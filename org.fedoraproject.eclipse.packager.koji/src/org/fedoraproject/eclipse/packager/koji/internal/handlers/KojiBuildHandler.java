@@ -32,13 +32,13 @@ import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerPreferencesConstants;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
-import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.koji.KojiMessageDialog;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
 import org.fedoraproject.eclipse.packager.koji.KojiUrlUtils;
+import org.fedoraproject.eclipse.packager.koji.KojiUrlUtils.UrlType;
 import org.fedoraproject.eclipse.packager.koji.api.BuildResult;
 import org.fedoraproject.eclipse.packager.koji.api.KojiBuildJob;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
@@ -90,11 +90,7 @@ public class KojiBuildHandler extends FedoraPackagerAbstractHandler {
 	 */
 	protected IJobChangeListener getJobChangeListener() {
 		final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-		String webUrl = PackagerPlugin.getStringPreference(FedoraPackagerPreferencesConstants.PREF_KOJI_WEB_URL);
-		if (webUrl == null) {
-			// use default
-			webUrl = FedoraPackagerPreferencesConstants.DEFAULT_KOJI_WEB_URL; 
-		}
+		String webUrl = KojiUrlUtils.getUrlOfType(UrlType.WEB);
 		try {
 			kojiWebUrl = new URL(webUrl);
 		} catch (MalformedURLException e) {

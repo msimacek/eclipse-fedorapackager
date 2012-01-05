@@ -12,6 +12,7 @@
  -->
 
 <plugin>
+   <extension-point id="org.fedoraproject.eclipse.packager.koji.instance" name="kojiInstance" schema="schema/org.fedoraproject.eclipse.packager.koji.instance.exsd"/>
    <extension
          point="org.eclipse.ui.menus">
       <menuContribution
@@ -133,5 +134,28 @@
             sequence="M1+M3+F U">
       </key>
     </extension>
+   <extension
+         point="org.fedoraproject.eclipse.packager.koji.instance">
+      <instance
+            name="Default Fedora Koji Instance"
+            webUrl="http://koji.fedoraproject.org/koji"
+            xmlrpcUrl="https://koji.fedoraproject.org/kojihub">
+      </instance>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.fedoraproject.eclipse.packager.preferences"
+            class="org.fedoraproject.eclipse.packager.koji.internal.preferences.FedoraPackagerKojiPreferencePage"
+            id="org.fedoraproject.eclipse.packager.preferences.koji"
+            name="Koji">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.equinox.preferences.preferences">
+      <initializer
+            class="org.fedoraproject.eclipse.packager.koji.internal.preferences.FedoraPackagerKojiPreferenceInitializer">
+      </initializer>
+   </extension>
 
 </plugin>

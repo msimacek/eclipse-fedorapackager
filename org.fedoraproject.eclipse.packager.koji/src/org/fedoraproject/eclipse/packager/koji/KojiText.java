@@ -52,16 +52,21 @@ public class KojiText extends NLS {
 	/****/ public static String KojiBuildCommand_buildLogMsg;
 	// BuildAlreadyExistsException
 	/****/ public static String BuildAlreadyExistsException_msg;
+	// FedoraPackagerKojiPreferencePage
+	/****/ public static String FedoraPackagerKojiPreferencePage_KojiPreferenceDescription;
+
+	// FedoraPackagerKojiPreferencePage
+	/****/ public static String FedoraPackagerKojiPreferencePage_namespaceWarningMsg;
+	/****/ public static String FedoraPackagerKojiPreferencePage_namespaceWarningTitle;
+	/****/ public static String FedoraPackagerKojiPreferencePage_serverDialogTitle;
 	// KojiSRPMScratchBuildHandler
 	/****/public static String KojiSRPMScratchBuildHandler_UploadFileDialogTitle;
 	// KojiHubClientLoginException
 	/****/ public static String KojiHubClientLoginException_loginFailedMsg;
 	// KojiSRPMBuildJob
 	/****/ public static String KojiSRPMBuildJob_ChooseSRPM;
-
 	/****/ public static String KojiSRPMBuildJob_ConfiguringClient;
 	/****/ public static String KojiSRPMBuildJob_NoSRPMsFound;
-
 	/****/ public static String KojiSRPMBuildJob_UploadingSRPM;
 	// KojiUploadSRPMCommand
 	/****/ public static String KojiUploadSRPMCommand_CouldNotRead;
@@ -74,6 +79,7 @@ public class KojiText extends NLS {
 	/****/ public static String KojiUploadSRPMJob_KojiUpload;
 	// Generic Strings
 	/****/ public static String xmlRPCconfigNotInitialized;
+	/****/ public static String ServerEntryTemplate;
 	
 	static {
 		initializeMessages(BUNDLE_NAME,	KojiText.class);

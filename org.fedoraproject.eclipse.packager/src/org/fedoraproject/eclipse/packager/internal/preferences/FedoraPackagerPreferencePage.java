@@ -37,14 +37,10 @@ public class FedoraPackagerPreferencePage extends FieldEditorPreferencePage impl
 	
 	private static final int GROUP_SPAN = 2;
 	private static final String HTTP_PREFIX = "http"; //$NON-NLS-1$
-	private static final String HTTPS_PREFIX = "https://"; //$NON-NLS-1$
 	 
 	// Lookaside cache
 	private StringFieldEditor lookasideUploadURLEditor;
 	private StringFieldEditor lookasideDownloadURLEditor;
-	// Koji
-	private StringFieldEditor kojiWebURLEditor;
-	private StringFieldEditor kojiHubURLEditor;
 	
 	/**
 	 * default constructor
@@ -69,14 +65,6 @@ public class FedoraPackagerPreferencePage extends FieldEditorPreferencePage impl
 		} else if (lookasideDownloadURLEditor.getStringValue() != null &&
 				!lookasideDownloadURLEditor.getStringValue().startsWith(HTTP_PREFIX)) {
 			setErrorMessage(FedoraPackagerText.FedoraPackagerPreferencePage_invalidDownloadURLMsg);
-			setValid(false);
-		} else if (kojiWebURLEditor.getStringValue() != null
-				&& !kojiWebURLEditor.getStringValue().startsWith(HTTP_PREFIX)) {
-			setErrorMessage(FedoraPackagerText.FedoraPackagerPreferencePage_kojiWebURLInvalidMsg);
-			setValid(false);
-		} else if (kojiHubURLEditor.getStringValue() != null
-				&& !kojiHubURLEditor.getStringValue().startsWith(HTTPS_PREFIX)) {
-			setErrorMessage(FedoraPackagerText.FedoraPackagerPreferencePage_kojiHubURLInvalidMsg);
 			setValid(false);
 		} else {
 			setErrorMessage(null);
@@ -137,25 +125,6 @@ public class FedoraPackagerPreferencePage extends FieldEditorPreferencePage impl
 		addField(lookasideUploadURLEditor);
 		addField(lookasideDownloadURLEditor);
 		updateMargins(lookasideGroup);
-		
-		Group kojiGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
-		kojiGroup.setText(FedoraPackagerText.FedoraPackagerPreferencePage_buildSystemGroupName);
-		GridDataFactory.fillDefaults().grab(true, false).span(GROUP_SPAN, 1)
-		.applyTo(kojiGroup);
-		/* Preference for setting the koji host */
-		kojiWebURLEditor = new StringFieldEditor(
-				FedoraPackagerPreferencesConstants.PREF_KOJI_WEB_URL, FedoraPackagerText.FedoraPackagerPreferencePage_kojiWebURLLabel,
-				kojiGroup);
-		kojiHubURLEditor = new StringFieldEditor(
-				FedoraPackagerPreferencesConstants.PREF_KOJI_HUB_URL, FedoraPackagerText.FedoraPackagerPreferencePage_kojiHubURLLabel,
-				kojiGroup);
-		kojiWebURLEditor.setPropertyChangeListener(this);
-		kojiHubURLEditor.setPropertyChangeListener(this);
-		kojiWebURLEditor.load();
-		kojiHubURLEditor.load();
-		addField(kojiWebURLEditor);
-		addField(kojiHubURLEditor);
-		updateMargins(kojiGroup);
 	}
 	
 	@Override
