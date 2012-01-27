@@ -53,12 +53,12 @@ public class KojiText extends NLS {
 	// BuildAlreadyExistsException
 	/****/ public static String BuildAlreadyExistsException_msg;
 	// FedoraPackagerKojiPreferencePage
-	/****/ public static String FedoraPackagerKojiPreferencePage_KojiPreferenceDescription;
-
-	// FedoraPackagerKojiPreferencePage
-	/****/ public static String FedoraPackagerKojiPreferencePage_namespaceWarningMsg;
-	/****/ public static String FedoraPackagerKojiPreferencePage_namespaceWarningTitle;
-	/****/ public static String FedoraPackagerKojiPreferencePage_serverDialogTitle;
+	/****/ public static String FedoraPackagerKojiPreferencePage_AdvancedButtonText;
+	/****/ public static String FedoraPackagerKojiPreferencePage_KojiSelect;
+	// FedoraPackagerAdvancedKojiDialogPage
+	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_namespaceWarningMsg;
+	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_namespaceWarningTitle;
+	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_serverDialogTitle;
 	// KojiSRPMScratchBuildHandler
 	/****/public static String KojiSRPMScratchBuildHandler_UploadFileDialogTitle;
 	// KojiHubClientLoginException

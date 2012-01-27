@@ -21,19 +21,22 @@ public class FedoraPackagerKojiPreferenceInitializer extends
 		// set default preferences for this plug-in
 		IEclipsePreferences node = DefaultScope.INSTANCE
 				.getNode(KojiPlugin.PLUGIN_ID);
-		node.put(KojiPreferencesConstants.PREF_KOJI_SERVER_NAME,
-				KojiPreferencesConstants.DEFAULT_KOJI_SERVER_NAME);
-		//don't use preset default, instead find Koji instance objects and construct a default
+		// don't use preset default, instead find Koji instance objects and
+		// construct a default
 		IConfigurationElement[] config = Platform.getExtensionRegistry()
 				.getConfigurationElementsFor(
 						"org.fedoraproject.eclipse.packager.koji.instance"); //$NON-NLS-1$
 		String serverList = ""; //$NON-NLS-1$
 		for (IConfigurationElement instance : config) {
-			serverList = NLS.bind(
-					KojiText.ServerEntryTemplate,
-					new String[] { instance.getAttribute("name"), //$NON-NLS-1$
-							instance.getAttribute("webUrl"), //$NON-NLS-1$
-							instance.getAttribute("xmlrpcUrl") }); //$NON-NLS-1$
+			String serverName = instance.getAttribute("name"); //$NON-NLS-1$
+			String webUrl = instance.getAttribute("webUrl"); //$NON-NLS-1$
+			String xmlrpcUrl = instance.getAttribute("xmlrpcUrl"); //$NON-NLS-1$
+			serverList = NLS.bind(KojiText.ServerEntryTemplate, new String[] {
+					serverName, webUrl, xmlrpcUrl });
+			if (serverName.contentEquals("Default Fedora Koji Instance")) { //$NON-NLS-1$
+				node.put(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO, webUrl
+						+ "," + xmlrpcUrl); //$NON-NLS-1$
+			}
 		}
 		node.put(KojiPreferencesConstants.PREF_SERVER_LIST, serverList);
 	}

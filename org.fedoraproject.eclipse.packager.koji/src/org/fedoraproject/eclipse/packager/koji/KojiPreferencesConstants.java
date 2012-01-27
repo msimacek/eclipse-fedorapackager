@@ -10,8 +10,8 @@ public class KojiPreferencesConstants {
 	 *                Prefences keys
 	 * -------------------------------------------------
 	 */
-	/***/ public static final String PREF_KOJI_SERVER_NAME =
-			"kojiServerName"; //$NON-NLS-1$
+	/***/ public static final String PREF_KOJI_SERVER_INFO =
+			"kojiServerInfo"; //$NON-NLS-1$
 	
 	/***/ public static final String PREF_SERVER_LIST =
 			"serverList"; //$NON-NLS-1$
@@ -22,8 +22,8 @@ public class KojiPreferencesConstants {
 	 * -------------------------------------------------
 	 */
 	
-	/***/ public static final String DEFAULT_KOJI_SERVER_NAME = 
-		"Default Fedora Koji Instance"; //$NON-NLS-1$
+	/***/ public static final String DEFAULT_KOJI_SERVER_INFO = 
+		""; //$NON-NLS-1$
 	
 	/**
 	 * Default servers provided by plugin. 

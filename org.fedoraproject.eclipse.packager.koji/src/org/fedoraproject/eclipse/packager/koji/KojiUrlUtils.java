@@ -19,17 +19,6 @@ import java.net.URL;
 public class KojiUrlUtils {
 
 	/**
-	 * Enum to specify Koji url type
-	 * 
-	 */
-	public enum UrlType {
-		/***/
-		WEB,
-		/***/
-		XMLRPC
-	}
-
-	/**
 	 * Construct the correct URL to a task on koji.
 	 * 
 	 * @param taskId
@@ -38,28 +27,5 @@ public class KojiUrlUtils {
 	 */
 	public static String constructTaskUrl(int taskId, URL kojiWebUrl) {
 		return kojiWebUrl.toString() + "/taskinfo?taskID=" + taskId; //$NON-NLS-1$
-	}
-
-	/**
-	 * @param type The Koji url type to return.
-	 * @return The String representation of the url of the passed type for the currently selected 
-	 */
-	public static String getUrlOfType(UrlType type){
-		String name = KojiPlugin.getDefault().getPreferenceStore().getString(KojiPreferencesConstants.PREF_KOJI_SERVER_NAME);
-		String[] serverInfo = null;
-		for (String server : KojiPlugin.getDefault().getPreferenceStore().getString(KojiPreferencesConstants.PREF_SERVER_LIST).split(";")){ //$NON-NLS-1$
-			if (server.startsWith(name + ",")){ //$NON-NLS-1$
-				serverInfo = server.split(","); //$NON-NLS-1$
-			}
-		}
-		if (serverInfo == null){
-			return null;
-		}
-		switch (type){
-		case WEB:
-			return serverInfo[1];
-		default:
-			return serverInfo[2];
-		}
 	}
 }

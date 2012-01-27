@@ -31,9 +31,8 @@ import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredExcepti
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
+import org.fedoraproject.eclipse.packager.koji.KojiPreferencesConstants;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
-import org.fedoraproject.eclipse.packager.koji.KojiUrlUtils;
-import org.fedoraproject.eclipse.packager.koji.KojiUrlUtils.UrlType;
 import org.fedoraproject.eclipse.packager.koji.api.errors.BuildAlreadyExistsException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
@@ -45,22 +44,27 @@ import org.fedoraproject.eclipse.packager.utils.RPMUtils;
 
 /**
  * Job to make a Koji Build.
- *
+ * 
  */
 public class KojiBuildJob extends Job {
 
 	private IProjectRoot fedoraProjectRoot;
-	private boolean isScratch; 
+	private boolean isScratch;
 	private Shell shell;
 	protected BuildResult buildResult;
-	
+
 	/**
-	 * @param name The name of the job.
-	 * @param shell The shell the job is run in.
-	 * @param fpr The root of the project being built.
-	 * @param scratch True if scratch, false otherwise.
+	 * @param name
+	 *            The name of the job.
+	 * @param shell
+	 *            The shell the job is run in.
+	 * @param fpr
+	 *            The root of the project being built.
+	 * @param scratch
+	 *            True if scratch, false otherwise.
 	 */
-	public KojiBuildJob(String name, Shell shell, IProjectRoot fpr, boolean scratch) {
+	public KojiBuildJob(String name, Shell shell, IProjectRoot fpr,
+			boolean scratch) {
 		super(name);
 		fedoraProjectRoot = fpr;
 		isScratch = scratch;
@@ -69,27 +73,29 @@ public class KojiBuildJob extends Job {
 
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
-		IFpProjectBits projectBits = FedoraPackagerUtils.getVcsHandler(fedoraProjectRoot);
+		IFpProjectBits projectBits = FedoraPackagerUtils
+				.getVcsHandler(fedoraProjectRoot);
 		BranchConfigInstance bci = projectBits.getBranchConfig();
 		FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 		FedoraPackager fp = new FedoraPackager(fedoraProjectRoot);
 		KojiBuildCommand kojiBuildCmd;
 		try {
 			kojiBuildCmd = (KojiBuildCommand) fp
-				.getCommandInstance(KojiBuildCommand.ID);
+					.getCommandInstance(KojiBuildCommand.ID);
 		} catch (FedoraPackagerCommandNotFoundException e) {
 			logger.logError(e.getMessage(), e);
-			FedoraHandlerUtils.showErrorDialog(shell,
-					fedoraProjectRoot.getProductStrings().getProductName(), e.getMessage());
-			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID, e.getMessage());
+			FedoraHandlerUtils.showErrorDialog(shell, fedoraProjectRoot
+					.getProductStrings().getProductName(), e.getMessage());
+			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,
+					e.getMessage());
 		} catch (FedoraPackagerCommandInitializationException e) {
 			logger.logError(e.getMessage(), e);
-			FedoraHandlerUtils.showErrorDialog(shell,
-					fedoraProjectRoot.getProductStrings().getProductName(), e.getMessage());
-			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID, e.getMessage());
+			FedoraHandlerUtils.showErrorDialog(shell, fedoraProjectRoot
+					.getProductStrings().getProductName(), e.getMessage());
+			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,
+					e.getMessage());
 		}
-		monitor.beginTask(NLS.bind(
-				KojiText.KojiBuildHandler_pushBuildToKoji,
+		monitor.beginTask(NLS.bind(KojiText.KojiBuildHandler_pushBuildToKoji,
 				fedoraProjectRoot.getProductStrings().getBuildToolName()), 100);
 		monitor.worked(5);
 		UnpushedChangesListener unpushedChangesListener = new UnpushedChangesListener(
@@ -97,29 +103,29 @@ public class KojiBuildJob extends Job {
 		// check for unpushed changes prior calling command
 		kojiBuildCmd.addCommandListener(unpushedChangesListener);
 		// tag sources if user wishes; TagSourcesListener takes care of this
-		TagSourcesListener tagSources = new TagSourcesListener(fedoraProjectRoot, monitor, shell, bci);
+		TagSourcesListener tagSources = new TagSourcesListener(
+				fedoraProjectRoot, monitor, shell, bci);
 		kojiBuildCmd.addCommandListener(tagSources);
 		IKojiHubClient kojiClient;
 		try {
 			kojiClient = getHubClient();
 		} catch (MalformedURLException e) {
-			logger.logError(NLS.bind(
-					KojiText.KojiBuildHandler_invalidHubUrl,
-					fedoraProjectRoot.getProductStrings().getBuildToolName()), e);
-			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,
-					NLS.bind(KojiText.KojiBuildHandler_invalidHubUrl,
-							fedoraProjectRoot.getProductStrings().getBuildToolName()),
-							e);
+			logger.logError(NLS.bind(KojiText.KojiBuildHandler_invalidHubUrl,
+					fedoraProjectRoot.getProductStrings().getBuildToolName()),
+					e);
+			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID, NLS
+					.bind(KojiText.KojiBuildHandler_invalidHubUrl,
+							fedoraProjectRoot.getProductStrings()
+									.getBuildToolName()), e);
 		}
 		kojiBuildCmd.setKojiClient(kojiClient);
-		kojiBuildCmd.sourceLocation(projectBits
-				.getScmUrlForKoji(fedoraProjectRoot, bci));
+		kojiBuildCmd.sourceLocation(projectBits.getScmUrlForKoji(
+				fedoraProjectRoot, bci));
 		String nvr;
 		try {
 			nvr = RPMUtils.getNVR(fedoraProjectRoot, bci);
 		} catch (IOException e) {
-			logger.logError(KojiText.KojiBuildHandler_errorGettingNVR,
-					e);
+			logger.logError(KojiText.KojiBuildHandler_errorGettingNVR, e);
 			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,
 					KojiText.KojiBuildHandler_errorGettingNVR, e);
 		}
@@ -140,15 +146,13 @@ public class KojiBuildJob extends Job {
 		} catch (BuildAlreadyExistsException e) {
 			// log in any case
 			logger.logInfo(e.getMessage());
-			FedoraHandlerUtils.showInformationDialog(shell,
-					fedoraProjectRoot.getProductStrings().getProductName(),
-					e.getMessage());
+			FedoraHandlerUtils.showInformationDialog(shell, fedoraProjectRoot
+					.getProductStrings().getProductName(), e.getMessage());
 			return Status.OK_STATUS;
 		} catch (UnpushedChangesException e) {
 			logger.logDebug(e.getMessage(), e);
-			FedoraHandlerUtils.showInformationDialog(shell,
-					fedoraProjectRoot.getProductStrings().getProductName(),
-					e.getMessage());
+			FedoraHandlerUtils.showInformationDialog(shell, fedoraProjectRoot
+					.getProductStrings().getProductName(), e.getMessage());
 			return Status.OK_STATUS;
 		} catch (TagSourcesException e) {
 			// something failed while tagging sources
@@ -192,27 +196,30 @@ public class KojiBuildJob extends Job {
 			}
 			// return some generic error
 			logger.logError(e.getMessage(), e);
-			return FedoraHandlerUtils.errorStatus(
-					KojiPlugin.PLUGIN_ID, e.getMessage(), e);
+			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,
+					e.getMessage(), e);
 		} catch (KojiHubClientException e) {
 			// return some generic error
-			String msg = NLS.bind(KojiText.KojiBuildHandler_unknownBuildError, e.getMessage());
+			String msg = NLS.bind(KojiText.KojiBuildHandler_unknownBuildError,
+					e.getMessage());
 			logger.logError(msg, e);
-			return FedoraHandlerUtils.errorStatus(
-					KojiPlugin.PLUGIN_ID, msg, e);
+			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID, msg, e);
 		}
 		// success
 		return Status.OK_STATUS;
 	}
-	
+
 	/**
 	 * Create a hub client based on set preferences.
 	 * 
-	 * @throws MalformedURLException If the koji hub URL preference was invalid.
+	 * @throws MalformedURLException
+	 *             If the koji hub URL preference was invalid.
 	 * @return The koji client.
 	 */
 	protected IKojiHubClient getHubClient() throws MalformedURLException {
-		String kojiHubUrl = KojiUrlUtils.getUrlOfType(UrlType.XMLRPC);
+		String kojiHubUrl = KojiPlugin.getDefault().getPreferenceStore()
+				.getString(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO)
+				.split(",")[1]; //$NON-NLS-1$
 		return new KojiSSLHubClient(kojiHubUrl);
 	}
 
@@ -225,5 +232,5 @@ public class KojiBuildJob extends Job {
 	public BuildResult getBuildResult() {
 		return this.buildResult;
 	}
-	
+
 }
