@@ -118,13 +118,6 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (instanceTable.getItems().length <= 1) {
-					FedoraHandlerUtils
-							.showErrorDialog(
-									staticParent.getShell(),
-									KojiText.FedoraPackagerAdvancedKojiDialogPage_removeFailTitle,
-									KojiText.FedoraPackagerAdvancedKojiDialogPage_removeFailText);
-				} else {
 					TableItem toRemove = instanceTable.getSelection()[0];
 					String name = toRemove.getText();
 					String[] info = pendingServers.get(name);
@@ -133,7 +126,9 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 									name, info[0], info[1] }), ""); //$NON-NLS-1$
 					pendingServers.remove(toRemove.getText(0));
 					toRemove.dispose();
-				}
+					if (instanceTable.getItems().length <= 1) {
+						removeButton.setEnabled(false);
+					}
 			}
 
 			@Override
@@ -142,6 +137,9 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 			}
 
 		});
+		if (instanceTable.getItems().length <= 1) {
+			removeButton.setEnabled(false);
+		}
 		buttons.pack();
 	}
 
@@ -213,6 +211,9 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 					serverInfo[2] });
 			TableItem serverItem = new TableItem(instanceTable, SWT.NONE);
 			serverItem.setText(0, serverInfo[0]);
+			if (instanceTable.getItems().length > 1) {
+				removeButton.setEnabled(true);
+			}
 			return true;
 		} else {
 			return false;
