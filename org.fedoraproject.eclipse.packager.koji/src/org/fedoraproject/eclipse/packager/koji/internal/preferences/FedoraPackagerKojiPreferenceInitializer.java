@@ -6,6 +6,7 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.osgi.util.NLS;
+import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiPreferencesConstants;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
@@ -27,13 +28,24 @@ public class FedoraPackagerKojiPreferenceInitializer extends
 				.getConfigurationElementsFor(
 						"org.fedoraproject.eclipse.packager.koji.instance"); //$NON-NLS-1$
 		String serverList = ""; //$NON-NLS-1$
+		// import old settings if upgrade from old version
+		String oldWeb = PackagerPlugin.getStringPreference("kojiWebURL"); //$NON-NLS-1$
+		String oldXml = PackagerPlugin.getStringPreference("kojiHubURL"); //$NON-NLS-1$
+		boolean existingSettings = false;
+		if (oldWeb != null && oldXml != null && oldWeb.length() > 0 && oldXml.length() > 0){
+			serverList = serverList.concat(NLS.bind(KojiText.ServerEntryTemplate, new String[] {
+					"Existing Koji Settings", oldWeb, oldXml })); //$NON-NLS-1$
+			node.put(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO, oldWeb
+					+ "," + oldXml); //$NON-NLS-1$
+			existingSettings = true;
+		}
 		for (IConfigurationElement instance : config) {
 			String serverName = instance.getAttribute("name"); //$NON-NLS-1$
 			String webUrl = instance.getAttribute("webUrl"); //$NON-NLS-1$
 			String xmlrpcUrl = instance.getAttribute("xmlrpcUrl"); //$NON-NLS-1$
-			serverList = NLS.bind(KojiText.ServerEntryTemplate, new String[] {
-					serverName, webUrl, xmlrpcUrl });
-			if (serverName.contentEquals("Default Fedora Koji Instance")) { //$NON-NLS-1$
+			serverList = serverList.concat(NLS.bind(KojiText.ServerEntryTemplate, new String[] {
+					serverName, webUrl, xmlrpcUrl }));
+			if (!existingSettings && serverName.contentEquals("Default Fedora Koji Instance")) { //$NON-NLS-1$
 				node.put(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO, webUrl
 						+ "," + xmlrpcUrl); //$NON-NLS-1$
 			}

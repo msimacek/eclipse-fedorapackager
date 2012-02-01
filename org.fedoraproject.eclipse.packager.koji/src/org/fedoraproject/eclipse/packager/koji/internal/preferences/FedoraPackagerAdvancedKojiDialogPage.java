@@ -41,13 +41,14 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 	 */
 	public FedoraPackagerAdvancedKojiDialogPage() {
 		super();
-		listPreferenceBuffer = KojiPlugin.getDefault().getPreferenceStore().getString(
-				KojiPreferencesConstants.PREF_SERVER_LIST);
+		listPreferenceBuffer = KojiPlugin.getDefault().getPreferenceStore()
+				.getString(KojiPreferencesConstants.PREF_SERVER_LIST);
 
 	}
 
 	@Override
 	public void createControl(Composite parent) {
+		final Composite staticParent = parent;
 		parent.setLayout(new GridLayout(1, false));
 		contents = new Composite(parent, SWT.NONE);
 		contents.setLayout(new GridLayout(2, false));
@@ -117,9 +118,22 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TableItem toRemove = instanceTable.getSelection()[0];
-				pendingServers.remove(toRemove.getText(0));
-				toRemove.dispose();
+				if (instanceTable.getItems().length <= 1) {
+					FedoraHandlerUtils
+							.showErrorDialog(
+									staticParent.getShell(),
+									KojiText.FedoraPackagerAdvancedKojiDialogPage_removeFailTitle,
+									KojiText.FedoraPackagerAdvancedKojiDialogPage_removeFailText);
+				} else {
+					TableItem toRemove = instanceTable.getSelection()[0];
+					String name = toRemove.getText();
+					String[] info = pendingServers.get(name);
+					listPreferenceBuffer = listPreferenceBuffer.replace(NLS
+							.bind(KojiText.ServerEntryTemplate, new String[] {
+									name, info[0], info[1] }), ""); //$NON-NLS-1$
+					pendingServers.remove(toRemove.getText(0));
+					toRemove.dispose();
+				}
 			}
 
 			@Override
@@ -153,32 +167,35 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 	private void editInstance(TableItem i) {
 		String name = i.getText();
 		String[] info = pendingServers.get(name);
-		String[] newInstance = new KojiServerDialog(contents.getShell(),
-				new String[] { name, info[0], info[1] }, "Add New Koji Server") //$NON-NLS-1$
-				.open();
-		if (newInstance != null) {
-			// allow redundant keys if name is unchanged
-			if (pendingServers.keySet().contains(newInstance[0])
-					&& !name.contentEquals(newInstance[0])) {
-				FedoraHandlerUtils
-						.showErrorDialog(
-								contents.getShell(),
-								KojiText.FedoraPackagerAdvancedKojiDialogPage_namespaceWarningTitle,
-								KojiText.FedoraPackagerAdvancedKojiDialogPage_namespaceWarningMsg);
-			} else {
-				// replace existing item
-				pendingServers.remove(name);
-				pendingServers.put(newInstance[0], new String[] {
-						newInstance[1], newInstance[2] });
-				for (TableItem item : instanceTable.getItems()) {
-					if (item.getText().contentEquals(name)) {
-						item.setText(newInstance[0]);
+		if (info != null && !(info.length < 2)) {
+			String[] newInstance = new KojiServerDialog(contents.getShell(),
+					new String[] { name, info[0], info[1] },
+					"Add New Koji Server") //$NON-NLS-1$
+					.open();
+			if (newInstance != null) {
+				// allow redundant keys if name is unchanged
+				if (pendingServers.keySet().contains(newInstance[0])
+						&& !name.contentEquals(newInstance[0])) {
+					FedoraHandlerUtils
+							.showErrorDialog(
+									contents.getShell(),
+									KojiText.FedoraPackagerAdvancedKojiDialogPage_namespaceWarningTitle,
+									KojiText.FedoraPackagerAdvancedKojiDialogPage_namespaceWarningMsg);
+				} else {
+					// replace existing item
+					pendingServers.remove(name);
+					pendingServers.put(newInstance[0], new String[] {
+							newInstance[1], newInstance[2] });
+					for (TableItem item : instanceTable.getItems()) {
+						if (item.getText().contentEquals(name)) {
+							item.setText(newInstance[0]);
+						}
 					}
+					listPreferenceBuffer = listPreferenceBuffer.replace(NLS
+							.bind(KojiText.ServerEntryTemplate, new String[] {
+									name, info[0], info[1] }), NLS.bind(
+							KojiText.ServerEntryTemplate, newInstance));
 				}
-				listPreferenceBuffer = listPreferenceBuffer.replace(
-						NLS.bind(KojiText.ServerEntryTemplate, new String[] {
-								name, info[0], info[1] }),
-						NLS.bind(KojiText.ServerEntryTemplate, newInstance));
 			}
 		}
 	}

@@ -80,6 +80,7 @@ public class FedoraPackagerKojiPreferencePage extends PreferencePage implements
 		advDialog.open();
 		loadOptions();
 		serverCombo.setItems(serverMapping[0]);
+		serverCombo.select(initSelection);
 	}
 
 	@Override
