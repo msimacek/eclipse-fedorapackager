@@ -48,7 +48,6 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 
 	@Override
 	public void createControl(Composite parent) {
-		final Composite staticParent = parent;
 		parent.setLayout(new GridLayout(1, false));
 		contents = new Composite(parent, SWT.NONE);
 		contents.setLayout(new GridLayout(2, false));

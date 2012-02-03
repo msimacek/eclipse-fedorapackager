@@ -58,10 +58,6 @@ public class KojiText extends NLS {
 	// FedoraPackagerAdvancedKojiDialogPage
 	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_namespaceWarningMsg;
 	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_namespaceWarningTitle;
-	public static String FedoraPackagerAdvancedKojiDialogPage_removeFailText;
-
-	public static String FedoraPackagerAdvancedKojiDialogPage_removeFailTitle;
-
 	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_serverDialogTitle;
 	// KojiSRPMScratchBuildHandler
 	/****/public static String KojiSRPMScratchBuildHandler_UploadFileDialogTitle;
