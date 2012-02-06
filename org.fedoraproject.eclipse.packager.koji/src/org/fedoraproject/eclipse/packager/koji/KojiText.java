@@ -59,6 +59,9 @@ public class KojiText extends NLS {
 	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_namespaceWarningMsg;
 	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_namespaceWarningTitle;
 	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_serverDialogTitle;
+	// KojiServerDialog
+	/****/ public static String KojiServerDialog_CustomTagLabel;
+
 	// KojiSRPMScratchBuildHandler
 	/****/public static String KojiSRPMScratchBuildHandler_UploadFileDialogTitle;
 	// KojiHubClientLoginException

@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.fedoraproject.eclipse.packager.koji.KojiText;
 
 /**
  * Dialog prompting the user for creating a Koji server instance.
@@ -32,6 +33,7 @@ public class KojiServerDialog extends Dialog {
 	private Text[] texts;
 	private Label[] labels;
 	private String[] returnValue;
+	private Button useCustomTagsCheck;
 
 	/**
 	 * @param parent
@@ -56,16 +58,19 @@ public class KojiServerDialog extends Dialog {
 	public String[] open() {
 		shell = new Shell(getParent(), SWT.MIN | SWT.BORDER);
 		shell.setText(title);
-		shell.setSize(550, 200);
 		shell.setLayout(new GridLayout(1, false));
-		Composite composite = new Composite(shell, SWT.NONE);
-		composite.setSize(550, 200);
+		
+		Composite parent = new Composite(shell, SWT.NONE);
+		parent.setLayout(new GridLayout(1, false));
+		parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
-		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
 		composite.setLayoutData(gd);
 		labels = new Label[3];
 		texts = new Text[3];
-		GridData textData = new GridData(SWT.FILL, SWT.FILL, true, true);
+		GridData textData = new GridData(SWT.FILL, SWT.FILL, true, false);
 		textData.heightHint = 25;
 		textData.widthHint = 450;
 		for (int i = 0; i < 3; i++) {
@@ -84,34 +89,20 @@ public class KojiServerDialog extends Dialog {
 					checkOk();
 				}
 			});
-			labels[i].pack();
 			texts[i].setLayoutData(textData);
-			texts[i].pack();
 		}
-		okButton = new Button(composite, SWT.DEFAULT);
-		okButton.setText("OK"); //$NON-NLS-1$
-		okButton.addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseDoubleClick(MouseEvent e) {
-				// no op
-			}
-
-			@Override
-			public void mouseDown(MouseEvent e) {
-				// no op
-			}
-
-			@Override
-			public void mouseUp(MouseEvent e) {
-				result = Window.OK;
-				returnValue = new String[] { texts[0].getText(),
-						texts[1].getText(), texts[2].getText() };
-				shell.close();
-			}
-		});
-		checkOk();
-		cancelButton = new Button(composite, SWT.DEFAULT);
+		
+		useCustomTagsCheck = new Button(parent, SWT.CHECK);
+		useCustomTagsCheck.setText(KojiText.KojiServerDialog_CustomTagLabel);
+		useCustomTagsCheck.setSelection(Boolean.parseBoolean(serverInfo[3]));
+		
+		Composite buttons = new Composite(shell, SWT.NONE);
+		buttons.setLayout(new GridLayout(2, false));
+		buttons.setLayoutData(new GridData(SWT.END, SWT.END, false, false));
+		
+		GridData buttonData = new GridData(SWT.END, SWT.END, false, false);
+		buttonData.widthHint = 100;
+		cancelButton = new Button(buttons, SWT.NONE);
 		cancelButton.setText("Cancel"); //$NON-NLS-1$
 		cancelButton.addMouseListener(new MouseListener() {
 
@@ -131,7 +122,41 @@ public class KojiServerDialog extends Dialog {
 				shell.close();
 			}
 		});
+		cancelButton.setLayoutData(buttonData);
+		okButton = new Button(buttons, SWT.NONE);
+		okButton.setText("OK"); //$NON-NLS-1$
+		okButton.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				// no op
+			}
+
+			@Override
+			public void mouseDown(MouseEvent e) {
+				// no op
+			}
+
+			@Override
+			public void mouseUp(MouseEvent e) {
+				result = Window.OK;
+				returnValue = new String[] {
+						texts[0].getText(),
+						texts[1].getText(),
+						texts[2].getText(),
+						new Boolean(useCustomTagsCheck.getSelection())
+								.toString() };
+				shell.close();
+			}
+		});
+		checkOk();
+		okButton.setLayoutData(buttonData);
+		
+		buttons.pack();
+		
+		shell.pack();
 		shell.open();
+		
 		Display display = getParent().getDisplay();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
@@ -143,8 +168,8 @@ public class KojiServerDialog extends Dialog {
 			return returnValue;
 		}
 	}
-	
-	private void checkOk(){
+
+	private void checkOk() {
 		okButton.setEnabled(true);
 		for (Text text : texts) {
 			String contents = text.getText();

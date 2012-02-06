@@ -36,7 +36,7 @@ public class FedoraPackagerKojiPreferenceInitializer extends
 			serverList = serverList.concat(NLS.bind(KojiText.ServerEntryTemplate, new String[] {
 					"Existing Koji Settings", oldWeb, oldXml })); //$NON-NLS-1$
 			node.put(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO, oldWeb
-					+ "," + oldXml); //$NON-NLS-1$
+					+ "," + oldXml + ",false"); //$NON-NLS-1$ //$NON-NLS-2$
 			existingSettings = true;
 		}
 		for (IConfigurationElement instance : config) {
@@ -44,10 +44,10 @@ public class FedoraPackagerKojiPreferenceInitializer extends
 			String webUrl = instance.getAttribute("webUrl"); //$NON-NLS-1$
 			String xmlrpcUrl = instance.getAttribute("xmlrpcUrl"); //$NON-NLS-1$
 			serverList = serverList.concat(NLS.bind(KojiText.ServerEntryTemplate, new String[] {
-					serverName, webUrl, xmlrpcUrl }));
+					serverName, webUrl, xmlrpcUrl, "false" })); //$NON-NLS-1$
 			if (!existingSettings && serverName.contentEquals("Default Fedora Koji Instance")) { //$NON-NLS-1$
 				node.put(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO, webUrl
-						+ "," + xmlrpcUrl); //$NON-NLS-1$
+						+ "," + xmlrpcUrl + ",false"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 		}
 		node.put(KojiPreferencesConstants.PREF_SERVER_LIST, serverList);

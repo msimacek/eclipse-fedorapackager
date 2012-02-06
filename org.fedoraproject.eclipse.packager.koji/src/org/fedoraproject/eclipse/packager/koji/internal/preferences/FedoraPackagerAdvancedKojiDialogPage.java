@@ -57,23 +57,6 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 		gd.heightHint = 200;
 		gd.widthHint = 300;
 		instanceTable.setLayoutData(gd);
-		@SuppressWarnings("unused")
-		TableColumn column = new TableColumn(instanceTable, SWT.NONE);
-		boolean warningShown = false;
-		for (String serverInfoSet : KojiPlugin.getDefault()
-				.getPreferenceStore()
-				.getString(KojiPreferencesConstants.PREF_SERVER_LIST)
-				.split(";")) { //$NON-NLS-1$
-			String[] serverInfo = serverInfoSet.split(","); //$NON-NLS-1$
-			if (!addServerItem(serverInfo) && !warningShown) {
-				FedoraHandlerUtils
-						.showErrorDialog(
-								parent.getShell(),
-								KojiText.FedoraPackagerAdvancedKojiDialogPage_namespaceWarningTitle,
-								KojiText.FedoraPackagerAdvancedKojiDialogPage_namespaceWarningMsg);
-			}
-		}
-		instanceTable.getColumn(0).pack();
 		Composite buttons = new Composite(contents, SWT.NONE);
 		buttons.setLayout(new GridLayout());
 		buttons.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -136,6 +119,23 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 			}
 
 		});
+		@SuppressWarnings("unused")
+		TableColumn column = new TableColumn(instanceTable, SWT.NONE);
+		boolean warningShown = false;
+		for (String serverInfoSet : KojiPlugin.getDefault()
+				.getPreferenceStore()
+				.getString(KojiPreferencesConstants.PREF_SERVER_LIST)
+				.split(";")) { //$NON-NLS-1$
+			String[] serverInfo = serverInfoSet.split(","); //$NON-NLS-1$
+			if (!addServerItem(serverInfo) && !warningShown) {
+				FedoraHandlerUtils
+						.showErrorDialog(
+								parent.getShell(),
+								KojiText.FedoraPackagerAdvancedKojiDialogPage_namespaceWarningTitle,
+								KojiText.FedoraPackagerAdvancedKojiDialogPage_namespaceWarningMsg);
+			}
+		}
+		instanceTable.getColumn(0).pack();
 		if (instanceTable.getItems().length <= 1) {
 			removeButton.setEnabled(false);
 		}
@@ -143,9 +143,11 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 	}
 
 	private void addInstance() {
+		contents.getShell().setEnabled(false);
 		String[] newInstance = new KojiServerDialog(contents.getShell(), null,
 				KojiText.FedoraPackagerAdvancedKojiDialogPage_serverDialogTitle)
 				.open();
+		contents.getShell().setEnabled(true);
 		if (newInstance != null) {
 			if (!addServerItem(newInstance)) {
 				FedoraHandlerUtils
@@ -164,11 +166,13 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 	private void editInstance(TableItem i) {
 		String name = i.getText();
 		String[] info = pendingServers.get(name);
-		if (info != null && !(info.length < 2)) {
+		if (info != null && !(info.length < 3)) {
+			contents.getShell().setEnabled(false);
 			String[] newInstance = new KojiServerDialog(contents.getShell(),
-					new String[] { name, info[0], info[1] },
+					new String[] { name, info[0], info[1], info[2] },
 					"Add New Koji Server") //$NON-NLS-1$
 					.open();
+			contents.getShell().setEnabled(true);
 			if (newInstance != null) {
 				// allow redundant keys if name is unchanged
 				if (pendingServers.keySet().contains(newInstance[0])
@@ -207,7 +211,7 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 	private boolean addServerItem(String[] serverInfo) {
 		if (!pendingServers.containsKey(serverInfo[0])) {
 			pendingServers.put(serverInfo[0], new String[] { serverInfo[1],
-					serverInfo[2] });
+					serverInfo[2], serverInfo[3] });
 			TableItem serverItem = new TableItem(instanceTable, SWT.NONE);
 			serverItem.setText(0, serverInfo[0]);
 			if (instanceTable.getItems().length > 1) {
