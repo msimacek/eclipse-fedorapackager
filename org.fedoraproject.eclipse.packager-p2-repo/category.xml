@@ -3,9 +3,28 @@
    <feature url="features/org.fedoraproject.eclipse.packager.feature_0.3.0.qualifier.jar" id="org.fedoraproject.eclipse.packager.feature" version="0.3.0.qualifier">
       <category name="fedora-packager"/>
    </feature>
-   <!--<feature url="features/org.fedoraproject.eclipse.packager_0.1.12.qualifier.jar" id="org.fedoraproject.eclipse.packager" version="0.1.12.qualifier">
+   <!--
+        Uncomment the following features when you copy this file and you are
+        about to run the UpdateSitePublisher when you are preparing a release:
+        see https://fedorahosted.org/eclipse-fedorapackager/wiki/PreparingReleases
+    -->
+   <!--
+   <feature url="features/org.fedoraproject.eclipse.packager_0.2.3.qualifier.jar" id="org.fedoraproject.eclipse.packager" version="0.2.3.qualifier">
       <category name="fedora-packager"/>
-   </feature>-->
+   </feature>
+   <feature url="features/org.fedoraproject.eclipse.packager_0.2.2.qualifier.jar" id="org.fedoraproject.eclipse.packager" version="0.2.2.qualifier">
+      <category name="fedora-packager"/>
+   </feature>
+   <feature url="features/org.fedoraproject.eclipse.packager_0.2.1.qualifier.jar" id="org.fedoraproject.eclipse.packager" version="0.2.1.qualifier">
+      <category name="fedora-packager"/>
+   </feature>
+   <feature url="features/org.fedoraproject.eclipse.packager_0.2.0.qualifier.jar" id="org.fedoraproject.eclipse.packager" version="0.2.0.qualifier">
+      <category name="fedora-packager"/>
+   </feature>
+   <feature url="features/org.fedoraproject.eclipse.packager_0.1.12.qualifier.jar" id="org.fedoraproject.eclipse.packager" version="0.1.12.qualifier">
+      <category name="fedora-packager"/>
+   </feature>
+   -->
    <category-def name="fedora-packager" label="Fedora Packager for Eclipse">
       <description>
          Fedora Packager for Eclipse and related plug-ins.
