@@ -186,7 +186,7 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 					// replace existing item
 					pendingServers.remove(name);
 					pendingServers.put(newInstance[0], new String[] {
-							newInstance[1], newInstance[2] });
+							newInstance[1], newInstance[2], newInstance[3] });
 					for (TableItem item : instanceTable.getItems()) {
 						if (item.getText().contentEquals(name)) {
 							item.setText(newInstance[0]);
@@ -194,7 +194,7 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 					}
 					listPreferenceBuffer = listPreferenceBuffer.replace(NLS
 							.bind(KojiText.ServerEntryTemplate, new String[] {
-									name, info[0], info[1] }), NLS.bind(
+									name, info[0], info[1], info[2] }), NLS.bind(
 							KojiText.ServerEntryTemplate, newInstance));
 				}
 			}

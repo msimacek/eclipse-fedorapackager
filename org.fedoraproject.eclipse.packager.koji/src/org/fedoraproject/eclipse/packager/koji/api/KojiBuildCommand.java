@@ -187,17 +187,8 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 			throw new OperationCanceledException();
 		}
 		
-		// main monitor worked for 20
+		// main monitor worked for 30
 		BuildResult result = new BuildResult();
-		monitor.subTask(NLS.bind(KojiText.KojiBuildCommand_kojiLogInTask,
-				this.projectRoot.getProductStrings().getBuildToolName()));
-		// login 
-		this.kojiClient.login();
-		if (monitor.isCanceled()) {
-			throw new OperationCanceledException();
-		}
-		
-		monitor.worked(30);
 		monitor.subTask(KojiText.KojiBuildCommand_sendBuildCmd);
 		FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 		if (this.scratchBuild) {

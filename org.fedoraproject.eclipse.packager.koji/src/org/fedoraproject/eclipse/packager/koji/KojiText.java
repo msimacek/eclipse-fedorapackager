@@ -71,6 +71,8 @@ public class KojiText extends NLS {
 	/****/ public static String KojiSRPMBuildJob_ConfiguringClient;
 	/****/ public static String KojiSRPMBuildJob_NoSRPMsFound;
 	/****/ public static String KojiSRPMBuildJob_UploadingSRPM;
+
+	public static String KojiTagDialog_DialogTitle;
 	// KojiUploadSRPMCommand
 	/****/ public static String KojiUploadSRPMCommand_CouldNotRead;
 	/****/ public static String KojiUploadSRPMCommand_FileNotFound;

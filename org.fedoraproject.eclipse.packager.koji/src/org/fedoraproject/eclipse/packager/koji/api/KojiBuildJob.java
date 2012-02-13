@@ -12,11 +12,20 @@ package org.fedoraproject.eclipse.packager.koji.api;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
@@ -36,6 +45,7 @@ import org.fedoraproject.eclipse.packager.koji.KojiText;
 import org.fedoraproject.eclipse.packager.koji.api.errors.BuildAlreadyExistsException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
+import org.fedoraproject.eclipse.packager.koji.internal.ui.KojiTagDialog;
 import org.fedoraproject.eclipse.packager.api.errors.TagSourcesException;
 import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
@@ -118,22 +128,59 @@ public class KojiBuildJob extends Job {
 							fedoraProjectRoot.getProductStrings()
 									.getBuildToolName()), e);
 		}
-		kojiBuildCmd.setKojiClient(kojiClient);
-		kojiBuildCmd.sourceLocation(projectBits.getScmUrlForKoji(
-				fedoraProjectRoot, bci));
-		String nvr;
+		monitor.subTask(NLS.bind(KojiText.KojiBuildCommand_kojiLogInTask,
+				fedoraProjectRoot.getProductStrings().getBuildToolName()));
 		try {
-			nvr = RPMUtils.getNVR(fedoraProjectRoot, bci);
-		} catch (IOException e) {
-			logger.logError(KojiText.KojiBuildHandler_errorGettingNVR, e);
-			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,
-					KojiText.KojiBuildHandler_errorGettingNVR, e);
-		}
-		kojiBuildCmd.buildTarget(bci.getBuildTarget()).nvr(nvr)
-				.isScratchBuild(isScratch);
-		logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
-				KojiBuildCommand.class.getName()));
-		try {
+			// login
+			kojiClient.login();
+			if (monitor.isCanceled()) {
+				throw new OperationCanceledException();
+			}
+
+			monitor.worked(30);
+			kojiBuildCmd.setKojiClient(kojiClient);
+			kojiBuildCmd.sourceLocation(projectBits.getScmUrlForKoji(
+					fedoraProjectRoot, bci));
+			String nvr;
+			try {
+				nvr = RPMUtils.getNVR(fedoraProjectRoot, bci);
+			} catch (IOException e) {
+				logger.logError(KojiText.KojiBuildHandler_errorGettingNVR, e);
+				return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,
+						KojiText.KojiBuildHandler_errorGettingNVR, e);
+			}
+
+			if (!KojiPlugin.getDefault().getPreferenceStore()
+					.getString(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO)
+					.split(",")[2].contentEquals("true")) { //$NON-NLS-1$//$NON-NLS-2$
+				kojiBuildCmd.buildTarget(bci.getBuildTarget());
+			} else {
+				final Set<String> tagSet = new HashSet<String>();
+				for (HashMap<?, ?> tagInfo : kojiClient.listTags()) {
+					tagSet.add(tagInfo.get("name").toString()); //$NON-NLS-1$
+				}
+
+				FutureTask<String> tagTask = new FutureTask<String>(
+						new Callable<String>() {
+
+							@Override
+							public String call() throws Exception {
+								return new KojiTagDialog(shell, tagSet).openForTag();
+							}
+
+						});
+				Display.getDefault().syncExec(tagTask);
+				String buildTarget = null;
+				buildTarget = tagTask.get();
+				if (buildTarget == null) {
+					throw new OperationCanceledException();
+				}
+				kojiBuildCmd.buildTarget(buildTarget);
+			}
+			kojiBuildCmd.nvr(nvr).isScratchBuild(isScratch);
+			logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
+					KojiBuildCommand.class.getName()));
+
 			// Call build command.
 			// Make sure to set the buildResult variable, since it is used
 			// by getBuildResult() which is in turn called from the handler
@@ -160,6 +207,16 @@ public class KojiBuildJob extends Job {
 			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,
 					e.getMessage(), e);
 		} catch (CommandListenerException e) {
+			// This shouldn't happen, but report error anyway
+			logger.logError(e.getMessage(), e);
+			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,
+					e.getMessage(), e);
+		} catch (ExecutionException e) {
+			// This shouldn't happen, but report error anyway
+			logger.logError(e.getMessage(), e);
+			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,
+					e.getMessage(), e);
+		} catch (InterruptedException e) {
 			// This shouldn't happen, but report error anyway
 			logger.logError(e.getMessage(), e);
 			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,

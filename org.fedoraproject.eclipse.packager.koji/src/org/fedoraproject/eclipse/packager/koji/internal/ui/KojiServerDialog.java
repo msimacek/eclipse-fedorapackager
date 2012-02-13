@@ -94,8 +94,9 @@ public class KojiServerDialog extends Dialog {
 		
 		useCustomTagsCheck = new Button(parent, SWT.CHECK);
 		useCustomTagsCheck.setText(KojiText.KojiServerDialog_CustomTagLabel);
-		useCustomTagsCheck.setSelection(Boolean.parseBoolean(serverInfo[3]));
-		
+		if (serverInfo != null && serverInfo.length > 3 && serverInfo[3] != null){
+			useCustomTagsCheck.setSelection(Boolean.parseBoolean(serverInfo[3]));
+		}
 		Composite buttons = new Composite(shell, SWT.NONE);
 		buttons.setLayout(new GridLayout(2, false));
 		buttons.setLayoutData(new GridData(SWT.END, SWT.END, false, false));
