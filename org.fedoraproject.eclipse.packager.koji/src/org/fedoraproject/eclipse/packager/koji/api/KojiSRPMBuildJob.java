@@ -12,13 +12,21 @@ package org.fedoraproject.eclipse.packager.koji.api;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.osgi.util.NLS;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
@@ -33,10 +41,12 @@ import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFou
 import org.fedoraproject.eclipse.packager.api.errors.TagSourcesException;
 import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
+import org.fedoraproject.eclipse.packager.koji.KojiPreferencesConstants;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
 import org.fedoraproject.eclipse.packager.koji.api.errors.BuildAlreadyExistsException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
+import org.fedoraproject.eclipse.packager.koji.internal.ui.KojiTagDialog;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.fedoraproject.eclipse.packager.utils.RPMUtils;
@@ -177,12 +187,40 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,
 					KojiText.KojiBuildHandler_errorGettingNVR, e);
 		}
-		kojiBuildCmd.buildTarget(bci.getBuildTarget()).nvr(nvr)
-				.isScratchBuild(true);
-		logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
-				KojiBuildCommand.class.getName()));
 		try {
-			//Call build command
+			if (!KojiPlugin.getDefault().getPreferenceStore()
+					.getString(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO)
+					.split(",")[2].contentEquals("true")) { //$NON-NLS-1$//$NON-NLS-2$
+				kojiBuildCmd.buildTarget(bci.getBuildTarget());
+			} else {
+				final Set<String> tagSet = new HashSet<String>();
+				for (HashMap<?, ?> tagInfo : kojiClient.listTags()) {
+					tagSet.add(tagInfo.get("name").toString()); //$NON-NLS-1$
+				}
+
+				FutureTask<String> tagTask = new FutureTask<String>(
+						new Callable<String>() {
+
+							@Override
+							public String call() throws Exception {
+								return new KojiTagDialog(shell, tagSet)
+										.openForTag();
+							}
+
+						});
+				Display.getDefault().syncExec(tagTask);
+				String buildTarget = null;
+				buildTarget = tagTask.get();
+				if (buildTarget == null) {
+					throw new OperationCanceledException();
+				}
+				kojiBuildCmd.buildTarget(buildTarget);
+			}
+			kojiBuildCmd.nvr(nvr).isScratchBuild(true);
+			logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
+					KojiBuildCommand.class.getName()));
+
+			// Call build command
 			buildResult = kojiBuildCmd.call(subMonitor.newChild(10));
 		} catch (CommandMisconfiguredException e) {
 			// This shouldn't happen, but report error anyway
@@ -240,6 +278,16 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 					e.getMessage());
 			logger.logError(msg, e);
 			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID, msg, e);
+		} catch (ExecutionException e) {
+			// This shouldn't happen, but report error anyway
+			logger.logError(e.getMessage(), e);
+			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,
+					e.getMessage(), e);
+		} catch (InterruptedException e) {
+			// This shouldn't happen, but report error anyway
+			logger.logError(e.getMessage(), e);
+			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,
+					e.getMessage(), e);
 		}
 		// success
 		return Status.OK_STATUS;
