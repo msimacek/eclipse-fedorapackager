@@ -29,7 +29,6 @@ import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.LookasideCache;
 import org.fedoraproject.eclipse.packager.SourcesFile;
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
-import org.fedoraproject.eclipse.packager.tests.utils.cvs.CVSTestProject;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType;
@@ -42,7 +41,6 @@ public class FedoraProjectRootTest {
 	private IProject projectResource;
 	private IProjectRoot fpRoot;
 	private GitTestProject gitTestProject;
-	private CVSTestProject cvsTestProject;
 
 	private static final String SOURCE_FILE_NAME = "project_sources.zip";
 	private static final String PACKAGE_NAME = "example-fedora-project";
@@ -73,9 +71,6 @@ public class FedoraProjectRootTest {
 		fpRoot = null;
 		if (gitTestProject != null) {
 			gitTestProject.dispose();
-		}
-		if (cvsTestProject != null) {
-			cvsTestProject.dispose();
 		}
 	}
 

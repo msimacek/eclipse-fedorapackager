@@ -13,7 +13,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.fedoraproject.eclipse.packager.tests,
  org.fedoraproject.eclipse.packager.tests.utils,
- org.fedoraproject.eclipse.packager.tests.utils.cvs,
  org.fedoraproject.eclipse.packager.tests.utils.git
 Import-Package: com.google.gson,
  org.apache.commons.httpclient,
@@ -51,7 +50,6 @@ Import-Package: com.google.gson,
  org.fedoraproject.eclipse.packager.bodhi.api.errors,
  org.fedoraproject.eclipse.packager.bodhi.deserializers,
  org.fedoraproject.eclipse.packager.bodhi.fas,
- org.fedoraproject.eclipse.packager.cvs,
  org.fedoraproject.eclipse.packager.git,
  org.fedoraproject.eclipse.packager.git.api,
  org.fedoraproject.eclipse.packager.git.api.errors,
