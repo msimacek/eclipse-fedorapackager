@@ -57,6 +57,8 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 	private static final String RPMBUILD_CMD = "rpmbuild"; //$NON-NLS-1$
 	private static final String SOURCEBUILD_OPTION = "-bs"; //$NON-NLS-1$
 	private static final String BINARYBUILD_OPTION = "-ba"; //$NON-NLS-1$
+	private static final String COMPILE_OPTION = "-bc"; //$NON-NLS-1$
+	private static final String INSTALL_OPTION = "-bi"; //$NON-NLS-1$
 	private static final String PREP_OPTION = "-bp"; //$NON-NLS-1$
 	
 	private List<String> fullRpmBuildCommand;
@@ -82,7 +84,15 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 		/**
 		 * Corresponds to rpmbuild's -bp
 		 */
-		PREP
+		PREP,
+		/**
+		 * Corresponds to rpmbuild's -bc
+		 */
+		COMPILE,
+		/**
+		 * Corresponds to rpmbuild's -bi
+		 */
+		INSTALL
 	}
 	
 	/**
@@ -103,6 +113,12 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 			break;
 		case PREP:
 			buildTypeFlags.add(PREP_OPTION);
+			break;
+		case INSTALL:
+			buildTypeFlags.add(INSTALL_OPTION);
+			break;
+		case COMPILE:
+			buildTypeFlags.add(COMPILE_OPTION);
 			break;
 		}
 		return this;
