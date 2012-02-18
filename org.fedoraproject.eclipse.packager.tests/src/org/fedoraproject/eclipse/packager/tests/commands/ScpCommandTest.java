@@ -79,9 +79,9 @@ public class ScpCommandTest {
 				.getCommandInstance(ScpCommand.ID);
 
 		ScpResult result = null;
-		scpCmd.setSpecFile(SPEC);
-		scpCmd.setSrpmFile(SRPM);
-		result = scpCmd.setFasAccount(FAS).call(new NullProgressMonitor());
+		scpCmd.specFile(SPEC);
+		scpCmd.srpmFile(SRPM);
+		result = scpCmd.fasAccount(FAS).call(new NullProgressMonitor());
 
 		assertNotNull(result);
 		assertTrue(result.wasSuccessful());

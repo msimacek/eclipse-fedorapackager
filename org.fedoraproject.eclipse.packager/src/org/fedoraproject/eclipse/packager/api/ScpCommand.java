@@ -322,8 +322,15 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 	@Override
 	protected void checkConfiguration() throws CommandMisconfiguredException {
-		// We are good to go with the defaults. No-Op.
+		if (this.fasAccount == null) {
+			throw new CommandMisconfiguredException(
+					FedoraPackagerText.ScpHandler_fasAccountMissing);
+		}
 
+		if ((this.specFile == null) || (this.srpmFile == null)) {
+			throw new CommandMisconfiguredException(
+					FedoraPackagerText.ScpCommand_filesToScpMissing);
+		}
 	}
 
 	/**
@@ -332,7 +339,7 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 	 * @return this instance
 	 * @throws ScpFailedException
 	 */
-	public ScpCommand setFasAccount(String fasAccount) throws ScpFailedException {
+	public ScpCommand fasAccount(String fasAccount) throws ScpFailedException {
 		this.fasAccount = fasAccount;
 		if (fasAccount == FedoraSSL.UNKNOWN_USER) {
 			throw new ScpFailedException
@@ -344,14 +351,14 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 	/**
 	 * @param specFile
 	 */
-	public void setSpecFile(String specFile) {
+	public void specFile(String specFile) {
 		this.specFile = specFile;
 	}
 
 	/**
 	 * @param srpmFile
 	 */
-	public void setSrpmFile(String srpmFile) {
+	public void srpmFile(String srpmFile) {
 		this.srpmFile = srpmFile;
 	}
 

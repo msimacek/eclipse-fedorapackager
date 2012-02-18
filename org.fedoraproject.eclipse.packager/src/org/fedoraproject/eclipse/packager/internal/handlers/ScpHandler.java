@@ -23,7 +23,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
-import org.fedoraproject.eclipse.packager.FedoraSSL;
 import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
@@ -106,22 +105,22 @@ public class ScpHandler extends FedoraPackagerAbstractHandler {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+
+				scpCmd.specFile(localfedoraProjectRoot.getSpecFile().getName());
+
 				for (int i = 0; i < members.length; i++) {
 					if (members[i] instanceof IFile) {
-						if (members[i].getName().endsWith(".spec")) { //$NON-NLS-1$
-							scpCmd.setSpecFile(members[i].getName());
-						}
 						if (members[i].getName().endsWith(".src.rpm")) {  //$NON-NLS-1$
-							scpCmd.setSrpmFile(members[i].getName());
+							scpCmd.srpmFile(members[i].getName());
 						}
 					}
 				}
 
-				 String fasAccount =
-					 FedoraSSLFactory.getInstance().getUsernameFromCert();
+				 String fasAccount = "mziaei1";
+//					 FedoraSSLFactory.getInstance().getUsernameFromCert();
 
 				try {
-					scpCmd.setFasAccount(fasAccount);
+					scpCmd.fasAccount(fasAccount);
 					result = scpCmd.call(monitor);
 					String message = null;
 					message = NLS.bind(
