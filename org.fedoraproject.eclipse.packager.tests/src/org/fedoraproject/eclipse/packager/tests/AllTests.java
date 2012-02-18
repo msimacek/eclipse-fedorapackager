@@ -23,7 +23,6 @@ import org.junit.runners.Suite.SuiteClasses;
 	// Command tests
 	AllCommandsTests.class,
 	// Auxiliary plug-in tests
-	CVSProjectTypeTest.class,
 	GitFpBitsTest.class,
 	GitProjectTypeTest.class,
 	SourcesFileTest.class,

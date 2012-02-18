@@ -62,6 +62,12 @@ public class KojiSSLHubClient extends AbstractKojiHubBaseClient {
 	public HashMap<?, ?> login() throws KojiHubClientLoginException {
 		// Initialize SSL connection
 		try {
+			// JDK 7 uses SNI extensions by default and koji does not send the server
+			// name during the handshake, which causes trouble when establishing
+			// the SSL handshake. We explicitly set it to false so as to avoid SSL handshake
+			// problems. This may have unknown side-effects.
+			// see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=7127374
+			System.setProperty("jsse.enableSNIExtension", "false");  //$NON-NLS-1$//$NON-NLS-2$
 			initSSLConnection();
 		} catch (FileNotFoundException e) {
 			// certs are missing
