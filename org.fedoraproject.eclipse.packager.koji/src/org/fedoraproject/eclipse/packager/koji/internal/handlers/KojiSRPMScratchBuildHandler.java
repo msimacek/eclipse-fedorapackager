@@ -14,6 +14,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.OperationCanceledException;
@@ -25,6 +26,7 @@ import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.api.FileDialogRunable;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
+import org.fedoraproject.eclipse.packager.koji.KojiPreferencesConstants;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
 import org.fedoraproject.eclipse.packager.koji.api.KojiSRPMBuildJob;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
@@ -78,8 +80,18 @@ public class KojiSRPMScratchBuildHandler extends KojiBuildHandler {
 			}
 			srpmPath = new Path(srpm);
 		}
+		kojiInfo = new ProjectScope(eventResource.getProject())
+				.getNode(KojiPlugin.getDefault().getBundle().getSymbolicName())
+				.get(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO,
+						KojiPlugin
+								.getDefault()
+								.getPreferenceStore()
+								.getString(
+										KojiPreferencesConstants.PREF_KOJI_SERVER_INFO))
+				.split(","); //$NON-NLS-1$
 		Job job = new KojiSRPMBuildJob(fedoraProjectRoot.getProductStrings()
-				.getProductName(), getShell(event), fedoraProjectRoot, srpmPath);
+				.getProductName(), getShell(event), fedoraProjectRoot,
+				kojiInfo, srpmPath);
 		job.addJobChangeListener(getJobChangeListener());
 		job.setUser(true);
 		job.schedule();

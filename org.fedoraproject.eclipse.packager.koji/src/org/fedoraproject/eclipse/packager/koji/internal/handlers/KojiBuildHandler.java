@@ -16,6 +16,7 @@ import java.net.URL;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
@@ -49,20 +50,21 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
  * 
  */
 public class KojiBuildHandler extends FedoraPackagerAbstractHandler {
-	
+
 	/**
 	 * Shell for message dialogs, etc.
 	 */
 	protected Shell shell;
 	protected URL kojiWebUrl;
 	protected IProjectRoot fedoraProjectRoot;
-	
+	protected String[] kojiInfo;
+
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		this.shell = getShell(event);
 		final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
+		IResource eventResource = FedoraHandlerUtils.getResource(event);
 		try {
-			IResource eventResource = FedoraHandlerUtils.getResource(event);
 			fedoraProjectRoot = FedoraPackagerUtils
 					.getProjectRoot(eventResource);
 		} catch (InvalidProjectRootException e) {
@@ -71,28 +73,36 @@ public class KojiBuildHandler extends FedoraPackagerAbstractHandler {
 					FedoraPackagerText.invalidFedoraProjectRootError);
 			return null;
 		}
-		Job job = new KojiBuildJob(fedoraProjectRoot.getProductStrings().getProductName(), 
-				getShell(event), fedoraProjectRoot, isScratchBuild());
+		kojiInfo = new ProjectScope(eventResource.getProject())
+				.getNode(KojiPlugin.getDefault().getBundle().getSymbolicName())
+				.get(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO,
+						KojiPlugin
+								.getDefault()
+								.getPreferenceStore()
+								.getString(
+										KojiPreferencesConstants.PREF_KOJI_SERVER_INFO))
+				.split(","); //$NON-NLS-1$
+		Job job = new KojiBuildJob(fedoraProjectRoot.getProductStrings()
+				.getProductName(), getShell(event), fedoraProjectRoot,
+				kojiInfo, isScratchBuild());
 		job.addJobChangeListener(getJobChangeListener());
 		job.setUser(true);
 		job.schedule();
 		return null; // must be null
 	}
-	
+
 	protected boolean isScratchBuild() {
 		return false;
 	}
-	
+
 	/**
 	 * Create a job listener for the event {@code done}.
-	 *  
+	 * 
 	 * @return The job change listener.
 	 */
 	protected IJobChangeListener getJobChangeListener() {
 		final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-		String webUrl = KojiPlugin.getDefault().getPreferenceStore()
-				.getString(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO)
-				.split(",")[0]; //$NON-NLS-1$
+		String webUrl = kojiInfo[0];
 		try {
 			kojiWebUrl = new URL(webUrl);
 		} catch (MalformedURLException e) {
@@ -100,33 +110,41 @@ public class KojiBuildHandler extends FedoraPackagerAbstractHandler {
 			// Web url set in preferences.
 			logger.logError(NLS.bind(
 					KojiText.KojiBuildHandler_invalidKojiWebUrl,
-					fedoraProjectRoot.getProductStrings().getBuildToolName(), webUrl), e);
+					fedoraProjectRoot.getProductStrings().getBuildToolName(),
+					webUrl), e);
 			try {
-				kojiWebUrl = new URL(FedoraPackagerPreferencesConstants.DEFAULT_KOJI_WEB_URL);
-			} catch (MalformedURLException ignored) {};
+				kojiWebUrl = new URL(
+						FedoraPackagerPreferencesConstants.DEFAULT_KOJI_WEB_URL);
+			} catch (MalformedURLException ignored) {
+			}
+			;
 		}
 		IJobChangeListener listener = new JobChangeAdapter() {
-			
+
 			// We are only interested in the done event
 			@Override
 			public void done(IJobChangeEvent event) {
 				// get the BuildResult from the underlying job
-				KojiBuildJob job = (KojiBuildJob)event.getJob();
+				KojiBuildJob job = (KojiBuildJob) event.getJob();
 				final BuildResult buildResult = job.getBuildResult();
 				final IStatus jobStatus = event.getResult();
-				PlatformUI.getWorkbench().getDisplay().asyncExec(
-						new Runnable() {
+				PlatformUI.getWorkbench().getDisplay()
+						.asyncExec(new Runnable() {
 							@Override
 							public void run() {
 								// Only show response message dialog on success
-								if (jobStatus.isOK() && buildResult != null && buildResult.wasSuccessful()) {
+								if (jobStatus.isOK() && buildResult != null
+										&& buildResult.wasSuccessful()) {
 									FedoraPackagerLogger logger = FedoraPackagerLogger
 											.getInstance();
-									// unconditionally log so that users get a second chance to see the
+									// unconditionally log so that users get a
+									// second chance to see the
 									// koji-web URL
 									logger.logInfo(NLS
 											.bind(KojiText.KojiMessageDialog_buildResponseMsg,
-													fedoraProjectRoot.getProductStrings().getBuildToolName())
+													fedoraProjectRoot
+															.getProductStrings()
+															.getBuildToolName())
 											+ " " //$NON-NLS-1$
 											+ KojiUrlUtils.constructTaskUrl(
 													buildResult.getTaskId(),
@@ -141,7 +159,7 @@ public class KojiBuildHandler extends FedoraPackagerAbstractHandler {
 		};
 		return listener;
 	}
-	
+
 	/**
 	 * Create KojiMessageDialog based on taskId and kojiWebUrl.
 	 * 
@@ -158,13 +176,13 @@ public class KojiBuildHandler extends FedoraPackagerAbstractHandler {
 		Image msgContentImage = KojiPlugin.getImageDescriptor("icons/koji.png") //$NON-NLS-1$
 				.createImage();
 		KojiMessageDialog msgDialog = new KojiMessageDialog(shell, NLS.bind(
-				KojiText.KojiBuildHandler_kojiBuild,
-				fedoraProjectRoot.getProductStrings().getBuildToolName()), titleImage,
+				KojiText.KojiBuildHandler_kojiBuild, fedoraProjectRoot
+						.getProductStrings().getBuildToolName()), titleImage,
 				MessageDialog.NONE, new String[] { IDialogConstants.OK_LABEL },
 				0, kojiWebUrl, taskId, NLS.bind(
 						KojiText.KojiMessageDialog_buildResponseMsg,
-						fedoraProjectRoot.getProductStrings().getBuildToolName()),
-				msgContentImage,
+						fedoraProjectRoot.getProductStrings()
+								.getBuildToolName()), msgContentImage,
 				fedoraProjectRoot.getProductStrings().getBuildToolName());
 		return msgDialog;
 	}

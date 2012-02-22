@@ -41,7 +41,6 @@ import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFou
 import org.fedoraproject.eclipse.packager.api.errors.TagSourcesException;
 import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
-import org.fedoraproject.eclipse.packager.koji.KojiPreferencesConstants;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
 import org.fedoraproject.eclipse.packager.koji.api.errors.BuildAlreadyExistsException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
@@ -68,12 +67,14 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 	 *            The shell the job runs in.
 	 * @param fedoraProjectRoot
 	 *            The root of the project containing the SRPM being used.
+	 * @param kojiInfo
+	 *            The information for the server being used.
 	 * @param srpmPath
 	 *            Path of the SRPM locally
 	 */
 	public KojiSRPMBuildJob(String name, Shell shell,
-			IProjectRoot fedoraProjectRoot, IPath srpmPath) {
-		super(name, shell, fedoraProjectRoot, true);
+			IProjectRoot fedoraProjectRoot, String[] kojiInfo, IPath srpmPath) {
+		super(name, shell, fedoraProjectRoot, kojiInfo, true);
 		this.shell = shell;
 		this.fedoraProjectRoot = fedoraProjectRoot;
 		this.srpmPath = srpmPath;
@@ -188,9 +189,7 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 					KojiText.KojiBuildHandler_errorGettingNVR, e);
 		}
 		try {
-			if (!KojiPlugin.getDefault().getPreferenceStore()
-					.getString(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO)
-					.split(",")[2].contentEquals("true")) { //$NON-NLS-1$//$NON-NLS-2$
+			if (!kojiInfo[2].contentEquals("true")) { //$NON-NLS-1$
 				kojiBuildCmd.buildTarget(bci.getBuildTarget());
 			} else {
 				final Set<String> tagSet = new HashSet<String>();

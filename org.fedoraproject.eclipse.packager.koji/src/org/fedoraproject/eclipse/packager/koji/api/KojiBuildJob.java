@@ -40,7 +40,6 @@ import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredExcepti
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
-import org.fedoraproject.eclipse.packager.koji.KojiPreferencesConstants;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
 import org.fedoraproject.eclipse.packager.koji.api.errors.BuildAlreadyExistsException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
@@ -62,6 +61,7 @@ public class KojiBuildJob extends Job {
 	private boolean isScratch;
 	private Shell shell;
 	protected BuildResult buildResult;
+	protected String[] kojiInfo;
 
 	/**
 	 * @param name
@@ -70,15 +70,18 @@ public class KojiBuildJob extends Job {
 	 *            The shell the job is run in.
 	 * @param fpr
 	 *            The root of the project being built.
+	 * @param kojiInfo
+	 *            The information for the server being used.
 	 * @param scratch
 	 *            True if scratch, false otherwise.
 	 */
 	public KojiBuildJob(String name, Shell shell, IProjectRoot fpr,
-			boolean scratch) {
+			String[] kojiInfo, boolean scratch) {
 		super(name);
 		fedoraProjectRoot = fpr;
 		isScratch = scratch;
 		this.shell = shell;
+		this.kojiInfo = kojiInfo;
 	}
 
 	@Override
@@ -150,9 +153,7 @@ public class KojiBuildJob extends Job {
 						KojiText.KojiBuildHandler_errorGettingNVR, e);
 			}
 
-			if (!KojiPlugin.getDefault().getPreferenceStore()
-					.getString(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO)
-					.split(",")[2].contentEquals("true")) { //$NON-NLS-1$//$NON-NLS-2$
+			if (!kojiInfo[2].contentEquals("true")) { //$NON-NLS-1$
 				kojiBuildCmd.buildTarget(bci.getBuildTarget());
 			} else {
 				final Set<String> tagSet = new HashSet<String>();
@@ -165,7 +166,8 @@ public class KojiBuildJob extends Job {
 
 							@Override
 							public String call() throws Exception {
-								return new KojiTagDialog(shell, tagSet).openForTag();
+								return new KojiTagDialog(shell, tagSet)
+										.openForTag();
 							}
 
 						});
@@ -274,10 +276,7 @@ public class KojiBuildJob extends Job {
 	 * @return The koji client.
 	 */
 	protected IKojiHubClient getHubClient() throws MalformedURLException {
-		String kojiHubUrl = KojiPlugin.getDefault().getPreferenceStore()
-				.getString(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO)
-				.split(",")[1]; //$NON-NLS-1$
-		return new KojiSSLHubClient(kojiHubUrl);
+		return new KojiSSLHubClient(kojiInfo[1]);
 	}
 
 	/**
