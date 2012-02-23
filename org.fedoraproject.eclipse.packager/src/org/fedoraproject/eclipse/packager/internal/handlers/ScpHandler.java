@@ -24,7 +24,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
-import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
@@ -54,11 +53,9 @@ public class ScpHandler extends FedoraPackagerAbstractHandler {
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		final Shell shell = getShell(event);
 		final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-		final IProjectRoot localfedoraProjectRoot;
 		try {
 			IResource eventResource = FedoraHandlerUtils.getResource(event);
-			localfedoraProjectRoot = FedoraPackagerUtils
-					.getProjectRoot(eventResource);
+			setProjectRoot(FedoraPackagerUtils.getProjectRoot(eventResource));
 		} catch (InvalidProjectRootException e) {
 			logger.logError(FedoraPackagerText.invalidFedoraProjectRootError, e);
 			FedoraHandlerUtils.showErrorDialog(shell, "Error", //$NON-NLS-1$
@@ -67,7 +64,7 @@ public class ScpHandler extends FedoraPackagerAbstractHandler {
 		}
 
 		final FedoraPackager packager = new FedoraPackager(
-				localfedoraProjectRoot);
+				getProjectRoot());
 
 		// Do the copying to remote - scp
 		Job job = new Job(FedoraPackagerText.ScpHandler_taskName) {
@@ -87,26 +84,26 @@ public class ScpHandler extends FedoraPackagerAbstractHandler {
 				} catch (FedoraPackagerCommandNotFoundException e) {
 					logger.logError(e.getMessage(), e);
 					FedoraHandlerUtils.showErrorDialog(shell,
-							localfedoraProjectRoot.getProductStrings()
+							getProjectRoot().getProductStrings()
 									.getProductName(), e.getMessage());
 					return null;
 				} catch (FedoraPackagerCommandInitializationException e) {
 					logger.logError(e.getMessage(), e);
 					FedoraHandlerUtils.showErrorDialog(shell,
-							localfedoraProjectRoot.getProductStrings()
+							getProjectRoot().getProductStrings()
 									.getProductName(), e.getMessage());
 					return null;
 				}
 
 				IResource[] members = null;
 				try {
-					members = localfedoraProjectRoot.getProject().members();
+					members = getProjectRoot().getProject().members();
 				} catch (CoreException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
-				scpCmd.specFile(localfedoraProjectRoot.getSpecFile().getName());
+				scpCmd.specFile(getProjectRoot().getSpecFile().getName());
 
 				for (int i = 0; i < members.length; i++) {
 					if (members[i] instanceof IFile) {
@@ -122,15 +119,17 @@ public class ScpHandler extends FedoraPackagerAbstractHandler {
 				try {
 					scpCmd.fasAccount(fasAccount);
 					result = scpCmd.call(monitor);
-					String message = null;
-					message = NLS.bind(
-							FedoraPackagerText.ScpHandler_scpFilesNotifier,
-							fasAccount);
-					String finalMessage = result
-							.getHumanReadableMessage(message);
-					FedoraHandlerUtils.showInformationDialog(shell,
-							FedoraPackagerText.ScpHandler_notificationTitle,
-							finalMessage);
+					if (result.wasSuccessful()) {
+						String message = null;
+						message = NLS.bind(
+								FedoraPackagerText.ScpHandler_scpFilesNotifier,
+								fasAccount);
+						String finalMessage = result
+								.getHumanReadableMessage(message);
+						FedoraHandlerUtils.showInformationDialog(shell,
+								FedoraPackagerText.ScpHandler_notificationTitle,
+								finalMessage);
+					}
 					return Status.OK_STATUS;
 
 				} catch (CommandMisconfiguredException e) {

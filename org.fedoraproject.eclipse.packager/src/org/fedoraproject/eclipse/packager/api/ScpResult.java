@@ -53,7 +53,7 @@ public class ScpResult implements ICommandResult {
 	 */
 	public String getHumanReadableMessage(String message) {
 		message = message.
-				concat("\n*" + specFile + "\n *" + srpmFile); //$NON-NLS-1$ //$NON-NLS-2$
+				concat("\n*" + specFile + "\n*" + srpmFile); //$NON-NLS-1$ //$NON-NLS-2$
 
 		return message;
 	}

@@ -43,6 +43,7 @@ import com.jcraft.jsch.UserInfo;
 import org.eclipse.jsch.internal.core.IConstants;
 import org.eclipse.jsch.internal.core.JSchCorePlugin;
 import org.eclipse.jsch.internal.core.PreferenceInitializer;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * A class used to execute a {@code Scp} command. It has setters for all
@@ -68,6 +69,7 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 	private boolean scpconfirmed;
 	private String fileScpConfirm;
+	private ScpResult result = null;
 
 	final static FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 
@@ -137,9 +139,9 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 			// create the 'fpe-rpm-review' directory in public_html if it doesn't exist
 			// return false if srpm file already exists
-			boolean scpOk = checkRemoteDir(session);
+			checkRemoteDir(session);
 
-			if (scpOk) {
+			if (scpconfirmed) {
 				copyFileToRemote(specFile, session);
 				copyFileToRemote(srpmFile, session);
 			}
@@ -158,11 +160,17 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 			}
 		}
 
-		ScpResult result = new ScpResult(specFile, srpmFile);
+		result = new ScpResult(specFile, srpmFile);
 
 		// Call post-exec listeners
 		callPostExecListeners();
-		result.setSuccessful(true);
+
+		if (scpconfirmed) {
+			result.setSuccessful(true);
+		}
+		else {
+			result.setSuccessful(false);
+		}
 		setCallable(false);
 
 		return result;
@@ -214,13 +222,14 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 					fileFound = true;
 			}
 			if (fileFound) {
-				fileScpConfirm = FedoraPackagerText.ScpCommand_filesToScpExist;
+				fileScpConfirm =
+						NLS.bind(FedoraPackagerText.ScpCommand_filesToScpExist, srpmFile);
 				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 					@Override
 					public void run() {
 						scpconfirmed = MessageDialog.openConfirm
 								(null, FedoraPackagerText.ScpCommand_notificationTitle,
-										fileScpConfirm.concat("\n *" + srpmFile)); //$NON-NLS-1$
+										fileScpConfirm);
 					}
 				});
 				rc = scpconfirmed;
