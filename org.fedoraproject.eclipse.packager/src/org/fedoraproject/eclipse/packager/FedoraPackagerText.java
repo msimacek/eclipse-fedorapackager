@@ -149,6 +149,7 @@ public class FedoraPackagerText extends NLS {
 	/****/ public static String ScpHandler_scpFilesNotifier;
 	/****/ public static String ScpHandler_failToScp;
 	/****/ public static String ScpHandler_fasAccountMissing;
+	/****/ public static String ScpHandler_FilesDialogTitle;
 
 	static {
 		initializeMessages(BUNDLE_NAME,	FedoraPackagerText.class);
