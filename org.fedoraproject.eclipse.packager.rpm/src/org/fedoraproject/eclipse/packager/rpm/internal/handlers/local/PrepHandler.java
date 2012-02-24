@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
+import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
@@ -52,7 +53,7 @@ public class PrepHandler extends LocalHandlerDispatcher {
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		// Perhaps need to dispatch to non-local handler
-		if (checkDispatch(event, new org.fedoraproject.eclipse.packager.rpm.internal.handlers.PrepHandler())) {
+		if (checkDispatch(event, getDispatchee())) {
 			// dispatched, so return
 			return null;
 		}
@@ -152,6 +153,11 @@ public class PrepHandler extends LocalHandlerDispatcher {
 		job.setSystem(true); // suppress UI. That's done in encapsulated jobs.
 		job.schedule();
 		return null;
+	}
+
+	@Override
+	protected FedoraPackagerAbstractHandler getDispatchee() {
+		return new org.fedoraproject.eclipse.packager.rpm.internal.handlers.PrepHandler();
 	}
 
 }

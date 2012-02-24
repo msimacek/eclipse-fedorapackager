@@ -34,6 +34,10 @@ public class RpmText extends NLS {
 	/****/ public static String LocalBuildHandler_downloadSourcesForLocalBuild;
 	/****/ public static String LocalBuildHandler_buildCanceled;
 	/****/ public static String LocalBuildHandler_buildCancelationResponse;
+	// InstallHandler
+	/****/ public static String InstallHandler_taskName;
+	// CompileHandler
+	/****/ public static String CompileHandler_taskName;
 	// MockBuildHandler
 	/****/ public static String MockBuildHandler_testLocalBuildWithMock;
 	/****/ public static String MockBuildHandler_creatingSrpm;

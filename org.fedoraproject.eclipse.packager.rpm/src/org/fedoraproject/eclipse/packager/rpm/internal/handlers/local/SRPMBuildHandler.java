@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
+import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
@@ -44,7 +45,7 @@ public class SRPMBuildHandler extends LocalHandlerDispatcher {
 		// Perhaps need to dispatch to non-local handler
 		if (checkDispatch(
 				event,
-				new org.fedoraproject.eclipse.packager.rpm.internal.handlers.SRPMBuildHandler())) {
+				getDispatchee())) {
 			// dispatched, so return
 			return null;
 		}
@@ -107,6 +108,11 @@ public class SRPMBuildHandler extends LocalHandlerDispatcher {
 		job.setSystem(true); // avoid UI for this job
 		job.schedule();
 		return null;
+	}
+
+	@Override
+	protected FedoraPackagerAbstractHandler getDispatchee() {
+		return new org.fedoraproject.eclipse.packager.rpm.internal.handlers.SRPMBuildHandler();
 	}
 
 }
