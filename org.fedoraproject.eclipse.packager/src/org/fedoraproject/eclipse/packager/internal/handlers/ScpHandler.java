@@ -146,10 +146,9 @@ public class ScpHandler extends FedoraPackagerAbstractHandler {
 					e.printStackTrace();
 				}
 
-
-				 String fasAccount = "mziaei1";
-//				 String fasAccount =
-//					 FedoraSSLFactory.getInstance().getUsernameFromCert();
+//				 String fasAccount = "mziaei1";
+				 String fasAccount =
+					 FedoraSSLFactory.getInstance().getUsernameFromCert();
 
 				try {
 					scpCmd.fasAccount(fasAccount);
