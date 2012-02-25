@@ -67,7 +67,7 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 	private String specFile;
 	private String srpmFile;
 
-	private boolean scpconfirmed;
+	private boolean scpconfirmed = true;
 	private String fileScpConfirm;
 	private ScpResult result = null;
 
@@ -137,10 +137,11 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 				throw new ScpFailedException(FedoraPackagerText.ScpCommand_filesToScpMissing);
 			}
 
-			// create the 'fpe-rpm-review' directory in public_html if it doesn't exist
-			// return false if srpm file already exists
-			checkRemoteDir(session);
+			// Creates the remote 'fpe-rpm-review' directory in public_html
+			createRemoteDir(session);
 
+			// if files done't exist in the remote directory or
+			// if the user is willing to replace them, copy those files remotely
 			if (scpconfirmed) {
 				copyFileToRemote(specFile, session);
 				copyFileToRemote(srpmFile, session);
@@ -179,16 +180,16 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 	/**
 	 * check the public_html and create the remote directory if it doesn't exist
 	 * If it exists, make sure the files to copy don't already exist
+	 * If they do, check with the user to replace or cancel the operation
 	 *
 	 * @param session
 	 *            of the current operation
 	 * @throws ScpFailedException
 	 *
 	 */
-	private boolean checkRemoteDir(Session session) throws ScpFailedException {
+	private void createRemoteDir(Session session) throws ScpFailedException {
 		boolean dirFound = false;
 		boolean fileFound = false;
-		boolean rc = false;
 
 		Channel channel;
 
@@ -232,10 +233,10 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 										fileScpConfirm);
 					}
 				});
-				rc = scpconfirmed;
+
 			}
 			else {
-				rc = true;
+				scpconfirmed = true;
 			}
 
 			channel.disconnect();
@@ -243,8 +244,6 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 		} catch (Exception e) {
 			throw new ScpFailedException(e.getMessage(), e);
 		}
-
-		return rc;
 
 	}
 
@@ -372,7 +371,6 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 	}
 
 	/*
-	 *
 	 * @param in
 	 *
 	 * @throws IOException

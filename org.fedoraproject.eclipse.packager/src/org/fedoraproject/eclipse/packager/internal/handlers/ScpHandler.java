@@ -11,25 +11,30 @@
 package org.fedoraproject.eclipse.packager.internal.handlers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListDialog;
+import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
@@ -106,44 +111,35 @@ public class ScpHandler extends FedoraPackagerAbstractHandler {
 
 
 				try {
-					IResource[] members = getProjectRoot().getProject().members();
-					final List<String> entries = new ArrayList<String>();
 
 					scpCmd.specFile(getProjectRoot().getSpecFile().getName());
-					for (int i = 0; i < members.length; i++) {
-						if (members[i] instanceof IFile) {
-							if (members[i].getName().endsWith(".src.rpm")) {  //$NON-NLS-1$
-								entries.add(members[i].getName());
-							}
+
+					HashSet<IResource> options = new HashSet<IResource>();
+					for (IResource resource : getProjectRoot().getProject().members()){
+						if (resource.getName().endsWith(".src.rpm")){ //$NON-NLS-1$
+							options.add(resource);
 						}
 					}
-
-					FutureTask<String> promptTask = new FutureTask<String>(
-							new Callable<String>() {
-								@Override
-								public String call() {
-									Shell shell = new Shell(Display.getDefault());
-									ListDialog ld = new ListDialog(shell);
-									ld.setInput(entries);
-									ld.setContentProvider(new ArrayContentProvider());
-									ld.setLabelProvider(new LabelProvider());
-									ld.setMessage(FedoraPackagerText.ScpHandler_FilesDialogTitle);
-									ld.open();
-									return ld.getResult()[0].toString();
-								}
-							});
-					Display.getDefault().syncExec(promptTask);
-
-					try {
-						scpCmd.srpmFile(promptTask.get());
-
-					} catch (InterruptedException e) {
-						return null;
-					} catch (java.util.concurrent.ExecutionException e) {
-						// ExecutionException may be thrown if user clicked "Cancel"
-						e.printStackTrace();
+					if (options.size() == 0){
 						return null;
 					}
+					final IResource[] syncOptions = options.toArray(new IResource[0]);
+					final ListDialog ld = new ListDialog(shell);
+					shell.getDisplay().syncExec(new Runnable() {
+						@Override
+						public void run(){
+							ld.setContentProvider(new ArrayContentProvider());
+							ld.setLabelProvider(new WorkbenchLabelProvider());
+							ld.setInput(syncOptions);
+							ld.setMessage(FedoraPackagerText.ScpHandler_FilesDialogTitle);
+							ld.open();
+						}
+					});
+					if (ld.getReturnCode() == Window.CANCEL){
+						throw new OperationCanceledException();
+					}
+
+					scpCmd.srpmFile(((IResource)ld.getResult()[0]).getName());
 
 				} catch (CoreException e) {
 					// TODO Auto-generated catch block
@@ -151,9 +147,9 @@ public class ScpHandler extends FedoraPackagerAbstractHandler {
 				}
 
 
-//				 String fasAccount = "mziaei1";
-				 String fasAccount =
-					 FedoraSSLFactory.getInstance().getUsernameFromCert();
+				 String fasAccount = "mziaei1";
+//				 String fasAccount =
+//					 FedoraSSLFactory.getInstance().getUsernameFromCert();
 
 				try {
 					scpCmd.fasAccount(fasAccount);
