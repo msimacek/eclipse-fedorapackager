@@ -6,6 +6,7 @@ import java.util.concurrent.FutureTask;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -28,6 +29,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.dialogs.ListDialog;
+import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiPreferencesConstants;
@@ -140,34 +142,36 @@ public class FedoraPackagerKojiPreferencePage extends PreferencePage implements
 		for (IProject project : ResourcesPlugin.getWorkspace().getRoot()
 				.getProjects()) {
 			try {
-				FedoraPackagerUtils.getProjectRoot(project);
+				String fedpkgProject = project.getPersistentProperty(PackagerPlugin.PROJECT_PROP);
+				if (fedpkgProject != null && fedpkgProject.contentEquals("true")){ //$NON-NLS-1$
 
-				TableItem projectItem = new TableItem(projectTable, SWT.NONE);
-				projectItem.setText(0, project.getName());
-				String kojiInfo = new ProjectScope(project)
-						.getNode(
-								KojiPlugin.getDefault().getBundle()
-										.getSymbolicName())
-						.get(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO, ""); //$NON-NLS-1$
-				if (kojiInfo.contentEquals("")) { //$NON-NLS-1$
-					projectItem.setText(1, ""); //$NON-NLS-1$
-				} else {
-					int i;
-					for (i = 0; i < serverMapping[1].length; i++) {
-						if (serverMapping[1][i].contentEquals(kojiInfo)) {
-							projectItem.setText(1, serverMapping[0][i]);
-							break;
+					TableItem projectItem = new TableItem(projectTable, SWT.NONE);
+					projectItem.setText(0, project.getName());
+					String kojiInfo = new ProjectScope(project)
+							.getNode(
+									KojiPlugin.getDefault().getBundle()
+											.getSymbolicName())
+							.get(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO, ""); //$NON-NLS-1$
+					if (kojiInfo.contentEquals("")) { //$NON-NLS-1$
+						projectItem.setText(1, ""); //$NON-NLS-1$
+					} else {
+						int i;
+						for (i = 0; i < serverMapping[1].length; i++) {
+							if (serverMapping[1][i].contentEquals(kojiInfo)) {
+								projectItem.setText(1, serverMapping[0][i]);
+								break;
+							}
+						}
+						if (i == serverMapping[1].length) {
+							projectItem
+									.setText(
+											1,
+											KojiText.FedoraPackagerKojiPreferencePage_CustomEntryTitle);
 						}
 					}
-					if (i == serverMapping[1].length) {
-						projectItem
-								.setText(
-										1,
-										KojiText.FedoraPackagerKojiPreferencePage_CustomEntryTitle);
-					}
 				}
-			} catch (InvalidProjectRootException e) {
-				// skip this project
+			} catch (CoreException e1) {
+				// skip project
 			}
 		}
 		projectTable.getColumn(0).pack();
