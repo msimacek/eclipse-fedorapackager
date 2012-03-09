@@ -149,7 +149,13 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 				.open();
 		contents.getShell().setEnabled(true);
 		if (newInstance != null) {
-			if (!addServerItem(newInstance)) {
+			if (newInstance[0].contentEquals(KojiText.FedoraPackagerKojiPreferencePage_CustomEntryTitle)) {
+				FedoraHandlerUtils
+				.showErrorDialog(
+						contents.getShell(),
+						KojiText.FedoraPackagerAdvancedKojiDialogPage_namespaceWarningTitle,
+						KojiText.FedoraPackagerAdvancedKojiDialogPage_placeholderWarningMsg);
+			} else if (!addServerItem(newInstance)) {
 				FedoraHandlerUtils
 						.showErrorDialog(
 								contents.getShell(),
@@ -182,6 +188,12 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 									contents.getShell(),
 									KojiText.FedoraPackagerAdvancedKojiDialogPage_namespaceWarningTitle,
 									KojiText.FedoraPackagerAdvancedKojiDialogPage_namespaceWarningMsg);
+				} else if (name.contentEquals(KojiText.FedoraPackagerKojiPreferencePage_CustomEntryTitle)) {
+					FedoraHandlerUtils
+					.showErrorDialog(
+							contents.getShell(),
+							KojiText.FedoraPackagerAdvancedKojiDialogPage_namespaceWarningTitle,
+							KojiText.FedoraPackagerAdvancedKojiDialogPage_placeholderWarningMsg);
 				} else {
 					// replace existing item
 					pendingServers.remove(name);

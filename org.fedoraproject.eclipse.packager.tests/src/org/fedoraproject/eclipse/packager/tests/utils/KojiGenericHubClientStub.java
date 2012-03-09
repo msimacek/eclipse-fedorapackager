@@ -75,4 +75,9 @@ public class KojiGenericHubClientStub implements IKojiHubClient {
 	@Override
 	public boolean uploadFile(String path, String name, int size, String md5sum, int offset, String data){ return true; }
 
+	@Override
+	public HashMap<?, ?>[] listTags() throws KojiHubClientException {
+		return null;
+	}
+
 }
