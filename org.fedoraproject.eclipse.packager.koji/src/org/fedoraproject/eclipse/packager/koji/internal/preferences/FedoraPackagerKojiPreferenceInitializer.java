@@ -33,22 +33,31 @@ public class FedoraPackagerKojiPreferenceInitializer extends
 		String oldXml = PackagerPlugin.getStringPreference("kojiHubURL"); //$NON-NLS-1$
 		boolean existingSettings = false;
 		if (oldWeb != null && oldXml != null && oldWeb.length() > 0 && oldXml.length() > 0){
-			serverList = serverList.concat(NLS.bind(KojiText.ServerEntryTemplate, new String[] {
-					"Existing Koji Settings", oldWeb, oldXml })); //$NON-NLS-1$
-			node.put(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO, oldWeb
-					+ "," + oldXml + ",false"); //$NON-NLS-1$ //$NON-NLS-2$
 			existingSettings = true;
 		}
+		String backupDefaultWeb = "", backupDefaultXml = "";  //$NON-NLS-1$ //$NON-NLS-2$
 		for (IConfigurationElement instance : config) {
 			String serverName = instance.getAttribute("name"); //$NON-NLS-1$
 			String webUrl = instance.getAttribute("webUrl"); //$NON-NLS-1$
 			String xmlrpcUrl = instance.getAttribute("xmlrpcUrl"); //$NON-NLS-1$
 			serverList = serverList.concat(NLS.bind(KojiText.ServerEntryTemplate, new String[] {
 					serverName, webUrl, xmlrpcUrl, "false" })); //$NON-NLS-1$
-			if (!existingSettings && serverName.contentEquals("Default Fedora Koji Instance")) { //$NON-NLS-1$
-				node.put(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO, webUrl
-						+ "," + xmlrpcUrl + ",false"); //$NON-NLS-1$ //$NON-NLS-2$
+			if (existingSettings && webUrl.contentEquals(oldWeb) && xmlrpcUrl.contentEquals(oldXml)){
+				existingSettings = false;
 			}
+			if (serverName.contentEquals("Default Fedora Koji Instance")) { //$NON-NLS-1$
+				backupDefaultWeb = webUrl;
+				backupDefaultXml = xmlrpcUrl;
+			}
+		}
+		if (existingSettings){
+			serverList = serverList.concat(NLS.bind(KojiText.ServerEntryTemplate, new String[] {
+					"Existing Koji Settings", oldWeb, oldXml })); //$NON-NLS-1$
+			node.put(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO, oldWeb
+					+ "," + oldXml + ",false"); //$NON-NLS-1$ //$NON-NLS-2$
+		} else {
+			node.put(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO, backupDefaultWeb
+					+ "," + backupDefaultXml + ",false"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		node.put(KojiPreferencesConstants.PREF_SERVER_LIST, serverList);
 	}

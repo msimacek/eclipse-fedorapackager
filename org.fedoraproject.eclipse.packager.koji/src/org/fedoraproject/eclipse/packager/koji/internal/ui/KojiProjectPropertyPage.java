@@ -43,10 +43,17 @@ public class KojiProjectPropertyPage extends PropertyPage {
 		// project settings drop-down window
 		serverCombo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		serverCombo.setItems(serverMapping[0]);
-		serverCombo.select(KojiUtils.getSelectionAddress(
+		serverCombo
+				.add(KojiText.FedoraPackagerKojiPreferencePage_DefaultPlaceholder);
+		int selectionAddress = KojiUtils.getSelectionAddress(
 				serverMapping,
 				getPreferenceStore().getString(
-						KojiPreferencesConstants.PREF_KOJI_SERVER_INFO)));
+						KojiPreferencesConstants.PREF_KOJI_SERVER_INFO));
+		if (selectionAddress > 0) {
+			serverCombo.select(selectionAddress);
+		} else {
+			serverCombo.select(serverCombo.getItemCount() - 1);
+		}
 		serverCombo.pack();
 		return composite;
 	}

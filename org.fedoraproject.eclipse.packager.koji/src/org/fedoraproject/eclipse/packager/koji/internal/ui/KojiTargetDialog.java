@@ -88,7 +88,6 @@ public class KojiTargetDialog extends TitleAreaDialog {
 		Arrays.sort(listItems);
 		targetList.setItems(listItems);
 		targetText.pack();
-		//targetList.pack();
 		return parent;
 	}
 
@@ -104,12 +103,6 @@ public class KojiTargetDialog extends TitleAreaDialog {
 			return returnTarget;
 		}
 		return null;
-	}
-
-	@Override
-	protected void constrainShellSize() {
-		super.constrainShellSize();
-		getShell().setSize(300, 300);
 	}
 
 	@Override

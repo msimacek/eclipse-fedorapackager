@@ -61,7 +61,7 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 		buttons.setLayout(new GridLayout());
 		buttons.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		addButton = new Button(buttons, SWT.NONE);
-		addButton.setText("Add..."); //$NON-NLS-1$
+		addButton.setText(KojiText.FedoraPackagerAdvancedKojiDialogPage_AddButton);
 		addButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		addButton.addSelectionListener(new SelectionListener() {
 
@@ -77,7 +77,7 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 
 		});
 		editButton = new Button(buttons, SWT.NONE);
-		editButton.setText("Edit..."); //$NON-NLS-1$
+		editButton.setText(KojiText.FedoraPackagerAdvancedKojiDialogPage_EditButton);
 		editButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		editButton.addSelectionListener(new SelectionListener() {
 
@@ -93,7 +93,7 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 
 		});
 		removeButton = new Button(buttons, SWT.NONE);
-		removeButton.setText("Remove"); //$NON-NLS-1$
+		removeButton.setText(KojiText.FedoraPackagerAdvancedKojiDialogPage_RemoveButton);
 		removeButton
 				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 		removeButton.addSelectionListener(new SelectionListener() {
@@ -149,7 +149,7 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 				.open();
 		contents.getShell().setEnabled(true);
 		if (newInstance != null) {
-			if (newInstance[0].contentEquals(KojiText.FedoraPackagerKojiPreferencePage_CustomEntryTitle)) {
+			if (newInstance[0].contentEquals(KojiText.FedoraPackagerKojiPreferencePage_DefaultPlaceholder)) {
 				FedoraHandlerUtils
 				.showErrorDialog(
 						contents.getShell(),
@@ -188,7 +188,7 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 									contents.getShell(),
 									KojiText.FedoraPackagerAdvancedKojiDialogPage_namespaceWarningTitle,
 									KojiText.FedoraPackagerAdvancedKojiDialogPage_namespaceWarningMsg);
-				} else if (name.contentEquals(KojiText.FedoraPackagerKojiPreferencePage_CustomEntryTitle)) {
+				} else if (name.contentEquals(KojiText.FedoraPackagerKojiPreferencePage_DefaultPlaceholder)) {
 					FedoraHandlerUtils
 					.showErrorDialog(
 							contents.getShell(),
