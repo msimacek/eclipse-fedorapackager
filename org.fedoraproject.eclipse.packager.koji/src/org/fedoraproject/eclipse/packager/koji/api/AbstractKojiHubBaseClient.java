@@ -226,16 +226,16 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 	 * org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient#listTags()
 	 */
 	@Override
-	public HashMap<?, ?>[] listTags() throws KojiHubClientException {
+	public HashMap<?, ?>[] listTargets() throws KojiHubClientException {
 		try {
 			// workaround for http://ws.apache.org/xmlrpc/faq.html#arrays
-			Object[] genericTags = (Object[]) xmlRpcClient.execute(
-					"listTags", new Object[0]); //$NON-NLS-1$
-			HashMap<?, ?>[] tagArray = new HashMap<?, ?>[genericTags.length];
-			for (int i = 0; i < genericTags.length; i++){
-				tagArray[i] = (HashMap<?,?>) genericTags[i];
+			Object[] genericTargets = (Object[]) xmlRpcClient.execute(
+					"getBuildTargets", new Object[0]); //$NON-NLS-1$
+			HashMap<?, ?>[] targetArray = new HashMap<?, ?>[genericTargets.length];
+			for (int i = 0; i < genericTargets.length; i++){
+				targetArray[i] = (HashMap<?,?>) genericTargets[i];
 			}
-			return tagArray;
+			return targetArray;
 		} catch (XmlRpcException e) {
 			throw new KojiHubClientException(e);
 		}

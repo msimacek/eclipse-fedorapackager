@@ -39,7 +39,7 @@ import org.fedoraproject.eclipse.packager.koji.KojiMessageDialog;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiPreferencesConstants;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
-import org.fedoraproject.eclipse.packager.koji.KojiUrlUtils;
+import org.fedoraproject.eclipse.packager.koji.KojiUtils;
 import org.fedoraproject.eclipse.packager.koji.api.BuildResult;
 import org.fedoraproject.eclipse.packager.koji.api.KojiBuildJob;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
@@ -146,7 +146,7 @@ public class KojiBuildHandler extends FedoraPackagerAbstractHandler {
 															.getProductStrings()
 															.getBuildToolName())
 											+ " " //$NON-NLS-1$
-											+ KojiUrlUtils.constructTaskUrl(
+											+ KojiUtils.constructTaskUrl(
 													buildResult.getTaskId(),
 													kojiWebUrl));
 									// open dialog

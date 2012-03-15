@@ -100,5 +100,5 @@ public interface IKojiHubClient {
 	 *         arches and locked for each tag.
 	 * @throws KojiHubClientException
 	 */
-	public HashMap<?, ?>[] listTags() throws KojiHubClientException;
+	public HashMap<?, ?>[] listTargets() throws KojiHubClientException;
 }

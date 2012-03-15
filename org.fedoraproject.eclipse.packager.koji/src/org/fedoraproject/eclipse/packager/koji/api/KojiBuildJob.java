@@ -44,7 +44,7 @@ import org.fedoraproject.eclipse.packager.koji.KojiText;
 import org.fedoraproject.eclipse.packager.koji.api.errors.BuildAlreadyExistsException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
-import org.fedoraproject.eclipse.packager.koji.internal.ui.KojiTagDialog;
+import org.fedoraproject.eclipse.packager.koji.internal.ui.KojiTargetDialog;
 import org.fedoraproject.eclipse.packager.api.errors.TagSourcesException;
 import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
@@ -156,9 +156,9 @@ public class KojiBuildJob extends Job {
 			if (!kojiInfo[2].contentEquals("true")) { //$NON-NLS-1$
 				kojiBuildCmd.buildTarget(bci.getBuildTarget());
 			} else {
-				final Set<String> tagSet = new HashSet<String>();
-				for (HashMap<?, ?> tagInfo : kojiClient.listTags()) {
-					tagSet.add(tagInfo.get("name").toString()); //$NON-NLS-1$
+				final Set<String> targetSet = new HashSet<String>();
+				for (HashMap<?, ?> targetInfo : kojiClient.listTargets()) {
+					targetSet.add(targetInfo.get("name").toString()); //$NON-NLS-1$
 				}
 
 				FutureTask<String> tagTask = new FutureTask<String>(
@@ -166,8 +166,8 @@ public class KojiBuildJob extends Job {
 
 							@Override
 							public String call() throws Exception {
-								return new KojiTagDialog(shell, tagSet)
-										.openForTag();
+								return new KojiTargetDialog(shell, targetSet)
+										.openForTarget();
 							}
 
 						});

@@ -23,57 +23,58 @@ import org.fedoraproject.eclipse.packager.koji.KojiText;
  * Dialog prompting user for a build tag.
  * 
  */
-public class KojiTagDialog extends TitleAreaDialog {
+public class KojiTargetDialog extends TitleAreaDialog {
 
-	private Text tagText;
-	private List tagList;
-	private Collection<String> tags;
-	private String returnTag;
+	private Text targetText;
+	private List targetList;
+	private Collection<String> targets;
+	private String returnTarget;
 
 	/**
 	 * @param parent
 	 *            The dialog's parent shell.
-	 * @param tags
+	 * @param targets
 	 *            The list of known tags.
 	 */
-	public KojiTagDialog(Shell parent, Collection<String> tags) {
+	public KojiTargetDialog(Shell parent, Collection<String> targets) {
 		super(parent);
-		this.tags = tags;
+		this.targets = targets;
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		parent.setLayout(new GridLayout(1, false));
-		tagText = new Text(parent, SWT.SINGLE | SWT.LEFT);
-		tagList = new List(parent, SWT.SINGLE | SWT.V_SCROLL);
-		GridData listData = new GridData(SWT.BEGINNING, SWT.BEGINNING, false, false);
+		targetText = new Text(parent, SWT.SINGLE | SWT.LEFT);
+		targetList = new List(parent, SWT.SINGLE | SWT.V_SCROLL);
+		GridData listData = new GridData(SWT.FILL, SWT.BEGINNING, true,
+				false);
 		listData.heightHint = 100;
-		tagList.setLayoutData(listData);
-		tagText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		tagText.addModifyListener(new ModifyListener() {
+		targetList.setLayoutData(listData);
+		targetText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+		targetText.addModifyListener(new ModifyListener() {
 
 			@Override
 			public void modifyText(ModifyEvent e) {
-				if (tagList.getSelectionCount() > 0
-						&& !tagList.getSelection()[0].contentEquals(tagText
-								.getText())) {
-					tagList.deselectAll();
+				if (targetList.getSelectionCount() > 0
+						&& !targetList.getSelection()[0]
+								.contentEquals(targetText.getText())) {
+					targetList.deselectAll();
 				}
-				if (tagText.getText().trim().contentEquals("")) { //$NON-NLS-1$
+				if (targetText.getText().trim().contentEquals("")) { //$NON-NLS-1$
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 				} else {
 					getButton(IDialogConstants.OK_ID).setEnabled(true);
 				}
-				returnTag = tagText.getText();
+				returnTarget = targetText.getText();
 			}
 		});
-		tagList.addSelectionListener(new SelectionListener() {
+		targetList.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (tagList.getSelectionCount() > 0) {
-					tagText.setText(tagList.getSelection()[0]);
-					returnTag = tagText.getText();
+				if (targetList.getSelectionCount() > 0) {
+					targetText.setText(targetList.getSelection()[0]);
+					returnTarget = targetText.getText();
 				}
 			}
 
@@ -83,35 +84,36 @@ public class KojiTagDialog extends TitleAreaDialog {
 			}
 
 		});
-		String[] listItems = tags.toArray(new String[0]);
+		String[] listItems = targets.toArray(new String[0]);
 		Arrays.sort(listItems);
-		tagList.setItems(listItems);
-		tagText.pack();
-		tagList.pack();
+		targetList.setItems(listItems);
+		targetText.pack();
+		//targetList.pack();
 		return parent;
 	}
-	
+
 	/**
 	 * Create and open the dialog, returning the chosen tag.
+	 * 
 	 * @return The chosen tag.
 	 */
-	public String openForTag(){
+	public String openForTarget() {
 		create();
-		setTitle(KojiText.KojiTagDialog_DialogTitle);
-		if (open() == OK){
-			return returnTag;
+		setTitle(KojiText.KojiTargetDialog_DialogTitle);
+		if (open() == OK) {
+			return returnTarget;
 		}
 		return null;
 	}
-	
+
 	@Override
-	protected void constrainShellSize(){
+	protected void constrainShellSize() {
 		super.constrainShellSize();
 		getShell().setSize(300, 300);
 	}
-	
+
 	@Override
-	protected Control createButtonBar(Composite parent){
+	protected Control createButtonBar(Composite parent) {
 		Control returnControl = super.createButtonBar(parent);
 		getButton(IDialogConstants.OK_ID).setEnabled(false);
 		return returnControl;

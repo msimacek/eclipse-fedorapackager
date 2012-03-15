@@ -58,6 +58,8 @@ public class KojiText extends NLS {
 
 	/****/ public static String FedoraPackagerKojiPreferencePage_CustomEntryTitle;
 	/****/ public static String FedoraPackagerKojiPreferencePage_InstanceColumnTitle;
+
+	public static String FedoraPackagerKojiPreferencePage_InstancePromptMsg;
 	/****/ public static String FedoraPackagerKojiPreferencePage_KojiSelect;
 	/****/ public static String FedoraPackagerKojiPreferencePage_ProjectColumnTitle;
 
@@ -74,13 +76,15 @@ public class KojiText extends NLS {
 	/****/ public static String KojiSRPMScratchBuildHandler_UploadFileDialogTitle;
 	// KojiHubClientLoginException
 	/****/ public static String KojiHubClientLoginException_loginFailedMsg;
+
+	public static String KojiProjectPropertyPage_ProjectKojiSelect;
 	// KojiSRPMBuildJob
 	/****/ public static String KojiSRPMBuildJob_ChooseSRPM;
 	/****/ public static String KojiSRPMBuildJob_ConfiguringClient;
 	/****/ public static String KojiSRPMBuildJob_NoSRPMsFound;
 	/****/ public static String KojiSRPMBuildJob_UploadingSRPM;
 	// KojiTagDialog
-	/****/ public static String KojiTagDialog_DialogTitle;
+	/****/ public static String KojiTargetDialog_DialogTitle;
 	// KojiUploadSRPMCommand
 	/****/ public static String KojiUploadSRPMCommand_CouldNotRead;
 	/****/ public static String KojiUploadSRPMCommand_FileNotFound;

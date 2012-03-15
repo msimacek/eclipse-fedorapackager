@@ -12,11 +12,13 @@ package org.fedoraproject.eclipse.packager.koji;
 
 import java.net.URL;
 
+import org.eclipse.jface.preference.IPreferenceStore;
+
 /**
  * Helper dealing with task URLs.
  * 
  */
-public class KojiUrlUtils {
+public class KojiUtils {
 
 	/**
 	 * Construct the correct URL to a task on koji.
@@ -27,5 +29,30 @@ public class KojiUrlUtils {
 	 */
 	public static String constructTaskUrl(int taskId, URL kojiWebUrl) {
 		return kojiWebUrl.toString() + "/taskinfo?taskID=" + taskId; //$NON-NLS-1$
+	}
+	
+	public static String[][] loadOptions(IPreferenceStore preferenceStore) {
+		String[] totalServerInfo = preferenceStore.getString(
+				KojiPreferencesConstants.PREF_SERVER_LIST).split(";"); //$NON-NLS-1$
+		String[][] serverMapping = new String[2][totalServerInfo.length];
+		int i = 0;
+		for (String serverInfoSet : totalServerInfo) {
+			String[] serverInfo = serverInfoSet.split(",", 2); //$NON-NLS-1$
+			serverMapping[0][i] = serverInfo[0];
+			serverMapping[1][i] = serverInfo[1];
+			i++;
+		}
+		return serverMapping;
+	}
+	
+	public static int getSelectionAddress(String[][] serverMapping, String currentInfo){
+		int selectionAddress = -1;
+		for (int i = 0; i < serverMapping[1].length; i++){
+			if (serverMapping[1][i].contentEquals(currentInfo)){
+				selectionAddress = i;
+				break;
+			}
+		}
+		return selectionAddress;
 	}
 }

@@ -45,7 +45,7 @@ import org.fedoraproject.eclipse.packager.koji.KojiText;
 import org.fedoraproject.eclipse.packager.koji.api.errors.BuildAlreadyExistsException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
-import org.fedoraproject.eclipse.packager.koji.internal.ui.KojiTagDialog;
+import org.fedoraproject.eclipse.packager.koji.internal.ui.KojiTargetDialog;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.fedoraproject.eclipse.packager.utils.RPMUtils;
@@ -193,7 +193,7 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 				kojiBuildCmd.buildTarget(bci.getBuildTarget());
 			} else {
 				final Set<String> tagSet = new HashSet<String>();
-				for (HashMap<?, ?> tagInfo : kojiClient.listTags()) {
+				for (HashMap<?, ?> tagInfo : kojiClient.listTargets()) {
 					tagSet.add(tagInfo.get("name").toString()); //$NON-NLS-1$
 				}
 
@@ -202,8 +202,8 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 
 							@Override
 							public String call() throws Exception {
-								return new KojiTagDialog(shell, tagSet)
-										.openForTag();
+								return new KojiTargetDialog(shell, tagSet)
+										.openForTarget();
 							}
 
 						});
