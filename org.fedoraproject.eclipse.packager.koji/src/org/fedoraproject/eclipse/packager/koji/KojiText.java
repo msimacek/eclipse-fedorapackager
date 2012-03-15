@@ -54,21 +54,18 @@ public class KojiText extends NLS {
 	/****/ public static String BuildAlreadyExistsException_msg;
 	// FedoraPackagerKojiPreferencePage
 	/****/ public static String FedoraPackagerKojiPreferencePage_AdvancedButtonText;
-	public static String FedoraPackagerKojiPreferencePage_ChangeInstanceLabel;
-
+	/****/ public static String FedoraPackagerKojiPreferencePage_ChangeInstanceLabel;
 	/****/ public static String FedoraPackagerKojiPreferencePage_CustomEntryTitle;
 	/****/ public static String FedoraPackagerKojiPreferencePage_InstanceColumnTitle;
-
-	public static String FedoraPackagerKojiPreferencePage_InstancePromptMsg;
+	/****/ public static String FedoraPackagerKojiPreferencePage_InstancePromptMsg;
 	/****/ public static String FedoraPackagerKojiPreferencePage_KojiSelect;
 	/****/ public static String FedoraPackagerKojiPreferencePage_ProjectColumnTitle;
-
-	public static String FedoraPackagerKojiPreferencePage_TableDescription;
+	/****/ public static String FedoraPackagerKojiPreferencePage_TableDescription;
+	
 	// FedoraPackagerAdvancedKojiDialogPage
 	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_namespaceWarningMsg;
 	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_namespaceWarningTitle;
-
-	public static String FedoraPackagerAdvancedKojiDialogPage_placeholderWarningMsg;
+	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_placeholderWarningMsg;
 	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_serverDialogTitle;
 	// KojiServerDialog
 	/****/ public static String KojiServerDialog_CustomTagLabel;
@@ -76,8 +73,8 @@ public class KojiText extends NLS {
 	/****/ public static String KojiSRPMScratchBuildHandler_UploadFileDialogTitle;
 	// KojiHubClientLoginException
 	/****/ public static String KojiHubClientLoginException_loginFailedMsg;
-
-	public static String KojiProjectPropertyPage_ProjectKojiSelect;
+	// KojiProjectPropertyPage
+	/****/ public static String KojiProjectPropertyPage_ProjectKojiSelect;
 	// KojiSRPMBuildJob
 	/****/ public static String KojiSRPMBuildJob_ChooseSRPM;
 	/****/ public static String KojiSRPMBuildJob_ConfiguringClient;

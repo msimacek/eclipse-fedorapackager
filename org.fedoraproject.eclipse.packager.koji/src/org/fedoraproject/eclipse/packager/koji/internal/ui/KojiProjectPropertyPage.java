@@ -38,7 +38,7 @@ public class KojiProjectPropertyPage extends PropertyPage {
 		description.setText(KojiText.KojiProjectPropertyPage_ProjectKojiSelect);
 		description.pack();
 
-		serverMapping = KojiUtils.loadOptions(KojiPlugin.getDefault()
+		serverMapping = KojiUtils.loadServerInfo(KojiPlugin.getDefault()
 				.getPreferenceStore());
 		// project settings drop-down window
 		serverCombo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);

@@ -61,7 +61,7 @@ public class FedoraPackagerKojiPreferencePage extends PreferencePage implements
 			}
 		};
 		advDialog.open();
-		serverMapping = KojiUtils.loadOptions(getPreferenceStore());
+		serverMapping = KojiUtils.loadServerInfo(getPreferenceStore());
 		serverCombo.setItems(serverMapping[0]);
 		serverCombo.select(KojiUtils.getSelectionAddress(
 				serverMapping,
@@ -79,7 +79,7 @@ public class FedoraPackagerKojiPreferencePage extends PreferencePage implements
 				.setText(KojiText.FedoraPackagerKojiPreferencePage_KojiSelect);
 		description.pack();
 
-		serverMapping = KojiUtils.loadOptions(getPreferenceStore());
+		serverMapping = KojiUtils.loadServerInfo(getPreferenceStore());
 		// default settings drop-down window
 		serverCombo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		serverCombo.setItems(serverMapping[0]);
