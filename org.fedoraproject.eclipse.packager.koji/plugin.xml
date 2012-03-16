@@ -166,10 +166,16 @@
          <enabledWhen>
             <adapt
                   type="org.eclipse.core.resources.IResource">
-               <test
-                     args="org.fedoraproject.eclipse.packager.project, true"
-                     property="org.eclipse.core.resources.projectPersistentProperty">
-               </test>
+               <or>
+                  <test
+                        args="org.fedoraproject.eclipse.packager.project, true"
+                        property="org.eclipse.core.resources.projectPersistentProperty">
+                  </test>
+                  <test
+                        args="org.fedoraproject.eclipse.packager.localproject, true"
+                        property="org.eclipse.core.resources.projectPersistentProperty">
+                  </test>
+               </or>
             </adapt>
          </enabledWhen>
       </page>
