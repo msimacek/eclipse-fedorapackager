@@ -25,6 +25,7 @@ import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IFpProjectBits;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
+import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
@@ -50,9 +51,7 @@ public class LocalBuildHandler extends LocalHandlerDispatcher {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		// Perhaps need to dispatch to non-local handler
-		if (checkDispatch(
-				event,
-				new org.fedoraproject.eclipse.packager.rpm.internal.handlers.LocalBuildHandler())) {
+		if (checkDispatch(event, getDispatchee())) {
 			// dispatched, so return
 			return null;
 		}
@@ -97,14 +96,14 @@ public class LocalBuildHandler extends LocalHandlerDispatcher {
 					protected IStatus run(IProgressMonitor monitor) {
 						try {
 							monitor.beginTask(
-									RpmText.LocalBuildHandler_buildForLocalArch,
+									getTaskName(),
 									IProgressMonitor.UNKNOWN);
 							IFpProjectBits projectBits = FedoraPackagerUtils
 									.getVcsHandler(getProjectRoot());
 							BranchConfigInstance bci = projectBits
 									.getBranchConfig();
 							try {
-								rpmBuild.buildType(BuildType.BINARY)
+								rpmBuild.buildType(getBuildType())
 										.branchConfig(bci).call(monitor);
 								getProjectRoot().getProject()
 										.refreshLocal(IResource.DEPTH_INFINITE,
@@ -167,6 +166,25 @@ public class LocalBuildHandler extends LocalHandlerDispatcher {
 		job.setSystem(true);
 		job.schedule();
 		return null;
+	}
+	
+	/*
+	 * Set the build type, overridden by compile/install handler
+	 */
+	protected BuildType getBuildType() {
+		return BuildType.BINARY;
+	}
+
+	/*
+	 * Set the task name, overridden by compile/install handler
+	 */
+	protected String getTaskName() {
+		return RpmText.LocalBuildHandler_buildForLocalArch;
+	}
+
+	@Override
+	protected FedoraPackagerAbstractHandler getDispatchee() {
+		return new org.fedoraproject.eclipse.packager.rpm.internal.handlers.LocalBuildHandler();
 	}
 
 }

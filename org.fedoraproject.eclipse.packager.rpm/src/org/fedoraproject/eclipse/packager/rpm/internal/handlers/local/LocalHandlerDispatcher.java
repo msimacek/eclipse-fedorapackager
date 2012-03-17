@@ -61,4 +61,10 @@ public abstract class LocalHandlerDispatcher extends
 		// no-op
 		return false;
 	}
+	
+	/**
+	 * 
+	 * @return The Handler to dispatch to if chechDispatch() returned true.
+	 */
+	protected abstract FedoraPackagerAbstractHandler getDispatchee();
 }

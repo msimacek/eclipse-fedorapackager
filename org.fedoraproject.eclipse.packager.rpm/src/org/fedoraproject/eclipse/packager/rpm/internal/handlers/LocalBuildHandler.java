@@ -50,6 +50,27 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
  */
 public class LocalBuildHandler extends FedoraPackagerAbstractHandler implements IPreferenceHandler {
 
+	private BuildType buildType;
+	private String taskName;
+	
+	/**
+	 * Used by dispatching from local build handlers.
+	 * 
+	 * @param buildType The build type to use.
+	 * @param taskName The task name to show.
+	 */
+	public LocalBuildHandler(BuildType buildType, String taskName) {
+		this.buildType = buildType;
+		this.taskName = taskName;
+	}
+	
+	/**
+	 *  Default constructor
+	 */
+	public LocalBuildHandler() {
+		// nothing
+	}
+	
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		final Shell shell = getShell(event);
@@ -115,14 +136,14 @@ public class LocalBuildHandler extends FedoraPackagerAbstractHandler implements 
 					protected IStatus run(IProgressMonitor monitor) {
 						try {
 							monitor.beginTask(
-									RpmText.LocalBuildHandler_buildForLocalArch,
+									getTaskName(),
 									IProgressMonitor.UNKNOWN);
 							IFpProjectBits projectBits = FedoraPackagerUtils
 									.getVcsHandler(getProjectRoot());
 							BranchConfigInstance bci = projectBits
 									.getBranchConfig();
 							try {
-								rpmBuild.buildType(BuildType.BINARY)
+								rpmBuild.buildType(getBuildType())
 										.branchConfig(bci).call(monitor);
 								getProjectRoot().getProject().refreshLocal(
 										IResource.DEPTH_INFINITE, monitor);
@@ -191,5 +212,24 @@ public class LocalBuildHandler extends FedoraPackagerAbstractHandler implements 
 		return PackagerPlugin
 				.getStringPreference(FedoraPackagerPreferencesConstants.PREF_LOOKASIDE_DOWNLOAD_URL);
 	}
+	
+	/*
+	 * Set the build type, overridden by compile/install handler
+	 */
+	protected BuildType getBuildType() {
+		if (this.buildType == null) {
+			return BuildType.BINARY;
+		}
+		return this.buildType;
+	}
 
+	/*
+	 * Set the task name, overridden by compile/install handler
+	 */
+	protected String getTaskName() {
+		if (this.taskName == null) {
+			return RpmText.LocalBuildHandler_buildForLocalArch;
+		}
+		return this.taskName;
+	}
 }

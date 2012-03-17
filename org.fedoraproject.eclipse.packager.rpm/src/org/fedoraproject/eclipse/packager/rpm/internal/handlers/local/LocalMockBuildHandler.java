@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
+import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
 import org.fedoraproject.eclipse.packager.api.FileDialogRunable;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.rpm.RPMPlugin;
@@ -42,7 +43,7 @@ public class LocalMockBuildHandler extends LocalHandlerDispatcher {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		// Perhaps need to dispatch to non-local handler
-		if(checkDispatch(event, new org.fedoraproject.eclipse.packager.rpm.internal.handlers.MockBuildHandler())) {
+		if(checkDispatch(event, getDispatchee())) {
 			// dispatched, so return
 			return null;
 		}
@@ -96,6 +97,11 @@ public class LocalMockBuildHandler extends LocalHandlerDispatcher {
 		job.setSystem(true); // Suppress UI. That's done in sub-jobs within.
 		job.schedule();
 		return null;
+	}
+
+	@Override
+	protected FedoraPackagerAbstractHandler getDispatchee() {
+		return new org.fedoraproject.eclipse.packager.rpm.internal.handlers.MockBuildHandler();
 	}
 
 }

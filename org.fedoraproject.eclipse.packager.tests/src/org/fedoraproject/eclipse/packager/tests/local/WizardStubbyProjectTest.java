@@ -23,8 +23,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.linuxtools.rpm.ui.editor.Activator;
 import org.eclipse.linuxtools.rpmstubby.InputType;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.fedoraproject.eclipse.packager.api.LocalFedoraPackagerProjectCreator;
 import org.fedoraproject.eclipse.packager.tests.utils.LocalSearchString;
@@ -75,8 +75,7 @@ public class WizardStubbyProjectTest {
 
 		// Make sure the proper .spec file is generated
 		IFile specFile = baseProject.getFile(new Path(SPEC));
-		IDE.openEditor(Activator.getDefault().getWorkbench()
-				.getActiveWorkbenchWindow().getActivePage(), specFile);
+		IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), specFile);
 		assertTrue(specFile.exists());
 
 		// Check if the generated .spec file contains the correct information

@@ -11,6 +11,7 @@
 package org.fedoraproject.eclipse.packager.tests.commands;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -152,6 +153,70 @@ public class RpmBuildCommandTest {
 		assertTrue(((IContainer) expandedSourcesFolder).members().length > 0);
 		// put some confidence into returned result
 		assertTrue(result.getBuildCommand().contains(RpmBuildCommand.NO_DEPS));
+	}
+	
+	/**
+	 * Test compiling.
+	 */
+	@Test
+	public void canRpmCompile() throws Exception {
+		RpmBuildCommand build = (RpmBuildCommand) packager
+				.getCommandInstance(RpmBuildCommand.ID);
+		RpmBuildResult result;
+		try {
+			result = build.buildType(BuildType.COMPILE).branchConfig(bci).call(new NullProgressMonitor());
+		} catch (Exception e) {
+			fail("Shouldn't have thrown any exception.");
+			return;
+		}
+		assertTrue(result.wasSuccessful());
+		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
+				new NullProgressMonitor());
+		IResource expandedSourcesFolder = fpRoot.getContainer().findMember(
+				new Path("eclipse-fedorapackager"));
+		assertNotNull(expandedSourcesFolder);
+		// there should be some files in that folder
+		assertTrue(((IContainer) expandedSourcesFolder).members().length > 0);
+		// put some confidence into returned result
+		assertTrue(result.getBuildCommand().contains("-bc"));
+		// should have created zip with jars
+		assertNotNull(fpRoot.getContainer().findMember(
+				new Path("eclipse-fedorapackager/build/rpmBuild/org.fedoraproject.eclipse.packager.zip")));
+		// should not have produced any RPMs
+		assertNull(fpRoot.getContainer().findMember(
+				new Path("noarch")));
+	}
+	
+	/**
+	 * Test install.
+	 */
+	@Test
+	public void canRpmInstall() throws Exception {
+		RpmBuildCommand build = (RpmBuildCommand) packager
+				.getCommandInstance(RpmBuildCommand.ID);
+		RpmBuildResult result;
+		try {
+			result = build.buildType(BuildType.INSTALL).branchConfig(bci).call(new NullProgressMonitor());
+		} catch (Exception e) {
+			fail("Shouldn't have thrown any exception.");
+			return;
+		}
+		assertTrue(result.wasSuccessful());
+		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
+				new NullProgressMonitor());
+		IResource expandedSourcesFolder = fpRoot.getContainer().findMember(
+				new Path("eclipse-fedorapackager"));
+		assertNotNull(expandedSourcesFolder);
+		// there should be some files in that folder
+		assertTrue(((IContainer) expandedSourcesFolder).members().length > 0);
+		// put some confidence into returned result
+		assertTrue(result.getBuildCommand().contains("-bi"));
+		// should have created zip with jars
+		assertNotNull(fpRoot.getContainer().findMember(
+				new Path("eclipse-fedorapackager/build/rpmBuild/org.fedoraproject.eclipse.packager.zip")));
+		// should not have produced any RPMs
+		assertNull(fpRoot.getContainer().findMember(
+				new Path("noarch")));
 	}
 
 	/**
