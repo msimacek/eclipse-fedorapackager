@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Text;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
 
 /**
- * Dialog prompting user for a build tag.
+ * Dialog prompting user for a build target.
  * 
  */
 public class KojiTargetDialog extends TitleAreaDialog {
@@ -34,7 +34,7 @@ public class KojiTargetDialog extends TitleAreaDialog {
 	 * @param parent
 	 *            The dialog's parent shell.
 	 * @param targets
-	 *            The list of known tags.
+	 *            The list of known targets.
 	 */
 	public KojiTargetDialog(Shell parent, Collection<String> targets) {
 		super(parent);
@@ -92,9 +92,9 @@ public class KojiTargetDialog extends TitleAreaDialog {
 	}
 
 	/**
-	 * Create and open the dialog, returning the chosen tag.
+	 * Create and open the dialog, returning the chosen target.
 	 * 
-	 * @return The chosen tag.
+	 * @return The chosen target.
 	 */
 	public String openForTarget() {
 		create();

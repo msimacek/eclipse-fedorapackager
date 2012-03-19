@@ -70,6 +70,21 @@
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="customTargets" use="required">
+            <annotation>
+               <documentation>
+                  Boolean value for whether this instance uses non-standard build targets.
+               </documentation>
+            </annotation>
+            <simpleType>
+               <restriction base="string">
+                  <enumeration value="true">
+                  </enumeration>
+                  <enumeration value="false">
+                  </enumeration>
+               </restriction>
+            </simpleType>
+         </attribute>
       </complexType>
    </element>
 

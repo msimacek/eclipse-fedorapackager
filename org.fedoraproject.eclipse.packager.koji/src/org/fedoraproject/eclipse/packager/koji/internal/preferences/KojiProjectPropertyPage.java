@@ -1,9 +1,11 @@
-package org.fedoraproject.eclipse.packager.koji.internal.ui;
+package org.fedoraproject.eclipse.packager.koji.internal.preferences;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -24,10 +26,18 @@ public class KojiProjectPropertyPage extends PropertyPage {
 	private Combo serverCombo;
 	private IProject project;
 	private String[][] serverMapping;
+	private Button useCustomTargetsCheck;
 
 	@Override
 	protected Control createContents(Composite parent) {
-		project = (IProject) getElement().getAdapter(IProject.class);
+		if (getElement() instanceof IResource) {
+			project = ((IResource) getElement()).getProject();
+		} else {
+			Object adapter = getElement().getAdapter(IResource.class);
+			if (adapter instanceof IResource) {
+				project = ((IResource) adapter).getProject();
+			}
+		}
 		setPreferenceStore(new ScopedPreferenceStore(new ProjectScope(project),
 				KojiPlugin.getDefault().getBundle().getSymbolicName()));
 		noDefaultAndApplyButton();
@@ -55,17 +65,33 @@ public class KojiProjectPropertyPage extends PropertyPage {
 			serverCombo.select(serverCombo.getItemCount() - 1);
 		}
 		serverCombo.pack();
+		useCustomTargetsCheck = new Button(composite, SWT.CHECK);
+		useCustomTargetsCheck
+				.setText(KojiText.KojiProjectPropertyPage_forceCustomTitle);
+		useCustomTargetsCheck.setSelection(Boolean
+				.parseBoolean(getPreferenceStore().getString(
+						KojiPreferencesConstants.PREF_FORCE_CUSTOM_BUILD)));
+		useCustomTargetsCheck.pack();
+
 		return composite;
 	}
 
 	@Override
 	public boolean performOk() {
 		int selection = serverCombo.getSelectionIndex();
-		if (selection != -1) {
+		if (selection >= serverMapping[1].length) {
+			getPreferenceStore()
+					.setValue(
+							KojiPreferencesConstants.PREF_KOJI_SERVER_INFO,
+							KojiText.FedoraPackagerKojiPreferencePage_DefaultPlaceholder);
+		} else if (selection != -1) {
+			String newVal = serverMapping[1][serverCombo.getSelectionIndex()];
 			getPreferenceStore().setValue(
-					KojiPreferencesConstants.PREF_KOJI_SERVER_INFO,
-					serverMapping[1][serverCombo.getSelectionIndex()]);
+					KojiPreferencesConstants.PREF_KOJI_SERVER_INFO, newVal);
 		}
+		getPreferenceStore().setValue(
+				KojiPreferencesConstants.PREF_FORCE_CUSTOM_BUILD,
+				Boolean.toString(useCustomTargetsCheck.getSelection()));
 		return true;
 	}
 }

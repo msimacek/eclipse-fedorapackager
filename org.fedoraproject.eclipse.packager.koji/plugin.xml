@@ -137,6 +137,7 @@
    <extension
          point="org.fedoraproject.eclipse.packager.koji.instance">
       <instance
+            customTargets="false"
             name="Default Fedora Koji Instance"
             webUrl="http://koji.fedoraproject.org/koji"
             xmlrpcUrl="https://koji.fedoraproject.org/kojihub">
@@ -160,7 +161,7 @@
    <extension
          point="org.eclipse.ui.propertyPages">
       <page
-            class="org.fedoraproject.eclipse.packager.koji.internal.ui.KojiProjectPropertyPage"
+            class="org.fedoraproject.eclipse.packager.koji.internal.preferences.KojiProjectPropertyPage"
             id="org.fedoraproject.eclipse.packager.koji.ui.KojiProjectPropertyPage"
             name="Fedora Packager Koji">
          <enabledWhen>

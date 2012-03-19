@@ -191,6 +191,7 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 		try {
 			if (!kojiInfo[2].contentEquals("true")) { //$NON-NLS-1$
 				kojiBuildCmd.buildTarget(bci.getBuildTarget());
+				logger.logDebug(NLS.bind(KojiText.KojiSRPMBuildJob_logTarget, bci.getBuildTarget()));
 			} else {
 				final Set<String> tagSet = new HashSet<String>();
 				for (HashMap<?, ?> tagInfo : kojiClient.listTargets()) {
@@ -214,6 +215,7 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 					throw new OperationCanceledException();
 				}
 				kojiBuildCmd.buildTarget(buildTarget);
+				logger.logDebug(NLS.bind(KojiText.KojiSRPMBuildJob_logTarget, buildTarget));
 			}
 			kojiBuildCmd.nvr(nvr).isScratchBuild(true);
 			logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,

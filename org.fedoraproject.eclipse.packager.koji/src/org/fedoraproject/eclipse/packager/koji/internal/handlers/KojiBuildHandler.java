@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -73,15 +74,27 @@ public class KojiBuildHandler extends FedoraPackagerAbstractHandler {
 					FedoraPackagerText.invalidFedoraProjectRootError);
 			return null;
 		}
-		kojiInfo = new ProjectScope(eventResource.getProject())
-				.getNode(KojiPlugin.getDefault().getBundle().getSymbolicName())
+		IEclipsePreferences projectPreferences = new ProjectScope(
+				eventResource.getProject()).getNode(KojiPlugin.getDefault()
+				.getBundle().getSymbolicName());
+		String kojiInfoString = projectPreferences
 				.get(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO,
 						KojiPlugin
 								.getDefault()
 								.getPreferenceStore()
 								.getString(
-										KojiPreferencesConstants.PREF_KOJI_SERVER_INFO))
-				.split(","); //$NON-NLS-1$
+										KojiPreferencesConstants.PREF_KOJI_SERVER_INFO));
+		if (kojiInfoString == KojiText.FedoraPackagerKojiPreferencePage_DefaultPlaceholder) {
+			kojiInfo = KojiPlugin.getDefault().getPreferenceStore()
+					.getString(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO)
+					.split(","); //$NON-NLS-1$
+		} else {
+			kojiInfo = kojiInfoString.split(","); //$NON-NLS-1$
+		}
+
+		if (kojiInfo[2].contentEquals("false") && projectPreferences.getBoolean(KojiPreferencesConstants.PREF_FORCE_CUSTOM_BUILD, false)) { //$NON-NLS-1$
+			kojiInfo[2] = "true"; //$NON-NLS-1$
+		}
 		Job job = new KojiBuildJob(fedoraProjectRoot.getProductStrings()
 				.getProductName(), getShell(event), fedoraProjectRoot,
 				kojiInfo, isScratchBuild());

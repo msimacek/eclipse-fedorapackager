@@ -64,22 +64,25 @@ public class KojiText extends NLS {
 	// FedoraPackagerAdvancedKojiDialogPage
 	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_AddButton;
 	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_EditButton;
+	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_editDialogTitle;
 	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_namespaceWarningMsg;
 	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_namespaceWarningTitle;
 	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_placeholderWarningMsg;
 	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_RemoveButton;
 	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_serverDialogTitle;
 	// KojiServerDialog
-	/****/ public static String KojiServerDialog_CustomTagLabel;
+	/****/ public static String KojiServerDialog_CustomTargetLabel;
 	// KojiSRPMScratchBuildHandler
 	/****/ public static String KojiSRPMScratchBuildHandler_UploadFileDialogTitle;
 	// KojiHubClientLoginException
 	/****/ public static String KojiHubClientLoginException_loginFailedMsg;
 	// KojiProjectPropertyPage
+	/****/ public static String KojiProjectPropertyPage_forceCustomTitle;
 	/****/ public static String KojiProjectPropertyPage_ProjectKojiSelect;
 	// KojiSRPMBuildJob
 	/****/ public static String KojiSRPMBuildJob_ChooseSRPM;
 	/****/ public static String KojiSRPMBuildJob_ConfiguringClient;
+	/****/ public static String KojiSRPMBuildJob_logTarget;
 	/****/ public static String KojiSRPMBuildJob_NoSRPMsFound;
 	/****/ public static String KojiSRPMBuildJob_UploadingSRPM;
 	// KojiTagDialog

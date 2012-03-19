@@ -33,7 +33,7 @@ public class KojiServerDialog extends Dialog {
 	private Text[] texts;
 	private Label[] labels;
 	private String[] returnValue;
-	private Button useCustomTagsCheck;
+	private Button useCustomTargetsCheck;
 
 	/**
 	 * @param parent
@@ -59,11 +59,11 @@ public class KojiServerDialog extends Dialog {
 		shell = new Shell(getParent(), SWT.MIN | SWT.BORDER);
 		shell.setText(title);
 		shell.setLayout(new GridLayout(1, false));
-		
+
 		Composite parent = new Composite(shell, SWT.NONE);
 		parent.setLayout(new GridLayout(1, false));
 		parent.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
+
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
 		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, false);
@@ -91,16 +91,18 @@ public class KojiServerDialog extends Dialog {
 			});
 			texts[i].setLayoutData(textData);
 		}
-		
-		useCustomTagsCheck = new Button(parent, SWT.CHECK);
-		useCustomTagsCheck.setText(KojiText.KojiServerDialog_CustomTagLabel);
-		if (serverInfo != null && serverInfo.length > 3 && serverInfo[3] != null){
-			useCustomTagsCheck.setSelection(Boolean.parseBoolean(serverInfo[3]));
+
+		useCustomTargetsCheck = new Button(parent, SWT.CHECK);
+		useCustomTargetsCheck.setText(KojiText.KojiServerDialog_CustomTargetLabel);
+		if (serverInfo != null && serverInfo.length > 3
+				&& serverInfo[3] != null) {
+			useCustomTargetsCheck.setSelection(Boolean
+					.parseBoolean(serverInfo[3]));
 		}
 		Composite buttons = new Composite(shell, SWT.NONE);
 		buttons.setLayout(new GridLayout(2, false));
 		buttons.setLayoutData(new GridData(SWT.END, SWT.END, false, false));
-		
+
 		GridData buttonData = new GridData(SWT.END, SWT.END, false, false);
 		buttonData.widthHint = 100;
 		cancelButton = new Button(buttons, SWT.NONE);
@@ -145,19 +147,19 @@ public class KojiServerDialog extends Dialog {
 						texts[0].getText(),
 						texts[1].getText(),
 						texts[2].getText(),
-						new Boolean(useCustomTagsCheck.getSelection())
+						new Boolean(useCustomTargetsCheck.getSelection())
 								.toString() };
 				shell.close();
 			}
 		});
 		checkOk();
 		okButton.setLayoutData(buttonData);
-		
+
 		buttons.pack();
-		
+
 		shell.pack();
 		shell.open();
-		
+
 		Display display = getParent().getDisplay();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())

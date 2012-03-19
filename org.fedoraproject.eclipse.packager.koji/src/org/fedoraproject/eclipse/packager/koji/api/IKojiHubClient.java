@@ -94,7 +94,7 @@ public interface IKojiHubClient {
 			throws KojiHubClientException;
 
 	/**
-	 * Query the Koji server for known build tags.
+	 * Query the Koji server for known build targets.
 	 * 
 	 * @return An array of hash maps containing the id, name, perm_id, perm,
 	 *         arches and locked for each tag.

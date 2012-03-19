@@ -40,8 +40,9 @@ public class FedoraPackagerKojiPreferenceInitializer extends
 			String serverName = instance.getAttribute("name"); //$NON-NLS-1$
 			String webUrl = instance.getAttribute("webUrl"); //$NON-NLS-1$
 			String xmlrpcUrl = instance.getAttribute("xmlrpcUrl"); //$NON-NLS-1$
+			String customTargets = instance.getAttribute("customTargets"); //$NON-NLS-1$
 			serverList = serverList.concat(NLS.bind(KojiText.ServerEntryTemplate, new String[] {
-					serverName, webUrl, xmlrpcUrl, "false" })); //$NON-NLS-1$
+					serverName, webUrl, xmlrpcUrl, customTargets })); 
 			if (existingSettings && webUrl.contentEquals(oldWeb) && xmlrpcUrl.contentEquals(oldXml)){
 				existingSettings = false;
 			}

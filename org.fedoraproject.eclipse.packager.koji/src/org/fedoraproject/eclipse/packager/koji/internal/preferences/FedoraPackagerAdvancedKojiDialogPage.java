@@ -176,7 +176,7 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 			contents.getShell().setEnabled(false);
 			String[] newInstance = new KojiServerDialog(contents.getShell(),
 					new String[] { name, info[0], info[1], info[2] },
-					"Add New Koji Server") //$NON-NLS-1$
+					KojiText.FedoraPackagerAdvancedKojiDialogPage_editDialogTitle)
 					.open();
 			contents.getShell().setEnabled(true);
 			if (newInstance != null) {

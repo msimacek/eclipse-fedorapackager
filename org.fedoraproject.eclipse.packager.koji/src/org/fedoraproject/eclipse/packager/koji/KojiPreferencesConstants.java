@@ -16,6 +16,9 @@ public class KojiPreferencesConstants {
 	/***/ public static final String PREF_SERVER_LIST =
 			"serverList"; //$NON-NLS-1$
 	
+	/***/ public static final String PREF_FORCE_CUSTOM_BUILD = 
+			"forceCustomTargets"; //$NON-NLS-1$
+	
 	/*
 	 * -------------------------------------------------
 	 *          Default values for preferences
