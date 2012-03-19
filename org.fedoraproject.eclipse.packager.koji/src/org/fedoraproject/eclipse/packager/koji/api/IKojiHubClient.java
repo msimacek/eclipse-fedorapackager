@@ -16,9 +16,9 @@ import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
 
 /**
- * Interface for Koji hub client implementations. At the moment there is only
- * a SSL login based implementation.
- *
+ * Interface for Koji hub client implementations. At the moment there is only a
+ * SSL login based implementation.
+ * 
  */
 public interface IKojiHubClient {
 
@@ -56,7 +56,7 @@ public interface IKojiHubClient {
 	 */
 	public int build(String target, String scmURL, String nvr, boolean scratch)
 			throws KojiHubClientException;
-	
+
 	/**
 	 * Fetches information related to a name-version-release token.
 	 * 
@@ -71,24 +71,34 @@ public interface IKojiHubClient {
 	 *         does not exist
 	 */
 	public KojiBuildInfo getBuild(String nvr) throws KojiHubClientException;
-	
+
 	/**
-	 * @param path 
-	 * 				Path to upload to on the koji server.
+	 * @param path
+	 *            Path to upload to on the koji server.
 	 * @param name
-	 * 				The name of the file being uploaded. 
+	 *            The name of the file being uploaded.
 	 * @param size
-	 * 				The size of the file being uploaded in bytes.
+	 *            The size of the file being uploaded in bytes.
 	 * @param md5sum
-	 * 				The MD5 sum of the file being uploaded.
+	 *            The MD5 sum of the file being uploaded.
 	 * @param offset
-	 * 				The number of bytes to skip when building the file 
-	 * 				from multiple uploads. 
+	 *            The number of bytes to skip when building the file from
+	 *            multiple uploads.
 	 * @param data
-	 * 				The Base64 representation of the file.
+	 *            The Base64 representation of the file.
 	 * @return True if successful, false if not.
 	 * @throws KojiHubClientException
 	 */
-	public boolean uploadFile(String path, String name, int size, String md5sum, int offset, String data)
-		throws KojiHubClientException;
+	public boolean uploadFile(String path, String name, int size,
+			String md5sum, int offset, String data)
+			throws KojiHubClientException;
+
+	/**
+	 * Query the Koji server for known build targets.
+	 * 
+	 * @return An array of hash maps containing the id, name, perm_id, perm,
+	 *         arches and locked for each tag.
+	 * @throws KojiHubClientException
+	 */
+	public HashMap<?, ?>[] listTargets() throws KojiHubClientException;
 }

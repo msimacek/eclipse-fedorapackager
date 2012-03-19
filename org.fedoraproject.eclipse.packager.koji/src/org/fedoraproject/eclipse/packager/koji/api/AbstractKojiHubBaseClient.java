@@ -29,7 +29,7 @@ import org.fedoraproject.eclipse.packager.koji.internal.utils.KojiTypeFactory;
  * Koji Base client.
  */
 public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
-	
+
 	/**
 	 * Default constructor to set up a basic client.
 	 * 
@@ -44,14 +44,14 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 		setupXmlRpcConfig();
 		setupXmlRpcClient();
 	}
-	
+
 	/**
 	 * URL of the Koji Hub/XMLRPC interface
 	 */
 	protected URL kojiHubUrl;
 	protected XmlRpcClientConfigImpl xmlRpcConfig;
 	protected XmlRpcClient xmlRpcClient;
-	
+
 	/**
 	 * Store session info in XMLRPC configuration.
 	 * 
@@ -100,7 +100,6 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 		discardSession();
 	}
 
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -139,7 +138,7 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 		}
 		return taskId;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -165,7 +164,7 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Configure XMLRPC connection
 	 */
@@ -175,12 +174,12 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 		xmlRpcConfig.setEnabledForExtensions(true);
 		xmlRpcConfig.setConnectionTimeout(30000);
 	}
-	
+
 	/**
 	 * Set up XMLRPC client.
 	 * 
-	 * @throws IllegalStateException If XMLRPC configuration hasn't been
-	 *         properly set up.
+	 * @throws IllegalStateException
+	 *             If XMLRPC configuration hasn't been properly set up.
 	 */
 	protected void setupXmlRpcClient() throws IllegalStateException {
 		if (xmlRpcConfig == null) {
@@ -190,13 +189,19 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 		xmlRpcClient.setTypeFactory(new KojiTypeFactory(this.xmlRpcClient));
 		xmlRpcClient.setConfig(this.xmlRpcConfig);
 	}
+
 	/*
 	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient#uploadFile(java.lang.String, java.lang.String, int, java.lang.String, int, java.lang.String)
+	 * 
+	 * @see
+	 * org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient#uploadFile
+	 * (java.lang.String, java.lang.String, int, java.lang.String, int,
+	 * java.lang.String)
 	 */
 	@Override
-	public boolean uploadFile(String path, String name, int size, String md5sum, int offset, String data)
-		throws KojiHubClientException {
+	public boolean uploadFile(String path, String name, int size,
+			String md5sum, int offset, String data)
+			throws KojiHubClientException {
 		ArrayList<Object> params = new ArrayList<Object>();
 		params.add(path);
 		params.add(name);
@@ -212,5 +217,27 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 		}
 		boolean success = Boolean.parseBoolean(result.toString());
 		return success;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient#listTags()
+	 */
+	@Override
+	public HashMap<?, ?>[] listTargets() throws KojiHubClientException {
+		try {
+			// workaround for http://ws.apache.org/xmlrpc/faq.html#arrays
+			Object[] genericTargets = (Object[]) xmlRpcClient.execute(
+					"getBuildTargets", new Object[0]); //$NON-NLS-1$
+			HashMap<?, ?>[] targetArray = new HashMap<?, ?>[genericTargets.length];
+			for (int i = 0; i < genericTargets.length; i++){
+				targetArray[i] = (HashMap<?,?>) genericTargets[i];
+			}
+			return targetArray;
+		} catch (XmlRpcException e) {
+			throw new KojiHubClientException(e);
+		}
 	}
 }
