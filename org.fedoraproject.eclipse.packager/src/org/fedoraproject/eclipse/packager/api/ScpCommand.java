@@ -201,8 +201,8 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 			// check if the remote directory exists
 			// if not, create the proper directory in public_html
-			Vector existDir = channelSftp.ls(PUBLIC_HTML);
-			Iterator it = existDir.iterator();
+			Vector<?> existDir = channelSftp.ls(PUBLIC_HTML);
+			Iterator<?> it = existDir.iterator();
 			while (it.hasNext() && !dirFound) {
 				LsEntry entry = (LsEntry) it.next();
 				String dirName = entry.getFilename();
@@ -214,7 +214,7 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 			// check if the files to scp already exist in the remote directory
 			// if yes, ask for confirmation
-			Vector existFile = channelSftp.ls(PUBLIC_HTML + IPath.SEPARATOR + REMOTE_DIR );
+			Vector<?> existFile = channelSftp.ls(PUBLIC_HTML + IPath.SEPARATOR + REMOTE_DIR );
 			it = existFile.iterator();
 			while (it.hasNext() && !fileFound) {
 				LsEntry entry = (LsEntry) it.next();
