@@ -202,6 +202,28 @@
                   </or>
                </visibleWhen>
             </command>
+            <command
+                  commandId="org.fedoraproject.eclipse.packager.FedoraReviewCommand"
+                  label="Run Fedora Review"
+                  style="push">
+               <visibleWhen
+                     checkEnabled="false">
+                  <or>
+                     <with
+                           variable="activeMenuSelection">
+                        <reference
+                              definitionId="org.fedoraproject.eclipse.packager.localproject">
+                        </reference>
+                     </with>
+                     <with
+                           variable="activeMenuEditorInput">
+                        <reference
+                              definitionId="org.fedoraproject.eclipse.packager.localproject">
+                        </reference>
+                     </with>
+                  </or>
+               </visibleWhen>
+            </command>
             <separator
                   name="org.fedoraproject.eclipse.packager.rpm.advancedsep"
                   visible="true">
@@ -317,6 +339,11 @@
             id="org.fedoraproject.eclipse.packager.rpm.RPMCompileCommandLocal"
             name="RPM Compile">
       </command>
+      <command
+            defaultHandler="org.fedoraproject.eclipse.packager.rpm.internal.handlers.local.FedoraReviewHandler"
+            id="org.fedoraproject.eclipse.packager.FedoraReviewCommand"
+            name="Fedora Review">
+      </command>
    </extension>
    <extension
          name="SCMMockBuildCommand"
@@ -333,6 +360,10 @@
        <command
              class="org.fedoraproject.eclipse.packager.rpm.api.SCMMockBuildCommand"
              id="SCMMockBuildCommand">
+       </command>
+       <command
+             class="org.fedoraproject.eclipse.packager.rpm.api.FedoraReviewCommand"
+             id="FedoraReviewCommand">
        </command>
    </extension>
    <!-- Keyboard shortcut definitions -->
