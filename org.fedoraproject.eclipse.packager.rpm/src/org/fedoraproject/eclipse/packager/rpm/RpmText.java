@@ -44,28 +44,22 @@ public class RpmText extends NLS {
 	/****/ public static String MockBuildHandler_srpmBuildFailed;
 	/****/ public static String MockBuildHandler_downloadSourcesForMockBuild;
 	/****/ public static String MockBuildHandler_creatingSRPMForMockBuild;
+	/****/ public static String MockBuildHandler_FileSystemDialogTitle;
+	/****/ public static String MockBuildHandler_RootListMessage;
+	// AbstractMockJob
 	/****/ public static String AbstractMockJob_mockFailedMsg;
 	/****/ public static String AbstractMockJob_mockSucceededMsg;
 	/****/ public static String AbstractMockJob_mockFailedMsgHTML;
 	/****/ public static String AbstractMockJob_mockSucceededMsgHTML;
 	/****/ public static String AbstractMockJob_mockCancelledMsg;
-	public static String FedoraReviewCommand_CommandName;
-
-
-	public static String FedoraReviewCommand_IOErrorText;
-
-
-	public static String FedoraReviewCommand_IOErrorTitle;
-
-
-	public static String FedoraReviewCommand_NFlag;
-
-
-	public static String FedoraReviewCommand_ReviewSuffix;
-
-
-	/****/ public static String MockBuildHandler_FileSystemDialogTitle;
-	/****/ public static String MockBuildHandler_RootListMessage;
+	// FedoraReviewCommand
+	/****/ public static String FedoraReviewCommand_CommandName;
+	/****/ public static String FedoraReviewCommand_IOErrorText;
+	/****/ public static String FedoraReviewCommand_IOErrorTitle;
+	/****/ public static String FedoraReviewCommand_NFlag;
+	/****/ public static String FedoraReviewCommand_ReviewSuffix;
+	// FedoraReviewNotInstalledException
+	/****/ public static String FedoraReviewNotInstalledException_msg;
 	// PrepHandler
 	/****/ public static String PrepHandler_prepareSourcesForBuildMsg;
 	/****/ public static String PrepHandler_downloadSourcesForPrep;
@@ -81,8 +75,6 @@ public class RpmText extends NLS {
 	/****/ public static String RpmBuildCommand_NoBranchConfig;
 	// RpmEvalCommand
 	/****/ public static String RpmEvalCommand_variableMustBeSet;
-
-
 	// MockBuildCommand
 	/****/ public static String MockBuildCommand_srpmNullError;
 	/****/ public static String MockBuildCommand_invalidMockConfigError;
@@ -111,16 +103,16 @@ public class RpmText extends NLS {
 	/****/ public static String SRPMImportCommand_ProjectNotSet;
 	/****/ public static String SRPMImportCommand_SRPMNotFound;
 	/****/ public static String SRPMImportCommand_CallbackNotSet;
+	/****/ public static String SRPMImportCommand_PackageNameSpecNameMismatchError;
+	/****/ public static String SRPMImportCommand_StagingChanges;
 	// SRPMImportHandler
 	/****/ public static String SRPMImportHandler_FileDialogTitle;
 	/****/ public static String SRPMImportHandler_ImportingFromSRPM;
 	// SRPMImportJob
-	/****/ public static String SRPMImportCommand_PackageNameSpecNameMismatchError;
 	/****/ public static String SRPMImportJob_ExtractFailed;
 	/****/ public static String SRPMImportJob_ExtractingSRPM;
 	/****/ public static String SRPMImportJob_InitialSetup;
 	/****/ public static String SRPMImportJob_MalformedLookasideURL;
-	/****/ public static String SRPMImportCommand_StagingChanges;
 	/****/ public static String SRPMImportJob_UploadingSources;
 
 	static {
