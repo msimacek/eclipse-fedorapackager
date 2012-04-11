@@ -92,8 +92,6 @@ public class FedoraPackagerText extends NLS {
 	/****/ public static String FedoraPackagerCommand_projectRootSetTwiceError;
 	// FedoraPackager
 	/****/ public static String FedoraPackager_commandNotFoundError;
-
-	public static String FedoraReviewHandler_TaskName;
 	// Generic strings
 	/****/ public static String somethingUnexpectedHappenedError;
 	/****/ public static String commandWasCalledInTheWrongState;

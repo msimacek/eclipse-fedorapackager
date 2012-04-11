@@ -1,5 +1,7 @@
 package org.fedoraproject.eclipse.packager.rpm.api;
 
+import org.eclipse.core.resources.IFile;
+
 /**
  * Result class for FedoraReviewCommand.
  *
@@ -7,6 +9,7 @@ package org.fedoraproject.eclipse.packager.rpm.api;
 public class FedoraReviewResult extends Result {
 	
 	private boolean success;
+	private IFile review = null;
 
 	/**
 	 * Default constructor.
@@ -35,6 +38,22 @@ public class FedoraReviewResult extends Result {
 	 */
 	public void setFailure() {
 		success = false;
+	}
+	
+	/**
+	 * Set the file containing the review.
+	 * @param review The file.
+	 */
+	public void setReview(IFile review){
+		this.review = review;
+	}
+	
+	/**
+	 * Get the file containing the reivew.
+	 * @return The review file.
+	 */
+	public IFile getReview(){
+		return review;
 	}
 
 }

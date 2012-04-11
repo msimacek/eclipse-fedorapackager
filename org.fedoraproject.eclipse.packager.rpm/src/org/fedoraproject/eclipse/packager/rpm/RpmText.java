@@ -46,6 +46,9 @@ public class RpmText extends NLS {
 	/****/ public static String MockBuildHandler_creatingSRPMForMockBuild;
 	/****/ public static String MockBuildHandler_FileSystemDialogTitle;
 	/****/ public static String MockBuildHandler_RootListMessage;
+	// FedoraReviewHandler
+	/****/ public static String FedoraReviewHandler_TaskName;
+	/****/ public static String FedoraReviewHandler_NoReview;
 	// AbstractMockJob
 	/****/ public static String AbstractMockJob_mockFailedMsg;
 	/****/ public static String AbstractMockJob_mockSucceededMsg;
@@ -53,11 +56,9 @@ public class RpmText extends NLS {
 	/****/ public static String AbstractMockJob_mockSucceededMsgHTML;
 	/****/ public static String AbstractMockJob_mockCancelledMsg;
 	// FedoraReviewCommand
-	/****/ public static String FedoraReviewCommand_CommandName;
 	/****/ public static String FedoraReviewCommand_IOErrorText;
 	/****/ public static String FedoraReviewCommand_IOErrorTitle;
-	/****/ public static String FedoraReviewCommand_NFlag;
-	/****/ public static String FedoraReviewCommand_ReviewSuffix;
+	/****/ public static String FedoraReviewCommand_CommandLog;
 	// FedoraReviewNotInstalledException
 	/****/ public static String FedoraReviewNotInstalledException_msg;
 	// PrepHandler
