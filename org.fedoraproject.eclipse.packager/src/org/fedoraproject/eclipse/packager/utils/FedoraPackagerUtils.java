@@ -176,9 +176,13 @@ public class FedoraPackagerUtils {
 			for (int i = 0; i < elements.length; i++) {
 				if (elements[i].getName().equals(VCS_CONTRIBUTION_ELEMENT_NAME)
 						&& elements[i]
+								.getAttribute(VCS_CONTRIBUTION_CONTRIB_PLUGIN_ID_ATTRIBUTE_NAME) != null
+						&& elements[i]
 								.getAttribute(
 										VCS_CONTRIBUTION_CONTRIB_PLUGIN_ID_ATTRIBUTE_NAME)
 								.startsWith(propertyName.getQualifier())
+						&& elements[i]
+								.getAttribute(VCS_CONTRIBUTION_TYPE_ATTRIBUTE_NAME) != null
 						&& elements[i].getAttribute(
 								VCS_CONTRIBUTION_TYPE_ATTRIBUTE_NAME).equals(
 								type.name())) {
