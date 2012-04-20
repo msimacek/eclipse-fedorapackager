@@ -82,7 +82,7 @@ public class SourcesFile {
 			br = new BufferedReader(new InputStreamReader(
 					sourcesFile.getContents()));
 			String line = br.readLine();
-			while (line != null) {
+			while (line != null && !line.contentEquals("")) { //$NON-NLS-1$
 				String[] source = line.split("\\s+"); //$NON-NLS-1$
 				if (source.length != 2) {
 					continue;
