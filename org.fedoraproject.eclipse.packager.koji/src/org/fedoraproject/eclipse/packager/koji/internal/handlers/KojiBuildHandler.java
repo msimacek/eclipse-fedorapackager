@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010-2011 Red Hat Inc. and others.
+ * Copyright (c) 2010-2012 Red Hat Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -32,7 +32,6 @@ import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerPreferencesConstants;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
-import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
@@ -55,7 +54,6 @@ public class KojiBuildHandler extends FedoraPackagerAbstractHandler {
 	 */
 	protected Shell shell;
 	protected URL kojiWebUrl;
-	protected IProjectRoot fedoraProjectRoot;
 	protected String[] kojiInfo;
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
@@ -65,8 +63,6 @@ public class KojiBuildHandler extends FedoraPackagerAbstractHandler {
 		try {
 			setProjectRoot(FedoraPackagerUtils
 					.getProjectRoot(eventResource));
-			fedoraProjectRoot = FedoraPackagerUtils
-					.getProjectRoot(eventResource);
 		} catch (InvalidProjectRootException e) {
 			logger.logError(FedoraPackagerText.invalidFedoraProjectRootError, e);
 			FedoraHandlerUtils.showErrorDialog(shell, "Error", //$NON-NLS-1$
@@ -94,8 +90,8 @@ public class KojiBuildHandler extends FedoraPackagerAbstractHandler {
 		if (kojiInfo[2].contentEquals("false") && projectPreferences.getBoolean(KojiPreferencesConstants.PREF_FORCE_CUSTOM_BUILD, false)) { //$NON-NLS-1$
 			kojiInfo[2] = "true"; //$NON-NLS-1$
 		}
-		Job job = new KojiBuildJob(fedoraProjectRoot.getProductStrings()
-				.getProductName(), getShell(event), fedoraProjectRoot,
+		Job job = new KojiBuildJob(getProjectRoot().getProductStrings()
+				.getProductName(), getShell(event), getProjectRoot(),
 				kojiInfo, isScratchBuild());
 		job.addJobChangeListener(getJobChangeListener());
 		job.setUser(true);
@@ -122,7 +118,7 @@ public class KojiBuildHandler extends FedoraPackagerAbstractHandler {
 			// Web url set in preferences.
 			logger.logError(NLS.bind(
 					KojiText.KojiBuildHandler_invalidKojiWebUrl,
-					fedoraProjectRoot.getProductStrings().getBuildToolName(),
+					getProjectRoot().getProductStrings().getBuildToolName(),
 					webUrl), e);
 			try {
 				kojiWebUrl = new URL(
@@ -154,7 +150,7 @@ public class KojiBuildHandler extends FedoraPackagerAbstractHandler {
 									// koji-web URL
 									logger.logInfo(NLS
 											.bind(KojiText.KojiMessageDialog_buildResponseMsg,
-													fedoraProjectRoot
+													getProjectRoot()
 															.getProductStrings()
 															.getBuildToolName())
 											+ " " //$NON-NLS-1$

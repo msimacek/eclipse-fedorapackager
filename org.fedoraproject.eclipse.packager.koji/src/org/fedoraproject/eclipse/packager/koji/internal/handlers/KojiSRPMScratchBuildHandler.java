@@ -89,8 +89,8 @@ public class KojiSRPMScratchBuildHandler extends KojiBuildHandler {
 								.getString(
 										KojiPreferencesConstants.PREF_KOJI_SERVER_INFO))
 				.split(","); //$NON-NLS-1$
-		Job job = new KojiSRPMBuildJob(fedoraProjectRoot.getProductStrings()
-				.getProductName(), getShell(event), fedoraProjectRoot,
+		Job job = new KojiSRPMBuildJob(getProjectRoot().getProductStrings()
+				.getProductName(), getShell(event), getProjectRoot(),
 				kojiInfo, srpmPath);
 		job.addJobChangeListener(getJobChangeListener());
 		job.setUser(true);
