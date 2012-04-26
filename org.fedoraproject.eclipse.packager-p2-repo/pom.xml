@@ -40,7 +40,4 @@
   </build>
 
   <name>Fedora Packager for Eclipse p2 Repository</name>
-  <!-- see http://issues.sonatype.org/browse/TYCHO-313 -->
-  <version>0.0.1-SNAPSHOT</version>
-
 </project>

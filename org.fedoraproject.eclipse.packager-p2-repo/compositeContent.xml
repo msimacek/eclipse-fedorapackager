@@ -9,6 +9,7 @@
     <child location='efp'/>
     <child location='http://download.eclipse.org/egit/updates'/>
     <child location='http://download.eclipse.org/technology/linuxtools/update'/>
+    <child location='https://fedorahosted.org/released/eclipse-fedorapackager/p2-repo/'/>
     <!--
     <child location='http://download.eclipse.org/technology/linuxtools/updates-nightly'/>-->
   </children>

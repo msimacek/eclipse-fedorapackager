@@ -21,6 +21,7 @@ such as Koji, Bodhi and Fedora Git.
 
    <requires>
       <import plugin="org.apache.commons.codec"/>
+      <import plugin="org.apache.httpcomponents.httpcore"/>
       <import plugin="org.apache.httpcomponents.httpcore-nio"/>
       <import plugin="org.apache.httpcomponents.httpclient"/>
       <import plugin="org.apache.httpcomponents.httpmime"/>
@@ -43,18 +44,20 @@ such as Koji, Bodhi and Fedora Git.
       <import plugin="org.eclipse.equinox.security"/>
       <import plugin="org.eclipse.ui.browser"/>
       <import plugin="org.eclipse.ui"/>
-      <import plugin="org.apache.commons.httpclient"/>
+      <import plugin="org.apache.commons.ssl"/>
       <import plugin="org.eclipse.team.core"/>
       <import plugin="org.eclipse.team.cvs.core"/>
       <import plugin="org.eclipse.team.cvs.ui"/>
       <import plugin="org.eclipse.team.ui"/>
       <import plugin="org.apache.ws.commons.util"/>
       <import plugin="org.apache.xmlrpc.common"/>
+      <import plugin="org.apache.xmlrpc"/>
       <import plugin="org.eclipse.jgit" version="1.1.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.help"/>
       <import plugin="org.eclipse.linuxtools.rpm.ui"/>
       <import plugin="javax.servlet"/>
       <import plugin="org.apache.commons.logging"/>
+      <import plugin="org.apache.xmlrpc"/>
       <import plugin="javax.xml.bind"/>
       <import plugin="javax.xml"/>
       <import plugin="org.eclipse.core.databinding"/>
@@ -103,76 +106,6 @@ such as Koji, Bodhi and Fedora Git.
 
    <plugin
          id="org.fedoraproject.eclipse.packager.rpm"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.httpcomponents.httpclient"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.httpcomponents.httpcore"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.httpcomponents.httpcore-nio"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.httpcomponents.httpmime"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.google.gson"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.commons.codec"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.ws.commons.util"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.xmlrpc"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.xmlrpc.common"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.apache.commons.ssl"
          download-size="0"
          install-size="0"
          version="0.0.0"
