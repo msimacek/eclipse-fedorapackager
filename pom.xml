@@ -46,7 +46,7 @@
   </licenses>
 
   <properties>
-    <tycho-version>0.13.0</tycho-version>
+    <tycho-version>0.14.1</tycho-version>
     <platform-version-name>indigo</platform-version-name>
     <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
     <wikitext-site>http://download.eclipse.org/tools/mylyn/update/weekly</wikitext-site>
@@ -240,7 +240,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>2.4.3</version>
+          <version>2.5</version>
           <configuration>
             <encoding>ISO-8859-1</encoding>
           </configuration>
@@ -248,12 +248,12 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-antrun-plugin</artifactId>
-          <version>1.6</version>
+          <version>1.7</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.2.1</version>
+          <version>2.3</version>
           <configuration>
             <tarLongFileMode>gnu</tarLongFileMode>
           </configuration>
@@ -261,7 +261,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.0-beta-3</version>
+          <version>3.0</version>
         </plugin>
       </plugins>
     </pluginManagement>
