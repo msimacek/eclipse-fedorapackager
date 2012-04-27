@@ -28,6 +28,7 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.osgi.framework.FrameworkUtil;
 
 /**
  * Test for {@code sources} file updater, {@link SourcesFileUpdater}.
@@ -47,7 +48,7 @@ public class SourcesFileUpdaterTest {
 	@Before
 	public void setUp() throws Exception {
 		String dirName = FileLocator.toFileURL(
-				FileLocator.find(TestsPlugin.getDefault().getBundle(),
+				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_FEDORA_PROJECT_ROOT), null)).getFile();
 		File copySource = new File(dirName);
 		
@@ -60,7 +61,7 @@ public class SourcesFileUpdaterTest {
 		assertNotNull(fpRoot);
 		
 		String fileName = FileLocator.toFileURL(
-				FileLocator.find(TestsPlugin.getDefault().getBundle(),
+				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_UPLOAD_FILE), null)).getFile();
 		uploadedFile = new File(fileName);
 		assertNotNull(uploadedFile);

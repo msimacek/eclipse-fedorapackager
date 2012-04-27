@@ -32,6 +32,7 @@ import org.fedoraproject.eclipse.packager.FedoraSSL;
 import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
 import org.junit.Before;
 import org.junit.Test;
+import org.osgi.framework.FrameworkUtil;
 
 /**
  * Test Fedora SSL connection setup
@@ -51,13 +52,13 @@ public class FedoraSSLTest {
 	@Before
 	public void setUp() throws Exception {
 		String fedCertName = FileLocator.toFileURL(
-				FileLocator.find(TestsPlugin.getDefault().getBundle(),
+				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(CERT_FILE), null)).getFile();
 		String fedUploadCertName = FileLocator.toFileURL(
-				FileLocator.find(TestsPlugin.getDefault().getBundle(),
+				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(UPLOAD_CERT_FILE), null)).getFile();
 		String fedServerCertName = FileLocator.toFileURL(
-				FileLocator.find(TestsPlugin.getDefault().getBundle(),
+				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(SERVER_CERT_FILE), null)).getFile();
 		File fedoraCert = new File(fedCertName);
 		File fedoraUploadCert = new File(fedUploadCertName);

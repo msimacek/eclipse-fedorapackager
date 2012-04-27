@@ -40,7 +40,6 @@ import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.FileAvailableInLookasideCacheException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidUploadFileException;
 import org.fedoraproject.eclipse.packager.tests.SourcesFileUpdaterTest;
-import org.fedoraproject.eclipse.packager.tests.TestsPlugin;
 import org.fedoraproject.eclipse.packager.tests.VCSIgnoreFileUpdaterTest;
 import org.fedoraproject.eclipse.packager.tests.units.UploadFileValidityTest;
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
@@ -50,6 +49,7 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.osgi.framework.FrameworkUtil;
 
 /**
  * Eclipse plug-in test for UploadSourceCommand. Note: in order to run this test
@@ -129,7 +129,7 @@ public class UploadSourceCommandTest {
 	@Test
 	public void canDetermineIfSourceIsAvailable() throws Exception {
 		String fileName = FileLocator.toFileURL(
-				FileLocator.find(TestsPlugin.getDefault().getBundle(),
+				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_UPLOAD_FILE), null)).getFile();
 		File file = new File(fileName);
 		UploadSourceCommand uploadCmd = (UploadSourceCommand) packager
@@ -251,7 +251,7 @@ public class UploadSourceCommandTest {
 		UploadSourceCommand uploadCmd = (UploadSourceCommand) packager
 				.getCommandInstance(UploadSourceCommand.ID);
 		String invalidUploadFileName = FileLocator.toFileURL(
-				FileLocator.find(TestsPlugin.getDefault().getBundle(),
+				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(INVALID_UPLOAD_FILE), null)).getFile();
 		File invalidUploadFile = new File(invalidUploadFileName);
 		try {

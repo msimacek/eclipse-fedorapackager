@@ -36,11 +36,11 @@ import org.fedoraproject.eclipse.packager.rpm.api.ISRPMImportCommandSLLPolicyCal
 import org.fedoraproject.eclipse.packager.rpm.api.SRPMImportCommand;
 import org.fedoraproject.eclipse.packager.rpm.api.SRPMImportResult;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.SRPMImportCommandException;
-import org.fedoraproject.eclipse.packager.tests.TestsPlugin;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.osgi.framework.FrameworkUtil;
 
 public class SRPMImportCommandTest implements ISRPMImportCommandSLLPolicyCallback {
 	// project under test
@@ -61,12 +61,12 @@ public class SRPMImportCommandTest implements ISRPMImportCommandSLLPolicyCallbac
 		srpmPath = FileLocator
 				.toFileURL(
 						FileLocator
-								.find(TestsPlugin.getDefault().getBundle(),
+								.find(FrameworkUtil.getBundle(this.getClass()),
 										new Path(
 												"resources/eclipse-mylyn-tasks-3.6.0-2.fc17.src.rpm"),
 										null)).getFile();
 		badSrpmPath = FileLocator.toFileURL(
-				FileLocator.find(TestsPlugin.getDefault().getBundle(),
+				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path("resources/ed-1.5-2.fc16.src.rpm"), null))
 				.getFile();
 		this.uploadURLForTesting = uploadURL;

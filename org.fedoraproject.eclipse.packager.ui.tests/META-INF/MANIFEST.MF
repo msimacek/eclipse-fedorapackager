@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Eclipse Fedora Packager UI tests
 Bundle-SymbolicName: org.fedoraproject.eclipse.packager.ui.tests
 Bundle-Version: 0.2.0.qualifier
-Bundle-Activator: org.fedoraproject.eclipse.packager.ui.tests.UITestsPlugin
 Bundle-Vendor: Fedoraproject.org
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,

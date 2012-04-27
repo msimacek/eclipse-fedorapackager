@@ -31,6 +31,7 @@ import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.osgi.framework.FrameworkUtil;
 
 public class SourcesFileTest {
 
@@ -49,7 +50,7 @@ public class SourcesFileTest {
 	@Before
 	public void setUp() throws Exception {
 		String dirName = FileLocator.toFileURL(
-				FileLocator.find(TestsPlugin.getDefault().getBundle(),
+				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_FEDORA_PROJECT_ROOT), null)).getFile();
 		File copySource = new File(dirName);
 		
@@ -190,7 +191,7 @@ public class SourcesFileTest {
 				+ File.separatorChar + SourcesFile.SOURCES_FILENAME);
 		final String sourcesFileContentPre = TestsUtils.readContents(s);
 		String newFileLoc = FileLocator.toFileURL(
-				FileLocator.find(TestsPlugin.getDefault().getBundle(),
+				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(NEW_SOURCE_ARCHIVE), null)).getFile();
 		File fileToAdd = new File(newFileLoc);
 		Map<String, String> sources = sourcesFile.getSources();

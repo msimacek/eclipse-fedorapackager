@@ -35,6 +35,7 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.osgi.framework.FrameworkUtil;
 
 public class FedoraProjectRootTest {
 
@@ -52,7 +53,7 @@ public class FedoraProjectRootTest {
 	@Before
 	public void setUp() throws Exception {
 		String dirName = FileLocator.toFileURL(
-				FileLocator.find(TestsPlugin.getDefault().getBundle(),
+				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_FEDORA_PROJECT_ROOT), null)).getFile();
 		File copySource = new File(dirName);
 
