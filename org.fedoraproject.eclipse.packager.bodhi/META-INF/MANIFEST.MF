@@ -7,12 +7,9 @@ Bundle-Activator: org.fedoraproject.eclipse.packager.bodhi.BodhiPlugin
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.ui.browser,
- org.eclipse.core.runtime
+Require-Bundle: org.eclipse.core.runtime
 Import-Package: com.google.gson,
  com.google.gson.annotations,
- com.google.gson.reflect,
- org.apache.commons.ssl,
  org.apache.http,
  org.apache.http.client,
  org.apache.http.client.methods,
@@ -34,8 +31,6 @@ Import-Package: com.google.gson,
  org.eclipse.jface.operation,
  org.eclipse.jface.resource,
  org.eclipse.jface.window,
- org.eclipse.linuxtools.rpm.core,
- org.eclipse.linuxtools.rpm.ui.editor.parser,
  org.eclipse.osgi.util,
  org.eclipse.swt,
  org.eclipse.swt.browser,
@@ -47,7 +42,6 @@ Import-Package: com.google.gson,
  org.eclipse.ui,
  org.eclipse.ui.browser,
  org.eclipse.ui.forms.widgets,
- org.eclipse.ui.handlers,
  org.eclipse.ui.plugin,
  org.eclipse.ui.progress,
  org.eclipse.ui.services,
