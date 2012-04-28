@@ -9,10 +9,13 @@
  *     Red Hat Inc. - initial API and implementation
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.bodhi.internal.ui;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -21,6 +24,7 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseTrackListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -31,20 +35,18 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.fedoraproject.eclipse.packager.bodhi.BodhiText;
 import org.fedoraproject.eclipse.packager.bodhi.api.PushUpdateCommand;
 import org.fedoraproject.eclipse.packager.bodhi.api.PushUpdateCommand.RequestType;
 import org.fedoraproject.eclipse.packager.bodhi.api.PushUpdateCommand.UpdateType;
 
-
 /**
  * UI dialog corresponding to the Web form of:
  * https://admin.fedoraproject.org/updates/new/
  */
-public class BodhiNewUpdateDialog extends AbstractBodhiDialog {
+public class BodhiNewUpdateDialog extends Dialog {
 
-	private final FormToolkit formToolkit = new FormToolkit(Display.getDefault());
+	protected Label lblError;
 	private Text txtComment;
 	private Text txtBugs;
 	private Text txtStableKarmaThreshold;
@@ -83,31 +85,29 @@ public class BodhiNewUpdateDialog extends AbstractBodhiDialog {
 	 * @param comment
 	 *            The update comment (i.e. notice)
 	 */
-	public BodhiNewUpdateDialog(Shell parent, String[] builds, String[] selectedBuild, String bugs, String comment) {
-		super(parent, SWT.MODELESS);
-		setText(BodhiText.BodhiNewUpdateDialog_createNewUpdateTitle);
+	public BodhiNewUpdateDialog(Shell parent, String[] builds,
+			String[] selectedBuild, String bugs, String comment) {
+		super(parent);
 		this.buildsData = builds;
 		this.bugsData = bugs;
 		this.commentData = comment;
 		this.selectedBuild = selectedBuild;
 	}
 
-	/**
-	 * Open the dialog.
-	 * @return the result. Either Window.OK or Window.Cancel
-	 */
-	public int open() {
-		createContents();
-		shell.open();
-		shell.layout();
-		Display display = getParent().getDisplay();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
+	@Override
+	protected void configureShell(Shell newShell) {
+		super.configureShell(newShell);
+		newShell.setText(BodhiText.BodhiNewUpdateDialog_createNewUpdateTitle);
+	}
+
+	@Override
+	protected void buttonPressed(int buttonId) {
+		if (buttonId == IDialogConstants.OK_ID) {
+			if (!validateForm()) {
+				return;
 			}
 		}
-		// result set in handleForm or performCancel
-		return result;
+		super.buttonPressed(buttonId);
 	}
 	
 	/**
@@ -118,11 +118,11 @@ public class BodhiNewUpdateDialog extends AbstractBodhiDialog {
 		// this should always return a non-empty list
 		return this.buildsData;
 	}
-	
+
 	private void setBuilds() {
 		this.buildsData = listBuilds.getSelection();
 	}
-	
+
 	/**
 	 * @return A comma separated list of bugs, et. al.
 	 */
@@ -131,7 +131,7 @@ public class BodhiNewUpdateDialog extends AbstractBodhiDialog {
 		// a reasonable string at this point.
 		return this.bugsData;
 	}
-	
+
 	private void setBugs() {
 		this.bugsData = txtBugs.getText();
 	}
@@ -143,11 +143,11 @@ public class BodhiNewUpdateDialog extends AbstractBodhiDialog {
 	public String getComment() {
 		return this.commentData;
 	}
-	
+
 	private void setComment() {
 		this.commentData = txtComment.getText();
 	}
-	
+
 	/**
 	 * 
 	 * @return The suggest reboot selection.
@@ -155,11 +155,11 @@ public class BodhiNewUpdateDialog extends AbstractBodhiDialog {
 	public boolean isSuggestReboot() {
 		return this.suggestRebootData;
 	}
-	
+
 	private void setSuggestReboot() {
 		this.suggestRebootData = btnSuggestReboot.getSelection();
 	}
-	
+
 	/**
 	 * 
 	 * @return The close bugs selection.
@@ -167,11 +167,11 @@ public class BodhiNewUpdateDialog extends AbstractBodhiDialog {
 	public boolean isCloseBugs() {
 		return this.closeBugsData;
 	}
-	
+
 	private void setCloseBugs() {
 		this.closeBugsData = btnCloseBugs.getSelection();
 	}
-	
+
 	/**
 	 * 
 	 * @return The karma automatism selection.
@@ -179,11 +179,12 @@ public class BodhiNewUpdateDialog extends AbstractBodhiDialog {
 	public boolean isKarmaAutomatismEnabled() {
 		return this.enableKarmaAutomatismData;
 	}
-	
+
 	private void setKarmaAutomatismEnabled() {
-		this.enableKarmaAutomatismData = btnEnableKarmaAutomatism.getSelection();
+		this.enableKarmaAutomatismData = btnEnableKarmaAutomatism
+				.getSelection();
 	}
-	
+
 	/**
 	 * 
 	 * @return The selected request type.
@@ -191,12 +192,12 @@ public class BodhiNewUpdateDialog extends AbstractBodhiDialog {
 	public RequestType getRequestType() {
 		return this.requestTypeData;
 	}
-	
+
 	private void setRequestType() {
 		this.requestTypeData = getRequestTypeMap().get(
 				comboRequest.getItem(comboRequest.getSelectionIndex()));
 	}
-	
+
 	/**
 	 * 
 	 * @return The selected update type.
@@ -204,12 +205,12 @@ public class BodhiNewUpdateDialog extends AbstractBodhiDialog {
 	public UpdateType getUpdateType() {
 		return this.updateTypeData;
 	}
-	
+
 	private void setUpdateType() {
 		this.updateTypeData = getUpdateTypeMap().get(
 				comboType.getItem(comboType.getSelectionIndex()));
 	}
-	
+
 	/*
 	 * fixed set of update types
 	 */
@@ -221,7 +222,7 @@ public class BodhiNewUpdateDialog extends AbstractBodhiDialog {
 		map.put("newpackage", UpdateType.NEWPACKAGE); //$NON-NLS-1$
 		return map;
 	}
-	
+
 	/*
 	 * fixed set of request types
 	 */
@@ -240,14 +241,15 @@ public class BodhiNewUpdateDialog extends AbstractBodhiDialog {
 	public int getStableKarmaThreshold() {
 		return this.stableKarmaThresholdData;
 	}
-	
+
 	private void setStableKarmaThreshold() {
 		// since we attempted to parse an integer from
 		// the string while validating it, this should
 		// not throw a NumberFormatException
-		this.stableKarmaThresholdData = Integer.parseInt(txtStableKarmaThreshold.getText());
+		this.stableKarmaThresholdData = Integer
+				.parseInt(txtStableKarmaThreshold.getText());
 	}
-	
+
 	/**
 	 * 
 	 * @return The entered unstable karma threshold.
@@ -255,139 +257,116 @@ public class BodhiNewUpdateDialog extends AbstractBodhiDialog {
 	public int getUnstableKarmaThreshold() {
 		return this.unstableKarmaThresholdData;
 	}
-	
+
 	private void setUnstableKarmaThreshold() {
 		// since we attempted to parse an integer from
 		// the string while validating it, this should
 		// not throw a NumberFormatException
-		this.unstableKarmaThresholdData = Integer.parseInt(txtUnstableKarmaThreshold.getText());
+		this.unstableKarmaThresholdData = Integer
+				.parseInt(txtUnstableKarmaThreshold.getText());
 	}
 
 	/**
 	 * Create contents of the dialog.
 	 */
-	private void createContents() {
-		shell = new Shell(getParent(), SWT.DIALOG_TRIM);
-		shell.setSize(686, 655);
-		shell.setText(BodhiText.BodhiNewUpdateDialog_createNewUpdateTitle);
-		shell.setLayout(null);
-		
-		ScrolledComposite scrolledComposite = new ScrolledComposite(shell, SWT.H_SCROLL | SWT.V_SCROLL);
-		scrolledComposite.setBackground(getColor(SWT.COLOR_WHITE));
+	@Override
+	protected Control createDialogArea(Composite parent) {
+		final Composite rootComposite = (Composite) super
+				.createDialogArea(parent);
+		ScrolledComposite scrolledComposite = new ScrolledComposite(
+				rootComposite, SWT.H_SCROLL | SWT.V_SCROLL);
 		scrolledComposite.setBounds(0, 0, 683, 682);
-		formToolkit.adapt(scrolledComposite);
-		formToolkit.paintBordersFor(scrolledComposite);
 		scrolledComposite.setExpandHorizontal(true);
 		scrolledComposite.setExpandVertical(true);
-		
+
 		Composite composite = new Composite(scrolledComposite, SWT.NONE);
-		composite.setBackground(getColor(SWT.COLOR_WHITE));
-		formToolkit.adapt(composite);
-		formToolkit.paintBordersFor(composite);
-		
+
 		Composite labelComposite = new Composite(composite, SWT.NONE);
-		labelComposite.setBackground(getColor(SWT.COLOR_WHITE));
 		labelComposite.setBounds(10, 10, 206, 601);
-		formToolkit.adapt(labelComposite);
-		formToolkit.paintBordersFor(labelComposite);
 		labelComposite.setLayout(null);
-		
+
 		Label lblPackage = new Label(labelComposite, SWT.RIGHT);
 		lblPackage.setBounds(131, 40, 70, 21);
-		lblPackage.setBackground(getColor(SWT.COLOR_WHITE));
-		formToolkit.adapt(lblPackage, true, true);
 		lblPackage.setText(BodhiText.BodhiNewUpdateDialog_packageLbl);
-		
+
 		Label lblType = new Label(labelComposite, SWT.RIGHT);
 		lblType.setBounds(131, 122, 70, 21);
-		lblType.setBackground(getColor(SWT.COLOR_WHITE));
-		formToolkit.adapt(lblType, true, true);
 		lblType.setText(BodhiText.BodhiNewUpdateDialog_typeLbl);
-		
+
 		Label lblRequest = new Label(labelComposite, SWT.RIGHT);
 		lblRequest.setBounds(131, 159, 70, 21);
-		lblRequest.setBackground(getColor(SWT.COLOR_WHITE));
-		formToolkit.adapt(lblRequest, true, true);
 		lblRequest.setText(BodhiText.BodhiNewUpdateDialog_requestTypeLbl);
-		
+
 		Label lblBugs = new Label(labelComposite, SWT.RIGHT);
 		lblBugs.setBounds(131, 199, 70, 21);
-		lblBugs.setBackground(getColor(SWT.COLOR_WHITE));
-		formToolkit.adapt(lblBugs, true, true);
 		lblBugs.setText(BodhiText.BodhiNewUpdateDialog_bugsLbl);
-		
+
 		Label lblNotes = new Label(labelComposite, SWT.SHADOW_NONE | SWT.RIGHT);
 		lblNotes.setBounds(131, 243, 70, 21);
-		lblNotes.setBackground(getColor(SWT.COLOR_WHITE));
-		formToolkit.adapt(lblNotes, true, true);
 		lblNotes.setText(BodhiText.BodhiNewUpdateDialog_notesLbl);
-		
+
 		Label lblStableKarma = new Label(labelComposite, SWT.WRAP | SWT.RIGHT);
-		lblStableKarma.setBackground(getColor(SWT.COLOR_WHITE));
 		lblStableKarma.setBounds(57, 462, 149, 44);
-		formToolkit.adapt(lblStableKarma, true, true);
-		lblStableKarma.setText(BodhiText.BodhiNewUpdateDialog_stableKarmaThresholdLbl);
-		
+		lblStableKarma
+				.setText(BodhiText.BodhiNewUpdateDialog_stableKarmaThresholdLbl);
+
 		Label lblUnstableKarma = new Label(labelComposite, SWT.WRAP | SWT.RIGHT);
 		lblUnstableKarma.setBounds(113, 513, 93, 41);
-		formToolkit.adapt(lblUnstableKarma, true, true);
-		lblUnstableKarma.setText(BodhiText.BodhiNewUpdateDialog_unstableKarmaThresholdLbl);
-		
+		lblUnstableKarma
+				.setText(BodhiText.BodhiNewUpdateDialog_unstableKarmaThresholdLbl);
+
 		Composite valuesComposite = new Composite(composite, SWT.NONE);
-		valuesComposite.setBackground(getColor(SWT.COLOR_WHITE));
 		valuesComposite.setBounds(222, 10, 459, 601);
-		formToolkit.adapt(valuesComposite);
-		formToolkit.paintBordersFor(valuesComposite);
 		valuesComposite.setLayout(null);
-		
+		valuesComposite.setBackground(rootComposite.getBackground());
+
 		btnEnableKarmaAutomatism = new Button(valuesComposite, SWT.CHECK);
-		btnEnableKarmaAutomatism.setToolTipText(BodhiText.BodhiNewUpdateDialog_enableKarmaAutomatismTooltip);
-		btnEnableKarmaAutomatism.setSelection(PushUpdateCommand.DEFAULT_KARMA_AUTOMATISM);
+		btnEnableKarmaAutomatism
+				.setToolTipText(BodhiText.BodhiNewUpdateDialog_enableKarmaAutomatismTooltip);
+		btnEnableKarmaAutomatism
+				.setSelection(PushUpdateCommand.DEFAULT_KARMA_AUTOMATISM);
 		btnEnableKarmaAutomatism.setBounds(7, 432, 196, 25);
-		formToolkit.adapt(btnEnableKarmaAutomatism, true, true);
-		btnEnableKarmaAutomatism.setText(BodhiText.BodhiNewUpdateDialog_enableKarmaAutomatismLbl);
-		
+		btnEnableKarmaAutomatism
+				.setText(BodhiText.BodhiNewUpdateDialog_enableKarmaAutomatismLbl);
 		btnSuggestReboot = new Button(valuesComposite, SWT.CHECK);
-		btnSuggestReboot.setToolTipText(BodhiText.BodhiNewUpdateDialog_suggestRebootTooltip);
+		btnSuggestReboot
+				.setToolTipText(BodhiText.BodhiNewUpdateDialog_suggestRebootTooltip);
 		btnSuggestReboot.setBounds(7, 403, 166, 25);
 		btnSuggestReboot.setSelection(PushUpdateCommand.DEFAULT_SUGGEST_REBOOT);
-		formToolkit.adapt(btnSuggestReboot, true, true);
-		btnSuggestReboot.setText(BodhiText.BodhiNewUpdateDialog_suggestRebootLbl);
-		
-		txtComment = new Text(valuesComposite, SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
+		btnSuggestReboot
+				.setText(BodhiText.BodhiNewUpdateDialog_suggestRebootLbl);
+
+		txtComment = new Text(valuesComposite, SWT.WRAP | SWT.V_SCROLL
+				| SWT.MULTI|SWT.BORDER);
 		txtComment.setText(this.commentData);
-		final HtmlTooltip tooltip = new HtmlTooltip(
-				txtComment,
-				BodhiText.BodhiNewUpdateDialog_notesHtmlTooltipTxt,
-				330, 270);
+		final HtmlTooltip tooltip = new HtmlTooltip(txtComment,
+				BodhiText.BodhiNewUpdateDialog_notesHtmlTooltipTxt, 330, 270);
 		txtComment.addMouseTrackListener(new MouseTrackListener() {
-			
+
 			@Override
 			public void mouseHover(MouseEvent e) {
 				tooltip.show(new Point(e.x + 10, e.y + 10));
 			}
-			
+
 			@Override
 			public void mouseExit(MouseEvent e) {
 				// nothing
 			}
-			
+
 			@Override
 			public void mouseEnter(MouseEvent e) {
 				// nothing
 			}
 		});
 		txtComment.setBounds(10, 243, 439, 152);
-		formToolkit.adapt(txtComment, true, true);
-		
-		txtBugs = new Text(valuesComposite, SWT.NONE);
+
+		txtBugs = new Text(valuesComposite, SWT.SINGLE|SWT.BORDER);
 		txtBugs.setToolTipText(BodhiText.BodhiNewUpdateDialog_bugsTooltip);
 		txtBugs.setText(this.bugsData);
 		txtBugs.setBounds(10, 197, 193, 31);
-		formToolkit.adapt(txtBugs, true, true);
-		
+
 		comboType = new Combo(valuesComposite, SWT.READ_ONLY);
-		String[] items = getUpdateTypeMap().keySet().toArray(new String[]{});
+		String[] items = getUpdateTypeMap().keySet().toArray(new String[] {});
 		comboType.setItems(items);
 		// select bugfix
 		for (int i = 0; i < items.length; i++) {
@@ -397,174 +376,98 @@ public class BodhiNewUpdateDialog extends AbstractBodhiDialog {
 			}
 		}
 		comboType.setBounds(9, 116, 196, 33);
-		formToolkit.adapt(comboType);
-		formToolkit.paintBordersFor(comboType);
-		
+
 		comboRequest = new Combo(valuesComposite, SWT.READ_ONLY);
-		comboRequest.setItems(getRequestTypeMap().keySet().toArray(new String[]{}));
+		comboRequest.setItems(getRequestTypeMap().keySet().toArray(
+				new String[] {}));
 		comboRequest.setBounds(9, 155, 196, 33);
-		formToolkit.adapt(comboRequest);
-		formToolkit.paintBordersFor(comboRequest);
-		
-		txtStableKarmaThreshold = new Text(valuesComposite, SWT.NONE);
-		txtStableKarmaThreshold.setToolTipText(BodhiText.BodhiNewUpdateDialog_stableKarmaTooltip);
-		txtStableKarmaThreshold.setText(String.valueOf(PushUpdateCommand.DEFAULT_STABLE_KARMA_THRESHOLD));
+
+		txtStableKarmaThreshold = new Text(valuesComposite, SWT.SINGLE|SWT.BORDER);
+		txtStableKarmaThreshold
+				.setToolTipText(BodhiText.BodhiNewUpdateDialog_stableKarmaTooltip);
+		txtStableKarmaThreshold.setText(String
+				.valueOf(PushUpdateCommand.DEFAULT_STABLE_KARMA_THRESHOLD));
 		txtStableKarmaThreshold.setBounds(10, 470, 40, 31);
-		formToolkit.adapt(txtStableKarmaThreshold, true, true);
-		
-		txtUnstableKarmaThreshold = new Text(valuesComposite, SWT.NONE);
-		txtUnstableKarmaThreshold.setToolTipText(BodhiText.BodhiNewUpdateDialog_unstableKarmaTooltip);
-		txtUnstableKarmaThreshold.setText(String.valueOf(PushUpdateCommand.DEFAULT_UNSTABLE_KARMA_THRESHOLD));
+
+		txtUnstableKarmaThreshold = new Text(valuesComposite, SWT.SINGLE|SWT.BORDER);
+		txtUnstableKarmaThreshold
+				.setToolTipText(BodhiText.BodhiNewUpdateDialog_unstableKarmaTooltip);
+		txtUnstableKarmaThreshold.setText(String
+				.valueOf(PushUpdateCommand.DEFAULT_UNSTABLE_KARMA_THRESHOLD));
 		txtUnstableKarmaThreshold.setBounds(10, 522, 40, 31);
-		formToolkit.adapt(txtUnstableKarmaThreshold, true, true);
-		
-		listBuilds = new List(valuesComposite, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
+
+		listBuilds = new List(valuesComposite, SWT.BORDER | SWT.V_SCROLL
+				| SWT.MULTI);
 		listBuilds.setToolTipText(BodhiText.BodhiNewUpdateDialog_buildsTooltip);
 		listBuilds.setItems(this.buildsData);
 		listBuilds.setBounds(10, 40, 439, 70);
 		listBuilds.setSelection(selectedBuild);
-		formToolkit.adapt(listBuilds, true, true);
-		
+
 		Button btnAddBuild = new Button(valuesComposite, SWT.NONE);
 		btnAddBuild.addKeyListener(new KeyListener() {
-			
+
 			@Override
 			public void keyReleased(KeyEvent e) {
 				if (e.character == SWT.CR) {
-					AddNewBuildDialog newBuildDialog = new AddNewBuildDialog(shell);
+					AddNewBuildDialog newBuildDialog = new AddNewBuildDialog(
+							rootComposite.getShell());
 					if (newBuildDialog.open() == Window.OK) {
 						mergeAndUpdateBuilds(newBuildDialog.getBuilds());
 					}
 				}
 			}
-			
+
 			@Override
 			public void keyPressed(KeyEvent e) {
 				// ignore, event doesn't seem to be fired
 			}
 		});
 		btnAddBuild.addMouseListener(new MouseListener() {
-			
+
 			@Override
 			public void mouseUp(MouseEvent e) {
 				// nothing
 			}
-			
+
 			@Override
 			public void mouseDown(MouseEvent e) {
-				AddNewBuildDialog newBuildDialog = new AddNewBuildDialog(shell);
+				AddNewBuildDialog newBuildDialog = new AddNewBuildDialog(
+						rootComposite.getShell());
 				if (newBuildDialog.open() == Window.OK) {
 					mergeAndUpdateBuilds(newBuildDialog.getBuilds());
 				}
 			}
-			
+
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
 				// nothing
 			}
 		});
-		btnAddBuild.setToolTipText(BodhiText.BodhiNewUpdateDialog_addBuildsBtnTooltip);
+		btnAddBuild
+				.setToolTipText(BodhiText.BodhiNewUpdateDialog_addBuildsBtnTooltip);
 		btnAddBuild.setBounds(375, 116, 74, 33);
-		formToolkit.adapt(btnAddBuild, true, true);
 		btnAddBuild.setText(BodhiText.BodhiNewUpdateDialog_addBuildsBtn);
-		
-		btnCloseBugs = new Button(valuesComposite, SWT.CHECK);
-		btnCloseBugs.setToolTipText(BodhiText.BodhiNewUpdateDialog_closeBugsTooltip);
+
+		btnCloseBugs = new Button(valuesComposite, SWT.CHECK|SWT.BORDER);
+		btnCloseBugs
+				.setToolTipText(BodhiText.BodhiNewUpdateDialog_closeBugsTooltip);
 		btnCloseBugs.setSelection(true);
 		btnCloseBugs.setBounds(209, 200, 242, 25);
-		formToolkit.adapt(btnCloseBugs, true, true);
 		btnCloseBugs.setText(BodhiText.BodhiNewUpdateDialog_closeBugsBtn);
-		
-		Button btnSaveUpdate = new Button(valuesComposite, SWT.NONE);
-		btnSaveUpdate.setBounds(9, 568, 94, 33);
-		btnSaveUpdate.forceFocus();
-		btnSaveUpdate.addMouseListener(new MouseListener() {
-			
-			@Override
-			public void mouseUp(MouseEvent e) {
-				// nothing
-			}
-			
-			@Override
-			public void mouseDown(MouseEvent e) {
-				// handle form input
-				handleFormInput();
-			}
-			
-			@Override
-			public void mouseDoubleClick(MouseEvent e) {
-				// nothing
-			}
-		});
-		btnSaveUpdate.addKeyListener(new KeyListener() {
-			
-			@Override
-			public void keyReleased(KeyEvent e) {
-				// handle form input if return key is pressed on the
-				// save update button
-				if (e.character == SWT.CR) {
-					handleFormInput();
-				}
-			}
-			
-			@Override
-			public void keyPressed(KeyEvent e) {
-				// nothing, this event does not seem to get triggered
-			}
-		});
-		formToolkit.adapt(btnSaveUpdate, true, true);
-		btnSaveUpdate.setText(BodhiText.BodhiNewUpdateDialog_saveUpdateBtn);
-		
-		Button btnCancel = new Button(valuesComposite, SWT.NONE);
-		btnCancel.setBounds(109, 568, 64, 33);
-		btnCancel.addMouseListener(new MouseListener() {
-			
-			@Override
-			public void mouseUp(MouseEvent e) {
-				// nothing
-			}
-			
-			@Override
-			public void mouseDown(MouseEvent e) {
-				performCancel();
-			}
-			
-			@Override
-			public void mouseDoubleClick(MouseEvent e) {
-				// nothing
-			}
-		});
-		btnCancel.addKeyListener(new KeyListener() {
-			
-			@Override
-			public void keyReleased(KeyEvent e) {
-				// Cancel only if return key is pressed on the cancel button
-				if (e.character == SWT.CR) {
-					performCancel();
-				}
-			}
-			
-			@Override
-			public void keyPressed(KeyEvent e) {
-				// nothing, this event does not seem to get triggered
-			}
-		});
-		formToolkit.adapt(btnCancel, true, true);
-		btnCancel.setText(BodhiText.BodhiNewUpdateDialog_cancelUpdateBtn);
-		
+
 		lblError = new Label(valuesComposite, SWT.NONE);
 		lblError.setForeground(getColor(SWT.COLOR_RED));
 		lblError.setBounds(10, 10, 439, 21);
-		formToolkit.adapt(lblError, true, true);
 		// set the tab order when tabbing through controls using the
 		// keyboard
 		valuesComposite.setTabList(new Control[] { listBuilds, btnAddBuild,
 				comboType, comboRequest, txtBugs, btnCloseBugs, txtComment,
 				btnSuggestReboot, btnEnableKarmaAutomatism,
-				txtStableKarmaThreshold, txtUnstableKarmaThreshold,
-				btnSaveUpdate, btnCancel });
+				txtStableKarmaThreshold, txtUnstableKarmaThreshold });
 		scrolledComposite.setContent(composite);
-		scrolledComposite.setMinSize(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		scrolledComposite.setMinSize(composite.computeSize(SWT.DEFAULT,
+				SWT.DEFAULT));
+		return rootComposite;
 
 	}
 
@@ -575,7 +478,6 @@ public class BodhiNewUpdateDialog extends AbstractBodhiDialog {
 	 * org.fedoraproject.eclipse.packager.bodhi.internal.ui.AbstractBodhiDialog
 	 * #validateForm()
 	 */
-	@Override
 	protected boolean validateForm() {
 		String bugs = txtBugs.getText();
 		// need to have at least one build selected
@@ -615,12 +517,11 @@ public class BodhiNewUpdateDialog extends AbstractBodhiDialog {
 		setDataFields();
 		return true;
 	}
-	
+
 	/**
 	 * Set all data fields from UI widgets.
 	 * 
-	 * pre: validation passed
-	 * post: public getters are functional
+	 * pre: validation passed post: public getters are functional
 	 */
 	private void setDataFields() {
 		setBugs();
@@ -634,7 +535,7 @@ public class BodhiNewUpdateDialog extends AbstractBodhiDialog {
 		setUnstableKarmaThreshold();
 		setUpdateType();
 	}
-	
+
 	/**
 	 * Update builds list after AddNewBuildDialog closed.
 	 * 
@@ -650,4 +551,19 @@ public class BodhiNewUpdateDialog extends AbstractBodhiDialog {
 		listBuilds.setItems(newBuilds);
 		listBuilds.redraw();
 	}
+
+	/**
+	 * Provide an inline error message feedback if some field is invalid.
+	 */
+	protected void setValidationError(String error) {
+		this.lblError.setText(error);
+		this.lblError.setForeground(getColor(SWT.COLOR_RED));
+		this.lblError.redraw();
+	}
+
+	protected Color getColor(int systemColorID) {
+		Display display = Display.getCurrent();
+		return display.getSystemColor(systemColorID);
+	}
+
 }
