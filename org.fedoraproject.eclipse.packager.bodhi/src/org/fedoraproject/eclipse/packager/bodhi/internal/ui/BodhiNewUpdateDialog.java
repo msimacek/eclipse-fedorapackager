@@ -18,7 +18,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
@@ -26,6 +25,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -271,15 +271,9 @@ public class BodhiNewUpdateDialog extends Dialog {
 	 */
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		final Composite rootComposite = (Composite) super
+		final Composite composite = (Composite) super
 				.createDialogArea(parent);
-		ScrolledComposite scrolledComposite = new ScrolledComposite(
-				rootComposite, SWT.H_SCROLL | SWT.V_SCROLL);
-		scrolledComposite.setBounds(0, 0, 683, 682);
-		scrolledComposite.setExpandHorizontal(true);
-		scrolledComposite.setExpandVertical(true);
-
-		Composite composite = new Composite(scrolledComposite, SWT.NONE);
+		composite.setLayout(new RowLayout());
 
 		Composite labelComposite = new Composite(composite, SWT.NONE);
 		labelComposite.setBounds(10, 10, 206, 601);
@@ -318,7 +312,6 @@ public class BodhiNewUpdateDialog extends Dialog {
 		Composite valuesComposite = new Composite(composite, SWT.NONE);
 		valuesComposite.setBounds(222, 10, 459, 601);
 		valuesComposite.setLayout(null);
-		valuesComposite.setBackground(rootComposite.getBackground());
 
 		btnEnableKarmaAutomatism = new Button(valuesComposite, SWT.CHECK);
 		btnEnableKarmaAutomatism
@@ -400,7 +393,7 @@ public class BodhiNewUpdateDialog extends Dialog {
 			public void keyReleased(KeyEvent e) {
 				if (e.character == SWT.CR) {
 					AddNewBuildDialog newBuildDialog = new AddNewBuildDialog(
-							rootComposite.getShell());
+							composite.getShell());
 					if (newBuildDialog.open() == Window.OK) {
 						mergeAndUpdateBuilds(newBuildDialog.getBuilds());
 					}
@@ -413,7 +406,7 @@ public class BodhiNewUpdateDialog extends Dialog {
 			@Override
 			public void mouseDown(MouseEvent e) {
 				AddNewBuildDialog newBuildDialog = new AddNewBuildDialog(
-						rootComposite.getShell());
+						composite.getShell());
 				if (newBuildDialog.open() == Window.OK) {
 					mergeAndUpdateBuilds(newBuildDialog.getBuilds());
 				}
@@ -441,10 +434,7 @@ public class BodhiNewUpdateDialog extends Dialog {
 				comboType, comboRequest, txtBugs, btnCloseBugs, txtComment,
 				btnSuggestReboot, btnEnableKarmaAutomatism,
 				txtStableKarmaThreshold, txtUnstableKarmaThreshold });
-		scrolledComposite.setContent(composite);
-		scrolledComposite.setMinSize(composite.computeSize(SWT.DEFAULT,
-				SWT.DEFAULT));
-		return rootComposite;
+		return composite;
 
 	}
 
