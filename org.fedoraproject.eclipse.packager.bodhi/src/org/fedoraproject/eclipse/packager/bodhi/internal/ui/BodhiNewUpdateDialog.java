@@ -19,11 +19,11 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.MouseTrackListener;
+import org.eclipse.swt.events.MouseTrackAdapter;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
@@ -341,21 +341,11 @@ public class BodhiNewUpdateDialog extends Dialog {
 		txtComment.setText(this.commentData);
 		final HtmlTooltip tooltip = new HtmlTooltip(txtComment,
 				BodhiText.BodhiNewUpdateDialog_notesHtmlTooltipTxt, 330, 270);
-		txtComment.addMouseTrackListener(new MouseTrackListener() {
+		txtComment.addMouseTrackListener(new MouseTrackAdapter() {
 
 			@Override
 			public void mouseHover(MouseEvent e) {
 				tooltip.show(new Point(e.x + 10, e.y + 10));
-			}
-
-			@Override
-			public void mouseExit(MouseEvent e) {
-				// nothing
-			}
-
-			@Override
-			public void mouseEnter(MouseEvent e) {
-				// nothing
 			}
 		});
 		txtComment.setBounds(10, 243, 439, 152);
@@ -404,7 +394,7 @@ public class BodhiNewUpdateDialog extends Dialog {
 		listBuilds.setSelection(selectedBuild);
 
 		Button btnAddBuild = new Button(valuesComposite, SWT.NONE);
-		btnAddBuild.addKeyListener(new KeyListener() {
+		btnAddBuild.addKeyListener(new KeyAdapter() {
 
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -417,17 +407,8 @@ public class BodhiNewUpdateDialog extends Dialog {
 				}
 			}
 
-			@Override
-			public void keyPressed(KeyEvent e) {
-				// ignore, event doesn't seem to be fired
-			}
 		});
-		btnAddBuild.addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseUp(MouseEvent e) {
-				// nothing
-			}
+		btnAddBuild.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseDown(MouseEvent e) {
@@ -438,10 +419,6 @@ public class BodhiNewUpdateDialog extends Dialog {
 				}
 			}
 
-			@Override
-			public void mouseDoubleClick(MouseEvent e) {
-				// nothing
-			}
 		});
 		btnAddBuild
 				.setToolTipText(BodhiText.BodhiNewUpdateDialog_addBuildsBtnTooltip);
