@@ -2,7 +2,6 @@
 <toc topic="userguide/Fedora_Packager_For_Eclipse_User_Guide/Fedora-Packager-For-Eclipse-User-Guide.html" label="Fedora Packager User Guide">
 	<topic href="userguide/Fedora_Packager_For_Eclipse_User_Guide/Fedora-Packager-For-Eclipse-User-Guide.html" label="Fedora Packager For Eclipse User Guide">
 		<topic href="userguide/Fedora_Packager_For_Eclipse_User_Guide/Fedora-Packager-For-Eclipse-User-Guide.html" label="What is Fedora Packager for Eclipse?"></topic>
-		<topic href="userguide/Fedora_Packager_For_Eclipse_User_Guide/Upgrade-to-Fedora-Packager-for-Eclipse-0-2-0.html" label="Upgrade to Fedora Packager for Eclipse 0.2.0"></topic>
 		<topic href="userguide/Fedora_Packager_For_Eclipse_User_Guide/Getting-Started-as-Maintainer-for-a-New-Fedora-Package.html" label="Getting Started as Maintainer for a New Fedora Package">
 			<topic href="userguide/Fedora_Packager_For_Eclipse_User_Guide/Getting-Started-as-Maintainer-for-a-New-Fedora-Package.html#Creating_Account_for_New_Contributors" label="Creating Account for New Contributors">
 				<topic href="userguide/Fedora_Packager_For_Eclipse_User_Guide/Getting-Started-as-Maintainer-for-a-New-Fedora-Package.html#Creating_a_new_account_in_Fedora_Account_System" label="Creating a new account in Fedora Account System"></topic>
@@ -33,9 +32,9 @@
 		</topic>
 		<topic href="userguide/Fedora_Packager_For_Eclipse_User_Guide/Using-Fedora-Packager-for-Eclipse.html" label="Using Fedora Packager for Eclipse">
 			<topic href="userguide/Fedora_Packager_For_Eclipse_User_Guide/Using-Fedora-Packager-for-Eclipse.html#Creating_a_Local_Fedora_RPM_Project" label="Creating a Local Fedora RPM Project">
-				<topic href="userguide/Fedora_Packager_For_Eclipse_User_Guide/Using-Fedora-Packager-for-Eclipse.html#4.a._Create_project_using_Rpm_Stubby" label="4.a. Create project using Rpm Stubby"></topic>
+				<topic href="userguide/Fedora_Packager_For_Eclipse_User_Guide/Using-Fedora-Packager-for-Eclipse.html#4.a._Start_a_plain_project" label="4.a. Start a plain project"></topic>
 				<topic href="userguide/Fedora_Packager_For_Eclipse_User_Guide/Using-Fedora-Packager-for-Eclipse.html#4.b._Use_existing_.spec_file_and_sources_by_importing_SRPM_file" label="4.b. Use existing .spec file and sources by importing SRPM file"></topic>
-				<topic href="userguide/Fedora_Packager_For_Eclipse_User_Guide/Using-Fedora-Packager-for-Eclipse.html#4.c._Start_a_plain_project" label="4.c. Start a plain project"></topic>
+				<topic href="userguide/Fedora_Packager_For_Eclipse_User_Guide/Using-Fedora-Packager-for-Eclipse.html#4.c._Create_project_using_Rpm_Stubby" label="4.c. Create project using Rpm Stubby"></topic>
 				<topic href="userguide/Fedora_Packager_For_Eclipse_User_Guide/Using-Fedora-Packager-for-Eclipse.html#Local_Menu" label="Local Menu"></topic>
 			</topic>
 			<topic href="userguide/Fedora_Packager_For_Eclipse_User_Guide/Using-Fedora-Packager-for-Eclipse.html#Importing_a_Fedora_Git_Project" label="Importing a Fedora Git Project"></topic>
