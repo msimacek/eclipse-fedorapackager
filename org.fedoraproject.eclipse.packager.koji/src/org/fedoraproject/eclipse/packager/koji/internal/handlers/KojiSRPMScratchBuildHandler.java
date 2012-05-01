@@ -28,6 +28,7 @@ import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiPreferencesConstants;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
+import org.fedoraproject.eclipse.packager.koji.KojiUtils;
 import org.fedoraproject.eclipse.packager.koji.api.KojiSRPMBuildJob;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
@@ -92,7 +93,7 @@ public class KojiSRPMScratchBuildHandler extends KojiBuildHandler {
 		Job job = new KojiSRPMBuildJob(getProjectRoot().getProductStrings()
 				.getProductName(), getShell(event), getProjectRoot(),
 				kojiInfo, srpmPath);
-		job.addJobChangeListener(getJobChangeListener());
+		job.addJobChangeListener(KojiUtils.getJobChangeListener(kojiInfo, getProjectRoot()));
 		job.setUser(true);
 		job.schedule();
 		return null; // must be null

@@ -21,22 +21,28 @@ import org.fedoraproject.eclipse.packager.koji.KojiText;
 public class BuildAlreadyExistsException extends KojiHubClientException {
 
 	private static final long serialVersionUID = 5322603068319243734L;
-	
+
 	/* existing task ID */
 	private int taskId;
-	
+
 	/**
-	 * @param taskId The task ID, which already existed.
+	 * @param taskId
+	 *            The task ID, which already existed.
 	 */
 	public BuildAlreadyExistsException(int taskId) {
 		this.taskId = taskId;
 	}
-	
+
 	@Override
 	public String getMessage() {
-		return NLS.bind(KojiText.BuildAlreadyExistsException_msg, this.taskId);
+		if (taskId > -1) {
+			return NLS.bind(KojiText.BuildAlreadyExistsException_msg,
+					this.taskId);
+		}
+		return NLS.bind(KojiText.BuildAlreadyExistsException_msg,
+				"Unknown"); //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * @return The task ID of the existing build.
 	 */

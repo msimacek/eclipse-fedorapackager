@@ -52,6 +52,20 @@ public class KojiText extends NLS {
 	/****/ public static String KojiBuildCommand_buildLogMsg;
 	// BuildAlreadyExistsException
 	/****/ public static String BuildAlreadyExistsException_msg;
+	// ChainBuildDialog
+	/****/ public static String ChainBuildDialog_AddButton;
+	/****/ public static String ChainBuildDialog_AddNewButton;
+	/****/ public static String ChainBuildDialog_AddPackagesLabel;
+	/****/ public static String ChainBuildDialog_BuildTitle;
+	/****/ public static String ChainBuildDialog_CancelButton;
+	/****/ public static String ChainBuildDialog_DownButton;
+	/****/ public static String ChainBuildDialog_GroupButton;
+	/****/ public static String ChainBuildDialog_PackageTitle;
+	/****/ public static String ChainBuildDialog_RemoveButton;
+	/****/ public static String ChainBuildDialog_ResetButton;
+	/****/ public static String ChainBuildDialog_StartButton;
+	/****/ public static String ChainBuildDialog_UpButton;
+
 	// FedoraPackagerKojiPreferencePage
 	/****/ public static String FedoraPackagerKojiPreferencePage_AdvancedButtonText;
 	/****/ public static String FedoraPackagerKojiPreferencePage_ChangeInstanceLabel;
