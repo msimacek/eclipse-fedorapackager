@@ -4,8 +4,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -107,17 +107,7 @@ public class KojiServerDialog extends Dialog {
 		buttonData.widthHint = 100;
 		cancelButton = new Button(buttons, SWT.NONE);
 		cancelButton.setText("Cancel"); //$NON-NLS-1$
-		cancelButton.addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseDoubleClick(MouseEvent e) {
-				// no op
-			}
-
-			@Override
-			public void mouseDown(MouseEvent e) {
-				// no op
-			}
+		cancelButton.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseUp(MouseEvent e) {
@@ -128,17 +118,7 @@ public class KojiServerDialog extends Dialog {
 		cancelButton.setLayoutData(buttonData);
 		okButton = new Button(buttons, SWT.NONE);
 		okButton.setText("OK"); //$NON-NLS-1$
-		okButton.addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseDoubleClick(MouseEvent e) {
-				// no op
-			}
-
-			@Override
-			public void mouseDown(MouseEvent e) {
-				// no op
-			}
+		okButton.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseUp(MouseEvent e) {
