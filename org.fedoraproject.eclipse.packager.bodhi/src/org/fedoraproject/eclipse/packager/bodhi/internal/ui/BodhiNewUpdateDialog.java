@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.bodhi.internal.ui;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ComboViewer;
+import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -27,12 +27,10 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.fedoraproject.eclipse.packager.bodhi.BodhiText;
@@ -53,9 +51,9 @@ public class BodhiNewUpdateDialog extends Dialog {
 	private Text txtUnstableKarmaThreshold;
 	private Button btnEnableKarmaAutomatism;
 	private Button btnSuggestReboot;
-	private Combo comboType;
-	private Combo comboRequest;
-	private List listBuilds;
+	private ComboViewer comboType;
+	private ComboViewer comboRequest;
+	private ListViewer listBuilds;
 	private Button btnCloseBugs;
 	// Data fields in order to be able to pre-fill some fields
 	private String[] buildsData;
@@ -120,7 +118,7 @@ public class BodhiNewUpdateDialog extends Dialog {
 	}
 
 	private void setBuilds() {
-		this.buildsData = listBuilds.getSelection();
+		this.buildsData = listBuilds.getList().getSelection();
 	}
 
 	/**
@@ -194,8 +192,8 @@ public class BodhiNewUpdateDialog extends Dialog {
 	}
 
 	private void setRequestType() {
-		this.requestTypeData = getRequestTypeMap().get(
-				comboRequest.getItem(comboRequest.getSelectionIndex()));
+		this.requestTypeData = RequestType.valueOf(comboRequest.getCombo().getItem(
+				comboRequest.getCombo().getSelectionIndex()));
 	}
 
 	/**
@@ -207,31 +205,8 @@ public class BodhiNewUpdateDialog extends Dialog {
 	}
 
 	private void setUpdateType() {
-		this.updateTypeData = getUpdateTypeMap().get(
-				comboType.getItem(comboType.getSelectionIndex()));
-	}
-
-	/*
-	 * fixed set of update types
-	 */
-	private static Map<String, UpdateType> getUpdateTypeMap() {
-		Map<String, UpdateType> map = new HashMap<String, PushUpdateCommand.UpdateType>();
-		map.put("bugfix", UpdateType.BUGFIX); //$NON-NLS-1$
-		map.put("enhancement", UpdateType.ENHANCEMENT); //$NON-NLS-1$
-		map.put("security", UpdateType.SECURITY); //$NON-NLS-1$
-		map.put("newpackage", UpdateType.NEWPACKAGE); //$NON-NLS-1$
-		return map;
-	}
-
-	/*
-	 * fixed set of request types
-	 */
-	private static Map<String, RequestType> getRequestTypeMap() {
-		Map<String, RequestType> map = new HashMap<String, PushUpdateCommand.RequestType>();
-		map.put("Stable", RequestType.STABLE); //$NON-NLS-1$
-		map.put("Testing", RequestType.TESTING); //$NON-NLS-1$
-		map.put("None", RequestType.NONE); //$NON-NLS-1$
-		return map;
+		this.updateTypeData = UpdateType.valueOf(comboType.getCombo().getItem(
+				comboType.getCombo().getSelectionIndex()));
 	}
 
 	/**
@@ -348,22 +323,16 @@ public class BodhiNewUpdateDialog extends Dialog {
 		txtBugs.setText(this.bugsData);
 		txtBugs.setBounds(10, 197, 193, 31);
 
-		comboType = new Combo(valuesComposite, SWT.READ_ONLY);
-		String[] items = getUpdateTypeMap().keySet().toArray(new String[] {});
-		comboType.setItems(items);
-		// select bugfix
-		for (int i = 0; i < items.length; i++) {
-			if (items[i].equalsIgnoreCase("bugfix")) { //$NON-NLS-1$
-				comboType.select(i);
-				break;
-			}
-		}
-		comboType.setBounds(9, 116, 196, 33);
+		comboType = new ComboViewer(valuesComposite, SWT.READ_ONLY);
+		comboType.setContentProvider(ArrayContentProvider.getInstance());
+		comboType.setInput(UpdateType.values());
+		comboType.getCombo().setBounds(9, 116, 196, 33);
+		comboType.setSelection(new StructuredSelection(UpdateType.BUGFIX));
 
-		comboRequest = new Combo(valuesComposite, SWT.READ_ONLY);
-		comboRequest.setItems(getRequestTypeMap().keySet().toArray(
-				new String[] {}));
-		comboRequest.setBounds(9, 155, 196, 33);
+		comboRequest = new ComboViewer(valuesComposite, SWT.READ_ONLY);
+		comboRequest.setContentProvider(ArrayContentProvider.getInstance());
+		comboRequest.setInput(RequestType.values());
+		comboRequest.getCombo().setBounds(9, 155, 196, 33);
 
 		txtStableKarmaThreshold = new Text(valuesComposite, SWT.SINGLE|SWT.BORDER);
 		txtStableKarmaThreshold
@@ -379,12 +348,13 @@ public class BodhiNewUpdateDialog extends Dialog {
 				.valueOf(PushUpdateCommand.DEFAULT_UNSTABLE_KARMA_THRESHOLD));
 		txtUnstableKarmaThreshold.setBounds(10, 522, 40, 31);
 
-		listBuilds = new List(valuesComposite, SWT.BORDER | SWT.V_SCROLL
+		listBuilds = new ListViewer(valuesComposite, SWT.BORDER | SWT.V_SCROLL
 				| SWT.MULTI);
-		listBuilds.setToolTipText(BodhiText.BodhiNewUpdateDialog_buildsTooltip);
-		listBuilds.setItems(this.buildsData);
-		listBuilds.setBounds(10, 40, 439, 70);
-		listBuilds.setSelection(selectedBuild);
+		listBuilds.setContentProvider(ArrayContentProvider.getInstance());
+		listBuilds.getList().setToolTipText(BodhiText.BodhiNewUpdateDialog_buildsTooltip);
+		listBuilds.setInput(this.buildsData);
+		listBuilds.getList().setBounds(10, 40, 439, 70);
+		listBuilds.setSelection(new StructuredSelection(selectedBuild));
 
 		Button btnAddBuild = new Button(valuesComposite, SWT.NONE);
 		btnAddBuild.addKeyListener(new KeyAdapter() {
@@ -395,7 +365,7 @@ public class BodhiNewUpdateDialog extends Dialog {
 					AddNewBuildDialog newBuildDialog = new AddNewBuildDialog(
 							composite.getShell());
 					if (newBuildDialog.open() == Window.OK) {
-						mergeAndUpdateBuilds(newBuildDialog.getBuilds());
+						listBuilds.add(newBuildDialog.getBuilds());
 					}
 				}
 			}
@@ -408,7 +378,7 @@ public class BodhiNewUpdateDialog extends Dialog {
 				AddNewBuildDialog newBuildDialog = new AddNewBuildDialog(
 						composite.getShell());
 				if (newBuildDialog.open() == Window.OK) {
-					mergeAndUpdateBuilds(newBuildDialog.getBuilds());
+					listBuilds.add(newBuildDialog.getBuilds());
 				}
 			}
 
@@ -430,8 +400,8 @@ public class BodhiNewUpdateDialog extends Dialog {
 		lblError.setBounds(10, 10, 439, 21);
 		// set the tab order when tabbing through controls using the
 		// keyboard
-		valuesComposite.setTabList(new Control[] { listBuilds, btnAddBuild,
-				comboType, comboRequest, txtBugs, btnCloseBugs, txtComment,
+		valuesComposite.setTabList(new Control[] { btnAddBuild,
+				txtBugs, btnCloseBugs, txtComment,
 				btnSuggestReboot, btnEnableKarmaAutomatism,
 				txtStableKarmaThreshold, txtUnstableKarmaThreshold });
 		return composite;
@@ -448,7 +418,7 @@ public class BodhiNewUpdateDialog extends Dialog {
 	protected boolean validateForm() {
 		String bugs = txtBugs.getText();
 		// need to have at least one build selected
-		if (listBuilds.getSelectionCount() == 0) {
+		if (listBuilds.getSelection().isEmpty()) {
 			setValidationError(BodhiText.BodhiNewUpdateDialog_buildsSelectionErrorMsg);
 			return false;
 		}
@@ -471,7 +441,7 @@ public class BodhiNewUpdateDialog extends Dialog {
 			return false;
 		}
 		// requestType needs to be set
-		if (comboRequest.getSelectionIndex() < 0) {
+		if (comboRequest.getCombo().getSelectionIndex() < 0) {
 			setValidationError(BodhiText.BodhiNewUpdateDialog_invalidRequestTypeErrorMsg);
 			return false;
 		}
@@ -496,27 +466,11 @@ public class BodhiNewUpdateDialog extends Dialog {
 		setCloseBugs();
 		setComment();
 		setKarmaAutomatismEnabled();
-		setRequestType();
 		setStableKarmaThreshold();
 		setSuggestReboot();
 		setUnstableKarmaThreshold();
+		setRequestType();
 		setUpdateType();
-	}
-
-	/**
-	 * Update builds list after AddNewBuildDialog closed.
-	 * 
-	 * @param additionalBuilds
-	 */
-	private void mergeAndUpdateBuilds(String[] additionalBuilds) {
-		String[] newBuilds = Arrays.copyOf(listBuilds.getItems(),
-				listBuilds.getItems().length + additionalBuilds.length);
-		for (int i = listBuilds.getItems().length, j = 0; i < listBuilds
-				.getItems().length + additionalBuilds.length; i++, j++) {
-			newBuilds[i] = additionalBuilds[j];
-		}
-		listBuilds.setItems(newBuilds);
-		listBuilds.redraw();
 	}
 
 	/**
