@@ -18,6 +18,8 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -179,7 +181,9 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 		}
 		subMonitor.worked(5);
 		kojiBuildCmd.setKojiClient(kojiClient);
-		kojiBuildCmd.sourceLocation(uploadPath + "/" + srpmPath.lastSegment()); //$NON-NLS-1$
+		List<String> sourceLocation = new ArrayList<String>();
+		sourceLocation.add(uploadPath + "/" + srpmPath.lastSegment()); //$NON-NLS-1$
+		kojiBuildCmd.sourceLocation(sourceLocation);
 		String nvr;
 		try {
 			nvr = RPMUtils.getNVR(fedoraProjectRoot, bci);
@@ -188,10 +192,14 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,
 					KojiText.KojiBuildHandler_errorGettingNVR, e);
 		}
+		kojiBuildCmd.nvr(new String[] { nvr }).isScratchBuild(true);
+		logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
+				KojiBuildCommand.class.getName()));
 		try {
 			if (!kojiInfo[2].contentEquals("true")) { //$NON-NLS-1$
 				kojiBuildCmd.buildTarget(bci.getBuildTarget());
-				logger.logDebug(NLS.bind(KojiText.KojiSRPMBuildJob_logTarget, bci.getBuildTarget()));
+				logger.logDebug(NLS.bind(KojiText.KojiSRPMBuildJob_logTarget,
+						bci.getBuildTarget()));
 			} else {
 				final Set<String> tagSet = new HashSet<String>();
 				for (HashMap<?, ?> tagInfo : kojiClient.listTargets()) {
@@ -215,9 +223,9 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 					throw new OperationCanceledException();
 				}
 				kojiBuildCmd.buildTarget(buildTarget);
-				logger.logDebug(NLS.bind(KojiText.KojiSRPMBuildJob_logTarget, buildTarget));
+				logger.logDebug(NLS.bind(KojiText.KojiSRPMBuildJob_logTarget,
+						buildTarget));
 			}
-			kojiBuildCmd.nvr(nvr).isScratchBuild(true);
 			logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
 					KojiBuildCommand.class.getName()));
 

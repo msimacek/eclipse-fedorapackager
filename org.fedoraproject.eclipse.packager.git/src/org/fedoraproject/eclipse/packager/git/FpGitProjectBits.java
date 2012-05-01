@@ -330,8 +330,8 @@ public class FpGitProjectBits implements IFpProjectBits {
 			// ignore
 		}
 		if (maxRelease == -1) {
-			// most likely a new package. ATM this is F-17
-			return "17"; //$NON-NLS-1$
+			// most likely a new package. ATM this is F-18
+			return "18"; //$NON-NLS-1$
 		} else {
 			return Integer.toString(maxRelease + 1);
 		}

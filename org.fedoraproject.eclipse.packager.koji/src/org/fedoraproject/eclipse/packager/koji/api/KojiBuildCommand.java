@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.koji.api;
 
+import java.util.List;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.osgi.util.NLS;
@@ -37,23 +39,23 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 	/**
 	 * The XMLRPC based client to use for Koji interaction.
 	 */
-	private IKojiHubClient kojiClient;
+	protected IKojiHubClient kojiClient;
 	/**
 	 * Set to true if scratch build should be pushed instead of a regular build.
 	 */
-	private boolean scratchBuild = false;
+	protected boolean scratchBuild = false;
 	/**
 	 * The URL into the VCS repo which should be used for the build. 
 	 */
-	private String location;
+	protected List<?> location;
 	/**
 	 * The distribution tag (e.g. dist-rawhide)
 	 */
-	private String buildTarget;
+	protected String buildTarget;
 	/**
 	 * The name-version-release token to push a build for
 	 */
-	private String nvr;
+	protected String[] nvr;
 	
 	/*
 	 * (non-Javadoc)
@@ -68,7 +70,7 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 					this.projectRoot.getProductStrings().getBuildToolName()));
 		}
 		// we also require scmURL to be set
-		if (location == null) {
+		if (location == null || location.size() == 0 || !(location.get(0) instanceof String || location.get(0) instanceof List<?>)) {
 			throw new CommandMisconfiguredException(KojiText.KojiBuildCommand_configErrorNoScmURL);
 		}
 		// distribution can't be null
@@ -76,7 +78,7 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 			throw new CommandMisconfiguredException(KojiText.KojiBuildCommand_configErrorNoBuildTarget);
 		}
 		// nvr can't be null
-		if (nvr == null) {
+		if (nvr == null || nvr.length == 0) {
 			throw new CommandMisconfiguredException(KojiText.KojiBuildCommand_configErrorNoNVR);
 		}
 	}
@@ -113,7 +115,7 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 	 * 	a tarball or the location of an uploaded srpm on the Koji server.
 	 * @return This instance.
 	 */
-	public KojiBuildCommand sourceLocation(String location) {
+	public KojiBuildCommand sourceLocation(List<?> location) {
 		this.location = location;
 		return this;
 	}
@@ -135,7 +137,7 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 	 * @param nvr
 	 * @return This instance.
 	 */
-	public KojiBuildCommand nvr(String nvr) {
+	public KojiBuildCommand nvr(String[] nvr) {
 		this.nvr = nvr;
 		return this;
 	}
@@ -197,7 +199,7 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 			logger.logDebug(KojiText.KojiBuildCommand_buildLogMsg);
 		}
 		// attempt to push build
-		int taskId = this.kojiClient.build(buildTarget, location.toString(), nvr, scratchBuild);
+		int taskId = this.kojiClient.build(buildTarget, location, nvr, scratchBuild)[0];
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}
@@ -212,5 +214,6 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 		monitor.done();
 		return result;
 	}
+
 
 }

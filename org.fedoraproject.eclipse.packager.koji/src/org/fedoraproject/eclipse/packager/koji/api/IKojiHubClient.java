@@ -11,6 +11,7 @@
 package org.fedoraproject.eclipse.packager.koji.api;
 
 import java.util.HashMap;
+import java.util.List;
 
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
@@ -45,7 +46,7 @@ public interface IKojiHubClient {
 	 * 
 	 * @param target
 	 *            The dist-tag (see: $ koji list-targets).
-	 * @param scmURL
+	 * @param scmURLs
 	 * @param nvr
 	 *            Name-Version-Release (see: RPM package naming).
 	 * @param scratch
@@ -54,8 +55,8 @@ public interface IKojiHubClient {
 	 * @throws KojiHubClientException
 	 *             If some error occurred.
 	 */
-	public int build(String target, String scmURL, String nvr, boolean scratch)
-			throws KojiHubClientException;
+	public int[] build(String target, List<?> scmURLs, String[] nvr,
+			boolean scratch) throws KojiHubClientException;
 
 	/**
 	 * Fetches information related to a name-version-release token.

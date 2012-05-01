@@ -14,6 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.xmlrpc.XmlRpcException;
@@ -108,35 +109,46 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 	 * .lang.String, java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
-	public int build(String target, String scmURL, String nvr, boolean scratch)
-			throws KojiHubClientException {
-		ArrayList<Object> params = new ArrayList<Object>();
-		params.add(scmURL);
-		params.add(target);
-		if (scratch) {
-			Map<String, Boolean> scratchParam = new HashMap<String, Boolean>();
-			scratchParam.put("scratch", true); //$NON-NLS-1$
-			params.add(scratchParam);
-		} else if (nvr != null) {
-			KojiBuildInfo buildInfo = getBuild(nvr);
-			if (buildInfo != null && buildInfo.isComplete()) {
-				throw new BuildAlreadyExistsException(buildInfo.getTaskId());
+	public int[] build(String target, List<?> scmURLs, String[] nvrs,
+			boolean scratch) throws KojiHubClientException {
+		ArrayList<Object> params;
+		Map<String, Boolean> scratchParam = new HashMap<String, Boolean>();
+		scratchParam.put("scratch", true); //$NON-NLS-1$
+
+		if (nvrs != null && !scratch) {
+			for (String nvr : nvrs) {
+				KojiBuildInfo buildInfo = getBuild(nvr);
+				if (buildInfo != null && buildInfo.isComplete()) {
+					throw new BuildAlreadyExistsException(buildInfo.getTaskId());
+				}
 			}
 		}
+		int[] taskIds;
 		Object result;
 		try {
-			result = xmlRpcClient.execute("build", params); //$NON-NLS-1$
+			if (scmURLs.get(0) instanceof String) {
+				taskIds = new int[scmURLs.size()];
+				for (int i = 0; i < scmURLs.size(); i++) {
+					params = new ArrayList<Object>();
+					params.add(scmURLs.get(i));
+					params.add(target);
+					if (scratch) {
+						params.add(scratchParam);
+					}
+					result = xmlRpcClient.execute("build", params); //$NON-NLS-1$
+					taskIds[i] = Integer.parseInt(result.toString());
+				}
+			} else {
+				params = new ArrayList<Object>();
+				params.add(scmURLs);
+				params.add(target);
+				result = xmlRpcClient.execute("chainBuild", params); //$NON-NLS-1$
+				taskIds = new int[] { Integer.parseInt(result.toString()) };
+			}
 		} catch (XmlRpcException e) {
 			throw new KojiHubClientException(e);
 		}
-		int taskId;
-		try {
-			taskId = Integer.parseInt(result.toString());
-		} catch (NumberFormatException e) {
-			// no task ID returned, some other error must have happened.
-			throw new KojiHubClientException(result.toString());
-		}
-		return taskId;
+		return taskIds;
 	}
 
 	/*
@@ -232,8 +244,8 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 			Object[] genericTargets = (Object[]) xmlRpcClient.execute(
 					"getBuildTargets", new Object[0]); //$NON-NLS-1$
 			HashMap<?, ?>[] targetArray = new HashMap<?, ?>[genericTargets.length];
-			for (int i = 0; i < genericTargets.length; i++){
-				targetArray[i] = (HashMap<?,?>) genericTargets[i];
+			for (int i = 0; i < genericTargets.length; i++) {
+				targetArray[i] = (HashMap<?, ?>) genericTargets[i];
 			}
 			return targetArray;
 		} catch (XmlRpcException e) {

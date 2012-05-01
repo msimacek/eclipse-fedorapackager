@@ -12,8 +12,10 @@ package org.fedoraproject.eclipse.packager.koji.api;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -123,36 +125,40 @@ public class KojiBuildJob extends Job {
 		try {
 			kojiClient = getHubClient();
 		} catch (MalformedURLException e) {
-			logger.logError(NLS.bind(KojiText.KojiBuildHandler_invalidHubUrl,
-					fedoraProjectRoot.getProductStrings().getBuildToolName()),
+			logger.logError(NLS.bind(
+					KojiText.KojiBuildHandler_invalidHubUrl,
+					fedoraProjectRoot.getProductStrings().getBuildToolName()), e);
+			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,
+					NLS.bind(KojiText.KojiBuildHandler_invalidHubUrl,
+							fedoraProjectRoot.getProductStrings().getBuildToolName()),
+							e);
+		}
+		kojiBuildCmd.setKojiClient(kojiClient);
+		List<String> sourceLocation = new ArrayList<String>();
+		sourceLocation.add(projectBits
+				.getScmUrlForKoji(fedoraProjectRoot, bci));
+		kojiBuildCmd.sourceLocation(sourceLocation);
+		String nvr;
+		try {
+			nvr = RPMUtils.getNVR(fedoraProjectRoot, bci);
+		} catch (IOException e) {
+			logger.logError(KojiText.KojiBuildHandler_errorGettingNVR,
 					e);
 			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID, NLS
 					.bind(KojiText.KojiBuildHandler_invalidHubUrl,
 							fedoraProjectRoot.getProductStrings()
 									.getBuildToolName()), e);
 		}
-		monitor.subTask(NLS.bind(KojiText.KojiBuildCommand_kojiLogInTask,
-				fedoraProjectRoot.getProductStrings().getBuildToolName()));
+		kojiBuildCmd.nvr(new String[]{nvr})
+				.isScratchBuild(isScratch);
+		logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
+				KojiBuildCommand.class.getName()));
 		try {
 			// login
 			kojiClient.login();
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
-
-			monitor.worked(30);
-			kojiBuildCmd.setKojiClient(kojiClient);
-			kojiBuildCmd.sourceLocation(projectBits.getScmUrlForKoji(
-					fedoraProjectRoot, bci));
-			String nvr;
-			try {
-				nvr = RPMUtils.getNVR(fedoraProjectRoot, bci);
-			} catch (IOException e) {
-				logger.logError(KojiText.KojiBuildHandler_errorGettingNVR, e);
-				return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,
-						KojiText.KojiBuildHandler_errorGettingNVR, e);
-			}
-
 			if (!kojiInfo[2].contentEquals("true")) { //$NON-NLS-1$
 				kojiBuildCmd.buildTarget(bci.getBuildTarget());
 			} else {
@@ -179,7 +185,6 @@ public class KojiBuildJob extends Job {
 				}
 				kojiBuildCmd.buildTarget(buildTarget);
 			}
-			kojiBuildCmd.nvr(nvr).isScratchBuild(isScratch);
 			logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
 					KojiBuildCommand.class.getName()));
 

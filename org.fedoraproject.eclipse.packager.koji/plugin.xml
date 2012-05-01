@@ -239,5 +239,32 @@
             xmlrpcUrl="https://ppc.koji.fedoraproject.org/kojihub">
       </instance>
    </extension>
+      <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            description="Actions associated with Fedora Packager and Koji."
+            id="org.fedoraproject.eclipse.packager.koji.FedoraPackagerActionSet"
+            label="Fedora Packager Koji Actions">
+         <action
+               class="org.fedoraproject.eclipse.packager.koji.internal.handlers.ChainBuildAction"
+               icon="icons/chain-build-dummy.png"
+               id="org.fedoraproject.eclipse.packager.koji.ChainBuildAction"
+               label="Chain build."
+               state="false"
+               style="push"
+               toolbarPath="org.fedoraproject.eclipse.packager.compatibility.FedoraPackagerActionSet/resource"
+               tooltip="Build many packages at the same time.">
+         </action>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.fedoraproject.eclipse.packager.perspective">
+         <actionSet
+               id="org.fedoraproject.eclipse.packager.koji.FedoraPackagerActionSet">
+         </actionSet>
+      </perspectiveExtension>
+   </extension>
 
 </plugin>

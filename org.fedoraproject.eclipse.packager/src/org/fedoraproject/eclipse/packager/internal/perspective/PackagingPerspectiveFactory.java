@@ -42,8 +42,9 @@ public class PackagingPerspectiveFactory implements IPerspectiveFactory {
 		layout.addShowViewShortcut("org.eclipse.egit.ui.RepositoriesView"); //$NON-NLS-1$
 		layout.addShowViewShortcut("org.eclipse.pde.runtime.LogView"); //$NON-NLS-1$
 		
-		// Show compatibility action set
+		// Show action sets
 		layout.addActionSet("org.fedoraproject.eclipse.packager.compatibility.FedoraPackagerActionSet"); //$NON-NLS-1$
+		layout.addActionSet("org.fedoraproject.eclipse.packager.koji.FedoraPackagerActionSet"); //$NON-NLS-1$
 	}
 
 	/**
