@@ -175,15 +175,6 @@
       </key>
     </extension>
    <extension
-         point="org.fedoraproject.eclipse.packager.koji.instance">
-      <instance
-            customTargets="false"
-            name="Default Fedora Koji Instance"
-            webUrl="http://koji.fedoraproject.org/koji"
-            xmlrpcUrl="https://koji.fedoraproject.org/kojihub">
-      </instance>
-   </extension>
-   <extension
          point="org.eclipse.ui.preferencePages">
       <page
             category="org.fedoraproject.eclipse.packager.preferences"
@@ -220,6 +211,15 @@
             </adapt>
          </enabledWhen>
       </page>
+   </extension>
+    <extension
+         point="org.fedoraproject.eclipse.packager.koji.instance">
+      <instance
+            customTargets="false"
+            name="Default Fedora Koji Instance"
+            webUrl="http://koji.fedoraproject.org/koji"
+            xmlrpcUrl="https://koji.fedoraproject.org/kojihub">
+      </instance>
    </extension>
    <extension
          point="org.fedoraproject.eclipse.packager.koji.instance">
