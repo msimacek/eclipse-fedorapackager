@@ -37,7 +37,10 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.browser.IWebBrowser;
+import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.progress.IProgressService;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
@@ -59,7 +62,6 @@ import org.fedoraproject.eclipse.packager.bodhi.api.PushUpdateResult;
 import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientException;
 import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientLoginException;
 import org.fedoraproject.eclipse.packager.bodhi.internal.ui.BodhiNewUpdateDialog;
-import org.fedoraproject.eclipse.packager.bodhi.internal.ui.BodhiUpdateInfoDialog;
 import org.fedoraproject.eclipse.packager.bodhi.internal.ui.UnpushedChangesJob;
 import org.fedoraproject.eclipse.packager.bodhi.internal.ui.UserValidationDialog;
 import org.fedoraproject.eclipse.packager.bodhi.internal.ui.UserValidationResponse;
@@ -285,17 +287,13 @@ public class BodhiNewHandler extends FedoraPackagerAbstractHandler {
 			public void done(IJobChangeEvent event) {
 				IStatus jobStatus = event.getResult();
 				if (jobStatus.isOK() && updateResult.wasSuccessful()) {
-					final String successMsg = updateResult.getDetails();
 					final String updateName = updateResult.getUpdateName();
 					logger.logInfo(NLS.bind(BodhiText.BodhiNewHandler_updateCreatedLogMsg, bodhiUrl.toString() + updateName));
 					PlatformUI.getWorkbench().getDisplay()
 							.asyncExec(new Runnable() {
 								@Override
 								public void run() {
-									BodhiUpdateInfoDialog infoDialog = new BodhiUpdateInfoDialog(
-											shell, bodhiUrl, updateName,
-											successMsg);
-									infoDialog.open();
+									openBrowser(bodhiUrl.toString() + updateName);
 								}
 							});
 				} else {
@@ -439,6 +437,32 @@ public class BodhiNewHandler extends FedoraPackagerAbstractHandler {
 			}
 		}
 		return nvrs.toArray(new String[] {});
+	}
+	
+	/** 
+	 * @param bodhiWebUrl
+	 *            The url to Bodhi Web without any parameters.
+	 */
+	protected void openBrowser(String bodhiWebUrl) {
+		try {
+			IWebBrowser browser = PlatformUI
+					.getWorkbench()
+					.getBrowserSupport()
+					.createBrowser(
+							IWorkbenchBrowserSupport.NAVIGATION_BAR
+									| IWorkbenchBrowserSupport.LOCATION_BAR
+									| IWorkbenchBrowserSupport.STATUS,
+							"koji_task", null, null); //$NON-NLS-1$
+			browser.openURL(new URL(bodhiWebUrl));
+		} catch (PartInitException e) {
+			FedoraPackagerLogger logger = FedoraPackagerLogger
+					.getInstance();
+			logger.logError(e.getMessage(), e);
+		} catch (MalformedURLException e) {
+			FedoraPackagerLogger logger = FedoraPackagerLogger
+					.getInstance();
+			logger.logError(e.getMessage(), e);
+		}
 	}
 
 }
