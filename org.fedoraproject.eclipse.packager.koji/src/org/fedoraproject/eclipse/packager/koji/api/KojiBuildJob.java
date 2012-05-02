@@ -58,7 +58,6 @@ import org.fedoraproject.eclipse.packager.utils.RPMUtils;
  */
 public class KojiBuildJob extends KojiJob {
 
-	private IProjectRoot fedoraProjectRoot;
 	private boolean isScratch;
 	protected BuildResult buildResult;
 
@@ -76,8 +75,7 @@ public class KojiBuildJob extends KojiJob {
 	 */
 	public KojiBuildJob(String name, Shell shell, IProjectRoot fpr,
 			String[] kojiInfo, boolean scratch) {
-		super(name, shell, kojiInfo);
-		fedoraProjectRoot = fpr;
+		super(name, shell, kojiInfo, fpr);
 		isScratch = scratch;
 	}
 
