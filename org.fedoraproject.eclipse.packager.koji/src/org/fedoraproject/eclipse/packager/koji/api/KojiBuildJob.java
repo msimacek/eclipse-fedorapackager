@@ -61,7 +61,6 @@ public class KojiBuildJob extends KojiJob {
 	private IProjectRoot fedoraProjectRoot;
 	private boolean isScratch;
 	protected BuildResult buildResult;
-	protected String[] kojiInfo;
 
 	/**
 	 * @param name
@@ -77,10 +76,9 @@ public class KojiBuildJob extends KojiJob {
 	 */
 	public KojiBuildJob(String name, Shell shell, IProjectRoot fpr,
 			String[] kojiInfo, boolean scratch) {
-		super(name, shell);
+		super(name, shell, kojiInfo);
 		fedoraProjectRoot = fpr;
 		isScratch = scratch;
-		this.kojiInfo = kojiInfo;
 	}
 
 	@Override
@@ -268,17 +266,6 @@ public class KojiBuildJob extends KojiJob {
 		}
 		// success
 		return Status.OK_STATUS;
-	}
-
-	/**
-	 * Create a hub client based on set preferences.
-	 * 
-	 * @throws MalformedURLException
-	 *             If the koji hub URL preference was invalid.
-	 * @return The koji client.
-	 */
-	protected IKojiHubClient getHubClient() throws MalformedURLException {
-		return new KojiSSLHubClient(kojiInfo[1]);
 	}
 
 	/**

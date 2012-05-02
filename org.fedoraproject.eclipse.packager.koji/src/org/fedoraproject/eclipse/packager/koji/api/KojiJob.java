@@ -1,5 +1,7 @@
 package org.fedoraproject.eclipse.packager.koji.api;
 
+import java.net.MalformedURLException;
+
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Shell;
 
@@ -10,17 +12,32 @@ import org.eclipse.swt.widgets.Shell;
 public abstract class KojiJob extends Job {
 
 	protected Shell shell;
+	protected String[] kojiInfo;
 
 	/**
 	 * @param name
 	 *            The name of the job.
 	 * @param shell
 	 *            The shell the job is run in.
+	 * @param kojiInfo
+	 *            The information for the server being used to run this job.
 	 * 
 	 */
-	public KojiJob(String name, Shell shell) {
+	public KojiJob(String name, Shell shell, String[] kojiInfo) {
 		super(name);
 		this.shell = shell;
+		this.kojiInfo = kojiInfo;
+	}
+
+	/**
+	 * Create a hub client based on set preferences.
+	 * 
+	 * @throws MalformedURLException
+	 *             If the koji hub URL preference was invalid.
+	 * @return The koji client.
+	 */
+	protected IKojiHubClient getHubClient() throws MalformedURLException {
+		return new KojiSSLHubClient(kojiInfo[1]);
 	}
 
 }
