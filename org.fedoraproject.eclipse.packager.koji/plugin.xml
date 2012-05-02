@@ -220,27 +220,18 @@
             webUrl="http://koji.fedoraproject.org/koji"
             xmlrpcUrl="https://koji.fedoraproject.org/kojihub">
       </instance>
-   </extension>
-   <extension
-         point="org.fedoraproject.eclipse.packager.koji.instance">
       <instance
             customTargets="true"
             name="Fedora ARM"
             webUrl="http://arm.koji.fedoraproject.org/koji"
             xmlrpcUrl="https://arm.koji.fedoraproject.org/kojihub">
       </instance>
-   </extension>
-   <extension
-         point="org.fedoraproject.eclipse.packager.koji.instance">
       <instance
             customTargets="true"
             name="Fedora s390x"
             webUrl="http://s390.koji.fedoraproject.org/koji"
             xmlrpcUrl="https://s390.koji.fedoraproject.org/kojihub">
       </instance>
-   </extension>
-   <extension
-         point="org.fedoraproject.eclipse.packager.koji.instance">
       <instance
             customTargets="true"
             name="Fedora PowerPC"
