@@ -48,13 +48,10 @@
   <properties>
     <tycho-version>0.14.1</tycho-version>
     <tycho-extras-version>0.14.0</tycho-extras-version>
-    <platform-version-name>indigo</platform-version-name>
+    <platform-version-name>juno</platform-version-name>
     <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
-    <wikitext-site>http://download.eclipse.org/tools/mylyn/update/weekly</wikitext-site>
     <swtbot-site>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site</swtbot-site>
     <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20110523182458/repository/</orbit-site>
-    <egit-site>http://download.eclipse.org/egit/updates</egit-site>
-    <!-- <jerboaa-fedora-site>http://fedorapeople.org/~jerboaa/eclipse-fedorapackager-0.2-bootstrap-repo</jerboaa-fedora-site> -->
     <!-- We need this for our dependencies and old versions -->
     <packager-site>https://fedorahosted.org/released/eclipse-fedorapackager/p2-repo/</packager-site>
     <linuxtools-nightly-site>http://download.eclipse.org/technology/linuxtools/updates-nightly</linuxtools-nightly-site>
@@ -109,7 +106,7 @@
 
   <repositories>
     <repository>
-      <id>helios</id>
+      <id>platform</id>
       <layout>p2</layout>
       <url>${eclipse-site}</url>
     </repository>
@@ -119,19 +116,9 @@
       <url>${swtbot-site}</url>
     </repository>
     <repository>
-      <id>wikitext</id>
-      <layout>p2</layout>
-      <url>${wikitext-site}</url>
-    </repository>
-    <repository>
       <id>orbit</id>
       <layout>p2</layout>
       <url>${orbit-site}</url>
-    </repository>
-    <repository>
-      <id>egit</id>
-      <layout>p2</layout>
-      <url>${egit-site}</url>
     </repository>
     <repository>
       <id>packager-deps</id>
