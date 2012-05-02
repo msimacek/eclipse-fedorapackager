@@ -58,7 +58,6 @@ import org.fedoraproject.eclipse.packager.utils.RPMUtils;
  */
 public class KojiSRPMBuildJob extends KojiBuildJob {
 
-	private Shell shell;
 	private IProjectRoot fedoraProjectRoot;
 	private IPath srpmPath;
 
@@ -77,7 +76,6 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 	public KojiSRPMBuildJob(String name, Shell shell,
 			IProjectRoot fedoraProjectRoot, String[] kojiInfo, IPath srpmPath) {
 		super(name, shell, fedoraProjectRoot, kojiInfo, true);
-		this.shell = shell;
 		this.fedoraProjectRoot = fedoraProjectRoot;
 		this.srpmPath = srpmPath;
 	}

@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -41,14 +40,14 @@ import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
+import org.fedoraproject.eclipse.packager.api.errors.TagSourcesException;
+import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
 import org.fedoraproject.eclipse.packager.koji.api.errors.BuildAlreadyExistsException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
 import org.fedoraproject.eclipse.packager.koji.internal.ui.KojiTargetDialog;
-import org.fedoraproject.eclipse.packager.api.errors.TagSourcesException;
-import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.fedoraproject.eclipse.packager.utils.RPMUtils;
@@ -57,11 +56,10 @@ import org.fedoraproject.eclipse.packager.utils.RPMUtils;
  * Job to make a Koji Build.
  * 
  */
-public class KojiBuildJob extends Job {
+public class KojiBuildJob extends KojiJob {
 
 	private IProjectRoot fedoraProjectRoot;
 	private boolean isScratch;
-	private Shell shell;
 	protected BuildResult buildResult;
 	protected String[] kojiInfo;
 
@@ -79,10 +77,9 @@ public class KojiBuildJob extends Job {
 	 */
 	public KojiBuildJob(String name, Shell shell, IProjectRoot fpr,
 			String[] kojiInfo, boolean scratch) {
-		super(name);
+		super(name, shell);
 		fedoraProjectRoot = fpr;
 		isScratch = scratch;
-		this.shell = shell;
 		this.kojiInfo = kojiInfo;
 	}
 
