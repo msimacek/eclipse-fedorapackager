@@ -6,7 +6,8 @@ Bundle-Version: 0.4.0.qualifier
 Bundle-Activator: org.fedoraproject.eclipse.packager.koji.KojiPlugin
 Bundle-Vendor: %Bundle-Vendor.0
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.eclipse.ui.workbench
 Import-Package: org.apache.commons.codec.binary;version="1.4.0",
  org.apache.ws.commons.util,
  org.apache.xmlrpc,
@@ -24,7 +25,6 @@ Import-Package: org.apache.commons.codec.binary;version="1.4.0",
  org.eclipse.swt.graphics,
  org.eclipse.swt.widgets,
  org.eclipse.ui,
- org.eclipse.ui.browser,
  org.eclipse.ui.forms.widgets,
  org.fedoraproject.eclipse.packager,
  org.fedoraproject.eclipse.packager.api,

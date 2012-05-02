@@ -75,17 +75,17 @@
       </properties>
     </profile>
     <profile>
-      <id>platform-indigo</id>
+      <id>platform-juno</id>
       <activation>
         <activeByDefault>true</activeByDefault>
         <property>
           <name>platform-version-name</name>
-          <value>indigo</value>
+          <value>juno</value>
         </property>
       </activation>
       <properties>
-        <eclipse-site>http://download.eclipse.org/releases/indigo</eclipse-site>
-        <platform-version>[3.7,3.8)</platform-version>
+        <eclipse-site>http://download.eclipse.org/releases/juno</eclipse-site>
+        <platform-version>[3.8,4.3)</platform-version>
       </properties>
     </profile>
   </profiles>
@@ -94,7 +94,6 @@
     <module>org.fedoraproject.eclipse.packager</module>
     <module>org.fedoraproject.eclipse.packager-feature</module>
     <module>org.fedoraproject.eclipse.packager.bodhi</module>
-    <module>org.fedoraproject.eclipse.packager.compatibility</module>
     <module>org.fedoraproject.eclipse.packager.doc</module>
     <module>org.fedoraproject.eclipse.packager.git</module>
     <module>org.fedoraproject.eclipse.packager.koji</module>
