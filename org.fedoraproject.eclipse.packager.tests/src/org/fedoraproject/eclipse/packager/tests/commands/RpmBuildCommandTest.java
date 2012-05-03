@@ -81,18 +81,13 @@ public class RpmBuildCommandTest {
 	/**
 	 * Test method for
 	 * {@link org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand#checkConfiguration()}
-	 * .
+	 * . Should have thrown an exception. Command is not properly configured.
 	 */
-	@Test
+	@Test(expected = CommandMisconfiguredException.class)
 	public void testCheckConfiguration() throws Exception {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
-		try {
-			build.call(new NullProgressMonitor());
-			fail("Should have thrown an exception. Command is not properly configured.");
-		} catch (CommandMisconfiguredException e) {
-			// pass
-		}
+		build.call(new NullProgressMonitor());
 	}
 
 	/**
