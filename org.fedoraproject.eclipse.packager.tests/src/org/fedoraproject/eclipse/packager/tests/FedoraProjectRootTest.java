@@ -244,10 +244,10 @@ public class FedoraProjectRootTest {
 				.getVcsHandler(fpRoot).getBranchConfig());
 		// expected list
 		String[] expectedNvrs = new String[] {
-				"eclipse-mylyn-tasks-3.5.1-3.fc15",
-				"eclipse-mylyn-tasks-bugzilla-3.5.1-3.fc15",
-				"eclipse-mylyn-tasks-trac-3.5.1-3.fc15",
-				"eclipse-mylyn-tasks-web-3.5.1-3.fc15" };
+				"eclipse-mylyn-tasks-3.5.1-4.fc15",
+				"eclipse-mylyn-tasks-bugzilla-3.5.1-4.fc15",
+				"eclipse-mylyn-tasks-trac-3.5.1-4.fc15",
+				"eclipse-mylyn-tasks-web-3.5.1-4.fc15" };
 		assertEquals(4, nvrs.length);
 		for (int i = 1; i < expectedNvrs.length; i++) {
 			assertEquals(expectedNvrs[i], nvrs[i]);
