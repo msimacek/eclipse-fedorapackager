@@ -18,7 +18,6 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({
 	KojiSSLHubClientTest.class,
 	UploadFileValidityTest.class,
-	AssertionsEnabledTest.class,
 	KojiBuildInfoTest.class,
 	KojiHubClientLoginExceptionTest.class,
 	BodhiClientTest.class
