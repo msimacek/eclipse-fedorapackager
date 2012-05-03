@@ -8,6 +8,15 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DragSource;
+import org.eclipse.swt.dnd.DragSourceAdapter;
+import org.eclipse.swt.dnd.DragSourceEvent;
+import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetAdapter;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FormAttachment;
@@ -80,30 +89,62 @@ public class ChainBuildDialog extends Dialog {
 		projectGroup.setLayoutData(projectData);
 		projectGroup.setText(KojiText.ChainBuildDialog_PackageTitle);
 
-		projectTable = new Table(projectGroup, SWT.CHECK);
-		for (IProject project : ResourcesPlugin.getWorkspace().getRoot()
-				.getProjects()) {
-			if (project.isOpen()) {
-				String fedpkgProject;
-				try {
-					fedpkgProject = project
-							.getPersistentProperty(PackagerPlugin.PROJECT_PROP);
-
-					if (fedpkgProject != null
-							&& fedpkgProject.contentEquals("true")) { //$NON-NLS-1$
-
-						TableItem projectItem = new TableItem(projectTable,
-								SWT.NONE);
-						projectItem.setText(0, project.getName());
-					}
-				} catch (CoreException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
+		projectTable = new Table(projectGroup, SWT.CHECK | SWT.MULTI);
+		resetTable();
 		projectTable
 				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		DragSource tableSource = new DragSource(projectTable, DND.DROP_MOVE);
+		Transfer[] types = new Transfer[] { TextTransfer.getInstance() };
+		tableSource.setTransfer(types);
+		tableSource.addDragListener(new DragSourceAdapter() {
+			private TableItem[] items;
+
+			@Override
+			public void dragStart(DragSourceEvent event) {
+				items = projectTable.getSelection();
+				if (items.length > 0) {
+					event.doit = true;
+				} else {
+					event.doit = false;
+				}
+			}
+
+			@Override
+			public void dragSetData(DragSourceEvent event) {
+				event.data = ""; //$NON-NLS-1$
+				for (TableItem item : items) {
+					event.data = event.data + item.getText(0) + ";"; //$NON-NLS-1$
+				}
+			}
+
+			@Override
+			public void dragFinished(DragSourceEvent event) {
+				if (event.detail == DND.DROP_MOVE) {
+					for (TableItem item : items) {
+						item.dispose();
+					}
+				}
+			}
+		});
+		
+		DropTarget tableTarget = new DropTarget(projectTable, DND.DROP_MOVE);
+		tableTarget.setTransfer(types);
+		tableTarget.addDropListener(new DropTargetAdapter() {
+			@Override
+			public void drop(DropTargetEvent event) {
+				if (event.data == null) {
+					event.detail = DND.DROP_NONE;
+					return;
+				}
+				String text = (String) event.data;
+				for (String itemText : text.split(";")) { //$NON-NLS-1$
+					TableItem projectItem = new TableItem(projectTable,
+							SWT.NONE);
+					projectItem.setText(0, itemText);
+				}
+			}
+		});
 
 		Composite projectButtons = new Composite(projectGroup, SWT.NONE);
 		projectButtons.setLayout(new GridLayout(2, false));
@@ -166,10 +207,78 @@ public class ChainBuildDialog extends Dialog {
 		buildData.bottom = new FormAttachment(100, 0);
 		buildGroup.setLayoutData(buildData);
 
-		buildTree = new Tree(buildGroup, SWT.CHECK);
+		buildTree = new Tree(buildGroup, SWT.CHECK | SWT.MULTI);
 		new TreeItem(buildTree, SWT.NONE).setText("Group 1"); //$NON-NLS-1$
 		buildTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+		DragSource treeSource = new DragSource(buildTree, DND.DROP_MOVE);
+		treeSource.setTransfer(types);
+		treeSource.addDragListener(new DragSourceAdapter() {
+			private TreeItem[] items;
 
+			@Override
+			public void dragStart(DragSourceEvent event) {
+				items = buildTree.getSelection();
+				for (TreeItem item : items) {
+					if (item.getItemCount() == 0) {
+						event.doit = true;
+						return;
+					}
+				}
+				event.doit = false;
+			}
+
+			@Override
+			public void dragSetData(DragSourceEvent event) {
+				event.data = ""; //$NON-NLS-1$
+				for (TreeItem item : items) {
+					if (item.getItemCount() == 0) {
+						event.data = event.data + item.getText() + ";"; //$NON-NLS-1$
+					}
+				}
+			}
+
+			@Override
+			public void dragFinished(DragSourceEvent event) {
+				if (event.detail == DND.DROP_MOVE) {
+					for (TreeItem item : items) {
+						if (item.getItemCount() == 0) {
+							item.dispose();
+						}
+					}
+				}
+			}
+		});
+		
+		DropTarget treeTarget = new DropTarget(buildTree, DND.DROP_MOVE);
+		treeTarget.setTransfer(types);
+		treeTarget.addDropListener(new DropTargetAdapter() {
+			@Override
+			public void dragOver(DropTargetEvent event) {
+				event.feedback = DND.FEEDBACK_EXPAND | DND.FEEDBACK_SELECT;
+			}
+
+			@Override
+			public void drop(DropTargetEvent event) {
+				if (event.data == null) {
+					event.detail = DND.DROP_NONE;
+					return;
+				}
+				String text = (String) event.data;
+				TreeItem item = (TreeItem) event.item;
+				if (item.getParentItem() == null) {
+					for (String itemText : text.split(";")) { //$NON-NLS-1$
+						new TreeItem(item, SWT.NONE).setText(itemText);
+					}
+				} else {
+					for (String itemText : text.split(";")) { //$NON-NLS-1$
+						new TreeItem(item.getParentItem(), SWT.NONE)
+								.setText(itemText);
+					}
+				}
+			}
+		});
+		
 		Button removeButton = new Button(buildGroup, SWT.NONE);
 		removeButton.setText(KojiText.ChainBuildDialog_RemoveButton);
 		removeButton
@@ -191,6 +300,9 @@ public class ChainBuildDialog extends Dialog {
 						root.setText("Group " + Integer.toString(i + 1)); //$NON-NLS-1$
 						for (TreeItem item : root.getItems()) {
 							if (item.getChecked()) {
+								TableItem projectItem = new TableItem(
+										projectTable, SWT.NONE);
+								projectItem.setText(0, item.getText());
 								item.dispose();
 							}
 						}
@@ -213,9 +325,11 @@ public class ChainBuildDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				for (int i = 1; i < buildTree.getItemCount(); i++) {
 					for (TreeItem item : buildTree.getItem(i).getItems()) {
-						new TreeItem(buildTree.getItem(i - 1), SWT.NONE)
-								.setText(item.getText());
-						item.dispose();
+						if (item.getChecked()) {
+							new TreeItem(buildTree.getItem(i - 1), SWT.NONE)
+									.setText(item.getText());
+							item.dispose();
+						}
 					}
 				}
 			}
@@ -238,9 +352,11 @@ public class ChainBuildDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				for (int i = 0; i < buildTree.getItemCount() - 1; i++) {
 					for (TreeItem item : buildTree.getItem(i).getItems()) {
-						new TreeItem(buildTree.getItem(i + 1), SWT.NONE)
-								.setText(item.getText());
-						item.dispose();
+						if (item.getChecked()) {
+							new TreeItem(buildTree.getItem(i + 1), SWT.NONE)
+									.setText(item.getText());
+							item.dispose();
+						}
 					}
 				}
 			}
@@ -261,6 +377,7 @@ public class ChainBuildDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				buildTree.removeAll();
 				new TreeItem(buildTree, SWT.NONE).setText("Group 1"); //$NON-NLS-1$
+				resetTable();
 			}
 		});
 
@@ -338,5 +455,29 @@ public class ChainBuildDialog extends Dialog {
 	 */
 	public IProjectRoot[] getRoots() {
 		return rootList.toArray(new IProjectRoot[] {});
+	}
+
+	private void resetTable() {
+		for (IProject project : ResourcesPlugin.getWorkspace().getRoot()
+				.getProjects()) {
+			if (project.isOpen()) {
+				String fedpkgProject;
+				try {
+					fedpkgProject = project
+							.getPersistentProperty(PackagerPlugin.PROJECT_PROP);
+
+					if (fedpkgProject != null
+							&& fedpkgProject.contentEquals("true")) { //$NON-NLS-1$
+
+						TableItem projectItem = new TableItem(projectTable,
+								SWT.NONE);
+						projectItem.setText(0, project.getName());
+
+					}
+				} catch (CoreException e) {
+					// ignore inaccessible projects
+				}
+			}
+		}
 	}
 }
