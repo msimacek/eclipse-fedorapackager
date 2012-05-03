@@ -12,7 +12,9 @@ package org.fedoraproject.eclipse.packager.tests.units;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient;
 import org.fedoraproject.eclipse.packager.koji.api.KojiBuildInfo;
@@ -97,7 +99,9 @@ public class KojiSSLHubClientTest {
 		assertNotNull(sessionData);
 		// get build info for eclipse-fedorapackager-0.1.13-fc15
 		boolean isScratchBuild = true;
-		int taskId = kojiClient.build("dist-rawhide", EFP_SCM_URL, EFP_NVR, isScratchBuild);
+		List<String> sourceLocation = new ArrayList<String>();
+		sourceLocation.add(EFP_SCM_URL);
+		int taskId = kojiClient.build("dist-rawhide", sourceLocation, new String[] {EFP_NVR}, isScratchBuild)[0];
 		System.out.println("Pushed task ID: " + taskId);
 		assertNotNull(taskId);
 	}

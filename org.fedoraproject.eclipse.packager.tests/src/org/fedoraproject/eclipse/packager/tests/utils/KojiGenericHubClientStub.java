@@ -11,6 +11,7 @@
 package org.fedoraproject.eclipse.packager.tests.utils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient;
@@ -21,12 +22,13 @@ import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginExce
 /**
  * Stub client, which essentially does nothing. Used for KojiBuildCommand
  * testing.
- *
+ * 
  */
 public class KojiGenericHubClientStub implements IKojiHubClient {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient#login()
 	 */
 	@Override
@@ -37,6 +39,7 @@ public class KojiGenericHubClientStub implements IKojiHubClient {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient#logout()
 	 */
 	@Override
@@ -46,17 +49,23 @@ public class KojiGenericHubClientStub implements IKojiHubClient {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient#build(java.lang.String, java.lang.String, java.lang.String, boolean)
+	 * 
+	 * @see
+	 * org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient#build(java
+	 * .lang.String, java.lang.String, java.lang.String, boolean)
 	 */
 	@Override
-	public int build(String target, String scmURL, String nvr, boolean scratch)
-			throws KojiHubClientException {
-		return 0xdead; // fake taskId
+	public int[] build(String target, List<?> scmURLs, String[] nvr,
+			boolean scratch) throws KojiHubClientException {
+		return new int[] {0xdead}; // fake taskId
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient#getBuild(java.lang.String)
+	 * 
+	 * @see
+	 * org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient#getBuild(java
+	 * .lang.String)
 	 */
 	@Override
 	public KojiBuildInfo getBuild(String unused) throws KojiHubClientException {
@@ -71,9 +80,12 @@ public class KojiGenericHubClientStub implements IKojiHubClient {
 		rawBuildinfoMap.put("nvr", "eclipse-fedorapackager-0.1.12-2.fc15");
 		return new KojiBuildInfo(rawBuildinfoMap);
 	}
-	
+
 	@Override
-	public boolean uploadFile(String path, String name, int size, String md5sum, int offset, String data){ return true; }
+	public boolean uploadFile(String path, String name, int size,
+			String md5sum, int offset, String data) {
+		return true;
+	}
 
 	@Override
 	public HashMap<?, ?>[] listTargets() throws KojiHubClientException {

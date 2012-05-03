@@ -15,6 +15,9 @@ package org.fedoraproject.eclipse.packager.tests.commands;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
@@ -86,8 +89,10 @@ public class KojiBuildCommandTest {
 		KojiBuildCommand build = (KojiBuildCommand) packager
 				.getCommandInstance(KojiBuildCommand.ID);
 		build.setKojiClient(new KojiGenericHubClientStub());
-		build.buildTarget("dist-rawhide").nvr("eclipse-fedorapackager-0.1.12-1.fc15");
-		build.sourceLocation("git://pkgs.stg.fedoraproject.org/eclipse-fedorapackager.git?#7526fb6c2c150dcc3480a9838540426a501d0553");
+		build.buildTarget("dist-rawhide").nvr(new String[] {"eclipse-fedorapackager-0.1.12-1.fc15"});
+		List<String> sourceLocation = new ArrayList<String>();
+		sourceLocation.add("git://pkgs.stg.fedoraproject.org/eclipse-fedorapackager.git?#7526fb6c2c150dcc3480a9838540426a501d0553");
+		build.sourceLocation(sourceLocation);
 		try {
 			build.isScratchBuild(true).call(new NullProgressMonitor());
 		} catch (Exception e) {

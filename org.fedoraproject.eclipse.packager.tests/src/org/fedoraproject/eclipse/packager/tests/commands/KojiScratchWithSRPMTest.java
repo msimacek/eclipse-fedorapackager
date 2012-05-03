@@ -17,6 +17,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -147,13 +150,15 @@ public class KojiScratchWithSRPMTest {
 			KojiBuildCommand kojiBuildCmd = (KojiBuildCommand) packager
 					.getCommandInstance(KojiBuildCommand.ID);
 			kojiBuildCmd.setKojiClient(kojiClient);
-			kojiBuildCmd.sourceLocation(uploadPath
+			List<String> sourceLocation = new ArrayList<String>();
+			sourceLocation.add(uploadPath
 					+ "/"
 					+ new File(srpmBuildResult.getAbsoluteSRPMFilePath())
-							.getName()); //$NON-NLS-1$
+							.getName());
+			kojiBuildCmd.sourceLocation(sourceLocation); //$NON-NLS-1$
 			String nvr = RPMUtils.getNVR(fpRoot, bci);
-			kojiBuildCmd.buildTarget(bci.getBuildTarget()).nvr(nvr)
-					.isScratchBuild(true);
+			kojiBuildCmd.buildTarget(bci.getBuildTarget())
+					.nvr(new String[] { nvr }).isScratchBuild(true);
 			assertTrue(kojiBuildCmd.call(new NullProgressMonitor())
 					.wasSuccessful());
 		} catch (Exception e) {
