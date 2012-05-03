@@ -8,7 +8,7 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <groupId>org.fedoraproject.eclipse.packager</groupId>
-  <artifactId>org.fedoraproject.eclipse.packager.tests</artifactId>
+  <artifactId>org.fedoraproject.eclipse.packager.ui.tests</artifactId>
   <version>0.4.0-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
 
@@ -22,7 +22,7 @@
         <version>${tycho-version}</version>
         <configuration>
           <useUIHarness>true</useUIHarness>
-          <useUIThread>false</useUIThread>
+          <useUIThread>true</useUIThread>
           <product>org.eclipse.sdk.ide</product>
         </configuration>
       </plugin>
