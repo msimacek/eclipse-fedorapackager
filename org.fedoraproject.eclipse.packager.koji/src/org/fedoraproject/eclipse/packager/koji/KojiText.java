@@ -34,6 +34,7 @@ public class KojiText extends NLS {
 	/****/ public static String KojiBuildHandler_invalidHubUrl;
 	/****/ public static String KojiBuildHandler_errorGettingNVR;
 	/****/ public static String KojiBuildHandler_invalidKojiWebUrl;
+	/****/ public static String KojiBuildHandler_unknownLoginErrorMsg;
 	/****/ public static String KojiBuildHandler_missingCertificatesMsg;
 	/****/ public static String KojiBuildHandler_certificateExpriredMsg;
 	/****/ public static String KojiBuildHandler_certificateRevokedMsg;
