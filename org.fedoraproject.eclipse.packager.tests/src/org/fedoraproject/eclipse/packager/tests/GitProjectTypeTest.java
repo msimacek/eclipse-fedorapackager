@@ -17,7 +17,7 @@ public class GitProjectTypeTest extends GitTestCase {
 	
 	public void testAdaptToFpProject() throws Exception {
 		// Should return FpProject instance with GIT type
-		assertTrue(FedoraPackagerUtils.getProjectType(getiProject()) == FedoraPackagerUtils.ProjectType.GIT);
+		assertEquals(FedoraPackagerUtils.getProjectType(getiProject()) , FedoraPackagerUtils.ProjectType.GIT);
 	}
 
 }

@@ -83,7 +83,7 @@ public class FedoraPackagerTest {
 				downloadUploadThereCounter--;
 			}
 		}
-		assertTrue(downloadUploadThereCounter == 0);
+		assertEquals(downloadUploadThereCounter ,0);
 	}
 
 	/**

@@ -102,7 +102,6 @@ public class KojiSSLHubClientTest {
 		List<String> sourceLocation = new ArrayList<String>();
 		sourceLocation.add(EFP_SCM_URL);
 		int taskId = kojiClient.build("dist-rawhide", sourceLocation, new String[] {EFP_NVR}, isScratchBuild)[0];
-		System.out.println("Pushed task ID: " + taskId);
 		assertNotNull(taskId);
 	}
 

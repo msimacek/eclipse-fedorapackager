@@ -79,17 +79,13 @@ public class PushUpdateCommandTest {
 	/**
 	 * Test method for 
 	 * {@link PushUpdateCommand#checkConfiguration()}.
+	 * Should have thrown an exception. Command is not properly configured.
 	 */
-	@Test
+	@Test(expected=CommandMisconfiguredException.class)
 	public void testCheckConfiguration() throws Exception {
 		PushUpdateCommand pushUpdateCommand = (PushUpdateCommand) packager
 				.getCommandInstance(PushUpdateCommand.ID);
-		try {
-			pushUpdateCommand.call(new NullProgressMonitor());
-			fail("Should have thrown an exception. Command is not properly configured.");
-		} catch (CommandMisconfiguredException e) {
-			// pass
-		}
+		pushUpdateCommand.call(new NullProgressMonitor());
 	}
 	
 	/**

@@ -60,17 +60,13 @@ public class RpmEvalCommandTest {
 	/**
 	 * Test method for 
 	 * {@link org.fedoraproject.eclipse.packager.rpm.api.RpmEvalCommand#checkConfiguration()}.
+	 * Should have thrown an exception. Command is not properly configured.
 	 */
-	@Test
+	@Test(expected=CommandMisconfiguredException.class)
 	public void testCheckConfiguration() throws Exception {
 		RpmEvalCommand eval = (RpmEvalCommand) packager
 				.getCommandInstance(RpmEvalCommand.ID);
-		try {
-			eval.call(new NullProgressMonitor());
-			fail("Should have thrown an exception. Command is not properly configured.");
-		} catch (CommandMisconfiguredException e) {
-			// pass
-		}
+		eval.call(new NullProgressMonitor());
 	}
 
 	/**

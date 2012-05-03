@@ -10,23 +10,27 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.tests.units;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-import junit.framework.TestCase;
-
-public class UploadFileValidityTest extends TestCase {
+public class UploadFileValidityTest {
 
 	private File emptyFileRegular;
 	private File emptyFileInvalid;
 	private File regularFileNonEmpty;
 	private File regularFileNonEmptyInvalid;
 	
-	@Override
+	@Before
 	public void setUp() {
 		try {
 			// Create files
@@ -54,7 +58,7 @@ public class UploadFileValidityTest extends TestCase {
 		} catch (IOException e) { }
 	}
 	
-	@Override
+	@After
 	public void tearDown() {
 		// tear down the house
 		if (emptyFileRegular.exists()) {
@@ -74,6 +78,7 @@ public class UploadFileValidityTest extends TestCase {
 	/**
 	 * Test FedoraHandlerUtils.isValidUploadFile().
 	 */
+	@Test
 	public void testIsValidUploadFile() {
 		assertFalse(FedoraPackagerUtils.isValidUploadFile(emptyFileRegular));
 		assertFalse(FedoraPackagerUtils.isValidUploadFile(emptyFileInvalid));

@@ -18,7 +18,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -83,20 +82,10 @@ public class FedoraSSLTest {
 	 * and {@link FedoraSSL#getInitializedSSLContext()} or {@link FedoraSSL#getFedoraCertKeyMaterial()} is called.
 	 * 
 	 */
-	@Test
+	@Test(expected=FileNotFoundException.class)
 	public void throwsFileNotFoundExceptionIfCertsMissing() throws Exception {
-		try {
-			anonymousFedoraSSL.getInitializedSSLContext();
-			fail("should have thrown FileNotFoundException");
-		} catch (FileNotFoundException e) {
-			// pass
-		}
-		try {
-			anonymousFedoraSSL.getFedoraCertKeyMaterial();
-			fail("should have thrown FileNotFoundException");
-		} catch (FileNotFoundException e) {
-			// pass
-		}
+		anonymousFedoraSSL.getInitializedSSLContext();
+		anonymousFedoraSSL.getFedoraCertKeyMaterial();
 	}
 	
 	/**

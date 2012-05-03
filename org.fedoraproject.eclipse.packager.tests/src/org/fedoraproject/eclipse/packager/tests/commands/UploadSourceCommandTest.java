@@ -105,17 +105,15 @@ public class UploadSourceCommandTest {
 		}
 	}
 	
-	@Test
+	/**
+	 * UploadSourceCommand.setUploadURL() should not accept invalid URLs.
+	 * @throws Exception
+	 */
+	@Test(expected=MalformedURLException.class)
 	public void shouldThrowMalformedURLException() throws Exception {
 		UploadSourceCommand uploadCmd = (UploadSourceCommand) packager
 				.getCommandInstance(UploadSourceCommand.ID);
-		try {
-			uploadCmd.setUploadURL("very bad url");
-			fail("UploadSourceCommand.setUploadURL()"
-					+ " should not accept invalid URLs!");
-		} catch (MalformedURLException e) {
-			// pass
-		}
+		uploadCmd.setUploadURL("very bad url");
 	}
 
 	/**
@@ -246,7 +244,7 @@ public class UploadSourceCommandTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test
+	@Test(expected=InvalidUploadFileException.class)
 	public void canDetermineValidUploadFiles() throws Exception {
 		UploadSourceCommand uploadCmd = (UploadSourceCommand) packager
 				.getCommandInstance(UploadSourceCommand.ID);
@@ -254,12 +252,7 @@ public class UploadSourceCommandTest {
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(INVALID_UPLOAD_FILE), null)).getFile();
 		File invalidUploadFile = new File(invalidUploadFileName);
-		try {
-			uploadCmd.setFileToUpload(invalidUploadFile);
-			fail("Upload file was invalid and no exception thrown.");
-		} catch (InvalidUploadFileException e) {
-			// pass
-		}
+		uploadCmd.setFileToUpload(invalidUploadFile);
 	}
 	
 	/**

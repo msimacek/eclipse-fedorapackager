@@ -63,33 +63,30 @@ public class FedoraPackagerCommandTest {
 		testProject.dispose();
 	}
 	
-	@Test
+	/**
+	 * Command was NOT properly configured, yet did not throw exception!
+	 * @throws Exception
+	 */
+	@Test(expected=CommandMisconfiguredException.class)
 	public void shouldThrowConfigurationException() throws Exception {
 		FedoraPackagerCommandDummyImpl fpCmd = new FedoraPackagerCommandDummyImpl();
 		fpCmd.initialize(fpRoot);
 		// FedoraPackagerCommandDummyImpl requires setConfiguration(true) to be
 		// called, i.e. this should throw an exception.
-		try {
-			fpCmd.call(new NullProgressMonitor());
-		} catch (CommandMisconfiguredException e) {
-			// pass
-			return;
-		}
-		fail("Command was NOT properly configured, yet did not throw exception!");
+		fpCmd.call(new NullProgressMonitor());
 	}
 	
-	@Test
+	/**
+	 * Command should have thrown IllegalStateException, since callable == false
+	 * @throws Exception
+	 */
+	@Test(expected=IllegalStateException.class)
 	public void cannotCallACommandInstanceTwice() throws Exception {
 		FedoraPackagerCommandDummyImpl fpCmd = new FedoraPackagerCommandDummyImpl();
 		fpCmd.initialize(fpRoot);
 		fpCmd.setConfiguration(true); // configure
 		fpCmd.call(new NullProgressMonitor()); // should work
-		try {
-			fpCmd.call(new NullProgressMonitor());
-			fail("Command should have thrown IllegalStateException, since callable == false");
-		} catch (IllegalStateException e) {
-			// pass
-		}
+		fpCmd.call(new NullProgressMonitor());
 	}
 	
 	@Test

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.tests;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -92,15 +93,6 @@ public class FedoraProjectRootTest {
 		assertNotNull(fpRoot);
 		assertTrue(fpRoot.getProjectType() == ProjectType.GIT);
 
-		// CVS case is turned off.
-		// fpRoot = null;
-		// cvsTestProject = new CVSTestProject();
-		// cvsTestProject.checkoutModule("eclipse-rpm-editor");
-		// IContainer cvsF12Container = (IContainer) cvsTestProject.getProject()
-		// .findMember(new Path("F-12"));
-		// fpRoot = FedoraPackagerUtils.getProjectRoot(cvsF12Container);
-		// assertNotNull(fpRoot);
-		// assertTrue(fpRoot.getProjectType() == ProjectType.CVS);
 	}
 
 	@Test
@@ -116,16 +108,6 @@ public class FedoraProjectRootTest {
 		// Project is container
 		assertSame(gitTestProject.getProject(), fpRoot.getContainer());
 
-		// // CVS case
-		// cvsTestProject = new CVSTestProject();
-		// cvsTestProject.checkoutModule("eclipse-rpm-editor");
-		// IContainer cvsF12Container = (IContainer) cvsTestProject.getProject()
-		// .findMember(new Path("F-12"));
-		// assertNotNull(cvsF12Container);
-		// fpRoot = FedoraPackagerUtils.getProjectRoot(cvsF12Container);
-		// assertNotNull(fpRoot);
-		// // Branch folder is container
-		// assertSame(cvsF12Container, fpRoot.getContainer());
 	}
 
 	@Test
@@ -139,17 +121,6 @@ public class FedoraProjectRootTest {
 		// Project is container
 		assertSame(gitTestProject.getProject(), fpRoot.getProject());
 
-		// CVS case
-		// cvsTestProject = new CVSTestProject();
-		// cvsTestProject.checkoutModule("eclipse-rpm-editor");
-		// IContainer cvsF12Container = (IContainer) cvsTestProject.getProject()
-		// .findMember(new Path("F-12"));
-		// assertNotNull(cvsF12Container);
-		// fpRoot = null;
-		// fpRoot = FedoraPackagerUtils.getProjectRoot(cvsF12Container);
-		// assertNotNull(fpRoot);
-		// // Branch folder is container
-		// assertSame(cvsTestProject.getProject(), fpRoot.getProject());
 	}
 
 	@Test
@@ -181,15 +152,6 @@ public class FedoraProjectRootTest {
 		assertNotNull(fpRoot);
 		assertEquals(ProjectType.GIT, fpRoot.getProjectType());
 
-		// // CVS case
-		// cvsTestProject = new CVSTestProject();
-		// cvsTestProject.checkoutModule("eclipse-rpm-editor");
-		// IContainer cvsF12Container = (IContainer) cvsTestProject.getProject()
-		// .findMember(new Path("F-12"));
-		// assertNotNull(cvsF12Container);
-		// fpRoot = FedoraPackagerUtils.getProjectRoot(cvsF12Container);
-		// assertNotNull(fpRoot);
-		// assertEquals(ProjectType.CVS, fpRoot.getProjectType());
 	}
 
 	@Test
@@ -208,17 +170,6 @@ public class FedoraProjectRootTest {
 		assertNotNull(ignoreFile);
 		assertEquals(GIT_IGNOREFILE_NAME, ignoreFile.getName());
 
-		// CVS case
-		// cvsTestProject = new CVSTestProject();
-		// cvsTestProject.checkoutModule("eclipse-rpm-editor");
-		// IContainer cvsF12Container = (IContainer) cvsTestProject.getProject()
-		// .findMember(new Path("F-12"));
-		// assertNotNull(cvsF12Container);
-		// fpRoot = FedoraPackagerUtils.getProjectRoot(cvsF12Container);
-		// assertNotNull(fpRoot);
-		// ignoreFile = fpRoot.getIgnoreFile();
-		// assertNotNull(ignoreFile);
-		// assertEquals(CVS_IGNOREFILE_NAME, ignoreFile.getName());
 	}
 
 	@Test
@@ -249,9 +200,7 @@ public class FedoraProjectRootTest {
 				"eclipse-mylyn-tasks-trac-3.5.1-4.fc15",
 				"eclipse-mylyn-tasks-web-3.5.1-4.fc15" };
 		assertEquals(4, nvrs.length);
-		for (int i = 1; i < expectedNvrs.length; i++) {
-			assertEquals(expectedNvrs[i], nvrs[i]);
-		}
+		assertArrayEquals(expectedNvrs, nvrs);
 	}
 
 }

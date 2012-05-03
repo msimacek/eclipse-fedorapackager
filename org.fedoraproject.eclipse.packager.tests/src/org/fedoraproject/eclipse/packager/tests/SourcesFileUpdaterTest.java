@@ -68,7 +68,7 @@ public class SourcesFileUpdaterTest {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() {
 		try {
 			this.testProject.delete(true, null);
 		} catch (CoreException e) { /* ignore */ }

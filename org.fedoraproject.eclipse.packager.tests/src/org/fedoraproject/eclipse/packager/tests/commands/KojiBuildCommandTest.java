@@ -67,17 +67,13 @@ public class KojiBuildCommandTest {
 	/**
 	 * Test method for 
 	 * {@link org.fedoraproject.eclipse.packager.koji.api.KojiBuildCommand#checkConfiguration()}.
+	 * Should have thrown an exception. Command is not properly configured.
 	 */
-	@Test
+	@Test(expected=CommandMisconfiguredException.class)
 	public void testCheckConfiguration() throws Exception {
 		KojiBuildCommand buildCommand = (KojiBuildCommand) packager
 				.getCommandInstance(KojiBuildCommand.ID);
-		try {
-			buildCommand.call(new NullProgressMonitor());
-			fail("Should have thrown an exception. Command is not properly configured.");
-		} catch (CommandMisconfiguredException e) {
-			// pass
-		}
+		buildCommand.call(new NullProgressMonitor());
 	}
 
 	/**
