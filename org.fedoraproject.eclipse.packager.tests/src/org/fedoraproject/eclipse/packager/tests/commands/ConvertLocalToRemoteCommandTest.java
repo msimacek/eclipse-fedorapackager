@@ -84,8 +84,7 @@ public class ConvertLocalToRemoteCommandTest {
 	public void testConvertCommand() throws Exception {
 		boolean localRefsOk = false;
 
-		ConvertLocalToRemoteCommand convertCmd;
-		convertCmd = (ConvertLocalToRemoteCommand) packager
+		ConvertLocalToRemoteCommand convertCmd = (ConvertLocalToRemoteCommand) packager
 				.getCommandInstance(ConvertLocalToRemoteCommand.ID);
 		convertCmd.call(new NullProgressMonitor());
 
@@ -141,8 +140,7 @@ public class ConvertLocalToRemoteCommandTest {
 
 		String uri = projectBits.getScmUrl();
 		testProject.addRemoteRepository(uri, git);
-		ConvertLocalToRemoteCommand convertCmd;
-		convertCmd = (ConvertLocalToRemoteCommand) packager
+		ConvertLocalToRemoteCommand convertCmd = (ConvertLocalToRemoteCommand) packager
 				.getCommandInstance(ConvertLocalToRemoteCommand.ID);
 		try {
 			convertCmd.call(new NullProgressMonitor());
@@ -171,8 +169,7 @@ public class ConvertLocalToRemoteCommandTest {
 		findGitRepository();
 
 		testProject.addRemoteRepository(URI, git);
-		ConvertLocalToRemoteCommand convertCmd;
-		convertCmd = (ConvertLocalToRemoteCommand) packager
+		ConvertLocalToRemoteCommand convertCmd = (ConvertLocalToRemoteCommand) packager
 				.getCommandInstance(ConvertLocalToRemoteCommand.ID);
 		try {
 			convertCmd.call(new NullProgressMonitor());
