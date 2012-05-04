@@ -11,7 +11,9 @@
 package org.fedoraproject.eclipse.packager.tests;
 
 import org.fedoraproject.eclipse.packager.tests.commands.AllCommandsTests;
+import org.fedoraproject.eclipse.packager.tests.local.AllLocalTests;
 import org.fedoraproject.eclipse.packager.tests.units.AllUnitTests;
+import org.fedoraproject.eclipse.packager.tests.units.deserialization.AllDeserializationTests;
 import org.junit.runners.Suite;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite.SuiteClasses;
@@ -22,6 +24,8 @@ import org.junit.runners.Suite.SuiteClasses;
 	AllUnitTests.class,
 	// Command tests
 	AllCommandsTests.class,
+	AllLocalTests.class,
+	AllDeserializationTests.class,
 	// Auxiliary plug-in tests
 	GitFpBitsTest.class,
 	GitProjectTypeTest.class,
@@ -29,6 +33,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	SourcesFileUpdaterTest.class,
 	VCSIgnoreFileUpdaterTest.class,
 	FedoraSSLTest.class,
+	FedoraPackagerGitCloneOperationTest.class,
 	FedoraProjectRootTest.class,
 	FedoraPackagerUtilsTest.class,
 	FedoraPackagerLoggerTest.class,

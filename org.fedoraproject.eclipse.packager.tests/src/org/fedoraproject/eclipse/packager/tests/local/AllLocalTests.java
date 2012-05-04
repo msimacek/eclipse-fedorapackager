@@ -8,7 +8,7 @@
  * Contributors:
  *     Red Hat Inc. - initial API and implementation
  *******************************************************************************/
-package org.fedoraproject.eclipse.packager.tests.commands;
+package org.fedoraproject.eclipse.packager.tests.local;
 
 import org.junit.runners.Suite;
 import org.junit.runner.RunWith;
@@ -16,22 +16,11 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	ConvertLocalToRemoteCommandTest.class,
-	DownloadSourceCommandTest.class,
-	FedoraPackagerCommandTest.class,
-	UploadSourceCommandTest.class,
-	KojiBuildCommandTest.class,
-	KojiScratchWithSRPMTest.class,
-	MockBuildCommandTest.class,
-	PushUpdateCommandTest.class,
-	RpmBuildCommandTest.class,
-	RpmEvalCommandTest.class,
-	ScpCommandTest.class,
-	SRPMImportCommandTest.class,
-	SCMMockBuildCommandGitTest.class,
-	UploadSourceCommandTest.class
+	WizardSRPMProjectTest.class,
+	WizardStubbyProjectTest.class,
+	WizardPlainProjectTest.class,
 })
 
-public class AllCommandsTests {
+public class AllLocalTests {
 	// empty
 }
