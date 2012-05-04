@@ -2,14 +2,13 @@ package org.fedoraproject.eclipse.packager.koji.internal.handlers;
 
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
+import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiPreferencesConstants;
 import org.fedoraproject.eclipse.packager.koji.KojiUtils;
@@ -20,12 +19,12 @@ import org.fedoraproject.eclipse.packager.koji.internal.ui.ChainBuildDialog;
  * Action for pushing a chain build to Koji.
  *
  */
-public class ChainBuildAction implements IWorkbenchWindowActionDelegate {
+public class ChainBuildHandler extends FedoraPackagerAbstractHandler {
 
 	private Shell shell;
 
 	@Override
-	public void run(IAction action) {
+	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		ChainBuildDialog dialog = new ChainBuildDialog(shell);
 		List<List<String>> buildList = dialog.open();
 		final IProjectRoot[] roots = dialog.getRoots();
@@ -40,21 +39,6 @@ public class ChainBuildAction implements IWorkbenchWindowActionDelegate {
 			job.setUser(true);
 			job.schedule();
 		}
+		return null;
 	}
-
-	@Override
-	public void selectionChanged(IAction action, ISelection selection) {
-		// no op
-	}
-
-	@Override
-	public void dispose() {
-		// no op
-	}
-
-	@Override
-	public void init(IWorkbenchWindow window) {
-		shell = window.getShell();
-	}
-
 }

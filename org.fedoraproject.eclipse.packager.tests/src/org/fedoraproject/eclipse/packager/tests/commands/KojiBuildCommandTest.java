@@ -53,7 +53,7 @@ public class KojiBuildCommandTest {
 		this.testProject = new GitTestProject("eclipse-fedorapackager");
 		this.fpRoot = FedoraPackagerUtils.getProjectRoot((this.testProject
 				.getProject()));
-		this.packager = new FedoraPackager(fpRoot);
+		this.packager = new FedoraPackager(fpRoot);		
 	}
 
 	/**
@@ -82,15 +82,15 @@ public class KojiBuildCommandTest {
 	 */
 	@Test
 	public void canPushFakeScratchBuild() throws Exception {
-		KojiBuildCommand build = (KojiBuildCommand) packager
+		KojiBuildCommand buildCommand = (KojiBuildCommand) packager
 				.getCommandInstance(KojiBuildCommand.ID);
-		build.setKojiClient(new KojiGenericHubClientStub());
-		build.buildTarget("dist-rawhide").nvr(new String[] {"eclipse-fedorapackager-0.1.12-1.fc15"});
+		buildCommand.setKojiClient(new KojiGenericHubClientStub());
+		buildCommand.buildTarget("dist-rawhide").nvr(new String[] {"eclipse-fedorapackager-0.1.12-1.fc15"});
 		List<String> sourceLocation = new ArrayList<String>();
 		sourceLocation.add("git://pkgs.stg.fedoraproject.org/eclipse-fedorapackager.git?#7526fb6c2c150dcc3480a9838540426a501d0553");
-		build.sourceLocation(sourceLocation);
+		buildCommand.sourceLocation(sourceLocation);
 		try {
-			build.isScratchBuild(true).call(new NullProgressMonitor());
+			buildCommand.isScratchBuild(true).call(new NullProgressMonitor());
 		} catch (Exception e) {
 			fail("Shouldn't have thrown any exception.");
 		}
