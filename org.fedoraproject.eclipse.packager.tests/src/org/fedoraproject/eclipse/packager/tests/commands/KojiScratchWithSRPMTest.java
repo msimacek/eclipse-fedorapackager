@@ -12,30 +12,20 @@ package org.fedoraproject.eclipse.packager.tests.commands;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.easymock.EasyMock.*;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.osgi.util.NLS;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
-import org.fedoraproject.eclipse.packager.FedoraSSL;
-import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient;
 import org.fedoraproject.eclipse.packager.koji.api.KojiBuildCommand;
-import org.fedoraproject.eclipse.packager.koji.api.KojiSSLHubClient;
 import org.fedoraproject.eclipse.packager.koji.api.KojiUploadSRPMCommand;
 import org.fedoraproject.eclipse.packager.rpm.RpmText;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand;
@@ -50,7 +40,6 @@ import org.junit.Test;
 
 public class KojiScratchWithSRPMTest {
 
-	private static final String KOJI_TEST_INSTANCE_URL_PROP = "org.fedoraproject.eclipse.packager.tests.koji.testInstanceURL"; //$NON-NLS-1$
 	// project under test
 	private GitTestProject testProject;
 	// Fedora packager root
@@ -66,14 +55,15 @@ public class KojiScratchWithSRPMTest {
 	@Before
 	public void setUp() throws Exception {
 		this.testProject = new GitTestProject("ed");
+		testProject.checkoutBranch("f15");
 		this.fpRoot = FedoraPackagerUtils.getProjectRoot(this.testProject
 				.getProject());
-		testProject.checkoutBranch("f15");
 		this.packager = new FedoraPackager(fpRoot);
 		srpmBuild = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
 		DownloadSourceCommand download = (DownloadSourceCommand) packager
 				.getCommandInstance(DownloadSourceCommand.ID);
+		download.setDownloadURL("http://pkgs.fedoraproject.org/repo/pkgs");
 		download.call(new NullProgressMonitor());
 		bci = FedoraPackagerUtils.getVcsHandler(fpRoot).getBranchConfig();
 		SRPMBuildJob srpmBuildJob = new SRPMBuildJob(NLS.bind(
@@ -106,43 +96,23 @@ public class KojiScratchWithSRPMTest {
 				.getCommandInstance(KojiUploadSRPMCommand.ID);
 		final String uploadPath = "cli-build/"
 				+ FedoraPackagerUtils.getUniqueIdentifier(); //$NON-NLS-1$
-		String kojiURL = System.getProperty(KOJI_TEST_INSTANCE_URL_PROP);
-		if (kojiURL == null) {
-			fail("System property testing.koji.url not set.");
-		}
 		try {
-			IKojiHubClient kojiClient = new KojiSSLHubClient(kojiURL) {
-				@Override
-				protected void initSSLConnection()
-						throws FileNotFoundException, GeneralSecurityException,
-						IOException {
-					// Create empty HostnameVerifier
-					HostnameVerifier hv = new HostnameVerifier() {
-						@Override
-						public boolean verify(String arg0, SSLSession arg1) {
-							return true;
-						}
-					};
-					String certDir = System.getProperty("user.home")
-							+ File.separatorChar + ".eclipse-fedorapackager"
-							+ File.separatorChar + "testing"
-							+ File.separatorChar + "koji-certs";
-					FedoraSSL fedoraSSL = FedoraSSLFactory.getInstance(
-							new File(certDir + File.separatorChar
-									+ "client.crt"), new File(certDir
-									+ File.separatorChar + "clientca.crt"),
-							new File(certDir + File.separatorChar
-									+ "serverca.crt"));
-					SSLContext ctxt = null;
-					// may throw exceptions (dealt with in login())
-					ctxt = fedoraSSL.getInitializedSSLContext();
-					// set up the proper socket
-					HttpsURLConnection.setDefaultSSLSocketFactory(ctxt
-							.getSocketFactory());
-					HttpsURLConnection.setDefaultHostnameVerifier(hv);
-				}
-			};
-			kojiClient.login();
+			IKojiHubClient kojiClient = createMock(IKojiHubClient.class);
+			expect(kojiClient.login()).andReturn(null);
+			expect(
+					kojiClient.uploadFile((String) anyObject(),
+							eq("ed-1.5-2.fc15.src.rpm"),
+							and(gt(0), leq(1000000)), (String) anyObject(),
+							anyInt(), (String) anyObject())).andReturn(true)
+					.atLeastOnce();
+			expect(
+					kojiClient.build(eq("f15-candidate"),
+							(List<?>) anyObject(),
+							aryEq(new String[] { "ed-1.5-2.fc15" }), eq(true)))
+					.andReturn(new int[] { 0xdead });
+			kojiClient.logout();
+			replay(kojiClient);
+
 			assertTrue(uploadSRPMCommand.setKojiClient(kojiClient)
 					.setRemotePath(uploadPath)
 					.setSRPM(srpmBuildResult.getAbsoluteSRPMFilePath())
@@ -161,6 +131,7 @@ public class KojiScratchWithSRPMTest {
 					.nvr(new String[] { nvr }).isScratchBuild(true);
 			assertTrue(kojiBuildCmd.call(new NullProgressMonitor())
 					.wasSuccessful());
+			verify(kojiClient);
 		} catch (Exception e) {
 			fail(e.getMessage());
 			throw e;
