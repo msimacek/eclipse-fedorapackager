@@ -406,7 +406,7 @@ public class UploadSourceCommand extends
 	/**
 	 * @return A properly configured HTTP client instance
 	 */
-	private HttpClient getClient() {
+	protected HttpClient getClient() {
 		// Set up client with proper timeout
 		HttpParams params = new BasicHttpParams();
 		params.setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,

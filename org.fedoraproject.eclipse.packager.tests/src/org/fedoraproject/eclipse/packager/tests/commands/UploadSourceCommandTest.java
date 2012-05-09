@@ -10,20 +10,27 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.tests.commands;
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.easymock.EasyMock.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.util.Stack;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.ClientConnectionManager;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -42,6 +49,7 @@ import org.fedoraproject.eclipse.packager.api.errors.InvalidUploadFileException;
 import org.fedoraproject.eclipse.packager.tests.SourcesFileUpdaterTest;
 import org.fedoraproject.eclipse.packager.tests.VCSIgnoreFileUpdaterTest;
 import org.fedoraproject.eclipse.packager.tests.units.UploadFileValidityTest;
+import org.fedoraproject.eclipse.packager.tests.utils.MockableUploadSourceCommand;
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
@@ -55,7 +63,8 @@ import org.osgi.framework.FrameworkUtil;
  * Eclipse plug-in test for UploadSourceCommand. Note: in order to run this test
  * successfully, one has to deploy the upload.cgi Python script as provided in
  * the resources folder on a test machine. After that make sure to set the
- * "org.fedoraproject.eclipse.packager.tests.LookasideUploadUrl" system property to point to the appropriate URL.
+ * "org.fedoraproject.eclipse.packager.tests.LookasideUploadUrl" system property
+ * to point to the appropriate URL.
  */
 public class UploadSourceCommandTest {
 
@@ -63,16 +72,13 @@ public class UploadSourceCommandTest {
 	private GitTestProject testProject;
 	// main interface class
 	private FedoraPackager packager;
-	private static final String EXAMPLE_UPLOAD_FILE =
-		"resources/callgraph-factorial.zip"; // $NON-NLS-1$
-	private static final String INVALID_UPLOAD_FILE =
-		"resources/invalid_upload_file.exe"; // $NON-NLS-1$
-	private static final String UPLOAD_URL_PROP = "org.fedoraproject.eclipse.packager.tests.LookasideUploadUrl"; //$NON-NLS-1$
+	private static final String EXAMPLE_UPLOAD_FILE = "resources/callgraph-factorial.zip"; // $NON-NLS-1$
+	private static final String INVALID_UPLOAD_FILE = "resources/invalid_upload_file.exe"; // $NON-NLS-1$
 	private String uploadURLForTesting;
-	
+
 	// List of temporary resources which should get deleted after test runs
 	private Stack<File> tempFilesAndDirectories = new Stack<File>();
-	
+
 	/**
 	 * Set up a Fedora project and run the command.
 	 * 
@@ -80,11 +86,7 @@ public class UploadSourceCommandTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		String uploadURL = System.getProperty(UPLOAD_URL_PROP);
-		if (uploadURL == null) {
-			fail(UPLOAD_URL_PROP  + " not set");
-		}
-		this.uploadURLForTesting = uploadURL;
+		this.uploadURLForTesting = "https://pkgs.fedoraproject.org/repo/pkgs/upload.cgi";
 		this.testProject = new GitTestProject("eclipse-fedorapackager");
 		IProjectRoot fpRoot = new FedoraProjectRoot();
 		fpRoot.initialize(this.testProject.getProject(), ProjectType.GIT);
@@ -97,19 +99,20 @@ public class UploadSourceCommandTest {
 		while (!tempFilesAndDirectories.isEmpty()) {
 			File file = tempFilesAndDirectories.pop();
 			if (file.isDirectory()) {
-				for (File f: file.listFiles()) {
+				for (File f : file.listFiles()) {
 					f.delete();
 				}
 			}
 			file.delete();
 		}
 	}
-	
+
 	/**
 	 * UploadSourceCommand.setUploadURL() should not accept invalid URLs.
+	 * 
 	 * @throws Exception
 	 */
-	@Test(expected=MalformedURLException.class)
+	@Test(expected = MalformedURLException.class)
 	public void shouldThrowMalformedURLException() throws Exception {
 		UploadSourceCommand uploadCmd = (UploadSourceCommand) packager
 				.getCommandInstance(UploadSourceCommand.ID);
@@ -130,23 +133,35 @@ public class UploadSourceCommandTest {
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_UPLOAD_FILE), null)).getFile();
 		File file = new File(fileName);
-		UploadSourceCommand uploadCmd = (UploadSourceCommand) packager
-				.getCommandInstance(UploadSourceCommand.ID);
+		MockableUploadSourceCommand uploadCmd = (MockableUploadSourceCommand) packager
+				.getCommandInstance(MockableUploadSourceCommand.ID);
+		HttpClient mockClient = createStrictMock(HttpClient.class);
+		HttpResponse mockResponse = createMock(HttpResponse.class);
+		StatusLine mockStatus = createMock(StatusLine.class);
+		HttpEntity mockEntity = createMock(HttpEntity.class);
+		expect(mockClient.execute((HttpUriRequest) anyObject())).andReturn(
+				mockResponse);
+		expect(mockResponse.getStatusLine()).andReturn(mockStatus).anyTimes();
+		expect(mockStatus.getStatusCode()).andReturn(HttpURLConnection.HTTP_OK)
+				.anyTimes();
+		expect(mockResponse.getEntity()).andReturn(mockEntity).anyTimes();
+		expect(mockEntity.getContent()).andReturn(
+				new ByteArrayInputStream(UploadSourceCommand.RESOURCE_AVAILABLE
+						.getBytes())).anyTimes();
+		expect(mockEntity.isStreaming()).andReturn(false);
+		expect(mockClient.getConnectionManager()).andReturn(
+				createNiceMock(ClientConnectionManager.class));
+		replay(mockClient);
+		replay(mockResponse);
+		replay(mockStatus);
+		replay(mockEntity);
 		try {
-			uploadCmd.setUploadURL(uploadURLForTesting)
-				.setFileToUpload(file).call(new NullProgressMonitor());
-		} catch (FileAvailableInLookasideCacheException e) {
-			// don't care
-		}
-		uploadCmd = (UploadSourceCommand) packager
-				.getCommandInstance(UploadSourceCommand.ID);
-		try {
-			uploadCmd.setUploadURL(uploadURLForTesting)
-				.setFileToUpload(file).call(new NullProgressMonitor());
+			uploadCmd.setClient(mockClient).setUploadURL(uploadURLForTesting)
+					.setFileToUpload(file).call(new NullProgressMonitor());
 			// File already available
 			fail("File should be present in lookaside cache.");
 		} catch (FileAvailableInLookasideCacheException e) {
-			//pass
+			// pass
 		}
 	}
 
@@ -159,8 +174,33 @@ public class UploadSourceCommandTest {
 	 */
 	@Test
 	public void canUploadSources() throws Exception {
-		UploadSourceCommand uploadCmd = (UploadSourceCommand) packager
-				.getCommandInstance(UploadSourceCommand.ID);
+		MockableUploadSourceCommand uploadCmd = (MockableUploadSourceCommand) packager
+				.getCommandInstance(MockableUploadSourceCommand.ID);
+		HttpClient mockClient = createStrictMock(HttpClient.class);
+		HttpResponse mockResponse = createMock(HttpResponse.class);
+		StatusLine mockStatus = createMock(StatusLine.class);
+		HttpEntity mockEntity = createMock(HttpEntity.class);
+		expect(mockClient.execute((HttpUriRequest) anyObject())).andReturn(
+				mockResponse);
+		expect(mockResponse.getStatusLine()).andReturn(mockStatus).anyTimes();
+		expect(mockStatus.getStatusCode()).andReturn(HttpURLConnection.HTTP_OK)
+				.anyTimes();
+		expect(mockResponse.getEntity()).andReturn(mockEntity).anyTimes();
+		expect(mockEntity.getContent()).andReturn(
+				new ByteArrayInputStream(UploadSourceCommand.RESOURCE_MISSING
+						.getBytes())).anyTimes();
+		expect(mockEntity.isStreaming()).andReturn(false);
+		expect(mockClient.getConnectionManager()).andReturn(
+				createNiceMock(ClientConnectionManager.class));
+		expect(mockClient.execute((HttpUriRequest) anyObject())).andReturn(
+				mockResponse);
+		expect(mockClient.getConnectionManager()).andReturn(
+				createNiceMock(ClientConnectionManager.class));
+		replay(mockClient);
+		replay(mockResponse);
+		replay(mockStatus);
+		replay(mockEntity);
+
 		// create a a temp file with checksum, which hasn't been uploaded so far
 		File newUploadFile = File.createTempFile(
 				"eclipse-fedorapackager-uploadsources-test-", "-REMOVE_ME.tar");
@@ -169,7 +209,8 @@ public class UploadSourceCommandTest {
 		writeRandomContentToFile(newUploadFile);
 		UploadSourceResult result = null;
 		try {
-			result = uploadCmd.setUploadURL(uploadURLForTesting)
+			result = uploadCmd.setClient(mockClient)
+					.setUploadURL(uploadURLForTesting)
 					.setFileToUpload(newUploadFile)
 					.call(new NullProgressMonitor());
 		} catch (FileAvailableInLookasideCacheException e) {
@@ -178,8 +219,9 @@ public class UploadSourceCommandTest {
 		}
 		assertNotNull(result);
 		assertTrue(result.wasSuccessful());
+		verify(mockClient);
 	}
-	
+
 	/**
 	 * After a file is uploaded, the {@code sources} file should be updated with
 	 * the new checksum/filename. This test checks for this.
@@ -199,19 +241,45 @@ public class UploadSourceCommandTest {
 		// add file to stack for removal after test run
 		tempFilesAndDirectories.push(newUploadFile);
 		writeRandomContentToFile(newUploadFile);
-		
+
 		// sources file pre-update
-		File sourcesFile = new File(testProject.getProject().getLocation().toFile().getAbsolutePath()
+		File sourcesFile = new File(testProject.getProject().getLocation()
+				.toFile().getAbsolutePath()
 				+ File.separatorChar + SourcesFile.SOURCES_FILENAME);
 		String sourcesFileContentPre = TestsUtils.readContents(sourcesFile);
 		IProjectRoot root = FedoraPackagerUtils.getProjectRoot(testProject
 				.getProject());
-		
+
 		// create listener
 		SourcesFileUpdater sourcesUpdater = new SourcesFileUpdater(root,
 				newUploadFile);
-		UploadSourceCommand uploadCmd = (UploadSourceCommand) packager
-				.getCommandInstance(UploadSourceCommand.ID);
+		MockableUploadSourceCommand uploadCmd = (MockableUploadSourceCommand) packager
+				.getCommandInstance(MockableUploadSourceCommand.ID);
+		HttpClient mockClient = createStrictMock(HttpClient.class);
+		HttpResponse mockResponse = createMock(HttpResponse.class);
+		StatusLine mockStatus = createMock(StatusLine.class);
+		HttpEntity mockEntity = createMock(HttpEntity.class);
+		expect(mockClient.execute((HttpUriRequest) anyObject())).andReturn(
+				mockResponse);
+		expect(mockResponse.getStatusLine()).andReturn(mockStatus).anyTimes();
+		expect(mockStatus.getStatusCode()).andReturn(HttpURLConnection.HTTP_OK)
+				.anyTimes();
+		expect(mockResponse.getEntity()).andReturn(mockEntity).anyTimes();
+		expect(mockEntity.getContent()).andReturn(
+				new ByteArrayInputStream(UploadSourceCommand.RESOURCE_MISSING
+						.getBytes())).anyTimes();
+		expect(mockEntity.isStreaming()).andReturn(false);
+		expect(mockClient.getConnectionManager()).andReturn(
+				createNiceMock(ClientConnectionManager.class));
+		expect(mockClient.execute((HttpUriRequest) anyObject())).andReturn(
+				mockResponse);
+		expect(mockClient.getConnectionManager()).andReturn(
+				createNiceMock(ClientConnectionManager.class));
+		replay(mockClient);
+		replay(mockResponse);
+		replay(mockStatus);
+		replay(mockEntity);
+		uploadCmd.setClient(mockClient);
 		uploadCmd.setFileToUpload(newUploadFile);
 		uploadCmd.setUploadURL(uploadURLForTesting);
 		uploadCmd.addCommandListener(sourcesUpdater);
@@ -236,15 +304,15 @@ public class UploadSourceCommandTest {
 		assertEquals(SourcesFile.calculateChecksum(newUploadFile) + "  "
 				+ newUploadFile.getName(), lastLine);
 	}
-	
+
 	/**
 	 * When setting the upload file it should throw InvalidUploadFileException
-	 * if the file name is not valid. Other upload file validity test are
-	 * tested in {@link UploadFileValidityTest}.
+	 * if the file name is not valid. Other upload file validity test are tested
+	 * in {@link UploadFileValidityTest}.
 	 * 
 	 * @throws Exception
 	 */
-	@Test(expected=InvalidUploadFileException.class)
+	@Test(expected = InvalidUploadFileException.class)
 	public void canDetermineValidUploadFiles() throws Exception {
 		UploadSourceCommand uploadCmd = (UploadSourceCommand) packager
 				.getCommandInstance(UploadSourceCommand.ID);
@@ -254,7 +322,7 @@ public class UploadSourceCommandTest {
 		File invalidUploadFile = new File(invalidUploadFileName);
 		uploadCmd.setFileToUpload(invalidUploadFile);
 	}
-	
+
 	/**
 	 * After a file is uploaded, the VCS ignore file should be updated.
 	 * 
@@ -273,7 +341,7 @@ public class UploadSourceCommandTest {
 		// add file to stack for removal after test run
 		tempFilesAndDirectories.push(newUploadFile);
 		writeRandomContentToFile(newUploadFile);
-		
+
 		// VCS ignore file pre-update
 		IFile vcsIgnoreFile = packager.getFedoraProjectRoot().getIgnoreFile();
 		String vcsIgnoreFileContentPre = "";
@@ -281,13 +349,38 @@ public class UploadSourceCommandTest {
 			vcsIgnoreFileContentPre = TestsUtils.readContents(vcsIgnoreFile
 					.getLocation().toFile());
 		}
-		
-		UploadSourceCommand uploadCmd = (UploadSourceCommand) packager
-				.getCommandInstance(UploadSourceCommand.ID);
+
+		MockableUploadSourceCommand uploadCmd = (MockableUploadSourceCommand) packager
+				.getCommandInstance(MockableUploadSourceCommand.ID);
+		HttpClient mockClient = createStrictMock(HttpClient.class);
+		HttpResponse mockResponse = createMock(HttpResponse.class);
+		StatusLine mockStatus = createMock(StatusLine.class);
+		HttpEntity mockEntity = createMock(HttpEntity.class);
+		expect(mockClient.execute((HttpUriRequest) anyObject())).andReturn(
+				mockResponse);
+		expect(mockResponse.getStatusLine()).andReturn(mockStatus).anyTimes();
+		expect(mockStatus.getStatusCode()).andReturn(HttpURLConnection.HTTP_OK)
+				.anyTimes();
+		expect(mockResponse.getEntity()).andReturn(mockEntity).anyTimes();
+		expect(mockEntity.getContent()).andReturn(
+				new ByteArrayInputStream(UploadSourceCommand.RESOURCE_MISSING
+						.getBytes())).anyTimes();
+		expect(mockEntity.isStreaming()).andReturn(false);
+		expect(mockClient.getConnectionManager()).andReturn(
+				createNiceMock(ClientConnectionManager.class));
+		expect(mockClient.execute((HttpUriRequest) anyObject())).andReturn(
+				mockResponse);
+		expect(mockClient.getConnectionManager()).andReturn(
+				createNiceMock(ClientConnectionManager.class));
+		replay(mockClient);
+		replay(mockResponse);
+		replay(mockStatus);
+		replay(mockEntity);
+		uploadCmd.setClient(mockClient);
 		uploadCmd.setFileToUpload(newUploadFile);
 		uploadCmd.setUploadURL(uploadURLForTesting);
-		VCSIgnoreFileUpdater vcsUpdater = new VCSIgnoreFileUpdater(newUploadFile,
-				vcsIgnoreFile);
+		VCSIgnoreFileUpdater vcsUpdater = new VCSIgnoreFileUpdater(
+				newUploadFile, vcsIgnoreFile);
 		uploadCmd.addCommandListener(vcsUpdater);
 		UploadSourceResult result = null;
 		try {
@@ -298,7 +391,7 @@ public class UploadSourceCommandTest {
 		} catch (CommandListenerException e) {
 			fail("should not be thrown");
 		}
-		
+
 		assertNotNull(result);
 		assertTrue(result.wasSuccessful());
 		String ignoreFileContentPost = TestsUtils.readContents(vcsIgnoreFile
@@ -310,6 +403,7 @@ public class UploadSourceCommandTest {
 
 	/**
 	 * Make sure to write some randomly generated content to this temporary file
+	 * 
 	 * @param newFile
 	 */
 	private void writeRandomContentToFile(File newFile) {

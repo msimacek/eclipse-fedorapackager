@@ -95,6 +95,31 @@ public class BodhiClient implements IBodhiClient {
 		this.httpclient = getClient();
 		this.bodhiServerUrl = bodhiServerURL;
 	}
+	
+	protected BodhiLoginResponse parseResult(HttpEntity resEntity) throws IOException{
+		// Got a 200, response body is the JSON passed on from the
+		// server.
+		String jsonString = ""; //$NON-NLS-1$
+		if (resEntity != null) {
+			try {
+				jsonString = parseResponse(resEntity);
+			} catch (IOException e) {
+				// ignore
+			} finally {
+				EntityUtils.consume(resEntity); // clean up resources
+			}
+		}
+		// log JSON string if in debug mode
+		if (PackagerPlugin.inDebugMode()) {
+			FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
+			logger.logInfo(NLS.bind(BodhiText.BodhiClient_rawJsonStringMsg, jsonString));
+		}
+		// Deserialize from JSON
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		gsonBuilder.registerTypeAdapter(DateTime.class, new DateTimeDeserializer());
+		Gson gson = gsonBuilder.create();
+		return gson.fromJson(jsonString, BodhiLoginResponse.class);
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -130,28 +155,7 @@ public class BodhiClient implements IBodhiClient {
 						"{0} {1}", response.getStatusLine().getStatusCode(), //$NON-NLS-1$
 						response.getStatusLine().getReasonPhrase()), response);
 			} else {
-				// Got a 200, response body is the JSON passed on from the
-				// server.
-				String jsonString = ""; //$NON-NLS-1$
-				if (resEntity != null) {
-					try {
-						jsonString = parseResponse(resEntity);
-					} catch (IOException e) {
-						// ignore
-					} finally {
-						EntityUtils.consume(resEntity); // clean up resources
-					}
-				}
-				// log JSON string if in debug mode
-				if (PackagerPlugin.inDebugMode()) {
-					FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-					logger.logInfo(NLS.bind(BodhiText.BodhiClient_rawJsonStringMsg, jsonString));
-				}
-				// Deserialize from JSON
-				GsonBuilder gsonBuilder = new GsonBuilder();
-				gsonBuilder.registerTypeAdapter(DateTime.class, new DateTimeDeserializer());
-				Gson gson = gsonBuilder.create();
-				result = gson.fromJson(jsonString, BodhiLoginResponse.class);
+				result = parseResult(resEntity);
 			}
 		} catch (IOException e) {
 			throw new BodhiClientLoginException(e.getMessage(), e);
@@ -296,7 +300,7 @@ public class BodhiClient implements IBodhiClient {
 	/**
 	 * @return A properly configured HTTP client instance
 	 */
-	private HttpClient getClient() {
+	protected HttpClient getClient() {
 		// Set up client with proper timeout
 		HttpParams params = new BasicHttpParams();
 		params.setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,

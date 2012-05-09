@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Fedora Packager Tests Plug-in
-Bundle-SymbolicName: org.fedoraproject.eclipse.packager.tests
+Bundle-SymbolicName: org.fedoraproject.eclipse.packager.tests;singleton:=true
 Bundle-Version: 0.4.0.qualifier
 Bundle-Vendor: FedoraProject.org
 Require-Bundle: org.eclipse.ui,
@@ -14,11 +14,18 @@ Export-Package: org.fedoraproject.eclipse.packager.tests,
  org.fedoraproject.eclipse.packager.tests.utils,
  org.fedoraproject.eclipse.packager.tests.utils.git
 Import-Package: com.google.gson,
+ javax.servlet,
  org.apache.commons.httpclient,
  org.apache.commons.ssl,
  org.apache.http,
- javax.servlet,
+ org.apache.http.client,
+ org.apache.http.client.methods,
+ org.apache.http.conn,
+ org.apache.http.entity.mime,
+ org.apache.http.entity.mime.content,
+ org.apache.http.params,
  org.apache.xmlrpc,
+ org.easymock,
  org.eclipse.core.resources,
  org.eclipse.egit.core,
  org.eclipse.egit.core.op,
@@ -58,6 +65,5 @@ Import-Package: com.google.gson,
  org.fedoraproject.eclipse.packager.rpm,
  org.fedoraproject.eclipse.packager.rpm.api,
  org.fedoraproject.eclipse.packager.rpm.api.errors,
- org.fedoraproject.eclipse.packager.utils,
- org.easymock
+ org.fedoraproject.eclipse.packager.utils
 Eclipse-BundleShape: dir

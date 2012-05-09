@@ -74,5 +74,4 @@ public interface IBodhiClient {
 	 * 
 	 */
 	public void logout() throws BodhiClientException;
-
 }
