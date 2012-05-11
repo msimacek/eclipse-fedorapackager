@@ -364,7 +364,7 @@ public class BodhiLoginResponseTest {
 					"}";
 	
 	@Test
-	public void canDeserializeLoginJSONResponse() throws Exception {
+	public void canDeserializeLoginJSONResponse() {
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(DateTime.class, new DateTimeDeserializer());
 		Gson gson = gsonBuilder.create();

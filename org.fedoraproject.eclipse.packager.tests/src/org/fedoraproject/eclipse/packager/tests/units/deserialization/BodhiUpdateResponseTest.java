@@ -77,7 +77,7 @@ public class BodhiUpdateResponseTest {
 					"}";
 	
 	@Test
-	public void canDeserializeUpdateJSONResponse() throws Exception {
+	public void canDeserializeUpdateJSONResponse() {
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		Gson gson = gsonBuilder.create();
 		BodhiUpdateResponse result = gson.fromJson(EXAMPLE_UPDATE_JSON_RESPONSE, BodhiUpdateResponse.class);

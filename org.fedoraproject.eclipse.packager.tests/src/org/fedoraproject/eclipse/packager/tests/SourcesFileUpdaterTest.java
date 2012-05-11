@@ -13,6 +13,7 @@ package org.fedoraproject.eclipse.packager.tests;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -23,6 +24,7 @@ import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.SourcesFile;
 import org.fedoraproject.eclipse.packager.api.SourcesFileUpdater;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
+import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.junit.After;
@@ -46,7 +48,7 @@ public class SourcesFileUpdaterTest {
 		"resources/callgraph-factorial.zip"; // $NON-NLS-1$
 	
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws IOException, CoreException, InvalidProjectRootException {
 		String dirName = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_FEDORA_PROJECT_ROOT), null)).getFile();
@@ -68,14 +70,12 @@ public class SourcesFileUpdaterTest {
 	}
 
 	@After
-	public void tearDown() {
-		try {
-			this.testProject.delete(true, null);
-		} catch (CoreException e) { /* ignore */ }
+	public void tearDown() throws CoreException {
+		this.testProject.delete(true, null);
 	}
 
 	@Test
-	public void canReplaceSourcesFile() throws Exception {
+	public void canReplaceSourcesFile() throws IOException {
 		// sources file pre-update
 		File sourcesFile = new File(testProject.getLocation().toFile().getAbsolutePath()
 				+ File.separatorChar + SourcesFile.SOURCES_FILENAME);
@@ -100,7 +100,7 @@ public class SourcesFileUpdaterTest {
 	}
 
 	@Test
-	public void canUpdateSourcesFile() throws Exception {
+	public void canUpdateSourcesFile() throws IOException  {
 		// sources file pre-update
 		File sourcesFile = new File(testProject.getLocation().toFile().getAbsolutePath()
 				+ File.separatorChar + SourcesFile.SOURCES_FILENAME);

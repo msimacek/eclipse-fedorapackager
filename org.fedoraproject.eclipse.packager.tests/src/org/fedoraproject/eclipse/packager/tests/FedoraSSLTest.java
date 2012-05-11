@@ -21,6 +21,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 import javax.net.ssl.SSLContext;
 
@@ -46,10 +48,10 @@ public class FedoraSSLTest {
 	
 	
 	/**
-	 * @throws java.lang.Exception
+	 * @throws IOException 
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws IOException  {
 		String fedCertName = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(CERT_FILE), null)).getFile();
@@ -70,9 +72,12 @@ public class FedoraSSLTest {
 
 	/**
 	 * Test for properly set up Fedora authentication enabled SSL context.
+	 * @throws IOException 
+	 * @throws GeneralSecurityException 
+	 * @throws FileNotFoundException 
 	 */
 	@Test
-	public void canGetInitializedSSLContext() throws Exception {
+	public void canGetInitializedSSLContext() throws FileNotFoundException, GeneralSecurityException, IOException  {
 		SSLContext ctxt = this.expiredFedoraSSL.getInitializedSSLContext();
 		assertNotNull(ctxt);
 	}
@@ -80,19 +85,25 @@ public class FedoraSSLTest {
 	/**
 	 * FileNotFoundException should be thrown if a certificate is missing
 	 * and {@link FedoraSSL#getInitializedSSLContext()} or {@link FedoraSSL#getFedoraCertKeyMaterial()} is called.
+	 * @throws IOException 
+	 * @throws GeneralSecurityException 
+	 * @throws FileNotFoundException 
 	 * 
 	 */
 	@Test(expected=FileNotFoundException.class)
-	public void throwsFileNotFoundExceptionIfCertsMissing() throws Exception {
+	public void throwsFileNotFoundExceptionIfCertsMissing() throws FileNotFoundException, GeneralSecurityException, IOException {
 		anonymousFedoraSSL.getInitializedSSLContext();
 		anonymousFedoraSSL.getFedoraCertKeyMaterial();
 	}
 	
 	/**
 	 * Test key material retrieval.
+	 * @throws IOException 
+	 * @throws GeneralSecurityException 
+	 * @throws FileNotFoundException 
 	 */
 	@Test
-	public void canGetKeyMaterial() throws Exception {
+	public void canGetKeyMaterial() throws FileNotFoundException, GeneralSecurityException, IOException {
 		// Get key material for fedora.cert
 		KeyMaterial keymat = this.expiredFedoraSSL.getFedoraCertKeyMaterial();
 		assertNotNull(keymat);
@@ -100,7 +111,7 @@ public class FedoraSSLTest {
 	}
 	
 	@Test
-	public void canGetUsernameFromCertificate() throws Exception {
+	public void canGetUsernameFromCertificate()  {
 		String username = this.expiredFedoraSSL.getUsernameFromCert();
 		assertNotNull(username);
 		assertEquals("jerboaa", username);
@@ -115,7 +126,7 @@ public class FedoraSSLTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void canDetermineCertificateValidity() throws Exception {
+	public void canDetermineCertificateValidity()  {
 		FedoraSSL validFedoraSSL = FedoraSSLFactory.getInstance();
 		// should be valid
 		assertTrue(validFedoraSSL.isFedoraCertValid());

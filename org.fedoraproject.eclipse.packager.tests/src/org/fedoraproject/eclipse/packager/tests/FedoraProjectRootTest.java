@@ -18,17 +18,25 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jgit.api.errors.InvalidRefNameException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
+import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.Specfile;
 import org.fedoraproject.eclipse.packager.FedoraProjectRoot;
 import org.fedoraproject.eclipse.packager.ILookasideCache;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.LookasideCache;
 import org.fedoraproject.eclipse.packager.SourcesFile;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerExtensionPointException;
+import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
@@ -47,12 +55,11 @@ public class FedoraProjectRootTest {
 	private static final String SOURCE_FILE_NAME = "project_sources.zip";
 	private static final String PACKAGE_NAME = "example-fedora-project";
 	private static final String GIT_IGNOREFILE_NAME = ".gitignore";
-	@SuppressWarnings("unused")
-	private static final String CVS_IGNOREFILE_NAME = ".cvsignore";
 	private static final String EXAMPLE_FEDORA_PROJECT_ROOT = "resources/example-fedora-project"; // $NON-NLS-1$
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws IOException,
+			FedoraPackagerExtensionPointException, CoreException {
 		String dirName = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_FEDORA_PROJECT_ROOT), null)).getFile();
@@ -77,7 +84,9 @@ public class FedoraProjectRootTest {
 	}
 
 	@Test
-	public void canCreateFedoraProjectRoot() throws Exception {
+	public void canCreateFedoraProjectRoot()
+			throws FedoraPackagerExtensionPointException, InterruptedException,
+			InvalidProjectRootException {
 		// Dummy Fedora project root
 		fpRoot = null;
 		assertNull(fpRoot);
@@ -96,7 +105,8 @@ public class FedoraProjectRootTest {
 	}
 
 	@Test
-	public void testGetContainer() throws Exception {
+	public void testGetContainer() throws InterruptedException,
+			InvalidProjectRootException {
 		assertNotNull(fpRoot.getContainer());
 		assertSame(projectResource, fpRoot.getContainer());
 
@@ -111,7 +121,8 @@ public class FedoraProjectRootTest {
 	}
 
 	@Test
-	public void testGetProject() throws Exception {
+	public void testGetProject() throws InterruptedException,
+			InvalidProjectRootException {
 		// Git case
 		fpRoot = null;
 		gitTestProject = new GitTestProject("eclipse-fedorapackager");
@@ -143,7 +154,8 @@ public class FedoraProjectRootTest {
 	}
 
 	@Test
-	public void testGetProjectType() throws Exception {
+	public void testGetProjectType() throws InterruptedException,
+			InvalidProjectRootException {
 		// Git case
 		fpRoot = null;
 		gitTestProject = new GitTestProject("eclipse-fedorapackager");
@@ -155,7 +167,8 @@ public class FedoraProjectRootTest {
 	}
 
 	@Test
-	public void testGetIgnoreFile() throws Exception {
+	public void testGetIgnoreFile() throws InterruptedException,
+			InvalidProjectRootException {
 		IFile ignoreFile = fpRoot.getIgnoreFile();
 		// we don't have an ignore file
 		assertTrue(!ignoreFile.exists());
@@ -184,7 +197,10 @@ public class FedoraProjectRootTest {
 	}
 
 	@Test
-	public void canRetrieveNVRs() throws Exception {
+	public void canRetrieveNVRs() throws InterruptedException,
+			JGitInternalException, RefAlreadyExistsException,
+			RefNotFoundException, InvalidRefNameException, CoreException,
+			InvalidProjectRootException {
 		fpRoot = null;
 		gitTestProject = new GitTestProject("eclipse-mylyn-tasks");
 		gitTestProject.checkoutBranch("f15");

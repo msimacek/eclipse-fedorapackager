@@ -107,7 +107,7 @@ public class GitTestProject {
 		}
 	}
 
-	public void dispose() throws Exception {
+	public void dispose() throws CoreException {
 		project.delete(true, true, null);
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 	}

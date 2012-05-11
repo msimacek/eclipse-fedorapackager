@@ -13,6 +13,8 @@ package org.fedoraproject.eclipse.packager.tests.utils.git;
 import static org.junit.Assert.fail;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.eclipse.core.resources.IProject;
@@ -25,6 +27,13 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.eclipse.jgit.api.errors.NoFilepatternException;
+import org.eclipse.jgit.api.errors.NoHeadException;
+import org.eclipse.jgit.api.errors.NoMessageException;
+import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
@@ -41,8 +50,8 @@ public class GitConvertTestProject {
 	private IProject project;
 	private LocalFedoraPackagerProjectCreator mainProject;
 
-	public GitConvertTestProject(final String packageName, final String fileName)
-			throws Exception {
+	public GitConvertTestProject(final String packageName, final String fileName) throws CoreException, IOException, NoFilepatternException, NoHeadException, NoMessageException, ConcurrentRefUpdateException, JGitInternalException, WrongRepositoryStateException
+			 {
 
 		// Create a base project for the test
 		this.project = ResourcesPlugin.getWorkspace().getRoot()
@@ -81,7 +90,7 @@ public class GitConvertTestProject {
 		}
 	}
 
-	public void dispose() throws Exception {
+	public void dispose() throws CoreException {
 		project.delete(true, true, null);
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 	}
@@ -97,10 +106,14 @@ public class GitConvertTestProject {
 
 	/**
 	 * Adds a remote repository to the existing local packager project
+	 * @throws URISyntaxException 
+	 * @throws IOException 
+	 * @throws InvalidRemoteException 
+	 * @throws JGitInternalException 
+	 * @throws CoreException 
 	 *
-	 * @throws Exception
 	 */
-	public void addRemoteRepository(String uri, Git git) throws Exception {
+	public void addRemoteRepository(String uri, Git git) throws URISyntaxException, IOException, JGitInternalException, InvalidRemoteException, CoreException  {
 
 		RemoteConfig config = new RemoteConfig(git.getRepository()
 				.getConfig(), "origin"); //$NON-NLS-1$

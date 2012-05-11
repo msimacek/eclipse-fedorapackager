@@ -11,8 +11,10 @@
 package org.fedoraproject.eclipse.packager.tests.utils.git;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.fedoraproject.eclipse.packager.FedoraProjectRoot;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
+import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 
 import junit.framework.TestCase;
@@ -24,7 +26,7 @@ public class GitTestCase extends TestCase {
 	private IProjectRoot fedoraprojectRoot;
 	
 	@Override
-	protected void setUp() throws Exception {
+	protected void setUp() throws InterruptedException, InvalidProjectRootException  {
 		project = new GitTestProject("eclipse-rpm-editor");
 		iProject = project.getProject();
 		// create a fedoraprojectRoot for this project
@@ -46,7 +48,7 @@ public class GitTestCase extends TestCase {
 	}
 
 	@Override
-	protected void tearDown() throws Exception {
+	protected void tearDown() throws CoreException  {
 		project.dispose();
 	}
 

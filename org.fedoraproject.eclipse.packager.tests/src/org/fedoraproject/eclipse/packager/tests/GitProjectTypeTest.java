@@ -15,7 +15,7 @@ import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestCase;
 
 public class GitProjectTypeTest extends GitTestCase {
 	
-	public void testAdaptToFpProject() throws Exception {
+	public void testAdaptToFpProject()  {
 		// Should return FpProject instance with GIT type
 		assertEquals(FedoraPackagerUtils.getProjectType(getiProject()) , FedoraPackagerUtils.ProjectType.GIT);
 	}

@@ -31,6 +31,8 @@ import org.eclipse.core.runtime.Path;
 import org.fedoraproject.eclipse.packager.FedoraProjectRoot;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.VCSIgnoreFileUpdater;
+import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerExtensionPointException;
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType;
 import org.junit.After;
@@ -54,7 +56,7 @@ public class VCSIgnoreFileUpdaterTest {
 	private static final String GITIGNORE_FILE_NAME = ".gitignore"; //$NON-NLS-1$
 	
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws IOException, CoreException, FedoraPackagerExtensionPointException  {
 		String dirName = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_FEDORA_PROJECT_ROOT), null)).getFile();
@@ -71,7 +73,7 @@ public class VCSIgnoreFileUpdaterTest {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() throws CoreException {
 		while (!tempDirsAndFiles.isEmpty()) {
 			File file = tempDirsAndFiles.pop();
 			if (file.isDirectory()) {
@@ -81,13 +83,11 @@ public class VCSIgnoreFileUpdaterTest {
 			}
 			file.delete();
 		}
-		try {
-			this.tempProject.delete(true, null);
-		} catch (CoreException e) { /* ignore */ }
+		this.tempProject.delete(true, null);
 	}
 	
 	@Test
-	public void canCreateNewVCSIgnoreFileIfNotExistent() throws Exception {
+	public void canCreateNewVCSIgnoreFileIfNotExistent() throws IOException, CommandListenerException  {
 		// should not exist as of yet
 		assertTrue(!vcsIgnoreFile.exists());
 		File underlyingFileInFs = vcsIgnoreFile.getLocation().toFile();
@@ -110,7 +110,7 @@ public class VCSIgnoreFileUpdaterTest {
 	
 
 	@Test
-	public void canReplaceContentWithNewIgnoreContent() throws Exception {
+	public void canReplaceContentWithNewIgnoreContent() throws IOException, CoreException, CommandListenerException {
 		final String initialContent = "somefile.txt\n";
 		File gitignore = createGitIgnoreWithContent(initialContent);
 		// sanity check
@@ -131,12 +131,14 @@ public class VCSIgnoreFileUpdaterTest {
 	/**
 	 * New to-be-ignored filename does not exist in ignore file yet. It should
 	 * simply append the new filename.
+	 * @throws CoreException 
+	 * @throws IOException 
+	 * @throws CommandListenerException 
 	 * 
-	 * @throws Exception
 	 */
 	@Test
-	public void canAppendToIgnoreFileContentIfNewIgnoredFileDoesNOTExistInIgnoreFile()
-			throws Exception {
+	public void canAppendToIgnoreFileContentIfNewIgnoredFileDoesNOTExistInIgnoreFile() throws IOException, CoreException, CommandListenerException
+			{
 		final String initialContent = "somefile.txt\n";
 		File gitignore = createGitIgnoreWithContent(initialContent);
 		// sanity check

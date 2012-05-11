@@ -48,7 +48,7 @@ public class SourcesFileTest {
 		"20a16942e761f9281591891834997fe5"; //$NON-NLS-1$
 	
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws IOException, CoreException  {
 		String dirName = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_FEDORA_PROJECT_ROOT), null)).getFile();
@@ -63,7 +63,7 @@ public class SourcesFileTest {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() throws CoreException  {
 		while (!tempDirsAndFiles.isEmpty()) {
 			File file = tempDirsAndFiles.pop();
 			if (file.isDirectory()) {
@@ -73,9 +73,7 @@ public class SourcesFileTest {
 			}
 			file.delete();
 		}
-		try {
-			tempProject.delete(true, null);
-		} catch (CoreException e) { /* ignore */ }
+		tempProject.delete(true, null);
 	}
 
 	@Test
@@ -121,7 +119,7 @@ public class SourcesFileTest {
 	}
 
 	@Test
-	public void testGetMissingSources() throws Exception {
+	public void testGetMissingSources() throws CoreException {
 		assertTrue(sourcesFile.getMissingSources().isEmpty());
 		// remove source file in order to get non-empty missing sources set
 		IFile sourceToDelete = (IFile) tempProject.findMember(new Path(
@@ -139,7 +137,7 @@ public class SourcesFileTest {
 	}
 
 	@Test
-	public void testDeleteSource() throws Exception {
+	public void testDeleteSource() throws CoreException {
 		// it's not missing, but should show up in all sources.
 		assertEquals(1, sourcesFile.getAllSources().size());
 		sourcesFile.deleteSource(ORIG_SOURCE);
@@ -147,7 +145,7 @@ public class SourcesFileTest {
 	}
 
 	@Test
-	public void testCalculateChecksum() throws Exception {
+	public void testCalculateChecksum() throws IOException  {
 		IFile projectSources = (IFile) tempProject.findMember(new Path(ORIG_SOURCE));
 		assertNotNull(projectSources);
 		assertEquals(ORIG_CHECKSUM,
@@ -167,11 +165,7 @@ public class SourcesFileTest {
 			}
 		} finally {
 			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException e) {
-					// ignore
-				}
+				out.close();
 			}
 		}
 		// MD5sum of "Test Checksum\n" == c4f94c2fe892ee0fa41f91352b64adf5
@@ -181,11 +175,12 @@ public class SourcesFileTest {
 
 	/**
 	 * SourceFile works. Why isn't this test?
+	 * @throws IOException 
+	 * @throws CoreException 
 	 * 
-	 * @throws Exception
 	 */
 	@Test
-	public void testSave() throws Exception {
+	public void testSave() throws IOException, CoreException  {
 		// sources file pre-update
 		File s = new File(tempProject.getLocation().toFile().getAbsolutePath()
 				+ File.separatorChar + SourcesFile.SOURCES_FILENAME);

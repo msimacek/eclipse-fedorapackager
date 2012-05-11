@@ -13,6 +13,7 @@ package org.fedoraproject.eclipse.packager.tests;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
@@ -24,6 +25,7 @@ import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.UploadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerExtensionPointException;
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType;
 import org.junit.After;
@@ -40,7 +42,7 @@ public class FedoraPackagerTest {
 	private FedoraProjectRoot fpRoot;
 	
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws IOException, CoreException, FedoraPackagerExtensionPointException {
 		String dirName = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_FEDORA_PROJECT_ROOT), null)).getFile();
@@ -55,10 +57,8 @@ public class FedoraPackagerTest {
 	}
 
 	@After
-	public void tearDown() throws Exception {
-		try {
-			this.packagerProject.delete(true, null);
-		} catch (CoreException e) { /* ignore */ }
+	public void tearDown() throws CoreException {
+		this.packagerProject.delete(true, null);
 	}
 
 	@Test

@@ -27,7 +27,7 @@ public class DateTimeTest {
 	private DateTime dateTime;
 	
 	@Before
-	public void setUp() throws Exception {
+	public void setUp()  {
 		dateTime = new DateTime("2010-06-17 15:42:05.553330+00:00");
 	}
 

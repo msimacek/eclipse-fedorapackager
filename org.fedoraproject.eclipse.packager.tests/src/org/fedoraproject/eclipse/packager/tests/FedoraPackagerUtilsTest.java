@@ -52,7 +52,7 @@ public class FedoraPackagerUtilsTest {
 	private GitTestProject gitProject;
 	
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws IOException, CoreException  {
 		String dirName = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_FEDORA_PROJECT_ROOT), null)).getFile();
@@ -66,10 +66,8 @@ public class FedoraPackagerUtilsTest {
 	}
 
 	@After
-	public void tearDown() throws Exception {
-		try {
-			this.packagerProject.delete(true, null);
-		} catch (CoreException e) { /* ignore */ }
+	public void tearDown() throws CoreException {
+		this.packagerProject.delete(true, null);
 		if (gitProject != null) {
 			gitProject.dispose();
 		}
@@ -126,7 +124,7 @@ public class FedoraPackagerUtilsTest {
 	}
 
 	@Test
-	public void testGetProjectType() throws Exception {
+	public void testGetProjectType() throws InterruptedException, InvalidProjectRootException {
 		gitProject = new GitTestProject("eclipse-fedorapackager");
 		IProjectRoot fproot = FedoraPackagerUtils.getProjectRoot(gitProject.getProject());
 		assertNotNull(fproot);
@@ -134,7 +132,7 @@ public class FedoraPackagerUtilsTest {
 	}
 
 	@Test
-	public void testGetVcsHandler() throws Exception {
+	public void testGetVcsHandler() throws InterruptedException, InvalidProjectRootException  {
 		gitProject = new GitTestProject("eclipse-fedorapackager");
 		IProjectRoot fproot = FedoraPackagerUtils.getProjectRoot(gitProject.getProject());
 		assertNotNull(fproot);

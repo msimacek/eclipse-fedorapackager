@@ -22,7 +22,7 @@ import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
 
 public class GitFpBitsTest extends GitTestCase {
 
-	public void testGetCurrentBranchName() throws Exception {
+	public void testGetCurrentBranchName() throws JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException  {
 		FpGitProjectBits projectBits = (FpGitProjectBits) FedoraPackagerUtils
 				.getVcsHandler(getFedoraprojectRoot());
 		assertNotNull(projectBits);
@@ -47,7 +47,7 @@ public class GitFpBitsTest extends GitTestCase {
 															// devel
 	}
 
-	public void testGetDistVal() throws Exception {
+	public void testGetDistVal() throws JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException  {
 		FpGitProjectBits projectBits = (FpGitProjectBits) FedoraPackagerUtils
 				.getVcsHandler(getFedoraprojectRoot());
 		assertNotNull(projectBits);
