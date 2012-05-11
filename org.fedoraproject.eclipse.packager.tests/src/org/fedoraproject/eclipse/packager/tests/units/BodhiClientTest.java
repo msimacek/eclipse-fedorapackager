@@ -10,18 +10,32 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.tests.units;
 
-import static org.junit.Assert.*;
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.ClientConnectionManager;
 import org.fedoraproject.eclipse.packager.bodhi.api.BodhiClient;
 import org.fedoraproject.eclipse.packager.bodhi.api.BodhiLoginResponse;
 import org.fedoraproject.eclipse.packager.bodhi.api.BodhiUpdateResponse;
-import org.junit.After;
+import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientException;
+import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientLoginException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,7 +53,6 @@ import org.junit.Test;
  */
 public class BodhiClientTest {
 
-	private BodhiClient client;
 	private URL bodhiUrl;
 	
 	// URL should end with '/'
@@ -49,52 +62,101 @@ public class BodhiClientTest {
 	private static final String PACKAGE_UPDATE_NVR = "ed-1.5-3.fc15"; //$NON-NLS-1$
 	
 	@Before
-	public void setUp() throws Exception {
-		try {
-			bodhiUrl = new URL(BODHI_STAGING);
-		} catch (MalformedURLException e) {
-			// ignore
-		}
-	}
-	
-	@After
-	public void tearDown() {
-		try {
-			client.logout();
-		} catch (Exception e) {
-			// don't care
-		}
+	public void setUp() throws MalformedURLException  {
+		bodhiUrl = new URL(BODHI_STAGING);
 	}
 	
 	@Test
 	public void testLogin() throws Exception {
-		// TODO: implement matcher for multipart entity, override parseResult to skip result parsing 
 		final HttpClient mockClient = createMock(HttpClient.class);
 		HttpResponse mockResponse = createMock(HttpResponse.class);
-		client = new BodhiClient(bodhiUrl) {
+		StatusLine mockStatus = createMock(StatusLine.class);
+		HttpEntity mockEntity = createMock(HttpEntity.class);
+		BodhiClient client = new BodhiClient(bodhiUrl) {
 			@Override
 			protected HttpClient getClient() {
 				return mockClient;
 			}
 		};
+		expect(mockClient.execute((HttpUriRequest) anyObject())).andReturn(
+				mockResponse);
+		expect(mockResponse.getStatusLine()).andReturn(mockStatus).anyTimes();
+		expect(mockStatus.getStatusCode()).andReturn(HttpURLConnection.HTTP_OK)
+				.anyTimes();
+		expect(mockResponse.getEntity()).andReturn(mockEntity).anyTimes();
+		expect(mockEntity.getContent()).andReturn(
+				new ByteArrayInputStream("{ }"
+						.getBytes())).anyTimes();
+		expect(mockEntity.isStreaming()).andReturn(false);
+		expect(mockClient.getConnectionManager()).andReturn(
+				createNiceMock(ClientConnectionManager.class)).anyTimes();
+		replay(mockClient);
+		replay(mockResponse);
+		replay(mockStatus);
+		replay(mockEntity);
 		client.login(BODHI_ADMIN_USERNAME, BODHI_ADMIN_PASSWORD);
 		client.shutDownConnection();
-		client = new BodhiClient(this.bodhiUrl);
 	}
-
-	@Test
-	public void testLogout() throws Exception {
-		// TODO: implement matcher for multipart entity
+	
+	@Test(expected=BodhiClientLoginException.class)
+	public void testLoginUnsuccessfull() throws ClientProtocolException, IOException, BodhiClientLoginException  {
 		final HttpClient mockClient = createMock(HttpClient.class);
-		client = new BodhiClient(bodhiUrl) {
+		HttpResponse mockResponse = createMock(HttpResponse.class);
+		StatusLine mockStatus = createMock(StatusLine.class);
+		HttpEntity mockEntity = createMock(HttpEntity.class);
+		BodhiClient client = new BodhiClient(bodhiUrl) {
 			@Override
 			protected HttpClient getClient() {
 				return mockClient;
 			}
-		};		
+		};
+		expect(mockClient.execute((HttpUriRequest) anyObject())).andReturn(
+				mockResponse);
+		expect(mockResponse.getStatusLine()).andReturn(mockStatus).anyTimes();
+		expect(mockStatus.getStatusCode()).andReturn(HttpURLConnection.HTTP_FORBIDDEN)
+				.anyTimes();
+		expect(mockStatus.getReasonPhrase()).andReturn("Forbidden")
+		.anyTimes();
+		expect(mockResponse.getEntity()).andReturn(mockEntity).anyTimes();
+		expect(mockEntity.isStreaming()).andReturn(false);
+		replay(mockClient);
+		replay(mockResponse);
+		replay(mockStatus);
+		replay(mockEntity);
+		client.login(BODHI_ADMIN_USERNAME, "");
+		client.shutDownConnection();
+	}
+
+	@Test
+	public void testLogout() throws ClientProtocolException, IOException, BodhiClientLoginException, BodhiClientException {
+		final HttpClient mockClient = createMock(HttpClient.class);
+		HttpResponse mockResponse = createMock(HttpResponse.class);
+		StatusLine mockStatus = createMock(StatusLine.class);
+		HttpEntity mockEntity = createMock(HttpEntity.class);
+		BodhiClient client = new BodhiClient(bodhiUrl) {
+			@Override
+			protected HttpClient getClient() {
+				return mockClient;
+			}
+		};
+		expect(mockClient.execute((HttpUriRequest) anyObject())).andReturn(
+				mockResponse).anyTimes();
+		expect(mockResponse.getStatusLine()).andReturn(mockStatus).anyTimes();
+		expect(mockStatus.getStatusCode()).andReturn(HttpURLConnection.HTTP_OK)
+				.anyTimes();
+		expect(mockResponse.getEntity()).andReturn(mockEntity).anyTimes();
+		expect(mockEntity.getContent()).andReturn(
+				new ByteArrayInputStream("{ }"
+						.getBytes())).anyTimes();
+		expect(mockEntity.isStreaming()).andReturn(false).anyTimes();
+		expect(mockClient.getConnectionManager()).andReturn(
+				createNiceMock(ClientConnectionManager.class)).anyTimes();
+		replay(mockClient);
+		replay(mockResponse);
+		replay(mockStatus);
+		replay(mockEntity);
 		client.login(BODHI_ADMIN_USERNAME, BODHI_ADMIN_PASSWORD);
 		client.shutDownConnection();
-		client = new BodhiClient(this.bodhiUrl);
 		client.logout();
 	}
 
@@ -102,19 +164,43 @@ public class BodhiClientTest {
 	 * Test updates pushing. This will only work if the build in question has
 	 * been built in the Koji instance which is connected to the Bodhi test
 	 * instance.
+	 * @throws IOException 
+	 * @throws ClientProtocolException 
+	 * @throws BodhiClientLoginException 
+	 * @throws BodhiClientException 
 	 * 
-	 * @throws Exception
 	 */
 	@Test
-	public void canCreateNewUpdate() throws Exception {
-		// TODO: implement matcher for multipart entity
+	public void canCreateNewUpdate() throws ClientProtocolException, IOException, BodhiClientLoginException, BodhiClientException  {
 		final HttpClient mockClient = createMock(HttpClient.class);
-		client = new BodhiClient(bodhiUrl){
+		HttpResponse mockResponse = createMock(HttpResponse.class);
+		StatusLine mockStatus = createMock(StatusLine.class);
+		HttpEntity mockEntity = createMock(HttpEntity.class);
+		BodhiClient client = new BodhiClient(bodhiUrl) {
 			@Override
 			protected HttpClient getClient() {
 				return mockClient;
 			}
 		};
+		expect(mockClient.execute((HttpUriRequest) anyObject())).andReturn(
+				mockResponse).anyTimes();
+		expect(mockResponse.getStatusLine()).andReturn(mockStatus).anyTimes();
+		expect(mockStatus.getStatusCode()).andReturn(HttpURLConnection.HTTP_OK)
+				.anyTimes();
+		expect(mockResponse.getEntity()).andReturn(mockEntity).anyTimes();
+		expect(mockEntity.getContent()).andReturn(
+				new ByteArrayInputStream("{user:{password:\"guest\"} }"
+						.getBytes()));
+		expect(mockEntity.getContent()).andReturn(
+				new ByteArrayInputStream("{tg_flash:\"Update successfully created\" , updates: [ {builds: [{package:{name=\"ed\"}}] }] }"
+						.getBytes()));
+		expect(mockEntity.isStreaming()).andReturn(false).anyTimes();
+		expect(mockClient.getConnectionManager()).andReturn(
+				createNiceMock(ClientConnectionManager.class)).anyTimes();
+		replay(mockClient);
+		replay(mockResponse);
+		replay(mockStatus);
+		replay(mockEntity);
 		
 		BodhiLoginResponse resp = client.login(BODHI_ADMIN_USERNAME, BODHI_ADMIN_PASSWORD);
 		// sanity check
