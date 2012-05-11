@@ -51,7 +51,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 	 */
 	public static final String ID = "PushUpdateCommand"; //$NON-NLS-1$
 	
-	private IBodhiClient client;
+	private BodhiClient client;
 	private String[] builds; // the list of builds for the update
 	private String release;  // the Fedora release for the update
 	/*
@@ -222,7 +222,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 	 * @param client A bodhi client.
 	 * @return this instance.
 	 */
-	public PushUpdateCommand client(IBodhiClient client) {
+	public PushUpdateCommand client(BodhiClient client) {
 		this.client = client;
 		return this;
 	}

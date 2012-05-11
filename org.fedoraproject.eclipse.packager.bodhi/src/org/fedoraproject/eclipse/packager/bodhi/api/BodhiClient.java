@@ -43,7 +43,7 @@ import org.fedoraproject.eclipse.packager.bodhi.fas.DateTime;
 /**
  * Bodhi JSON over HTTP client.
  */
-public class BodhiClient implements IBodhiClient {
+public class BodhiClient {
 	
 	// Use 30 sec connection timeout
 	private static final int CONNECTION_TIMEOUT = 30000;
@@ -121,14 +121,14 @@ public class BodhiClient implements IBodhiClient {
 		return gson.fromJson(jsonString, BodhiLoginResponse.class);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Bodhi login with username and password.
 	 * 
-	 * @see
-	 * org.fedoraproject.eclipse.packager.IBodhiClient#login(java.lang.String,
-	 * java.lang.String)
+	 * @param username
+	 * @param password
+	 * @return The parsed response from the server or {@code null}.
+	 * @throws BodhiClientLoginException If some error occurred.
 	 */
-	@Override
 	public BodhiLoginResponse login(String username, String password)
 			throws BodhiClientLoginException {
 		BodhiLoginResponse result = null;
@@ -163,11 +163,13 @@ public class BodhiClient implements IBodhiClient {
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.bodhi.api.IBodhiClient#logout()
+	/**
+	 * Log out from Bodhi server.
+	 * 
+	 * @throws BodhiClientException
+	 *             If an error occurred.
+	 * 
 	 */
-	@Override
 	public void logout() throws BodhiClientException {
 		try {
 			HttpPost post = new HttpPost(getLogoutUrl());
@@ -214,16 +216,37 @@ public class BodhiClient implements IBodhiClient {
 		httpclient.getConnectionManager().shutdown();
 	}
 	
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Push a new Bodhi update for one or more builds (i.e. N-V-Rs).
 	 * 
-	 * @see
-	 * org.fedoraproject.eclipse.packager.bodhi.api.IBodhiClient#createNewUpdate
-	 * (java.lang.String[], java.lang.String, java.lang.String,
-	 * java.lang.String, java.lang.String, java.lang.String, java.lang.String,
-	 * boolean, boolean, int, int, boolean)
+	 * @param builds
+	 *            N-V-R's for which to push an update for
+	 * @param release
+	 *            For example "F15".
+	 * @param type
+	 *            One of "bugfix", "security", "enhancement", "newpackage".
+	 * @param request
+	 *            {@code testing} or {@code stable}.
+	 * @param bugs
+	 *            Numbers of bugs to close automatically (comma separated).
+	 * @param notes
+	 *            The comment for this update.
+	 * @param csrfToken
+	 * @param suggestReboot
+	 *            If a reboot is suggested after this update.
+	 * @param enableKarmaAutomatism
+	 *            If Karma automatism should be enabled.
+	 * @param stableKarmaThreshold
+	 *            The lower unpushing Karma threshold.
+	 * @param unstableKarmaThreshold
+	 *            The upper stable Karma threshold.
+	 * @param closeBugsWhenStable
+	 *            Flag which determines if bugs should get closed when the
+	 *            update hits stable.
+	 * @return The update response.
+	 * @throws BodhiClientException
+	 *             If some error occurred.
 	 */
-	@Override
 	public BodhiUpdateResponse createNewUpdate(String[] builds, String release,
 			String type, String request, String bugs, String notes,
 			String csrfToken, boolean suggestReboot,
