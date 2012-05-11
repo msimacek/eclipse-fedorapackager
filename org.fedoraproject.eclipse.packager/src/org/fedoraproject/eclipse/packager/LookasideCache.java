@@ -20,16 +20,6 @@ import java.net.URL;
  */
 public class LookasideCache implements ILookasideCache {
 	
-	/**
-	 * Default upload URL for the Fedora lookaside cache
-	 */
-	public static final String DEFAULT_FEDORA_UPLOAD_URL = "https://pkgs.fedoraproject.org/repo/pkgs/upload.cgi"; //$NON-NLS-1$
-	/**
-	 * Default download URL for the Fedora lookaside cache
-	 */
-	public static final String DEFAULT_FEDORA_DOWNLOAD_URL = "http://pkgs.fedoraproject.org/repo/pkgs"; //$NON-NLS-1$
-	
-	
 	private URL downloadUrl;
 	private URL uploadUrl;
 	
@@ -39,8 +29,8 @@ public class LookasideCache implements ILookasideCache {
 	 */
 	LookasideCache() {
 		try {
-			this.downloadUrl = new URL(DEFAULT_FEDORA_DOWNLOAD_URL);
-			this.uploadUrl = new URL(DEFAULT_FEDORA_UPLOAD_URL);
+			this.downloadUrl = new URL(FedoraPackagerPreferencesConstants.DEFAULT_LOOKASIDE_DOWNLOAD_URL);
+			this.uploadUrl = new URL(FedoraPackagerPreferencesConstants.DEFAULT_LOOKASIDE_UPLOAD_URL);
 		} catch (MalformedURLException e) {
 			// ignore
 		}

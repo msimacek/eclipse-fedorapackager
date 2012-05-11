@@ -30,10 +30,10 @@ import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.Specfile;
+import org.fedoraproject.eclipse.packager.FedoraPackagerPreferencesConstants;
 import org.fedoraproject.eclipse.packager.FedoraProjectRoot;
 import org.fedoraproject.eclipse.packager.ILookasideCache;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
-import org.fedoraproject.eclipse.packager.LookasideCache;
 import org.fedoraproject.eclipse.packager.SourcesFile;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerExtensionPointException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
@@ -190,9 +190,9 @@ public class FedoraProjectRootTest {
 		ILookasideCache lookasideCache = fpRoot.getLookAsideCache();
 		assertNotNull(lookasideCache);
 		// should be initialized with default values
-		assertEquals(LookasideCache.DEFAULT_FEDORA_DOWNLOAD_URL, lookasideCache
+		assertEquals(FedoraPackagerPreferencesConstants.DEFAULT_LOOKASIDE_DOWNLOAD_URL, lookasideCache
 				.getDownloadUrl().toString());
-		assertEquals(LookasideCache.DEFAULT_FEDORA_UPLOAD_URL, lookasideCache
+		assertEquals(FedoraPackagerPreferencesConstants.DEFAULT_LOOKASIDE_UPLOAD_URL, lookasideCache
 				.getUploadUrl().toString());
 	}
 

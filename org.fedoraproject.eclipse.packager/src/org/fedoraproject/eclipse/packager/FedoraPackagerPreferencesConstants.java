@@ -10,39 +10,43 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager;
 
-
 /**
  * Constants for preferences.
  */
 public final class FedoraPackagerPreferencesConstants {
 
 	/*
-	 * -------------------------------------------------
-	 *                Prefences keys
+	 * ------------------------------------------------- Prefences keys
 	 * -------------------------------------------------
 	 */
-	/***/ public static final String PREF_DEBUG_MODE =
-		"debug"; //$NON-NLS-1$
-	/***/ public static final String PREF_LOOKASIDE_DOWNLOAD_URL =
-			"lookasideDownloadURL"; //$NON-NLS-1$
-	/***/ public static final String PREF_LOOKASIDE_UPLOAD_URL =
-			"lookasideUploadURL"; //$NON-NLS-1$
-	/***/ public static final String PREF_KOJI_WEB_URL = "kojiWebURL"; //$NON-NLS-1$
-	/***/ public static final String PREF_KOJI_HUB_URL = "kojiHubURL"; //$NON-NLS-1$
-	
+	/***/
+	public static final String PREF_DEBUG_MODE = "debug"; //$NON-NLS-1$
+	/***/
+	public static final String PREF_LOOKASIDE_DOWNLOAD_URL = "lookasideDownloadURL"; //$NON-NLS-1$
+	/***/
+	public static final String PREF_LOOKASIDE_UPLOAD_URL = "lookasideUploadURL"; //$NON-NLS-1$
+	/***/
+	public static final String PREF_KOJI_WEB_URL = "kojiWebURL"; //$NON-NLS-1$
+	/***/
+	public static final String PREF_KOJI_HUB_URL = "kojiHubURL"; //$NON-NLS-1$
+
 	/*
-	 * -------------------------------------------------
-	 *          Default values for preferences
-	 * -------------------------------------------------
+	 * ------------------------------------------------- Default values for
+	 * preferences -------------------------------------------------
 	 */
-	
-	/***/ public static final boolean DEFAULT_DEBUG_MODE = false;
-	/***/ public static final String DEFAULT_LOOKASIDE_DOWNLOAD_URL = 
-			LookasideCache.DEFAULT_FEDORA_DOWNLOAD_URL;
-	/***/ public static final String DEFAULT_LOOKASIDE_UPLOAD_URL = 
-			LookasideCache.DEFAULT_FEDORA_UPLOAD_URL;
-	/***/ public static final String DEFAULT_KOJI_WEB_URL = 
-		"http://koji.fedoraproject.org/koji"; //$NON-NLS-1$
-	/***/ public static final String DEFAULT_KOJI_HUB_URL = 
-		"https://koji.fedoraproject.org/kojihub"; //$NON-NLS-1$
+
+	/***/
+	public static final boolean DEFAULT_DEBUG_MODE = false;
+	/**
+	 * Default download URL for the Fedora lookaside cache
+	 */
+	public static final String DEFAULT_LOOKASIDE_DOWNLOAD_URL = "http://pkgs.fedoraproject.org/repo/pkgs"; //$NON-NLS-1$
+	/**
+	 * Default upload URL for the Fedora lookaside cache
+	 */
+	public static final String DEFAULT_LOOKASIDE_UPLOAD_URL = "https://pkgs.fedoraproject.org/repo/pkgs/upload.cgi"; //$NON-NLS-1$
+	/***/
+	public static final String DEFAULT_KOJI_WEB_URL = "http://koji.fedoraproject.org/koji"; //$NON-NLS-1$
+	/***/
+	public static final String DEFAULT_KOJI_HUB_URL = "https://koji.fedoraproject.org/kojihub"; //$NON-NLS-1$
 }
