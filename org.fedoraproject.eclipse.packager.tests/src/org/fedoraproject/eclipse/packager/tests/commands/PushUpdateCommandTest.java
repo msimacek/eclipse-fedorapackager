@@ -13,20 +13,43 @@
  */
 package org.fedoraproject.eclipse.packager.tests.commands;
 
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.ClientConnectionManager;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
+import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
+import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.bodhi.api.BodhiClient;
-import org.fedoraproject.eclipse.packager.bodhi.api.IBodhiClient;
 import org.fedoraproject.eclipse.packager.bodhi.api.PushUpdateCommand;
 import org.fedoraproject.eclipse.packager.bodhi.api.PushUpdateCommand.RequestType;
 import org.fedoraproject.eclipse.packager.bodhi.api.PushUpdateCommand.UpdateType;
 import org.fedoraproject.eclipse.packager.bodhi.api.PushUpdateResult;
+import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientException;
+import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientLoginException;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.junit.After;
@@ -43,7 +66,6 @@ import org.junit.Test;
  */
 public class PushUpdateCommandTest {
 
-	private static final String BODHI_TEST_INSTANCE_URL_PROP = "org.fedoraproject.eclipse.packager.tests.bodhi.testInstanceURL"; //$NON-NLS-1$
 	private static final String BODHI_ADMIN_USERNAME = "guest"; //$NON-NLS-1$
 	private static final String BODHI_ADMIN_PASSWORD = "guest"; //$NON-NLS-1$
 	private static final String PACKAGE_UPDATE_NVR = "ed-1.5-3.fc15"; //$NON-NLS-1$
@@ -57,11 +79,12 @@ public class PushUpdateCommandTest {
 	
 	/**
 	 * Clone a test project to be used for testing.
+	 * @throws InterruptedException 
+	 * @throws InvalidProjectRootException 
 	 * 
-	 * @throws java.lang.Exception
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws InterruptedException, InvalidProjectRootException  {
 		this.testProject = new GitTestProject("eclipse-fedorapackager");
 		this.fpRoot = FedoraPackagerUtils.getProjectRoot((this.testProject
 				.getProject()));
@@ -69,10 +92,10 @@ public class PushUpdateCommandTest {
 	}
 
 	/**
-	 * @throws java.lang.Exception
+	 * @throws CoreException 
 	 */
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() throws CoreException  {
 		this.testProject.dispose();
 	}
 
@@ -80,9 +103,15 @@ public class PushUpdateCommandTest {
 	 * Test method for 
 	 * {@link PushUpdateCommand#checkConfiguration()}.
 	 * Should have thrown an exception. Command is not properly configured.
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws BodhiClientException 
+	 * @throws BodhiClientLoginException 
+	 * @throws CommandMisconfiguredException 
+	 * @throws CommandListenerException 
 	 */
 	@Test(expected=CommandMisconfiguredException.class)
-	public void testCheckConfiguration() throws Exception {
+	public void testCheckConfiguration() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CommandListenerException, CommandMisconfiguredException, BodhiClientLoginException, BodhiClientException  {
 		PushUpdateCommand pushUpdateCommand = (PushUpdateCommand) packager
 				.getCommandInstance(PushUpdateCommand.ID);
 		pushUpdateCommand.call(new NullProgressMonitor());
@@ -90,19 +119,52 @@ public class PushUpdateCommandTest {
 	
 	/**
 	 * Basic test for {@link PushUpdateCommand}.
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws BodhiClientException 
+	 * @throws BodhiClientLoginException 
+	 * @throws CommandMisconfiguredException 
+	 * @throws CommandListenerException 
+	 * @throws IOException 
+	 * @throws ClientProtocolException 
 	 * 
-	 * @throws Exception
 	 */
 	@Test
-	public void canPushUpdate() throws Exception {
+	public void canPushUpdate() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CommandListenerException, CommandMisconfiguredException, BodhiClientLoginException, BodhiClientException, ClientProtocolException, IOException  {
 		PushUpdateCommand pushUpdateCommand = (PushUpdateCommand) packager
 				.getCommandInstance(PushUpdateCommand.ID);
-		String bodhiTestInstanceURL = System.getProperty(BODHI_TEST_INSTANCE_URL_PROP);
-		if (bodhiTestInstanceURL == null) {
-			fail(BODHI_TEST_INSTANCE_URL_PROP  + " not set");
-		}
-		URL bodhiServerURL = new URL(bodhiTestInstanceURL);
-		IBodhiClient client = new BodhiClient(bodhiServerURL);
+		URL bodhiServerURL = new URL("http://admin.stg.fedoraproject.org/updates");
+		
+		final HttpClient mockClient = createMock(HttpClient.class);
+		HttpResponse mockResponse = createMock(HttpResponse.class);
+		StatusLine mockStatus = createMock(StatusLine.class);
+		HttpEntity mockEntity = createMock(HttpEntity.class);
+		BodhiClient client = new BodhiClient(bodhiServerURL) {
+			@Override
+			protected HttpClient getClient() {
+				return mockClient;
+			}
+		};
+		expect(mockClient.execute((HttpUriRequest) anyObject())).andReturn(
+				mockResponse).anyTimes();
+		expect(mockResponse.getStatusLine()).andReturn(mockStatus).anyTimes();
+		expect(mockStatus.getStatusCode()).andReturn(HttpURLConnection.HTTP_OK)
+				.anyTimes();
+		expect(mockResponse.getEntity()).andReturn(mockEntity).anyTimes();
+		expect(mockEntity.getContent()).andReturn(
+				new ByteArrayInputStream("{user:{password:\"guest\"} }"
+						.getBytes()));
+		expect(mockEntity.getContent()).andReturn(
+				new ByteArrayInputStream("{tg_flash:\"Update successfully created\" , updates: [ {builds: [{package:{name=\"ed\"} , nvr=\"ed-1.5-3.fc15\"}] }] }"
+						.getBytes())).anyTimes();
+		expect(mockEntity.isStreaming()).andReturn(false).anyTimes();
+		expect(mockClient.getConnectionManager()).andReturn(
+				createNiceMock(ClientConnectionManager.class)).anyTimes();
+		replay(mockClient);
+		replay(mockResponse);
+		replay(mockStatus);
+		replay(mockEntity);
+		
 		String[] builds = { PACKAGE_UPDATE_NVR };
 		// setup the command and call it
 		PushUpdateResult result = pushUpdateCommand.client(client).bugs(PushUpdateCommand.NO_BUGS)
