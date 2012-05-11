@@ -14,6 +14,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
 import org.eclipse.core.resources.IFile;
@@ -22,7 +23,14 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.eclipse.jgit.api.errors.NoFilepatternException;
+import org.eclipse.jgit.api.errors.NoHeadException;
+import org.eclipse.jgit.api.errors.NoMessageException;
+import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.linuxtools.rpmstubby.InputType;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
@@ -43,10 +51,13 @@ public class WizardStubbyProjectTest {
 	private File externalFile;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws CoreException, IOException  {
 		// Create a base project for the test
 		baseProject = ResourcesPlugin.getWorkspace().getRoot()
 				.getProject(PROJECT);
+		if (baseProject.exists()){
+			baseProject.delete(true, new NullProgressMonitor());
+		}
 		baseProject.create(null);
 		baseProject.open(null);
 
@@ -65,7 +76,7 @@ public class WizardStubbyProjectTest {
 	}
 
 	@Test
-	public void testPopulateStubby() throws Exception {
+	public void testPopulateStubby() throws NoFilepatternException, NoHeadException, NoMessageException, ConcurrentRefUpdateException, JGitInternalException, WrongRepositoryStateException, CoreException, IOException  {
 		// poulate project using imported feature.xml
 		testMainProject.create(InputType.ECLIPSE_FEATURE, externalFile);
 
