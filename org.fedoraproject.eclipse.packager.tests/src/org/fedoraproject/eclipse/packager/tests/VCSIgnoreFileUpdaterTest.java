@@ -101,7 +101,6 @@ public class VCSIgnoreFileUpdaterTest {
 		ignoreUpdater.postExecution();
 		// File should have been created
 		assertTrue(vcsIgnoreFile.exists());
-		System.out.println(this.fpRoot.getProject().getLocationURI().toURL().getPath());
 		assertTrue(underlyingFileInFs.exists());
 		final String postContent = TestsUtils.readContents(underlyingFileInFs);
 		assertNotSame(preContent, postContent);
