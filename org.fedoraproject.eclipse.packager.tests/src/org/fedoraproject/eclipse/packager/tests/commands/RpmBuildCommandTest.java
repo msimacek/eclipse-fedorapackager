@@ -20,13 +20,24 @@ import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jgit.api.errors.InvalidRefNameException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
+import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
+import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
+import org.fedoraproject.eclipse.packager.api.errors.DownloadFailedException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
+import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
+import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand.BuildType;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildResult;
@@ -53,13 +64,25 @@ public class RpmBuildCommandTest {
 
 	/**
 	 * Clone a test project to be used for testing.
+	 * @throws InterruptedException 
+	 * @throws CoreException 
+	 * @throws InvalidRefNameException 
+	 * @throws RefNotFoundException 
+	 * @throws RefAlreadyExistsException 
+	 * @throws JGitInternalException 
+	 * @throws InvalidProjectRootException 
+	 * @throws CommandListenerException 
+	 * @throws CommandMisconfiguredException 
+	 * @throws DownloadFailedException 
+	 * @throws SourcesUpToDateException 
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
 	 * 
-	 * @throws java.lang.Exception
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws InterruptedException, JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException, InvalidProjectRootException, SourcesUpToDateException, DownloadFailedException, CommandMisconfiguredException, CommandListenerException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException  {
 		this.testProject = new GitTestProject("eclipse-fedorapackager");
-		testProject.checkoutBranch("f15");
+		testProject.checkoutBranch("f17");
 		this.fpRoot = FedoraPackagerUtils.getProjectRoot((this.testProject
 				.getProject()));
 		this.packager = new FedoraPackager(fpRoot);
@@ -71,10 +94,10 @@ public class RpmBuildCommandTest {
 	}
 
 	/**
-	 * @throws java.lang.Exception
+	 * @throws CoreException 
 	 */
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() throws CoreException  {
 		this.testProject.dispose();
 	}
 
@@ -93,17 +116,20 @@ public class RpmBuildCommandTest {
 	/**
 	 * This illustrates proper usage of {@link RpmEvalCommand}. This may take a
 	 * long time.
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws CoreException 
 	 */
 	@Test
-	public void canBuildForLocalArchitecture() throws Exception {
+	public void canBuildForLocalArchitecture() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
 		RpmBuildResult result;
 		List<String> distDefines = new ArrayList<String>();
 		distDefines.add("--define"); //$NON-NLS-1$
-		distDefines.add("dist .fc15"); //$NON-NLS-1$
+		distDefines.add("dist .fc17"); //$NON-NLS-1$
 		distDefines.add("--define"); //$NON-NLS-1$
-		distDefines.add("fedora 15");
+		distDefines.add("fedora 17");
 		build.buildType(BuildType.BINARY).branchConfig(bci);
 		try {
 			result = build.call(new NullProgressMonitor());
@@ -123,9 +149,12 @@ public class RpmBuildCommandTest {
 
 	/**
 	 * Test preparing sources.
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws CoreException 
 	 */
 	@Test
-	public void canPrepareSources() throws Exception {
+	public void canPrepareSources() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException  {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
 		List<String> nodeps = new ArrayList<String>(1);
@@ -152,9 +181,12 @@ public class RpmBuildCommandTest {
 	
 	/**
 	 * Test compiling.
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws CoreException 
 	 */
 	@Test
-	public void canRpmCompile() throws Exception {
+	public void canRpmCompile() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException  {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
 		RpmBuildResult result;
@@ -184,9 +216,12 @@ public class RpmBuildCommandTest {
 	
 	/**
 	 * Test install.
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws CoreException 
 	 */
 	@Test
-	public void canRpmInstall() throws Exception {
+	public void canRpmInstall() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
 		RpmBuildResult result;
@@ -216,9 +251,12 @@ public class RpmBuildCommandTest {
 
 	/**
 	 * Test create SRPM.
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws CoreException 
 	 */
 	@Test
-	public void canCreateSRPM() throws Exception {
+	public void canCreateSRPM() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
 		List<String> nodeps = new ArrayList<String>(1);
