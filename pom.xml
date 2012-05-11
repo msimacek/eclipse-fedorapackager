@@ -99,6 +99,7 @@
     <module>org.fedoraproject.eclipse.packager.l10n-de</module>
     <module>org.fedoraproject.eclipse.packager.tests</module>
     <module>org.fedoraproject.eclipse.packager.ui.tests</module>
+    <module>org.fedoraproject.eclipse.packager.bodhi.tests</module>
   </modules>
 
   <repositories>

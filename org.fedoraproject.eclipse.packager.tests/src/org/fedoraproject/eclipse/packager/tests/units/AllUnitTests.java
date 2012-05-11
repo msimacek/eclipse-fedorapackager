@@ -19,8 +19,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	KojiSSLHubClientTest.class,
 	UploadFileValidityTest.class,
 	KojiBuildInfoTest.class,
-	KojiHubClientLoginExceptionTest.class,
-	BodhiClientTest.class
+	KojiHubClientLoginExceptionTest.class
 })
 
 public class AllUnitTests {

@@ -8,7 +8,7 @@
  * Contributors:
  *     Red Hat Inc. - initial API and implementation
  *******************************************************************************/
-package org.fedoraproject.eclipse.packager.tests.units.deserialization;
+package org.fedoraproject.eclipse.packager.bodhi.fas;
 
 import static org.junit.Assert.*;
 

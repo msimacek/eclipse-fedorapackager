@@ -23,7 +23,6 @@ import org.junit.runners.Suite.SuiteClasses;
 	KojiBuildCommandTest.class,
 	KojiScratchWithSRPMTest.class,
 	MockBuildCommandTest.class,
-	PushUpdateCommandTest.class,
 	RpmBuildCommandTest.class,
 	RpmEvalCommandTest.class,
 	ScpCommandTest.class,
