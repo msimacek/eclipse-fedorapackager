@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.tests;
 
+import static org.junit.Assert.*;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
@@ -19,9 +21,11 @@ import org.fedoraproject.eclipse.packager.git.FpGitProjectBits;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestCase;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
+import org.junit.Test;
 
 public class GitFpBitsTest extends GitTestCase {
 
+	@Test
 	public void testGetCurrentBranchName() throws JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException  {
 		FpGitProjectBits projectBits = (FpGitProjectBits) FedoraPackagerUtils
 				.getVcsHandler(getFedoraprojectRoot());
@@ -37,6 +41,7 @@ public class GitFpBitsTest extends GitTestCase {
 		assertEquals("FC-6", projectBits.getCurrentBranchName());
 	}
 
+	@Test
 	public void testGetBranchName() {
 		// this should do initialization
 		FpGitProjectBits projectBits = (FpGitProjectBits) FedoraPackagerUtils
@@ -47,6 +52,7 @@ public class GitFpBitsTest extends GitTestCase {
 															// devel
 	}
 
+	@Test
 	public void testGetDistVal() throws JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException  {
 		FpGitProjectBits projectBits = (FpGitProjectBits) FedoraPackagerUtils
 				.getVcsHandler(getFedoraprojectRoot());
@@ -62,6 +68,7 @@ public class GitFpBitsTest extends GitTestCase {
 		assertEquals(projectBits.getBranchConfig().getDistVal(), "13");
 	}
 
+	@Test
 	public void testNonExactNamedBranches() throws JGitInternalException,
 			RefAlreadyExistsException, RefNotFoundException,
 			InvalidRefNameException, CoreException {
@@ -77,6 +84,7 @@ public class GitFpBitsTest extends GitTestCase {
 		assertEquals(projectBits.getBranchConfig().getEquivalentBranch(), "F-16");
 	}
 	
+	@Test
 	public void testElRhelNonExactBranches() throws JGitInternalException,
 			RefAlreadyExistsException, RefNotFoundException,
 			InvalidRefNameException, CoreException {

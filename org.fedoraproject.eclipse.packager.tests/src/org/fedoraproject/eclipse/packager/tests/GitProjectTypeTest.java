@@ -10,11 +10,15 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.tests;
 
+import static org.junit.Assert.*;
+
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestCase;
+import org.junit.Test;
 
 public class GitProjectTypeTest extends GitTestCase {
 	
+	@Test
 	public void testAdaptToFpProject()  {
 		// Should return FpProject instance with GIT type
 		assertEquals(FedoraPackagerUtils.getProjectType(getiProject()) , FedoraPackagerUtils.ProjectType.GIT);
