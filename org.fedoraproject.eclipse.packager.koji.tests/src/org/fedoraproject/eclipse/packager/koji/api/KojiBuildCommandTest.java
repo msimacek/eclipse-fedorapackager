@@ -11,7 +11,7 @@
 /**
  * 
  */
-package org.fedoraproject.eclipse.packager.tests.commands;
+package org.fedoraproject.eclipse.packager.koji.api;
 
 import static org.easymock.EasyMock.and;
 import static org.easymock.EasyMock.anyInt;

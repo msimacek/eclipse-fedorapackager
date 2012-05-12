@@ -8,22 +8,44 @@
  * Contributors:
  *     Red Hat Inc. - initial API and implementation
  *******************************************************************************/
-package org.fedoraproject.eclipse.packager.tests.commands;
+package org.fedoraproject.eclipse.packager.koji.api;
 
+import static org.easymock.EasyMock.and;
+import static org.easymock.EasyMock.anyInt;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.aryEq;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.gt;
+import static org.easymock.EasyMock.leq;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.easymock.EasyMock.*;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jgit.api.errors.InvalidRefNameException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
+import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.osgi.util.NLS;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
+import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
+import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
+import org.fedoraproject.eclipse.packager.api.errors.DownloadFailedException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
+import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
+import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
 import org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient;
 import org.fedoraproject.eclipse.packager.koji.api.KojiBuildCommand;
 import org.fedoraproject.eclipse.packager.koji.api.KojiUploadSRPMCommand;
@@ -53,7 +75,13 @@ public class KojiScratchWithSRPMTest {
 	private BranchConfigInstance bci;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws InterruptedException, JGitInternalException,
+			RefAlreadyExistsException, RefNotFoundException,
+			InvalidRefNameException, CoreException,
+			InvalidProjectRootException,
+			FedoraPackagerCommandInitializationException,
+			FedoraPackagerCommandNotFoundException, MalformedURLException,
+			SourcesUpToDateException, DownloadFailedException, CommandMisconfiguredException, CommandListenerException  {
 		this.testProject = new GitTestProject("ed");
 		testProject.checkoutBranch("f15");
 		this.fpRoot = FedoraPackagerUtils.getProjectRoot(this.testProject
@@ -96,45 +124,38 @@ public class KojiScratchWithSRPMTest {
 				.getCommandInstance(KojiUploadSRPMCommand.ID);
 		final String uploadPath = "cli-build/"
 				+ FedoraPackagerUtils.getUniqueIdentifier(); //$NON-NLS-1$
-		try {
-			IKojiHubClient kojiClient = createMock(IKojiHubClient.class);
-			expect(kojiClient.login()).andReturn(null);
-			expect(
-					kojiClient.uploadFile((String) anyObject(),
-							eq("ed-1.5-2.fc15.src.rpm"),
-							and(gt(0), leq(1000000)), (String) anyObject(),
-							anyInt(), (String) anyObject())).andReturn(true)
-					.atLeastOnce();
-			expect(
-					kojiClient.build(eq("f15-candidate"),
-							(List<?>) anyObject(),
-							aryEq(new String[] { "ed-1.5-2.fc15" }), eq(true)))
-					.andReturn(new int[] { 0xdead });
-			kojiClient.logout();
-			replay(kojiClient);
+		IKojiHubClient kojiClient = createMock(IKojiHubClient.class);
+		expect(kojiClient.login()).andReturn(null);
+		expect(
+				kojiClient.uploadFile((String) anyObject(),
+						eq("ed-1.5-2.fc15.src.rpm"), and(gt(0), leq(1000000)),
+						(String) anyObject(), anyInt(), (String) anyObject()))
+				.andReturn(true).atLeastOnce();
+		expect(
+				kojiClient.build(eq("f15-candidate"), (List<?>) anyObject(),
+						aryEq(new String[] { "ed-1.5-2.fc15" }), eq(true)))
+				.andReturn(new int[] { 0xdead });
+		kojiClient.logout();
+		replay(kojiClient);
 
-			assertTrue(uploadSRPMCommand.setKojiClient(kojiClient)
-					.setRemotePath(uploadPath)
-					.setSRPM(srpmBuildResult.getAbsoluteSRPMFilePath())
-					.call(new NullProgressMonitor()).wasSuccessful());
-			KojiBuildCommand kojiBuildCmd = (KojiBuildCommand) packager
-					.getCommandInstance(KojiBuildCommand.ID);
-			kojiBuildCmd.setKojiClient(kojiClient);
-			List<String> sourceLocation = new ArrayList<String>();
-			sourceLocation.add(uploadPath
-					+ "/"
-					+ new File(srpmBuildResult.getAbsoluteSRPMFilePath())
-							.getName());
-			kojiBuildCmd.sourceLocation(sourceLocation); //$NON-NLS-1$
-			String nvr = RPMUtils.getNVR(fpRoot, bci);
-			kojiBuildCmd.buildTarget(bci.getBuildTarget())
-					.nvr(new String[] { nvr }).isScratchBuild(true);
-			assertTrue(kojiBuildCmd.call(new NullProgressMonitor())
-					.wasSuccessful());
-			verify(kojiClient);
-		} catch (Exception e) {
-			fail(e.getMessage());
-			throw e;
-		}
+		assertTrue(uploadSRPMCommand.setKojiClient(kojiClient)
+				.setRemotePath(uploadPath)
+				.setSRPM(srpmBuildResult.getAbsoluteSRPMFilePath())
+				.call(new NullProgressMonitor()).wasSuccessful());
+		KojiBuildCommand kojiBuildCmd = (KojiBuildCommand) packager
+				.getCommandInstance(KojiBuildCommand.ID);
+		kojiBuildCmd.setKojiClient(kojiClient);
+		List<String> sourceLocation = new ArrayList<String>();
+		sourceLocation
+				.add(uploadPath
+						+ "/"
+						+ new File(srpmBuildResult.getAbsoluteSRPMFilePath())
+								.getName());
+		kojiBuildCmd.sourceLocation(sourceLocation); //$NON-NLS-1$
+		String nvr = RPMUtils.getNVR(fpRoot, bci);
+		kojiBuildCmd.buildTarget(bci.getBuildTarget())
+				.nvr(new String[] { nvr }).isScratchBuild(true);
+		assertTrue(kojiBuildCmd.call(new NullProgressMonitor()).wasSuccessful());
+		verify(kojiClient);
 	}
 }

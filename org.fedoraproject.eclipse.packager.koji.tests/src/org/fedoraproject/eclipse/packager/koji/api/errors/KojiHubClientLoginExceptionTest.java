@@ -8,16 +8,15 @@
  * Contributors:
  *     Red Hat Inc. - initial API and implementation
  *******************************************************************************/
-package org.fedoraproject.eclipse.packager.tests.units;
+package org.fedoraproject.eclipse.packager.koji.api.errors;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
 import java.security.GeneralSecurityException;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.fedoraproject.eclipse.packager.koji.api.errors.*;
 
 public class KojiHubClientLoginExceptionTest {
 

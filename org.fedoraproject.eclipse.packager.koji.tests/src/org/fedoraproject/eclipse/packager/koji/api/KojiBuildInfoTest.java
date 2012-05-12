@@ -8,7 +8,7 @@
  * Contributors:
  *     Red Hat Inc. - initial API and implementation
  *******************************************************************************/
-package org.fedoraproject.eclipse.packager.tests.units;
+package org.fedoraproject.eclipse.packager.koji.api;
 
 import static org.junit.Assert.*;
 

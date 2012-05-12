@@ -20,8 +20,6 @@ import org.junit.runners.Suite.SuiteClasses;
 	DownloadSourceCommandTest.class,
 	FedoraPackagerCommandTest.class,
 	UploadSourceCommandTest.class,
-	KojiBuildCommandTest.class,
-	KojiScratchWithSRPMTest.class,
 	MockBuildCommandTest.class,
 	RpmBuildCommandTest.class,
 	RpmEvalCommandTest.class,

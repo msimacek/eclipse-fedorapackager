@@ -16,10 +16,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	KojiSSLHubClientTest.class,
-	UploadFileValidityTest.class,
-	KojiBuildInfoTest.class,
-	KojiHubClientLoginExceptionTest.class
+	UploadFileValidityTest.class
 })
 
 public class AllUnitTests {
