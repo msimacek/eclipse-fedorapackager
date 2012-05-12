@@ -13,6 +13,16 @@
  */
 package org.fedoraproject.eclipse.packager.tests.commands;
 
+import static org.easymock.EasyMock.and;
+import static org.easymock.EasyMock.anyInt;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.aryEq;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.gt;
+import static org.easymock.EasyMock.leq;
+import static org.easymock.EasyMock.replay;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -22,8 +32,8 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
+import org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient;
 import org.fedoraproject.eclipse.packager.koji.api.KojiBuildCommand;
-import org.fedoraproject.eclipse.packager.tests.utils.KojiGenericHubClientStub;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.junit.After;
@@ -84,7 +94,22 @@ public class KojiBuildCommandTest {
 	public void canPushFakeScratchBuild() throws Exception {
 		KojiBuildCommand buildCommand = (KojiBuildCommand) packager
 				.getCommandInstance(KojiBuildCommand.ID);
-		buildCommand.setKojiClient(new KojiGenericHubClientStub());
+		IKojiHubClient kojiClient = createMock(IKojiHubClient.class);
+		expect(kojiClient.login()).andReturn(null);
+		expect(
+				kojiClient.uploadFile((String) anyObject(),
+						eq("eclipse-fedorapackager-0.1.12-1.fc15.src.rpm"),
+						and(gt(0), leq(1000000)), (String) anyObject(),
+						anyInt(), (String) anyObject())).andReturn(true)
+				.atLeastOnce();
+		expect(
+				kojiClient.build(eq("dist-rawhide"),
+						(List<?>) anyObject(),
+						aryEq(new String[] { "eclipse-fedorapackager-0.1.12-1.fc15" }), eq(true)))
+				.andReturn(new int[] { 0xdead });
+		kojiClient.logout();
+		replay(kojiClient);
+		buildCommand.setKojiClient(kojiClient);
 		buildCommand.buildTarget("dist-rawhide").nvr(new String[] {"eclipse-fedorapackager-0.1.12-1.fc15"});
 		List<String> sourceLocation = new ArrayList<String>();
 		sourceLocation.add("git://pkgs.stg.fedoraproject.org/eclipse-fedorapackager.git?#7526fb6c2c150dcc3480a9838540426a501d0553");
