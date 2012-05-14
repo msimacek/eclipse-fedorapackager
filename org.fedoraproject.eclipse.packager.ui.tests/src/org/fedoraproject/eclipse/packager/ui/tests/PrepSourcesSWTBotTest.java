@@ -111,7 +111,7 @@ public class PrepSourcesSWTBotTest {
 	 * @param Tree of Package Explorer view.
 	 * @throws Exception
 	 */
-	private void clickOnPrepareSources(SWTBotTree packagerTree) throws Exception {
+	private void clickOnPrepareSources(SWTBotTree packagerTree) {
 		String menuItem = "Prepare Sources for Build";
 		ContextMenuHelper.clickContextMenu(packagerTree, "Fedora Packager",
 				menuItem);

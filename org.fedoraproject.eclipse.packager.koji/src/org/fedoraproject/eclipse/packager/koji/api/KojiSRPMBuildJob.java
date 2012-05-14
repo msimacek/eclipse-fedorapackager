@@ -210,7 +210,7 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 						new Callable<String>() {
 
 							@Override
-							public String call() throws Exception {
+							public String call() {
 								return new KojiTargetDialog(shell, tagSet)
 										.openForTarget();
 							}
@@ -253,31 +253,6 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 					e.getMessage(), e);
 		} catch (CommandListenerException e) {
 			// This shouldn't happen, but report error anyway
-			logger.logError(e.getMessage(), e);
-			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,
-					e.getMessage(), e);
-		} catch (KojiHubClientLoginException e) {
-			e.printStackTrace();
-			// Check if certs were missing
-			if (e.isCertificateMissing()) {
-				String msg = NLS.bind(
-						KojiText.KojiBuildHandler_missingCertificatesMsg,
-						fedoraProjectRoot.getProductStrings()
-								.getDistributionName());
-				logger.logError(msg, e);
-				return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,
-						msg, e);
-			}
-			if (e.isCertificateExpired()) {
-				String msg = NLS.bind(
-						KojiText.KojiBuildHandler_certificateExpriredMsg,
-						fedoraProjectRoot.getProductStrings()
-								.getDistributionName());
-				logger.logError(msg, e);
-				return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,
-						msg, e);
-			}
-			// return some generic error
 			logger.logError(e.getMessage(), e);
 			return FedoraHandlerUtils.errorStatus(KojiPlugin.PLUGIN_ID,
 					e.getMessage(), e);

@@ -99,7 +99,7 @@ public class BodhiUpdateSWTBotTest {
 	 * @param Tree of Package Explorer view.
 	 * @throws Exception
 	 */
-	private void clickOnCreateBodhiUpdate(SWTBotTree packagerTree) throws Exception {
+	private void clickOnCreateBodhiUpdate(SWTBotTree packagerTree) {
 		String menuItem = "Create New Bodhi Update";
 		ContextMenuHelper.clickContextMenu(packagerTree,
 				"Fedora Packager",	menuItem);

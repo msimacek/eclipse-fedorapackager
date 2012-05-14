@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
@@ -74,8 +73,6 @@ public class FedoraPackagerGitCloneOperationTest {
 				} catch (InvocationTargetException e) {
 					e.printStackTrace();
 				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (CoreException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();

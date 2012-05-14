@@ -32,7 +32,6 @@ import org.fedoraproject.eclipse.packager.FedoraProjectRoot;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.VCSIgnoreFileUpdater;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerExtensionPointException;
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType;
 import org.junit.After;
@@ -56,7 +55,7 @@ public class VCSIgnoreFileUpdaterTest {
 	private static final String GITIGNORE_FILE_NAME = ".gitignore"; //$NON-NLS-1$
 	
 	@Before
-	public void setUp() throws IOException, CoreException, FedoraPackagerExtensionPointException  {
+	public void setUp() throws IOException, CoreException  {
 		String dirName = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_FEDORA_PROJECT_ROOT), null)).getFile();

@@ -43,7 +43,7 @@ public class KojiBuildInfoTest {
 	private HashMap<String, Object> rawBuildinfoMap;
 	
 	@Before
-	public void setUp() throws Exception {
+	public void setUp()  {
 		rawBuildinfoMap = new HashMap<String, Object>();
 		rawBuildinfoMap.put("state", new Integer(2));
 		rawBuildinfoMap.put("task_id", new Integer(3333));
@@ -115,7 +115,7 @@ public class KojiBuildInfoTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void canParseBuildInfo() throws Exception {
+	public void canParseBuildInfo() {
 		KojiBuildInfo info = new KojiBuildInfo(rawBuildinfoMap);
 		assertNotNull(info);
 		assertEquals("2.fc15", info.getRelease());

@@ -24,7 +24,6 @@ import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
 import org.fedoraproject.eclipse.packager.koji.api.errors.BuildAlreadyExistsException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
-import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
 
 /**
  * Fedora Packager koji build command. Supports scratch builds
@@ -160,8 +159,6 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 	 *             If tagging of sources failed.
 	 * @throws CommandListenerException
 	 *             If some listener detected a problem.
-	 * @throws KojiHubClientLoginException
-	 *             If some error occured during login.
 	 * @throws KojiHubClientException
 	 *             If some other error occured while pushing a build.
 	 * @return The result of this command.
@@ -170,8 +167,7 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 	public BuildResult call(IProgressMonitor monitor)
 			throws CommandMisconfiguredException, BuildAlreadyExistsException,
 			UnpushedChangesException, TagSourcesException,
-			CommandListenerException, KojiHubClientLoginException,
-			KojiHubClientException {
+			CommandListenerException, KojiHubClientException {
 		try {
 			callPreExecListeners();
 		} catch (CommandListenerException e) {

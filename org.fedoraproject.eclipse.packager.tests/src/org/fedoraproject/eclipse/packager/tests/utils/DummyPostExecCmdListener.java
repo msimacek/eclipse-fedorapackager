@@ -24,7 +24,7 @@ public class DummyPostExecCmdListener implements ICommandListener {
 	public static final String EXCEPTION_MSG = "postExecTest";
 	
 	@Override
-	public void preExecution() throws CommandListenerException {
+	public void preExecution() {
 		// nothing
 	}
 

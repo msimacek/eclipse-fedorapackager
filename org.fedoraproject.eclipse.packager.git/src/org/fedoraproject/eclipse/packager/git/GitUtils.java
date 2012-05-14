@@ -12,7 +12,6 @@ package org.fedoraproject.eclipse.packager.git;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jgit.api.CreateBranchCommand;
@@ -84,10 +83,8 @@ public class GitUtils {
 	 *
 	 * @param git
 	 * @param monitor
-	 * @throws CoreException
 	 */
-	public static void createLocalBranches(Git git, IProgressMonitor monitor)
-			throws CoreException {
+	public static void createLocalBranches(Git git, IProgressMonitor monitor) {
 		monitor.beginTask(FedoraPackagerGitText.FedoraPackagerGitCloneWizard_createLocalBranchesJob,
 				IProgressMonitor.UNKNOWN);
 		try {

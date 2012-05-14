@@ -102,7 +102,7 @@ public class DownloadSourcesSWTBotTest {
 	 * @param Tree of Package Explorer view.
 	 * @throws Exception
 	 */
-	private void clickOnDownloadSources(SWTBotTree packagerTree) throws Exception {
+	private void clickOnDownloadSources(SWTBotTree packagerTree) {
 		String menuString = "Download Sources";
 		ContextMenuHelper.clickContextMenu(packagerTree, "Fedora Packager",
 				menuString);

@@ -247,7 +247,7 @@ public class AddSourcesSWTBotTest {
 	 * @param Tree of Package Explorer view.
 	 * @throws Exception
 	 */
-	private void clickOnAddNewSources(SWTBotTree packagerTree) throws Exception {
+	private void clickOnAddNewSources(SWTBotTree packagerTree) {
 		String subMenu = "Upload This File";
 		String menuItem = "Add to existing sources";
 		ContextMenuHelper.clickContextMenu(packagerTree, "Fedora Packager",

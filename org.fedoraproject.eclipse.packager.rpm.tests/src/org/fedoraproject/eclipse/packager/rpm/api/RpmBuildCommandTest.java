@@ -81,8 +81,8 @@ public class RpmBuildCommandTest {
 	 */
 	@Before
 	public void setUp() throws InterruptedException, JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException, InvalidProjectRootException, SourcesUpToDateException, DownloadFailedException, CommandMisconfiguredException, CommandListenerException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException  {
-		this.testProject = new GitTestProject("eclipse-fedorapackager");
-		testProject.checkoutBranch("f17");
+		this.testProject = new GitTestProject("eclipse-fedorapackager"); //$NON-NLS-1$
+		testProject.checkoutBranch("f17"); //$NON-NLS-1$
 		this.fpRoot = FedoraPackagerUtils.getProjectRoot((this.testProject
 				.getProject()));
 		this.packager = new FedoraPackager(fpRoot);
@@ -129,19 +129,19 @@ public class RpmBuildCommandTest {
 		distDefines.add("--define"); //$NON-NLS-1$
 		distDefines.add("dist .fc17"); //$NON-NLS-1$
 		distDefines.add("--define"); //$NON-NLS-1$
-		distDefines.add("fedora 17");
+		distDefines.add("fedora 17"); //$NON-NLS-1$
 		build.buildType(BuildType.BINARY).branchConfig(bci);
 		try {
 			result = build.call(new NullProgressMonitor());
 		} catch (Exception e) {
-			fail("Shouldn't have thrown any exception.");
+			fail("Shouldn't have thrown any exception."); //$NON-NLS-1$
 			return;
 		}
 		assertTrue(result.wasSuccessful());
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());
 		IResource noArchFolder = fpRoot.getContainer().findMember(
-				new Path("noarch"));
+				new Path("noarch")); //$NON-NLS-1$
 		assertNotNull(noArchFolder);
 		// there should be one RPM
 		assertTrue(((IContainer) noArchFolder).members().length == 1);
@@ -164,14 +164,14 @@ public class RpmBuildCommandTest {
 			result = build.buildType(BuildType.PREP).flags(nodeps)
 					.branchConfig(bci).call(new NullProgressMonitor());
 		} catch (Exception e) {
-			fail("Shouldn't have thrown any exception.");
+			fail("Shouldn't have thrown any exception."); //$NON-NLS-1$
 			return;
 		}
 		assertTrue(result.wasSuccessful());
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());
 		IResource expandedSourcesFolder = fpRoot.getContainer().findMember(
-				new Path("eclipse-fedorapackager"));
+				new Path("eclipse-fedorapackager")); //$NON-NLS-1$
 		assertNotNull(expandedSourcesFolder);
 		// there should be some files in that folder
 		assertTrue(((IContainer) expandedSourcesFolder).members().length > 0);
@@ -193,25 +193,25 @@ public class RpmBuildCommandTest {
 		try {
 			result = build.buildType(BuildType.COMPILE).branchConfig(bci).call(new NullProgressMonitor());
 		} catch (Exception e) {
-			fail("Shouldn't have thrown any exception.");
+			fail("Shouldn't have thrown any exception."); //$NON-NLS-1$
 			return;
 		}
 		assertTrue(result.wasSuccessful());
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());
 		IResource expandedSourcesFolder = fpRoot.getContainer().findMember(
-				new Path("eclipse-fedorapackager"));
+				new Path("eclipse-fedorapackager")); //$NON-NLS-1$
 		assertNotNull(expandedSourcesFolder);
 		// there should be some files in that folder
 		assertTrue(((IContainer) expandedSourcesFolder).members().length > 0);
 		// put some confidence into returned result
-		assertTrue(result.getBuildCommand().contains("-bc"));
+		assertTrue(result.getBuildCommand().contains("-bc")); //$NON-NLS-1$
 		// should have created zip with jars
 		assertNotNull(fpRoot.getContainer().findMember(
-				new Path("eclipse-fedorapackager/build/rpmBuild/org.fedoraproject.eclipse.packager.zip")));
+				new Path("eclipse-fedorapackager/build/rpmBuild/org.fedoraproject.eclipse.packager.zip"))); //$NON-NLS-1$
 		// should not have produced any RPMs
 		assertNull(fpRoot.getContainer().findMember(
-				new Path("noarch")));
+				new Path("noarch"))); //$NON-NLS-1$
 	}
 	
 	/**
@@ -228,25 +228,25 @@ public class RpmBuildCommandTest {
 		try {
 			result = build.buildType(BuildType.INSTALL).branchConfig(bci).call(new NullProgressMonitor());
 		} catch (Exception e) {
-			fail("Shouldn't have thrown any exception.");
+			fail("Shouldn't have thrown any exception."); //$NON-NLS-1$
 			return;
 		}
 		assertTrue(result.wasSuccessful());
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());
 		IResource expandedSourcesFolder = fpRoot.getContainer().findMember(
-				new Path("eclipse-fedorapackager"));
+				new Path("eclipse-fedorapackager")); //$NON-NLS-1$
 		assertNotNull(expandedSourcesFolder);
 		// there should be some files in that folder
 		assertTrue(((IContainer) expandedSourcesFolder).members().length > 0);
 		// put some confidence into returned result
-		assertTrue(result.getBuildCommand().contains("-bi"));
+		assertTrue(result.getBuildCommand().contains("-bi")); //$NON-NLS-1$
 		// should have created zip with jars
 		assertNotNull(fpRoot.getContainer().findMember(
-				new Path("eclipse-fedorapackager/build/rpmBuild/org.fedoraproject.eclipse.packager.zip")));
+				new Path("eclipse-fedorapackager/build/rpmBuild/org.fedoraproject.eclipse.packager.zip"))); //$NON-NLS-1$
 		// should not have produced any RPMs
 		assertNull(fpRoot.getContainer().findMember(
-				new Path("noarch")));
+				new Path("noarch"))); //$NON-NLS-1$
 	}
 
 	/**
@@ -266,7 +266,7 @@ public class RpmBuildCommandTest {
 			result = build.buildType(BuildType.SOURCE).flags(nodeps)
 					.branchConfig(bci).call(new NullProgressMonitor());
 		} catch (Exception e) {
-			fail("Shouldn't have thrown any exception.");
+			fail("Shouldn't have thrown any exception."); //$NON-NLS-1$
 			return;
 		}
 		assertTrue(result.wasSuccessful());
@@ -275,12 +275,12 @@ public class RpmBuildCommandTest {
 				new NullProgressMonitor());
 		boolean found = false;
 		for (IResource res : fpRoot.getContainer().members()) {
-			if (res.getName().contains("src.rpm")) {
+			if (res.getName().contains("src.rpm")) { //$NON-NLS-1$
 				found = true;
 			}
 		}
 		assertTrue(found);
 		String srpm = result.getAbsoluteSRPMFilePath();
-		assertTrue(srpm.endsWith("src.rpm"));
+		assertTrue(srpm.endsWith("src.rpm")); //$NON-NLS-1$
 	}
 }

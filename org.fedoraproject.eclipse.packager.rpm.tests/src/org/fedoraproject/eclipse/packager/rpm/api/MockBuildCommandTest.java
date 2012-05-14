@@ -54,9 +54,9 @@ public class MockBuildCommandTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		this.testProject = new GitTestProject("eclipse-fedorapackager");
+		this.testProject = new GitTestProject("eclipse-fedorapackager"); //$NON-NLS-1$
 		// switch to F15
-		testProject.checkoutBranch("f15");
+		testProject.checkoutBranch("f15"); //$NON-NLS-1$
 		testProject.getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 		this.fpRoot = FedoraPackagerUtils.getProjectRoot((this.testProject
 				.getProject()));
@@ -98,9 +98,9 @@ public class MockBuildCommandTest {
 		IContainer container = (IContainer) this.testProject.getProject()
 				.findMember(new Path(resultPath.getName()));
 		for (IResource file: container.members()) {
-			if (file.getName().endsWith(".rpm")) {
+			if (file.getName().endsWith(".rpm")) { //$NON-NLS-1$
 				// not interested in source RPMs
-				if (!file.getName().endsWith(".src.rpm")) {
+				if (!file.getName().endsWith(".src.rpm")) { //$NON-NLS-1$
 					found = true;
 				}
 			}

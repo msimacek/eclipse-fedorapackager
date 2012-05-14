@@ -66,7 +66,7 @@ public class UnpushedChangesListener implements ICommandListener {
 	 * @see org.fedoraproject.eclipse.packager.api.ICommandListener#postExecution()
 	 */
 	@Override
-	public void postExecution() throws CommandListenerException {
+	public void postExecution() {
 		// nothing
 	}
 

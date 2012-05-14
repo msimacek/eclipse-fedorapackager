@@ -166,7 +166,7 @@ public class MockSWTBotTest {
 	 * @param Tree of Package Explorer view.
 	 * @throws Exception
 	 */
-	private void clickOnMockBuild(SWTBotTree packagerTree) throws Exception {
+	private void clickOnMockBuild(SWTBotTree packagerTree)  {
 		String menuItem = "Local Build Using Mock";
 		ContextMenuHelper.clickContextMenu(packagerTree, "Fedora Packager",
 				menuItem);

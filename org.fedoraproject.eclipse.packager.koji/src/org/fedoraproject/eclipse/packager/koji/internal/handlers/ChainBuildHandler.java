@@ -3,7 +3,6 @@ package org.fedoraproject.eclipse.packager.koji.internal.handlers;
 import java.util.List;
 
 import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
@@ -24,7 +23,7 @@ public class ChainBuildHandler extends FedoraPackagerAbstractHandler {
 	private Shell shell;
 
 	@Override
-	public Object execute(final ExecutionEvent event) throws ExecutionException {
+	public Object execute(final ExecutionEvent event)  {
 		ChainBuildDialog dialog = new ChainBuildDialog(shell);
 		List<List<String>> buildList = dialog.open();
 		final IProjectRoot[] roots = dialog.getRoots();

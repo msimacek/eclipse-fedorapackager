@@ -146,7 +146,7 @@ public class KojiBuildSWTBotTest {
 	 * @param Tree of Package Explorer view.
 	 * @throws Exception
 	 */
-	private void clickOnPushBuildToKoji(SWTBotTree packagerTree) throws Exception {
+	private void clickOnPushBuildToKoji(SWTBotTree packagerTree) {
 		String menuItem = "Push Build to Koji";
 		ContextMenuHelper.clickContextMenu(packagerTree,
 				"Fedora Packager",	menuItem);

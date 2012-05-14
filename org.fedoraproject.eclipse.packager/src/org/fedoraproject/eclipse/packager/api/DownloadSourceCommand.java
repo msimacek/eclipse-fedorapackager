@@ -190,7 +190,7 @@ public class DownloadSourceCommand extends
 	}
 
 	@Override
-	protected void checkConfiguration() throws CommandMisconfiguredException {
+	protected void checkConfiguration() {
 		// We are good to go with the defaults. No-Op.
 	}
 
@@ -210,7 +210,7 @@ public class DownloadSourceCommand extends
 	 *             If getting the URL of fileToDownload returned a 404.
 	 */
 	private void download(IProgressMonitor subMonitor, IFile fileToDownload,
-			URL fileURL) throws IOException, CoreException, DownloadFailedException {
+			URL fileURL) throws IOException, CoreException {
 		HttpURLConnection fileConnection = (HttpURLConnection)fileURL.openConnection();
 		if (fileConnection.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND) {
 			throw new FileNotFoundException();

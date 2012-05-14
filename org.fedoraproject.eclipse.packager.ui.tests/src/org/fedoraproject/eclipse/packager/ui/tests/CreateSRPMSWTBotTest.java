@@ -109,7 +109,7 @@ public class CreateSRPMSWTBotTest {
 	 * @param Tree of Package Explorer view.
 	 * @throws Exception
 	 */
-	private void clickOnCreateSRPM(SWTBotTree packagerTree) throws Exception {
+	private void clickOnCreateSRPM(SWTBotTree packagerTree)  {
 		String menuItem = "Create SRPM";
 		ContextMenuHelper.clickContextMenu(packagerTree, "Fedora Packager",
 				menuItem);

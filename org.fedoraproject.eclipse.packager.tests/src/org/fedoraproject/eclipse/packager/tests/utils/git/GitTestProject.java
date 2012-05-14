@@ -64,8 +64,6 @@ public class GitTestProject {
 					e.printStackTrace();
 				} catch (IllegalStateException e) {
 					e.printStackTrace();
-				} catch (CoreException e) {
-					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

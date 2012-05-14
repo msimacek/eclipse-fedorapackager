@@ -19,7 +19,6 @@ import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IFpProjectBits;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.QuestionMessageDialog;
-import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 
 /**
@@ -62,7 +61,7 @@ public class TagSourcesListener implements ICommandListener {
 	 * org.fedoraproject.eclipse.packager.api.ICommandListener#preExecution()
 	 */
 	@Override
-	public void preExecution() throws CommandListenerException {
+	public void preExecution() {
 		// indicate some progress, by creating a subtask
 		mainMonitor
 				.subTask(FedoraPackagerText.TagSourcesListener_tagSourcesMsg);
@@ -87,7 +86,7 @@ public class TagSourcesListener implements ICommandListener {
 	 * org.fedoraproject.eclipse.packager.api.ICommandListener#postExecution()
 	 */
 	@Override
-	public void postExecution() throws CommandListenerException {
+	public void postExecution()  {
 		// nothing
 	}
 

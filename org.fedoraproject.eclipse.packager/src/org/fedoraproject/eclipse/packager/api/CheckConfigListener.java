@@ -43,7 +43,7 @@ public class CheckConfigListener implements ICommandListener {
 	}
 
 	@Override
-	public void postExecution() throws CommandListenerException {
+	public void postExecution() {
 		// nothing to do for this listener
 	}
 

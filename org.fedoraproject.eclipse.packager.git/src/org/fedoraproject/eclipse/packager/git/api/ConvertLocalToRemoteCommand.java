@@ -256,7 +256,7 @@ public class ConvertLocalToRemoteCommand extends
 	}
 
 	@Override
-	protected void checkConfiguration() throws CommandMisconfiguredException {
+	protected void checkConfiguration() {
 		// We are good to go with the defaults. No-Op.
 	}
 }

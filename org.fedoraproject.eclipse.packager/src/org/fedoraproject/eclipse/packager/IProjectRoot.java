@@ -15,7 +15,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.Specfile;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerExtensionPointException;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType;
 
 /**
@@ -32,14 +31,8 @@ public interface IProjectRoot {
 	 * 
 	 * @param container
 	 * @param type
-	 * @throws FedoraPackagerExtensionPointException
-	 *             If one or more of the dependent extension points have not
-	 *             been implemented. {@code lookasideCacheProvider} and
-	 *             {@code productNamesProvider} are required for this
-	 *             initialization to work.
 	 */
-	public void initialize(IContainer container, ProjectType type)
-			throws FedoraPackagerExtensionPointException;
+	public void initialize(IContainer container, ProjectType type);
 
 	/**
 	 * Returns the root container. This may be different from the project this

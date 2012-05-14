@@ -30,7 +30,7 @@ public class DummyPreExecCmdListener implements ICommandListener {
 	}
 
 	@Override
-	public void postExecution() throws CommandListenerException {
+	public void postExecution() {
 		// nothing
 	}
 

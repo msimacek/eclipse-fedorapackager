@@ -10,7 +10,10 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +28,6 @@ import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.UploadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerExtensionPointException;
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType;
 import org.junit.After;
@@ -42,7 +44,7 @@ public class FedoraPackagerTest {
 	private FedoraProjectRoot fpRoot;
 	
 	@Before
-	public void setUp() throws IOException, CoreException, FedoraPackagerExtensionPointException {
+	public void setUp() throws IOException, CoreException {
 		String dirName = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_FEDORA_PROJECT_ROOT), null)).getFile();

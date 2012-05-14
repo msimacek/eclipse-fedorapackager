@@ -38,7 +38,7 @@ public class FedoraReviewCommand extends
 	protected static final String MOCK_GROUP_NAME = "mock"; //$NON-NLS-1$
 
 	@Override
-	protected void checkConfiguration() throws CommandMisconfiguredException {
+	protected void checkConfiguration() {
 		// no prereqs
 	}
 

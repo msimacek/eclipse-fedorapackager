@@ -27,12 +27,6 @@ import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.Specfile;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.SpecfilePackage;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.SpecfileParser;
-import org.fedoraproject.eclipse.packager.ILookasideCache;
-import org.fedoraproject.eclipse.packager.IProductStrings;
-import org.fedoraproject.eclipse.packager.IProjectRoot;
-import org.fedoraproject.eclipse.packager.ProductStringsNonTranslatable;
-import org.fedoraproject.eclipse.packager.SourcesFile;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerExtensionPointException;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType;
 import org.fedoraproject.eclipse.packager.utils.RPMUtils;
 
@@ -62,7 +56,7 @@ public class LocalFedoraPackagerProjectRoot implements IProjectRoot {
 	 * Also @see org.fedoraproject.eclipse.packager.FedoraProjectRoot#initialize(container, type)
 	 */
 	@Override
-	public void initialize(IContainer container, ProjectType type) throws FedoraPackagerExtensionPointException {
+	public void initialize(IContainer container, ProjectType type) {
 		this.rootContainer = container;
 		assert type != null;
 		this.type = type;

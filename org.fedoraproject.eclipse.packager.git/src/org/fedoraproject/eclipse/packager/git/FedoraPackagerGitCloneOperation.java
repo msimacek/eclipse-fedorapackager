@@ -15,7 +15,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.RepositoryCache;
 import org.eclipse.egit.core.RepositoryUtil;
@@ -76,13 +75,11 @@ public class FedoraPackagerGitCloneOperation {
 	 * @throws IllegalStateException
 	 * @throws InvocationTargetException
 	 * @throws InterruptedException
-	 * @throws CoreException
 	 * @throws IOException
 	 * @return A Git API instance.
 	 */
 	public Git run(IProgressMonitor monitor) throws IllegalStateException,
-			InvocationTargetException, InterruptedException, CoreException,
-			IOException {
+			InvocationTargetException, InterruptedException, IOException {
 		if (!runnable || hasRun) {
 			throw new IllegalStateException(
 					NLS.bind(

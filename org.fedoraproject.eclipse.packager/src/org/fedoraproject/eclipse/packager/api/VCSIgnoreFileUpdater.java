@@ -69,7 +69,7 @@ public class VCSIgnoreFileUpdater implements ICommandListener {
 	}
 
 	@Override
-	public void preExecution() throws CommandListenerException {
+	public void preExecution() {
 		// nothing
 	}
 

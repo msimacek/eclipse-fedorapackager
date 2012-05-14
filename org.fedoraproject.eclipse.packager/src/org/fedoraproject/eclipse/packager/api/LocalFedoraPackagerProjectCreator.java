@@ -174,7 +174,6 @@ public class LocalFedoraPackagerProjectCreator {
 	/**
 	 * Creates project structure inside the base project
 	 *
-	 * @throws CoreException
 	 * @throws IOException
 	 * @throws WrongRepositoryStateException
 	 * @throws JGitInternalException
@@ -186,8 +185,7 @@ public class LocalFedoraPackagerProjectCreator {
 	 */
 	public void createProjectStructure() throws NoFilepatternException,
 			NoHeadException, NoMessageException, ConcurrentRefUpdateException,
-			JGitInternalException, WrongRepositoryStateException, IOException,
-			CoreException {
+			JGitInternalException, WrongRepositoryStateException, IOException {
 
 		File directory = new File(project.getLocation().toString());
 		FileUtils.mkdirs(directory, true);

@@ -35,7 +35,6 @@ import org.fedoraproject.eclipse.packager.FedoraProjectRoot;
 import org.fedoraproject.eclipse.packager.ILookasideCache;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.SourcesFile;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerExtensionPointException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
@@ -58,8 +57,7 @@ public class FedoraProjectRootTest {
 	private static final String EXAMPLE_FEDORA_PROJECT_ROOT = "resources/example-fedora-project"; // $NON-NLS-1$
 
 	@Before
-	public void setUp() throws IOException,
-			FedoraPackagerExtensionPointException, CoreException {
+	public void setUp() throws IOException, CoreException {
 		String dirName = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_FEDORA_PROJECT_ROOT), null)).getFile();
@@ -84,8 +82,7 @@ public class FedoraProjectRootTest {
 	}
 
 	@Test
-	public void canCreateFedoraProjectRoot()
-			throws FedoraPackagerExtensionPointException, InterruptedException,
+	public void canCreateFedoraProjectRoot() throws InterruptedException,
 			InvalidProjectRootException {
 		// Dummy Fedora project root
 		fpRoot = null;

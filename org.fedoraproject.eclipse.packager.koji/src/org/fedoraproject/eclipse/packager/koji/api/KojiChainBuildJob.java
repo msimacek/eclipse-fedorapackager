@@ -149,7 +149,7 @@ public class KojiChainBuildJob extends KojiBuildJob {
 						new Callable<String>() {
 
 							@Override
-							public String call() throws Exception {
+							public String call() {
 								return new KojiTargetDialog(shell, targetSet)
 										.openForTarget();
 							}

@@ -244,7 +244,7 @@ public class ReplaceSourcesSWTBotTest {
 	 * @param Tree of Package Explorer view.
 	 * @throws Exception
 	 */
-	private void clickOnReplaceExistingSources(SWTBotTree packagerTree) throws Exception {
+	private void clickOnReplaceExistingSources(SWTBotTree packagerTree) {
 		String subMenu = "Upload This File";
 		String menuItem = "Replace existing sources";
 		ContextMenuHelper.clickContextMenu(packagerTree, "Fedora Packager",

@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.Path;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.SourcesFile;
 import org.fedoraproject.eclipse.packager.api.ICommandListener;
-import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 
 /**
  * Action to intentionally alter the MD5sum of a downloaded
@@ -36,7 +35,7 @@ public class CorruptDownload implements ICommandListener {
 	}
 
 	@Override
-	public void preExecution() throws CommandListenerException {
+	public void preExecution() {
 		// nothing
 	}
 
@@ -44,7 +43,7 @@ public class CorruptDownload implements ICommandListener {
 	 * Intentionally destroy MD5sums of sources files.
 	 */
 	@Override
-	public void postExecution() throws CommandListenerException {
+	public void postExecution()  {
 		String extraContents = "0xbeef";
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(extraContents.getBytes());
 		SourcesFile sources = fedoraProjectRoot.getSourcesFile();

@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.Specfile;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.SpecfilePackage;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.SpecfileParser;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerExtensionPointException;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType;
 import org.fedoraproject.eclipse.packager.utils.RPMUtils;
 
@@ -57,7 +56,7 @@ public class FedoraProjectRoot implements IProjectRoot {
 	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#initialize(org.eclipse.core.resources.IContainer, org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType)
 	 */
 	@Override
-	public void initialize(IContainer container, ProjectType type) throws FedoraPackagerExtensionPointException {
+	public void initialize(IContainer container, ProjectType type) {
 		this.rootContainer = container;
 		this.sourcesFile = new SourcesFile(rootContainer.getFile(new Path(
 				SourcesFile.SOURCES_FILENAME)));

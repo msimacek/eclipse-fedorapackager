@@ -43,7 +43,7 @@ public class RpmEvalCommandTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.testProject = new GitTestProject("eclipse-fedorapackager");
+		this.testProject = new GitTestProject("eclipse-fedorapackager"); //$NON-NLS-1$
 		this.fpRoot = FedoraPackagerUtils.getProjectRoot((this.testProject
 				.getProject()));
 		this.packager = new FedoraPackager(fpRoot);
@@ -80,7 +80,7 @@ public class RpmEvalCommandTest {
 		try {
 			result = eval.variable(RpmEvalCommand.ARCH).call(new NullProgressMonitor());
 		} catch (Exception e) {
-			fail("Shouldn't have thrown any exception.");
+			fail("Shouldn't have thrown any exception."); //$NON-NLS-1$
 			return;
 		}
 		assertTrue(result.wasSuccessful());

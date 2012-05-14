@@ -23,7 +23,7 @@ public class KojiHubClientLoginExceptionTest {
 	private KojiHubClientLoginException exceptionUnderTest;
 	
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		exceptionUnderTest = new KojiHubClientLoginException(new GeneralSecurityException());
 	}
 

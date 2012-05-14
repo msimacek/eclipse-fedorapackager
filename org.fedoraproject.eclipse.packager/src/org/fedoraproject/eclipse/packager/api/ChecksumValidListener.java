@@ -42,7 +42,7 @@ public class ChecksumValidListener implements ICommandListener {
 	 * @see org.fedoraproject.eclipse.packager.api.ICommandListener#preExecution()
 	 */
 	@Override
-	public void preExecution() throws CommandListenerException {
+	public void preExecution() {
 		// Nothing
 	}
 

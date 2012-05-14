@@ -123,7 +123,7 @@ public class LocalBuildSWTBotTest {
 	 * @param Tree of Package Explorer view.
 	 * @throws Exception
 	 */
-	private void clickOnBuildForLocalArchitecture(SWTBotTree packagerTree) throws Exception {
+	private void clickOnBuildForLocalArchitecture(SWTBotTree packagerTree)  {
 		String menuItem = "Build for Local Architecture";
 		ContextMenuHelper.clickContextMenu(packagerTree, "Fedora Packager",
 				menuItem);

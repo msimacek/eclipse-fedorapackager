@@ -53,9 +53,9 @@ public class SCMMockBuildCommandTest {
 
 	@Before
 	public void setUp() throws Exception {
-		this.testProject = new GitTestProject("eclipse-fedorapackager");
+		this.testProject = new GitTestProject("eclipse-fedorapackager"); //$NON-NLS-1$
 		// switch to F15
-		testProject.checkoutBranch("f15");
+		testProject.checkoutBranch("f15"); //$NON-NLS-1$
 		this.fpRoot = FedoraPackagerUtils.getProjectRoot((this.testProject
 				.getProject()));
 		this.packager = new FedoraPackager(fpRoot);
@@ -82,8 +82,8 @@ public class SCMMockBuildCommandTest {
 				.getCommandInstance(SCMMockBuildCommand.ID);
 		MockBuildResult result = mockBuild
 				.useDownloadedSourceDirectory(download.getDownloadFolderPath())
-				.useBranch("f15")
-				.usePackage("eclipse-fedorapackager")
+				.useBranch("f15") //$NON-NLS-1$
+				.usePackage("eclipse-fedorapackager") //$NON-NLS-1$
 				.useRepoPath(
 						fpRoot.getContainer().getParent().getRawLocation()
 								.toString()).useRepoType(RepoType.GIT)
@@ -101,9 +101,9 @@ public class SCMMockBuildCommandTest {
 		IContainer container = (IContainer) this.testProject.getProject()
 				.findMember(new Path(resultPath.getName()));
 		for (IResource file : container.members()) {
-			if (file.getName().endsWith(".rpm")) {
+			if (file.getName().endsWith(".rpm")) { //$NON-NLS-1$
 				// not interested in source RPMs
-				if (!file.getName().endsWith(".src.rpm")) {
+				if (!file.getName().endsWith(".src.rpm")) { //$NON-NLS-1$
 					rpmfound = true;
 				} else {
 					srpmfound = true;
