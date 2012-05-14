@@ -13,7 +13,6 @@ package org.fedoraproject.eclipse.packager.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -91,20 +90,13 @@ public class FedoraPackagerTest {
 	/**
 	 * Should be able to successfully instantiate a
 	 * {@link DownloadSourceCommand} object.
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
 	 */
 	@Test
-	public void canGetCommandInstance() {
-		DownloadSourceCommand download;
-		try {
-			download = (DownloadSourceCommand) packager
+	public void canGetCommandInstance() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException {
+		DownloadSourceCommand download = (DownloadSourceCommand) packager
 					.getCommandInstance(DownloadSourceCommand.ID);
-		} catch (FedoraPackagerCommandNotFoundException e) {
-			fail(DownloadSourceCommand.ID + " should be available!");
-			return;
-		} catch (FedoraPackagerCommandInitializationException e) {
-			fail(DownloadSourceCommand.ID + " should be properly initialized!");
-			return;
-		}
 		assertNotNull(download);
 	}
 	
@@ -112,32 +104,23 @@ public class FedoraPackagerTest {
 	 * Should throw {@link FedoraPackagerCommandNotFoundException} for an
 	 * unknown command.
 	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
 	 */
 	@Test(expected=FedoraPackagerCommandNotFoundException.class) 
 	public void shouldThrowFedoraPackagerCommandNotFoundException()
-			throws FedoraPackagerCommandNotFoundException {
-		try {
+			throws FedoraPackagerCommandNotFoundException, FedoraPackagerCommandInitializationException {
 			packager
 					.getCommandInstance("SomeCommandWhichShouldNotBeThere");
-		} catch (FedoraPackagerCommandInitializationException e) {
-			fail("Command shouldn't be there");
-			return;
-		}
 	}
 	
 	/**
+	 * @throws FedoraPackagerCommandNotFoundException 
 	 * 
 	 */
 	@Test(expected=FedoraPackagerCommandInitializationException.class)
-	public void shouldThrowInitializationException() throws FedoraPackagerCommandInitializationException {
-		DownloadSourceCommand download;
-		try {
-			download = (DownloadSourceCommand) packager
+	public void shouldThrowInitializationException() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException {
+		DownloadSourceCommand download = (DownloadSourceCommand) packager
 					.getCommandInstance(DownloadSourceCommand.ID);
-		} catch (FedoraPackagerCommandNotFoundException e) {
-			fail(DownloadSourceCommand.ID + " should be available!");
-			return;
-		}
 		// this should throw initialization exception
 		download.initialize(fpRoot);
 	}

@@ -206,11 +206,7 @@ public class VCSIgnoreFileUpdaterTest {
 			}
 		} finally {
 			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException e) {
-					// ignore
-				}
+				out.close();
 			}
 		}
 		// now link to make Eclipse happy

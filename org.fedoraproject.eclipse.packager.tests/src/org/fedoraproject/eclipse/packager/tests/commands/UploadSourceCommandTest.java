@@ -10,12 +10,17 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.tests.commands;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.easymock.EasyMock.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -28,6 +33,7 @@ import java.util.Stack;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
@@ -44,8 +50,13 @@ import org.fedoraproject.eclipse.packager.api.UploadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.UploadSourceResult;
 import org.fedoraproject.eclipse.packager.api.VCSIgnoreFileUpdater;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
+import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.api.errors.FileAvailableInLookasideCacheException;
+import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidUploadFileException;
+import org.fedoraproject.eclipse.packager.api.errors.UploadFailedException;
 import org.fedoraproject.eclipse.packager.tests.SourcesFileUpdaterTest;
 import org.fedoraproject.eclipse.packager.tests.VCSIgnoreFileUpdaterTest;
 import org.fedoraproject.eclipse.packager.tests.units.UploadFileValidityTest;
@@ -124,11 +135,18 @@ public class UploadSourceCommandTest {
 	 * with filename and MD5 as parameters and the server returns if the
 	 * resource is "missing" or "available". Should sources be already
 	 * available, an FileAvailableInLookasideCacheException should be thrown.
+	 * @throws IOException 
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws InvalidUploadFileException 
+	 * @throws UploadFailedException 
+	 * @throws CommandListenerException 
+	 * @throws CommandMisconfiguredException 
+	 * @throws FileAvailableInLookasideCacheException 
 	 * 
-	 * @throws Exception
 	 */
-	@Test
-	public void canDetermineIfSourceIsAvailable() throws Exception {
+	@Test(expected=FileAvailableInLookasideCacheException.class)
+	public void canDetermineIfSourceIsAvailable() throws IOException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, FileAvailableInLookasideCacheException, CommandMisconfiguredException, CommandListenerException, UploadFailedException, InvalidUploadFileException  {
 		String fileName = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_UPLOAD_FILE), null)).getFile();
@@ -155,25 +173,28 @@ public class UploadSourceCommandTest {
 		replay(mockResponse);
 		replay(mockStatus);
 		replay(mockEntity);
-		try {
-			uploadCmd.setClient(mockClient).setUploadURL(uploadURLForTesting)
+		uploadCmd.setClient(mockClient).setUploadURL(uploadURLForTesting)
 					.setFileToUpload(file).call(new NullProgressMonitor());
-			// File already available
-			fail("File should be present in lookaside cache.");
-		} catch (FileAvailableInLookasideCacheException e) {
-			// pass
-		}
 	}
 
 	/**
 	 * Generate a file which will have a different checksum than any other
 	 * already uploaded file for package {@code eclipse-fedorapackager}. Then
 	 * attempt to upload this file.
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws IOException 
+	 * @throws ClientProtocolException 
+	 * @throws IllegalStateException 
+	 * @throws InvalidUploadFileException 
+	 * @throws UploadFailedException 
+	 * @throws CommandListenerException 
+	 * @throws CommandMisconfiguredException 
+	 * @throws FileAvailableInLookasideCacheException 
 	 * 
-	 * @throws Exception
 	 */
 	@Test
-	public void canUploadSources() throws Exception {
+	public void canUploadSources() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, ClientProtocolException, IOException, IllegalStateException, FileAvailableInLookasideCacheException, CommandMisconfiguredException, CommandListenerException, UploadFailedException, InvalidUploadFileException {
 		MockableUploadSourceCommand uploadCmd = (MockableUploadSourceCommand) packager
 				.getCommandInstance(MockableUploadSourceCommand.ID);
 		HttpClient mockClient = createStrictMock(HttpClient.class);
@@ -208,15 +229,10 @@ public class UploadSourceCommandTest {
 		tempFilesAndDirectories.push(newUploadFile);
 		writeRandomContentToFile(newUploadFile);
 		UploadSourceResult result = null;
-		try {
-			result = uploadCmd.setClient(mockClient)
+		result = uploadCmd.setClient(mockClient)
 					.setUploadURL(uploadURLForTesting)
 					.setFileToUpload(newUploadFile)
 					.call(new NullProgressMonitor());
-		} catch (FileAvailableInLookasideCacheException e) {
-			// File should not be available
-			fail("File should have been missing!");
-		}
 		assertNotNull(result);
 		assertTrue(result.wasSuccessful());
 		verify(mockClient);
@@ -225,13 +241,21 @@ public class UploadSourceCommandTest {
 	/**
 	 * After a file is uploaded, the {@code sources} file should be updated with
 	 * the new checksum/filename. This test checks for this.
+	 * @throws IOException 
+	 * @throws InvalidProjectRootException 
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws InvalidUploadFileException 
+	 * @throws UploadFailedException 
+	 * @throws CommandListenerException 
+	 * @throws CommandMisconfiguredException 
+	 * @throws FileAvailableInLookasideCacheException 
 	 * 
 	 * @see SourcesFileUpdaterTest
 	 * 
-	 * @throws Exception
 	 */
 	@Test
-	public void canUpdateSourcesFile() throws Exception {
+	public void canUpdateSourcesFile() throws IOException, InvalidProjectRootException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, InvalidUploadFileException, FileAvailableInLookasideCacheException, CommandMisconfiguredException, CommandListenerException, UploadFailedException  {
 		// Create a a temp file with checksum, which hasn't been uploaded so
 		// far. We need to upload a new non-existing file into the lookaside
 		// cache. Otherwise a file exists exception is thrown and nothing will
@@ -283,15 +307,7 @@ public class UploadSourceCommandTest {
 		uploadCmd.setFileToUpload(newUploadFile);
 		uploadCmd.setUploadURL(uploadURLForTesting);
 		uploadCmd.addCommandListener(sourcesUpdater);
-		UploadSourceResult result = null;
-		try {
-			result = uploadCmd.call(new NullProgressMonitor());
-		} catch (FileAvailableInLookasideCacheException e) {
-			fail("Need a new file to be uploaded "
-					+ "otherwise listener will not get executed!");
-		} catch (CommandListenerException e) {
-			fail("should not be thrown");
-		}
+		UploadSourceResult result = uploadCmd.call(new NullProgressMonitor());
 		assertNotNull(result);
 		assertTrue(result.wasSuccessful());
 		final String sourceContentPost = TestsUtils.readContents(sourcesFile);
@@ -309,11 +325,14 @@ public class UploadSourceCommandTest {
 	 * When setting the upload file it should throw InvalidUploadFileException
 	 * if the file name is not valid. Other upload file validity test are tested
 	 * in {@link UploadFileValidityTest}.
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws IOException 
+	 * @throws InvalidUploadFileException 
 	 * 
-	 * @throws Exception
 	 */
 	@Test(expected = InvalidUploadFileException.class)
-	public void canDetermineValidUploadFiles() throws Exception {
+	public void canDetermineValidUploadFiles() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, IOException, InvalidUploadFileException {
 		UploadSourceCommand uploadCmd = (UploadSourceCommand) packager
 				.getCommandInstance(UploadSourceCommand.ID);
 		String invalidUploadFileName = FileLocator.toFileURL(
@@ -325,13 +344,20 @@ public class UploadSourceCommandTest {
 
 	/**
 	 * After a file is uploaded, the VCS ignore file should be updated.
+	 * @throws IOException 
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws InvalidUploadFileException 
+	 * @throws UploadFailedException 
+	 * @throws CommandMisconfiguredException 
+	 * @throws CommandListenerException 
+	 * @throws FileAvailableInLookasideCacheException 
 	 * 
 	 * @see VCSIgnoreFileUpdaterTest
 	 * 
-	 * @throws Exception
 	 */
 	@Test
-	public void canUpdateIgnoreFile() throws Exception {
+	public void canUpdateIgnoreFile() throws IOException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, InvalidUploadFileException, CommandMisconfiguredException, UploadFailedException, FileAvailableInLookasideCacheException, CommandListenerException {
 		// Create a a temp file with checksum, which hasn't been uploaded so
 		// far. We need to upload a new non-existing file into the lookaside
 		// cache. Otherwise a file exists exception is thrown and nothing will
@@ -382,15 +408,7 @@ public class UploadSourceCommandTest {
 		VCSIgnoreFileUpdater vcsUpdater = new VCSIgnoreFileUpdater(
 				newUploadFile, vcsIgnoreFile);
 		uploadCmd.addCommandListener(vcsUpdater);
-		UploadSourceResult result = null;
-		try {
-			result = uploadCmd.call(new NullProgressMonitor());
-		} catch (FileAvailableInLookasideCacheException e) {
-			fail("Need a new file to be uploaded "
-					+ "otherwise listener will not get executed!");
-		} catch (CommandListenerException e) {
-			fail("should not be thrown");
-		}
+		UploadSourceResult result = uploadCmd.call(new NullProgressMonitor());
 
 		assertNotNull(result);
 		assertTrue(result.wasSuccessful());

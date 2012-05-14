@@ -11,10 +11,9 @@
 package org.fedoraproject.eclipse.packager.tests.commands;
 
 
-import static org.junit.Assert.fail;
-
 import java.net.MalformedURLException;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.ChecksumValidListener;
@@ -22,7 +21,11 @@ import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
+import org.fedoraproject.eclipse.packager.api.errors.DownloadFailedException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidCheckSumException;
+import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
 import org.fedoraproject.eclipse.packager.tests.utils.CorruptDownload;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
@@ -61,26 +64,31 @@ public class DownloadSourceCommandTest {
 		this.testProject.dispose();
 	}
 	
-	@Test
-	public void shouldThrowMalformedURLException() throws Exception {
+	@Test(expected = MalformedURLException.class)
+	public void shouldThrowMalformedURLException()
+			throws FedoraPackagerCommandInitializationException,
+			FedoraPackagerCommandNotFoundException, MalformedURLException {
 		DownloadSourceCommand downloadCmd = (DownloadSourceCommand) packager
 				.getCommandInstance(DownloadSourceCommand.ID);
-		try {
-			downloadCmd.setDownloadURL("very bad url");
-			fail("DownloadSourceCommand.setUploadURL should not accept invalid URLs!");
-		} catch (MalformedURLException e) {
-			// pass
-		}
+		downloadCmd.setDownloadURL("very bad url");
 	}
 
 	/**
 	 * Positive results test. Should work fine. Since this is downloading
 	 * Eclipse sources it might take a while.
+	 * @throws CoreException 
+	 * @throws InterruptedException 
+	 * @throws InvalidProjectRootException 
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws CommandListenerException 
+	 * @throws CommandMisconfiguredException 
+	 * @throws DownloadFailedException 
+	 * @throws SourcesUpToDateException 
 	 * 
-	 * @throws Exception
 	 */
 	@Test
-	public void canDownloadSeveralFilesWithoutErrors() throws Exception {
+	public void canDownloadSeveralFilesWithoutErrors() throws CoreException, InterruptedException, InvalidProjectRootException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, SourcesUpToDateException, DownloadFailedException, CommandMisconfiguredException, CommandListenerException {
 		// not using eclipse-fedorapackager for this test
 		this.testProject.dispose();
 		// The eclipse package usually has 2 source files. That's why we
@@ -93,27 +101,25 @@ public class DownloadSourceCommandTest {
 				.getCommandInstance(DownloadSourceCommand.ID);
 		ChecksumValidListener md5sumListener = new ChecksumValidListener(fpRoot);
 		downloadCmd.addCommandListener(md5sumListener); // want md5sum checking
-		try {
-			downloadCmd.call(new NullProgressMonitor());
-		} catch (SourcesUpToDateException e) {
-			fail("sources for " + testProject.getProject().getName() + " should not be present");
-		} catch (CommandMisconfiguredException e) {
-			fail("Cmd should be properly configured");
-		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof InvalidCheckSumException) {
-				fail("Checksums should be OK");
-			}
-		}
-		// pass
+		downloadCmd.call(new NullProgressMonitor());
 	}
 	
 	/**
 	 * Test checksums of source files.
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws CommandListenerException 
+	 * @throws CommandMisconfiguredException 
+	 * @throws DownloadFailedException 
+	 * @throws SourcesUpToDateException 
 	 * 
-	 * @throws Exception
 	 */
-	@Test
-	public void canDetectChecksumErrors() throws Exception {
+	@Test(expected = CommandListenerException.class)
+	public void canDetectChecksumErrors()
+			throws FedoraPackagerCommandInitializationException,
+			FedoraPackagerCommandNotFoundException, SourcesUpToDateException,
+			DownloadFailedException, CommandMisconfiguredException,
+			CommandListenerException {
 		DownloadSourceCommand downloadCmd = (DownloadSourceCommand) packager
 				.getCommandInstance(DownloadSourceCommand.ID);
 		CorruptDownload checksumDestroyer = new CorruptDownload(fpRoot);
@@ -121,19 +127,7 @@ public class DownloadSourceCommandTest {
 		// Add checksum destroyer first, checksum checker after.
 		downloadCmd.addCommandListener(checksumDestroyer); // should corrupt MD5
 		downloadCmd.addCommandListener(md5sumListener); // want md5sum checking
-		try {
-			downloadCmd.call(new NullProgressMonitor());
-		} catch (SourcesUpToDateException e) {
-			fail("sources for " + testProject.getProject().getName() + " should not be present");
-		} catch (CommandMisconfiguredException e) {
-			fail("Cmd should be properly configured");
-		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof InvalidCheckSumException) {
-				// pass
-				return;
-			}
-		}
-		fail("Checksum should be invalid for all source files!");
+		downloadCmd.call(new NullProgressMonitor());
 	}
 
 }

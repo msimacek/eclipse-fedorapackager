@@ -161,17 +161,11 @@ public class SRPMImportCommandTest implements ISRPMImportCommandSLLPolicyCallbac
 				.equals("eclipse-mylyn-tasks.spec")); //$NON-NLS-1$
 	}
 
-	@Test
-	public void incorrectSpecFails() {
+	@Test(expected=SRPMImportCommandException.class)
+	public void incorrectSpecFails() throws SRPMImportCommandException {
 		SRPMImportCommand srpmImport = new SRPMImportCommand(badSrpmPath,
 				testProject, testProject, uploadURLForTesting, this);
-		try {
-			srpmImport.call(new NullProgressMonitor());
-		} catch (SRPMImportCommandException e) {
-			assertTrue(e.getCause() instanceof SRPMImportCommandException);
-			return;
-		}
-		fail("Should not reach here."); //$NON-NLS-1$
+		srpmImport.call(new NullProgressMonitor());
 	}
 
 	@Override

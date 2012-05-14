@@ -13,7 +13,6 @@ package org.fedoraproject.eclipse.packager.tests;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -34,19 +33,16 @@ public class FedoraPackagerGitCloneOperationTest {
 
 	private Git git;
 
-	@Test
-	public void shouldThrowExceptionWhenURIInvalid() {
+	@Test(expected=URISyntaxException.class)
+	public void shouldThrowExceptionWhenURIInvalid() throws URISyntaxException {
 		FedoraPackagerGitCloneOperation cloneOp = new FedoraPackagerGitCloneOperation();
-		try {
-			cloneOp.setCloneURI("+ // + really bad URL");
-			fail("Should have thrown URISyntaxException");
-		} catch (URISyntaxException e) {
-			// pass
-		}
+		cloneOp.setCloneURI("+ // + really bad URL");
 	}
 
-	@Test(expected=IllegalStateException.class)
-	public void shouldThrowExceptionWhenIllConfigured() throws Exception {
+	@Test(expected = IllegalStateException.class)
+	public void shouldThrowExceptionWhenIllConfigured()
+			throws IllegalStateException, InvocationTargetException,
+			InterruptedException, IOException {
 		FedoraPackagerGitCloneOperation cloneOp = new FedoraPackagerGitCloneOperation();
 		cloneOp.run(null);
 	}

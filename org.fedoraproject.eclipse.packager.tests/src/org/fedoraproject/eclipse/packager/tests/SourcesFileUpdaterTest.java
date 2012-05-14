@@ -75,7 +75,7 @@ public class SourcesFileUpdaterTest {
 	}
 
 	@Test
-	public void canReplaceSourcesFile() throws IOException {
+	public void canReplaceSourcesFile() throws IOException, CommandListenerException {
 		// sources file pre-update
 		File sourcesFile = new File(testProject.getLocation().toFile().getAbsolutePath()
 				+ File.separatorChar + SourcesFile.SOURCES_FILENAME);
@@ -87,12 +87,8 @@ public class SourcesFileUpdaterTest {
 				uploadedFile);
 		// want to replace :)
 		sourcesUpdater.setShouldReplace(true);
-		try {
 			// this should update the sources file
-			sourcesUpdater.postExecution();
-		} catch (CommandListenerException e) {
-			fail("Should not throw any exception!");
-		}
+		sourcesUpdater.postExecution();
 		final String sourcesFileContentPost = TestsUtils.readContents(sourcesFile);
 		assertNotSame(sourcesFileContentPre, sourcesFileContentPost);
 		assertEquals(SourcesFile.calculateChecksum(uploadedFile) + "  "
@@ -100,7 +96,7 @@ public class SourcesFileUpdaterTest {
 	}
 
 	@Test
-	public void canUpdateSourcesFile() throws IOException  {
+	public void canUpdateSourcesFile() throws IOException, CommandListenerException  {
 		// sources file pre-update
 		File sourcesFile = new File(testProject.getLocation().toFile().getAbsolutePath()
 				+ File.separatorChar + SourcesFile.SOURCES_FILENAME);
@@ -110,12 +106,8 @@ public class SourcesFileUpdaterTest {
 				sourcesFileContentPre);
 		SourcesFileUpdater sourcesUpdater = new SourcesFileUpdater(fpRoot,
 				uploadedFile);
-		try {
 			// this should update the sources file
-			sourcesUpdater.postExecution();
-		} catch (CommandListenerException e) {
-			fail("Should not throw any exception!");
-		}
+		sourcesUpdater.postExecution();
 		final String sourcesFileContentPost = TestsUtils.readContents(sourcesFile);
 		assertNotSame(sourcesFileContentPre, sourcesFileContentPost);
 		final String expectedSourcesFileContentPost = sourcesFileContentPre + "\n" +
