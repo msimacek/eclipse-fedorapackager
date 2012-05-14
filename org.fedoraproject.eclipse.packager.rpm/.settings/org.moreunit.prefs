@@ -1,0 +1,3 @@
+eclipse.preferences.version=1
+org.moreunit.unitsourcefolder=org.fedoraproject.eclipse.packager.rpm\:src\:org.fedoraproject.eclipse.packager.rpm.tests\:src
+org.moreunit.useprojectsettings=true

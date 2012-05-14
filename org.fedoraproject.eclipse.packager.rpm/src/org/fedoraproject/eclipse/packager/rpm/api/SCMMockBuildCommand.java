@@ -13,23 +13,12 @@ package org.fedoraproject.eclipse.packager.rpm.api;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-
 /**
  * Class for performing SCM-integrated Mock builds.
  *
  */
 public class SCMMockBuildCommand extends MockBuildCommand {
 	
-
-	
-
-	
-
-	
-
-	
-
 	/**
 	 * Enumeration of supported repository types.
 	 *
@@ -207,7 +196,7 @@ public class SCMMockBuildCommand extends MockBuildCommand {
 	}
 	
 	@Override
-	protected void checkConfiguration() throws CommandMisconfiguredException {
+	protected void checkConfiguration() {
 		//no required parameters
 	}
 	

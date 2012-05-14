@@ -20,12 +20,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	DownloadSourceCommandTest.class,
 	FedoraPackagerCommandTest.class,
 	UploadSourceCommandTest.class,
-	MockBuildCommandTest.class,
-	RpmBuildCommandTest.class,
-	RpmEvalCommandTest.class,
 	ScpCommandTest.class,
-	SRPMImportCommandTest.class,
-	SCMMockBuildCommandGitTest.class,
 	UploadSourceCommandTest.class
 })
 

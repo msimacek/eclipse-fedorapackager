@@ -35,7 +35,5 @@ Import-Package: org.apache.commons.ssl,
  org.fedoraproject.eclipse.packager.git,
  org.fedoraproject.eclipse.packager.git.api,
  org.fedoraproject.eclipse.packager.git.api.errors,
- org.fedoraproject.eclipse.packager.rpm.api,
- org.fedoraproject.eclipse.packager.rpm.api.errors,
  org.fedoraproject.eclipse.packager.utils
 Eclipse-BundleShape: dir

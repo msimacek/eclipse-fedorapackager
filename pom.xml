@@ -101,6 +101,7 @@
     <module>org.fedoraproject.eclipse.packager.ui.tests</module>
     <module>org.fedoraproject.eclipse.packager.bodhi.tests</module>
     <module>org.fedoraproject.eclipse.packager.koji.tests</module>
+    <module>org.fedoraproject.eclipse.packager.rpm.tests</module>
   </modules>
 
   <repositories>

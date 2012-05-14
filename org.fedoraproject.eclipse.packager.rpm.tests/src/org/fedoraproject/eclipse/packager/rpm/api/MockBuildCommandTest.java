@@ -8,7 +8,7 @@
  * Contributors:
  *     Red Hat Inc. - initial API and implementation
  *******************************************************************************/
-package org.fedoraproject.eclipse.packager.tests.commands;
+package org.fedoraproject.eclipse.packager.rpm.api;
 
 
 import static org.junit.Assert.assertNotNull;

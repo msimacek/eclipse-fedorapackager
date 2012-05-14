@@ -8,7 +8,7 @@
  * Contributors:
  *     Red Hat Inc. - initial API and implementation
  *******************************************************************************/
-package org.fedoraproject.eclipse.packager.tests.commands;
+package org.fedoraproject.eclipse.packager.rpm.api;
 
 import java.io.File;
 
@@ -40,7 +40,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class SCMMockBuildCommandGitTest {
+public class SCMMockBuildCommandTest {
 	// project under test
 	private GitTestProject testProject;
 	// Fedora packager root
