@@ -13,7 +13,6 @@ package org.fedoraproject.eclipse.packager.rpm.api;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +37,8 @@ import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitia
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
-import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand.BuildType;
-import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildResult;
-import org.fedoraproject.eclipse.packager.rpm.api.RpmEvalCommand;
+import org.fedoraproject.eclipse.packager.rpm.api.errors.RpmBuildCommandException;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.junit.After;
@@ -105,9 +102,14 @@ public class RpmBuildCommandTest {
 	 * Test method for
 	 * {@link org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand#checkConfiguration()}
 	 * . Should have thrown an exception. Command is not properly configured.
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws RpmBuildCommandException 
+	 * @throws CommandListenerException 
+	 * @throws CommandMisconfiguredException 
 	 */
 	@Test(expected = CommandMisconfiguredException.class)
-	public void testCheckConfiguration() throws Exception {
+	public void testCheckConfiguration() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
 		build.call(new NullProgressMonitor());
@@ -119,9 +121,12 @@ public class RpmBuildCommandTest {
 	 * @throws FedoraPackagerCommandNotFoundException 
 	 * @throws FedoraPackagerCommandInitializationException 
 	 * @throws CoreException 
+	 * @throws RpmBuildCommandException 
+	 * @throws CommandListenerException 
+	 * @throws CommandMisconfiguredException 
 	 */
 	@Test
-	public void canBuildForLocalArchitecture() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException {
+	public void canBuildForLocalArchitecture() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
 		RpmBuildResult result;
@@ -131,12 +136,7 @@ public class RpmBuildCommandTest {
 		distDefines.add("--define"); //$NON-NLS-1$
 		distDefines.add("fedora 17"); //$NON-NLS-1$
 		build.buildType(BuildType.BINARY).branchConfig(bci);
-		try {
-			result = build.call(new NullProgressMonitor());
-		} catch (Exception e) {
-			fail("Shouldn't have thrown any exception."); //$NON-NLS-1$
-			return;
-		}
+		result = build.call(new NullProgressMonitor());
 		assertTrue(result.wasSuccessful());
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());
@@ -152,21 +152,20 @@ public class RpmBuildCommandTest {
 	 * @throws FedoraPackagerCommandNotFoundException 
 	 * @throws FedoraPackagerCommandInitializationException 
 	 * @throws CoreException 
+	 * @throws IllegalArgumentException 
+	 * @throws RpmBuildCommandException 
+	 * @throws CommandListenerException 
+	 * @throws CommandMisconfiguredException 
 	 */
 	@Test
-	public void canPrepareSources() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException  {
+	public void canPrepareSources() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException, IllegalArgumentException  {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
 		List<String> nodeps = new ArrayList<String>(1);
 		nodeps.add(RpmBuildCommand.NO_DEPS);
 		RpmBuildResult result;
-		try {
 			result = build.buildType(BuildType.PREP).flags(nodeps)
 					.branchConfig(bci).call(new NullProgressMonitor());
-		} catch (Exception e) {
-			fail("Shouldn't have thrown any exception."); //$NON-NLS-1$
-			return;
-		}
 		assertTrue(result.wasSuccessful());
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());
@@ -184,18 +183,16 @@ public class RpmBuildCommandTest {
 	 * @throws FedoraPackagerCommandNotFoundException 
 	 * @throws FedoraPackagerCommandInitializationException 
 	 * @throws CoreException 
+	 * @throws RpmBuildCommandException 
+	 * @throws CommandListenerException 
+	 * @throws CommandMisconfiguredException 
 	 */
 	@Test
-	public void canRpmCompile() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException  {
+	public void canRpmCompile() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException  {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
 		RpmBuildResult result;
-		try {
 			result = build.buildType(BuildType.COMPILE).branchConfig(bci).call(new NullProgressMonitor());
-		} catch (Exception e) {
-			fail("Shouldn't have thrown any exception."); //$NON-NLS-1$
-			return;
-		}
 		assertTrue(result.wasSuccessful());
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());
@@ -219,18 +216,16 @@ public class RpmBuildCommandTest {
 	 * @throws FedoraPackagerCommandNotFoundException 
 	 * @throws FedoraPackagerCommandInitializationException 
 	 * @throws CoreException 
+	 * @throws RpmBuildCommandException 
+	 * @throws CommandListenerException 
+	 * @throws CommandMisconfiguredException 
 	 */
 	@Test
-	public void canRpmInstall() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException {
+	public void canRpmInstall() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
 		RpmBuildResult result;
-		try {
 			result = build.buildType(BuildType.INSTALL).branchConfig(bci).call(new NullProgressMonitor());
-		} catch (Exception e) {
-			fail("Shouldn't have thrown any exception."); //$NON-NLS-1$
-			return;
-		}
 		assertTrue(result.wasSuccessful());
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());
@@ -254,21 +249,20 @@ public class RpmBuildCommandTest {
 	 * @throws FedoraPackagerCommandNotFoundException 
 	 * @throws FedoraPackagerCommandInitializationException 
 	 * @throws CoreException 
+	 * @throws IllegalArgumentException 
+	 * @throws RpmBuildCommandException 
+	 * @throws CommandListenerException 
+	 * @throws CommandMisconfiguredException 
 	 */
 	@Test
-	public void canCreateSRPM() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException {
+	public void canCreateSRPM() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException, IllegalArgumentException {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
 		List<String> nodeps = new ArrayList<String>(1);
 		nodeps.add(RpmBuildCommand.NO_DEPS);
 		RpmBuildResult result;
-		try {
 			result = build.buildType(BuildType.SOURCE).flags(nodeps)
 					.branchConfig(bci).call(new NullProgressMonitor());
-		} catch (Exception e) {
-			fail("Shouldn't have thrown any exception."); //$NON-NLS-1$
-			return;
-		}
 		assertTrue(result.wasSuccessful());
 		// should contain at least one SRPM
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,

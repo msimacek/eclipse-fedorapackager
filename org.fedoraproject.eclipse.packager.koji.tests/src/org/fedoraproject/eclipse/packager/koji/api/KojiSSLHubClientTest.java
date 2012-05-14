@@ -12,6 +12,7 @@ package org.fedoraproject.eclipse.packager.koji.api;
 
 import static org.junit.Assert.*;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,8 @@ import java.util.List;
 import org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient;
 import org.fedoraproject.eclipse.packager.koji.api.KojiBuildInfo;
 import org.fedoraproject.eclipse.packager.koji.api.KojiSSLHubClient;
+import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
+import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,24 +45,24 @@ public class KojiSSLHubClientTest {
 	private IKojiHubClient kojiClient;
 	
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws MalformedURLException  {
 		// a bare SSL Koji client
 		kojiClient = new KojiSSLHubClient("https://koji.fedoraproject.org/kojihub");
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() throws KojiHubClientException  {
 		kojiClient.logout();
 	}
 	
 	/**
 	 * Log on to Koji using SSL authentication.
 	 * This test requires proper certificates to be set up.
+	 * @throws KojiHubClientLoginException 
 	 * 
-	 * @throws Exception
 	 */
 	@Test
-	public void canLoginUsingSSLCertificate() throws Exception {
+	public void canLoginUsingSSLCertificate() throws KojiHubClientLoginException  {
 		// Logging in to koji should return session data
 		HashMap<?, ?> sessionData = kojiClient.login();
 		assertNotNull(sessionData);
@@ -70,11 +73,12 @@ public class KojiSSLHubClientTest {
 	
 	/**
 	 * Get build info test.
+	 * @throws KojiHubClientLoginException 
+	 * @throws KojiHubClientException 
 	 * 
-	 * @throws Exception
 	 */
 	@Test
-	public void canGetBuildInfo() throws Exception {
+	public void canGetBuildInfo() throws KojiHubClientLoginException, KojiHubClientException  {
 		// First log in
 		HashMap<?, ?> sessionData = kojiClient.login();
 		assertNotNull(sessionData);
@@ -89,11 +93,12 @@ public class KojiSSLHubClientTest {
 	
 	/**
 	 * Push scratch build test.
+	 * @throws KojiHubClientLoginException 
+	 * @throws KojiHubClientException 
 	 * 
-	 * @throws Exception
 	 */
 	@Test
-	public void canPushScratchBuild() throws Exception {
+	public void canPushScratchBuild() throws KojiHubClientLoginException, KojiHubClientException  {
 		// Log in first
 		HashMap<?, ?> sessionData = kojiClient.login();
 		assertNotNull(sessionData);

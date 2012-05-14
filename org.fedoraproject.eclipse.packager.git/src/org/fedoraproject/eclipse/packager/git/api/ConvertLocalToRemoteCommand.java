@@ -10,16 +10,27 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.git.api;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.egit.core.RepositoryCache;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.MergeCommand;
+import org.eclipse.jgit.api.errors.CheckoutConflictException;
+import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
+import org.eclipse.jgit.api.errors.InvalidMergeHeadsException;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.eclipse.jgit.api.errors.NoHeadException;
+import org.eclipse.jgit.api.errors.NoMessageException;
+import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
@@ -153,15 +164,13 @@ public class ConvertLocalToRemoteCommand extends
 					PackagerPlugin.PROJECT_PROP, "true"); //$NON-NLS-1$
 			projectRoot.getProject().setPersistentProperty(
 					PackagerPlugin.PROJECT_LOCAL_PROP, null);
-		} catch (Exception e) {
-			if (e instanceof OperationCanceledException) {
-				throw ((OperationCanceledException) e);
-			} else if (e instanceof RemoteAlreadyExistsException) {
-				throw ((RemoteAlreadyExistsException) e);
-			} else {
-				throw new LocalProjectConversionFailedException
-					(e.getMessage(), e);
-			}
+				
+		} catch (CoreException e) {
+			throw new LocalProjectConversionFailedException
+			(e.getMessage(), e);
+		} catch (IOException e) {
+			throw new LocalProjectConversionFailedException
+			(e.getMessage(), e);
 		}
 
 		ConvertLocalResult result = new ConvertLocalResult(git, addRemote,
@@ -226,7 +235,16 @@ public class ConvertLocalToRemoteCommand extends
 			}
 			fetch.call();
 
-		} catch (Exception e) {
+		} catch (URISyntaxException e) {
+			throw new LocalProjectConversionFailedException(e.getCause()
+					.getMessage(), e);
+		} catch (JGitInternalException e) {
+			throw new LocalProjectConversionFailedException(e.getCause()
+					.getMessage(), e);
+		} catch (InvalidRemoteException e) {
+			throw new LocalProjectConversionFailedException(e.getCause()
+					.getMessage(), e);
+		} catch (IOException e) {
 			throw new LocalProjectConversionFailedException(e.getCause()
 					.getMessage(), e);
 		}
@@ -249,7 +267,25 @@ public class ConvertLocalToRemoteCommand extends
 				throw new OperationCanceledException();
 			}
 			merge.call();
-		} catch (Exception e) {
+		} catch (NoHeadException e) {
+			throw new LocalProjectConversionFailedException(e.getCause()
+					.getMessage(), e);
+		} catch (ConcurrentRefUpdateException e) {
+			throw new LocalProjectConversionFailedException(e.getCause()
+					.getMessage(), e);
+		} catch (CheckoutConflictException e) {
+			throw new LocalProjectConversionFailedException(e.getCause()
+					.getMessage(), e);
+		} catch (InvalidMergeHeadsException e) {
+			throw new LocalProjectConversionFailedException(e.getCause()
+					.getMessage(), e);
+		} catch (WrongRepositoryStateException e) {
+			throw new LocalProjectConversionFailedException(e.getCause()
+					.getMessage(), e);
+		} catch (NoMessageException e) {
+			throw new LocalProjectConversionFailedException(e.getCause()
+					.getMessage(), e);
+		} catch (IOException e) {
 			throw new LocalProjectConversionFailedException(e.getCause()
 					.getMessage(), e);
 		}

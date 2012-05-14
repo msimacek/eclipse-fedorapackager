@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.internal.ui;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -29,6 +30,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
@@ -150,13 +152,15 @@ public class LocalFedoraPackagerPageTwo extends WizardPage {
 		link.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-				try {
 					IWorkbenchBrowserSupport support = PlatformUI
 							.getWorkbench().getBrowserSupport();
-					support.getExternalBrowser().openURL(new URL(url));
-				} catch (Exception e) {
-
-				}
+					try {
+						support.getExternalBrowser().openURL(new URL(url));
+					} catch (PartInitException e) {
+						e.printStackTrace();
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+					}
 			}
 		});
 	}

@@ -38,8 +38,14 @@ import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.SourcesFileUpdater;
 import org.fedoraproject.eclipse.packager.api.UploadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.VCSIgnoreFileUpdater;
+import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.api.errors.FileAvailableInLookasideCacheException;
+import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
+import org.fedoraproject.eclipse.packager.api.errors.InvalidUploadFileException;
+import org.fedoraproject.eclipse.packager.api.errors.UploadFailedException;
 import org.fedoraproject.eclipse.packager.rpm.RpmText;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.SRPMImportCommandException;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
@@ -271,7 +277,7 @@ public class SRPMImportCommand {
 						// identical files in an update, but these files don't
 						// really need to be uploaded
 						skippedUploads.add(file);
-					}
+					} 
 
 				} else {
 					stageSet.add(file);
@@ -293,7 +299,23 @@ public class SRPMImportCommand {
 			FedoraPackagerUtils.getVcsHandler(fpr).stageChanges(
 					stageSet.toArray(new String[0]));
 			result.setAddedToGit(stageSet.toArray(new String[0]));
-		} catch (Exception e) {
+		} catch (CoreException e) {
+			throw new SRPMImportCommandException(e.getMessage(), e);
+		} catch (CommandListenerException e) {
+			throw new SRPMImportCommandException(e.getMessage(), e);
+		} catch (IOException e) {
+			throw new SRPMImportCommandException(e.getMessage(), e);
+		} catch (InvalidProjectRootException e) {
+			throw new SRPMImportCommandException(e.getMessage(), e);
+		} catch (FedoraPackagerCommandInitializationException e) {
+			throw new SRPMImportCommandException(e.getMessage(), e);
+		} catch (FedoraPackagerCommandNotFoundException e) {
+			throw new SRPMImportCommandException(e.getMessage(), e);
+		} catch (InvalidUploadFileException e) {
+			throw new SRPMImportCommandException(e.getMessage(), e);
+		} catch (CommandMisconfiguredException e) {
+			throw new SRPMImportCommandException(e.getMessage(), e);
+		} catch (UploadFailedException e) {
 			throw new SRPMImportCommandException(e.getMessage(), e);
 		}
 		result.setSuccess(true);

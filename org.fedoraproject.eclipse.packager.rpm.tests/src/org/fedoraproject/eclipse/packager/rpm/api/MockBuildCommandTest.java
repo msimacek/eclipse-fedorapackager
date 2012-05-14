@@ -15,22 +15,39 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jgit.api.errors.InvalidRefNameException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
+import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
+import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
+import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
+import org.fedoraproject.eclipse.packager.api.errors.DownloadFailedException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
+import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
+import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
 import org.fedoraproject.eclipse.packager.rpm.api.MockBuildCommand;
 import org.fedoraproject.eclipse.packager.rpm.api.MockBuildResult;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand.BuildType;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildResult;
+import org.fedoraproject.eclipse.packager.rpm.api.errors.MockBuildCommandException;
+import org.fedoraproject.eclipse.packager.rpm.api.errors.MockNotInstalledException;
+import org.fedoraproject.eclipse.packager.rpm.api.errors.RpmBuildCommandException;
+import org.fedoraproject.eclipse.packager.rpm.api.errors.UserNotInMockGroupException;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.junit.After;
@@ -53,7 +70,7 @@ public class MockBuildCommandTest {
 	private BranchConfigInstance bci;
 	
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws InterruptedException, JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException, InvalidProjectRootException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, SourcesUpToDateException, DownloadFailedException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException  {
 		this.testProject = new GitTestProject("eclipse-fedorapackager"); //$NON-NLS-1$
 		// switch to F15
 		testProject.checkoutBranch("f15"); //$NON-NLS-1$
@@ -72,17 +89,26 @@ public class MockBuildCommandTest {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() throws CoreException {
 		this.testProject.dispose();
 	}
 
 	/**
 	 * This test may take >= 15 mins to run. Be patient :)
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws FileNotFoundException 
+	 * @throws IllegalArgumentException 
+	 * @throws MockNotInstalledException 
+	 * @throws MockBuildCommandException 
+	 * @throws CommandListenerException 
+	 * @throws UserNotInMockGroupException 
+	 * @throws CommandMisconfiguredException 
+	 * @throws CoreException 
 	 * 
-	 * @throws Exception
 	 */
 	@Test
-	public void canCreateF15MockBuild() throws Exception {
+	public void canCreateF15MockBuild() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CommandMisconfiguredException, UserNotInMockGroupException, CommandListenerException, MockBuildCommandException, MockNotInstalledException, IllegalArgumentException, FileNotFoundException, CoreException {
 		MockBuildCommand mockBuild = (MockBuildCommand) packager
 				.getCommandInstance(MockBuildCommand.ID);
 		MockBuildResult result = mockBuild.pathToSRPM(srpmPath)
@@ -112,9 +138,13 @@ public class MockBuildCommandTest {
 	 * Helper to create an SRPM which we can use for a mock build.
 	 * 
 	 * @return the built result.
-	 * @throws Exception
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws RpmBuildCommandException 
+	 * @throws CommandListenerException 
+	 * @throws CommandMisconfiguredException 
 	 */
-	private RpmBuildResult createSRPM() throws Exception {
+	private RpmBuildResult createSRPM() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException  {
 		List<String> nodeps = new ArrayList<String>(1);
 		nodeps.add(RpmBuildCommand.NO_DEPS);
 		// get RPM build command in order to produce an SRPM

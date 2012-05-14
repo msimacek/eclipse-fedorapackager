@@ -12,11 +12,14 @@ package org.fedoraproject.eclipse.packager.koji.api;
 
 import static org.junit.Assert.*;
 
+import java.net.MalformedURLException;
 import java.util.HashMap;
 
 import org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient;
 import org.fedoraproject.eclipse.packager.koji.api.KojiBuildInfo;
 import org.fedoraproject.eclipse.packager.koji.api.KojiSSLHubClient;
+import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
+import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -58,11 +61,13 @@ public class KojiBuildInfoTest {
 	/**
 	 * Get build info from koji via XMLRPC. This test requires
 	 * a valid .fedora.cert in ~/
+	 * @throws MalformedURLException 
+	 * @throws KojiHubClientLoginException 
+	 * @throws KojiHubClientException 
 	 * 
-	 * @throws Exception
 	 */
 	@Test
-	public void canGetBuildInfoFromKoji() throws Exception {
+	public void canGetBuildInfoFromKoji() throws MalformedURLException, KojiHubClientLoginException, KojiHubClientException {
 		IKojiHubClient kojiClient = new KojiSSLHubClient("https://koji.fedoraproject.org/kojihub");
 		// log in first
 		try {
@@ -81,20 +86,21 @@ public class KojiBuildInfoTest {
 			assertEquals(0, info.getEpoch());
 			assertEquals(EFP_NVR, info.getNvr());
 			assertEquals(10555, info.getPackageId());
-		} catch (Exception e) {
+		} finally {
 			kojiClient.logout();
-			throw e; // rethrow
 		}
 	}
 	
 	/**
 	 * Get build non-existent build from koji via XMLRPC. This test requires
 	 * a valid .fedora.cert in ~/
+	 * @throws MalformedURLException 
+	 * @throws KojiHubClientLoginException 
+	 * @throws KojiHubClientException 
 	 * 
-	 * @throws Exception
 	 */
 	@Test
-	public void canGetNonExistingBuildInfoFromKoji() throws Exception {
+	public void canGetNonExistingBuildInfoFromKoji() throws MalformedURLException, KojiHubClientLoginException, KojiHubClientException {
 		IKojiHubClient kojiClient = new KojiSSLHubClient("https://koji.fedoraproject.org/kojihub");
 		// log in first
 		try {
@@ -102,9 +108,8 @@ public class KojiBuildInfoTest {
 			assertNotNull(sessionData);
 			KojiBuildInfo info = kojiClient.getBuild(NON_EXISTING_NVR);
 			assertNull(info);
-		} catch (Exception e) {
+		} finally {
 			kojiClient.logout();
-			throw e; // rethrow
 		}
 	}
 	
@@ -112,7 +117,6 @@ public class KojiBuildInfoTest {
 	/**
 	 * Sanity Check. Offline KojiBuildInfo test using rawBuildInfoMap fixture.
 	 * 
-	 * @throws Exception
 	 */
 	@Test
 	public void canParseBuildInfo() {

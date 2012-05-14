@@ -17,14 +17,21 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.jgit.api.errors.InvalidRefNameException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
+import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
+import org.fedoraproject.eclipse.packager.api.errors.DownloadFailedException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
+import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
+import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
 import org.fedoraproject.eclipse.packager.rpm.api.MockBuildResult;
 import org.fedoraproject.eclipse.packager.rpm.api.SCMMockBuildCommand;
 import org.fedoraproject.eclipse.packager.rpm.api.SCMMockBuildCommand.RepoType;
@@ -52,7 +59,7 @@ public class SCMMockBuildCommandTest {
 	private BranchConfigInstance bci;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws InterruptedException, JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException, InvalidProjectRootException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, SourcesUpToDateException, DownloadFailedException, CommandMisconfiguredException, CommandListenerException  {
 		this.testProject = new GitTestProject("eclipse-fedorapackager"); //$NON-NLS-1$
 		// switch to F15
 		testProject.checkoutBranch("f15"); //$NON-NLS-1$
@@ -67,7 +74,7 @@ public class SCMMockBuildCommandTest {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() throws CoreException  {
 		this.testProject.dispose();
 	}
 

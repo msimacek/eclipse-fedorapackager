@@ -12,12 +12,18 @@ package org.fedoraproject.eclipse.packager.rpm.api;
 
 import static org.junit.Assert.*;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
+import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
+import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.rpm.api.EvalResult;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmEvalCommand;
+import org.fedoraproject.eclipse.packager.rpm.api.errors.RpmEvalCommandException;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.junit.After;
@@ -38,11 +44,12 @@ public class RpmEvalCommandTest {
 	
 	/**
 	 * Clone a test project to be used for testing.
+	 * @throws InterruptedException 
+	 * @throws InvalidProjectRootException 
 	 * 
-	 * @throws java.lang.Exception
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws InterruptedException, InvalidProjectRootException {
 		this.testProject = new GitTestProject("eclipse-fedorapackager"); //$NON-NLS-1$
 		this.fpRoot = FedoraPackagerUtils.getProjectRoot((this.testProject
 				.getProject()));
@@ -50,10 +57,10 @@ public class RpmEvalCommandTest {
 	}
 
 	/**
-	 * @throws java.lang.Exception
+	 * @throws CoreException 
 	 */
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() throws CoreException {
 		this.testProject.dispose();
 	}
 
@@ -61,9 +68,14 @@ public class RpmEvalCommandTest {
 	 * Test method for 
 	 * {@link org.fedoraproject.eclipse.packager.rpm.api.RpmEvalCommand#checkConfiguration()}.
 	 * Should have thrown an exception. Command is not properly configured.
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws RpmEvalCommandException 
+	 * @throws CommandListenerException 
+	 * @throws CommandMisconfiguredException 
 	 */
 	@Test(expected=CommandMisconfiguredException.class)
-	public void testCheckConfiguration() throws Exception {
+	public void testCheckConfiguration() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CommandMisconfiguredException, CommandListenerException, RpmEvalCommandException {
 		RpmEvalCommand eval = (RpmEvalCommand) packager
 				.getCommandInstance(RpmEvalCommand.ID);
 		eval.call(new NullProgressMonitor());
@@ -71,18 +83,18 @@ public class RpmEvalCommandTest {
 
 	/**
 	 *  This illustrates proper usage of {@link RpmEvalCommand}.
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws RpmEvalCommandException 
+	 * @throws CommandListenerException 
+	 * @throws CommandMisconfiguredException 
 	 */
 	@Test
-	public void canEvalArchitecture() throws Exception {
+	public void canEvalArchitecture() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CommandMisconfiguredException, CommandListenerException, RpmEvalCommandException {
 		RpmEvalCommand eval = (RpmEvalCommand) packager
 				.getCommandInstance(RpmEvalCommand.ID);
 		EvalResult result;
-		try {
 			result = eval.variable(RpmEvalCommand.ARCH).call(new NullProgressMonitor());
-		} catch (Exception e) {
-			fail("Shouldn't have thrown any exception."); //$NON-NLS-1$
-			return;
-		}
 		assertTrue(result.wasSuccessful());
 	}
 

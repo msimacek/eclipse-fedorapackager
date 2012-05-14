@@ -13,18 +13,22 @@ package org.fedoraproject.eclipse.packager.rpm.api;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.InitCommand;
+import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.lib.Repository;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
@@ -32,6 +36,13 @@ import org.fedoraproject.eclipse.packager.api.ChecksumValidListener;
 import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.UploadSourceCommand;
+import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
+import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
+import org.fedoraproject.eclipse.packager.api.errors.DownloadFailedException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
+import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
+import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
 import org.fedoraproject.eclipse.packager.rpm.api.ISRPMImportCommandSLLPolicyCallback;
 import org.fedoraproject.eclipse.packager.rpm.api.SRPMImportCommand;
 import org.fedoraproject.eclipse.packager.rpm.api.SRPMImportResult;
@@ -53,7 +64,7 @@ public class SRPMImportCommandTest implements ISRPMImportCommandSLLPolicyCallbac
 	private String badSrpmPath;
 
 	@Before
-	public void setup() throws Exception {
+	public void setup() throws IOException, CoreException  {
 		String uploadURL = System.getProperty(UPLOAD_URL_PROP);
 		if (uploadURL == null) {
 			fail(UPLOAD_URL_PROP + " not set"); //$NON-NLS-1$
@@ -87,12 +98,12 @@ public class SRPMImportCommandTest implements ISRPMImportCommandSLLPolicyCallbac
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() throws CoreException  {
 		this.testProject.delete(true, null);
 	}
 
 	@Test
-	public void canImportSRPM() throws Exception {
+	public void canImportSRPM() throws SRPMImportCommandException, InvalidProjectRootException, NoWorkTreeException, IOException, CoreException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, URISyntaxException, SourcesUpToDateException, DownloadFailedException, CommandMisconfiguredException, CommandListenerException  {
 		SRPMImportCommand srpmImport = new SRPMImportCommand(srpmPath,
 				testProject, testProject, uploadURLForTesting, this);
 		SRPMImportResult result = srpmImport.call(new NullProgressMonitor());

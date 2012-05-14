@@ -67,7 +67,7 @@ public class BodhiClientTest {
 	}
 	
 	@Test
-	public void testLogin() throws Exception {
+	public void testLogin() throws ClientProtocolException, IOException, BodhiClientLoginException  {
 		final HttpClient mockClient = createMock(HttpClient.class);
 		HttpResponse mockResponse = createMock(HttpResponse.class);
 		StatusLine mockStatus = createMock(StatusLine.class);

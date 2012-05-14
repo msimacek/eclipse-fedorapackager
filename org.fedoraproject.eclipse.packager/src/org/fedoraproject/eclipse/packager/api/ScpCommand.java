@@ -38,7 +38,9 @@ import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.UserInfo;
 import org.eclipse.jsch.internal.core.IConstants;
 import org.eclipse.jsch.internal.core.JSchCorePlugin;
@@ -153,12 +155,8 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 			session.disconnect();
 
-		} catch (Exception e) {
-			if (e instanceof OperationCanceledException) {
-				throw ((OperationCanceledException) e);
-			} else {
-				throw new ScpFailedException(e.getMessage(), e);
-			}
+		} catch (JSchException e) {
+			throw new ScpFailedException(e.getMessage(), e);
 		}
 
 		result = new ScpResult(specFile, srpmFile);
@@ -241,7 +239,9 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 			channel.disconnect();
 
-		} catch (Exception e) {
+		} catch (JSchException e) {
+			throw new ScpFailedException(e.getMessage(), e);
+		} catch (SftpException e) {
 			throw new ScpFailedException(e.getMessage(), e);
 		}
 
@@ -323,7 +323,9 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 			channel.disconnect();
 
-		} catch (Exception e) {
+		} catch (JSchException e) {
+			throw new ScpFailedException(e.getMessage(), e);
+		} catch (IOException e) {
 			throw new ScpFailedException(e.getMessage(), e);
 		}
 	}

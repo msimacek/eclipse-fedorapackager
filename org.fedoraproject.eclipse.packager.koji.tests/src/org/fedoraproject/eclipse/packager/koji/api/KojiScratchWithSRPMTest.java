@@ -24,6 +24,7 @@ import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,9 +47,13 @@ import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitia
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
+import org.fedoraproject.eclipse.packager.api.errors.TagSourcesException;
+import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
 import org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient;
 import org.fedoraproject.eclipse.packager.koji.api.KojiBuildCommand;
 import org.fedoraproject.eclipse.packager.koji.api.KojiUploadSRPMCommand;
+import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
+import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
 import org.fedoraproject.eclipse.packager.rpm.RpmText;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildResult;
@@ -104,7 +109,7 @@ public class KojiScratchWithSRPMTest {
 	}
 
 	@After
-	public void tearDown() throws Exception {
+	public void tearDown() throws CoreException {
 		this.testProject.dispose();
 	}
 
@@ -115,11 +120,19 @@ public class KojiScratchWithSRPMTest {
 	 * Also, it is required to set Java System property
 	 * "org.fedoraproject.eclipse.packager.tests.koji.testInstanceURL" to point
 	 * to the koji test instance.
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws KojiHubClientLoginException 
+	 * @throws KojiHubClientException 
+	 * @throws CommandListenerException 
+	 * @throws CommandMisconfiguredException 
+	 * @throws IOException 
+	 * @throws TagSourcesException 
+	 * @throws UnpushedChangesException 
 	 * 
-	 * @throws Exception
 	 */
 	@Test
-	public void canUploadSRPMAndRequestBuild() throws Exception {
+	public void canUploadSRPMAndRequestBuild() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, KojiHubClientLoginException, KojiHubClientException, CommandMisconfiguredException, CommandListenerException, IOException, UnpushedChangesException, TagSourcesException  {
 		KojiUploadSRPMCommand uploadSRPMCommand = (KojiUploadSRPMCommand) packager
 				.getCommandInstance(KojiUploadSRPMCommand.ID);
 		final String uploadPath = "cli-build/"

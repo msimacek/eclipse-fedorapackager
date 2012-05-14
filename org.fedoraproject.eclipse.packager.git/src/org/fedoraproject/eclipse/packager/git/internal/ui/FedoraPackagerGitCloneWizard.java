@@ -13,11 +13,13 @@ package org.fedoraproject.eclipse.packager.git.internal.ui;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URISyntaxException;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -201,7 +203,15 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements IImportWizar
 			MessageDialog.openInformation(getShell(), FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail,
 					FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneCancel);
 			return false;
-		} catch (Exception e) {
+		} catch (CoreException e) {
+			org.fedoraproject.eclipse.packager.git.Activator.handleError(
+					FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail, e, true);
+			return false;
+		} catch (InvocationTargetException e) {
+			org.fedoraproject.eclipse.packager.git.Activator.handleError(
+					FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail, e, true);
+			return false;
+		} catch (URISyntaxException e) {
 			org.fedoraproject.eclipse.packager.git.Activator.handleError(
 					FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail, e, true);
 			return false;
