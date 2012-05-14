@@ -33,7 +33,6 @@ import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.SourcesFile;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.git.FpGitProjectBits;
-import org.fedoraproject.eclipse.packager.tests.units.UploadFileValidityTest;
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
@@ -140,11 +139,4 @@ public class FedoraPackagerUtilsTest {
 		assertTrue(projectBits instanceof FpGitProjectBits);
 	}
 
-	/**
-	 * @see UploadFileValidityTest
-	 */
-	@Test
-	public void testIsValidUploadFile() {
-		// pass
-	}
 }
