@@ -52,7 +52,7 @@ public class DownloadSourceCommandTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		this.testProject = new GitTestProject("eclipse-fedorapackager");
+		this.testProject = new GitTestProject("eclipse-moreunit");
 		this.fpRoot = FedoraPackagerUtils.getProjectRoot((this.testProject
 				.getProject()));
 		this.packager = new FedoraPackager(fpRoot);

@@ -71,7 +71,7 @@ public class SourcesFileUpdaterTest {
 
 	@After
 	public void tearDown() throws CoreException {
-		this.testProject.delete(true, null);
+		this.testProject.delete(true, true, null);
 	}
 
 	@Test

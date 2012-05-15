@@ -98,7 +98,7 @@ public class UploadSourceCommandTest {
 	@Before
 	public void setUp() throws Exception {
 		this.uploadURLForTesting = "https://pkgs.fedoraproject.org/repo/pkgs/upload.cgi";
-		this.testProject = new GitTestProject("eclipse-fedorapackager");
+		this.testProject = new GitTestProject("apache-commons-codec");
 		IProjectRoot fpRoot = new FedoraProjectRoot();
 		fpRoot.initialize(this.testProject.getProject(), ProjectType.GIT);
 		this.packager = new FedoraPackager(fpRoot);

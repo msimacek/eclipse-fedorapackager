@@ -82,7 +82,7 @@ public class VCSIgnoreFileUpdaterTest {
 			}
 			file.delete();
 		}
-		this.tempProject.delete(true, null);
+		this.tempProject.delete(true, true, null);
 	}
 	
 	@Test

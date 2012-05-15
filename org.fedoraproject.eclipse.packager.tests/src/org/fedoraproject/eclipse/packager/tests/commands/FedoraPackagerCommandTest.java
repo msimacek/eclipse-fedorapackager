@@ -49,7 +49,7 @@ public class FedoraPackagerCommandTest {
 	 */
 	@BeforeClass
 	public static void setUp() throws Exception {
-		testProject = new GitTestProject("eclipse-fedorapackager");
+		testProject = new GitTestProject("apache-commons-io");
 		fpRoot = FedoraPackagerUtils.getProjectRoot(testProject.getProject());
 	}
 

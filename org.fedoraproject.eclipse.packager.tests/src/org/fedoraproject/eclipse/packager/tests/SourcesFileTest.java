@@ -73,7 +73,7 @@ public class SourcesFileTest {
 			}
 			file.delete();
 		}
-		tempProject.delete(true, null);
+		tempProject.delete(true, true, null);
 	}
 
 	@Test

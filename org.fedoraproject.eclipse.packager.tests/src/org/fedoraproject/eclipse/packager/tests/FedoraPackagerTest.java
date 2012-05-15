@@ -59,7 +59,7 @@ public class FedoraPackagerTest {
 
 	@After
 	public void tearDown() throws CoreException {
-		this.packagerProject.delete(true, null);
+		this.packagerProject.delete(true, true, null);
 	}
 
 	@Test

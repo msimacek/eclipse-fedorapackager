@@ -74,7 +74,7 @@ public class FedoraProjectRootTest {
 
 	@After
 	public void tearDown() throws Exception {
-		projectResource.delete(true, null);
+		projectResource.delete(true, true, null);
 		fpRoot = null;
 		if (gitTestProject != null) {
 			gitTestProject.dispose();
@@ -93,7 +93,7 @@ public class FedoraProjectRootTest {
 
 		// Git case
 		fpRoot = null;
-		gitTestProject = new GitTestProject("eclipse-fedorapackager");
+		gitTestProject = new GitTestProject("apache-commons-lang");
 		fpRoot = FedoraPackagerUtils
 				.getProjectRoot(gitTestProject.getProject());
 		assertNotNull(fpRoot);
@@ -108,7 +108,7 @@ public class FedoraProjectRootTest {
 		assertSame(projectResource, fpRoot.getContainer());
 
 		// Git case
-		gitTestProject = new GitTestProject("eclipse-fedorapackager");
+		gitTestProject = new GitTestProject("apache-commons-math");
 		fpRoot = FedoraPackagerUtils
 				.getProjectRoot(gitTestProject.getProject());
 		assertNotNull(fpRoot);
@@ -122,7 +122,7 @@ public class FedoraProjectRootTest {
 			InvalidProjectRootException {
 		// Git case
 		fpRoot = null;
-		gitTestProject = new GitTestProject("eclipse-fedorapackager");
+		gitTestProject = new GitTestProject("plexus-utils");
 		fpRoot = FedoraPackagerUtils
 				.getProjectRoot(gitTestProject.getProject());
 		assertNotNull(fpRoot);
@@ -155,7 +155,7 @@ public class FedoraProjectRootTest {
 			InvalidProjectRootException {
 		// Git case
 		fpRoot = null;
-		gitTestProject = new GitTestProject("eclipse-fedorapackager");
+		gitTestProject = new GitTestProject("maven-site-plugin");
 		fpRoot = FedoraPackagerUtils
 				.getProjectRoot(gitTestProject.getProject());
 		assertNotNull(fpRoot);
@@ -172,7 +172,7 @@ public class FedoraProjectRootTest {
 
 		// Git case
 		fpRoot = null;
-		gitTestProject = new GitTestProject("eclipse-fedorapackager");
+		gitTestProject = new GitTestProject("maven-compiler-plugin");
 		fpRoot = FedoraPackagerUtils
 				.getProjectRoot(gitTestProject.getProject());
 		assertNotNull(fpRoot);

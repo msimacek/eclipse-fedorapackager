@@ -66,7 +66,7 @@ public class FedoraPackagerUtilsTest {
 
 	@After
 	public void tearDown() throws CoreException {
-		this.packagerProject.delete(true, null);
+		this.packagerProject.delete(true, true, null);
 		if (gitProject != null) {
 			gitProject.dispose();
 		}
@@ -124,7 +124,7 @@ public class FedoraPackagerUtilsTest {
 
 	@Test
 	public void testGetProjectType() throws InterruptedException, InvalidProjectRootException {
-		gitProject = new GitTestProject("eclipse-fedorapackager");
+		gitProject = new GitTestProject("jsch");
 		IProjectRoot fproot = FedoraPackagerUtils.getProjectRoot(gitProject.getProject());
 		assertNotNull(fproot);
 		assertEquals(ProjectType.GIT, fproot.getProjectType());
@@ -132,7 +132,7 @@ public class FedoraPackagerUtilsTest {
 
 	@Test
 	public void testGetVcsHandler() throws InterruptedException, InvalidProjectRootException  {
-		gitProject = new GitTestProject("eclipse-fedorapackager");
+		gitProject = new GitTestProject("jzlib");
 		IProjectRoot fproot = FedoraPackagerUtils.getProjectRoot(gitProject.getProject());
 		assertNotNull(fproot);
 		IFpProjectBits projectBits = FedoraPackagerUtils.getVcsHandler(fproot);
