@@ -108,6 +108,6 @@ public class WizardSRPMProjectTest {
 
 	@After
 	public void tearDown() throws CoreException {
-		baseProject.delete(true, false, null);
+		baseProject.delete(true, true, null);
 	}
 }
