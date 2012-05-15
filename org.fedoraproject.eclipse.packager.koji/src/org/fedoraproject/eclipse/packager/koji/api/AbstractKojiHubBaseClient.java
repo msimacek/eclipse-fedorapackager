@@ -151,6 +151,22 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 		return taskIds;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public KojiRepoInfo getRepo(String tag) throws KojiHubClientException{
+		ArrayList<Object> params = new ArrayList<Object>();
+		params.add(tag);
+
+		HashMap<String, Object> result;
+		try {
+			result = (HashMap<String, Object>) xmlRpcClient.execute("getRepo", params); //$NON-NLS-1$
+		} catch (XmlRpcException e) {
+			throw new KojiHubClientException (e);
+		}
+
+		return new KojiRepoInfo(result);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

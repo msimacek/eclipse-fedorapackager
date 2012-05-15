@@ -102,4 +102,12 @@ public interface IKojiHubClient {
 	 * @throws KojiHubClientException
 	 */
 	public HashMap<?, ?>[] listTargets() throws KojiHubClientException;
+
+	/**
+	 * Get repository information from the Koji server.
+	 * @param tag The tag of the repository to inpect.
+	 * @return {@link KojiRepoInfo} repository information.
+	 * @throws KojiHubClientException
+	 */
+	public KojiRepoInfo getRepo(String tag) throws KojiHubClientException;
 }
