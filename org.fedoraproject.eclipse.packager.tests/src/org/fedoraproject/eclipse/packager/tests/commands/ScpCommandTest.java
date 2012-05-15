@@ -74,8 +74,7 @@ public class ScpCommandTest {
 		IFile specFile = scpTestProject.getProject().getFile(new Path(SPEC));
 		assertTrue(specFile.exists());
 
-		ScpCommand scpCmd;
-		scpCmd = (ScpCommand) packager
+		ScpCommand scpCmd = (ScpCommand) packager
 				.getCommandInstance(ScpCommand.ID);
 
 		ScpResult result = null;

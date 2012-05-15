@@ -12,7 +12,6 @@ package org.fedoraproject.eclipse.packager.tests.utils.git;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.fedoraproject.eclipse.packager.FedoraProjectRoot;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
@@ -42,13 +41,6 @@ public class GitTestCase  {
 		return fedoraprojectRoot;
 	}
 
-	/**
-	 * @param fedoraprojectRoot the fedoraprojectRoot to set
-	 */
-	public void setFedoraprojectRoot(FedoraProjectRoot fedoraprojectRoot) {
-		this.fedoraprojectRoot = fedoraprojectRoot;
-	}
-
 	@After
 	public void tearDown() throws CoreException  {
 		project.dispose();
@@ -62,23 +54,10 @@ public class GitTestCase  {
 	}
 
 	/**
-	 * @param project the project to set
-	 */
-	public void setProject(GitTestProject project) {
-		this.project = project;
-	}
-
-	/**
 	 * @return the iProject
 	 */
 	public IProject getiProject() {
 		return iProject;
 	}
 
-	/**
-	 * @param iProject the iProject to set
-	 */
-	public void setiProject(IProject iProject) {
-		this.iProject = iProject;
-	}
 }
