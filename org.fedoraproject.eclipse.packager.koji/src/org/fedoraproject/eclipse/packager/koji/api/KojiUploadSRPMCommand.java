@@ -101,9 +101,7 @@ public class KojiUploadSRPMCommand extends FedoraPackagerCommand<BuildResult> {
 				throw new CommandMisconfiguredException(KojiText.KojiUploadSRPMCommand_NoMD5);
 			}
 			BuildResult result = new BuildResult();
-			if (success){
-				result.setSuccessful(true);
-			}
+			result.setSuccessful(success);
 			return result;
 		}
 		
