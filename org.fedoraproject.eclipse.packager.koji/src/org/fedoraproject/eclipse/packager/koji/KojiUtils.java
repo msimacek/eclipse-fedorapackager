@@ -138,7 +138,7 @@ public class KojiUtils {
 							public void run() {
 								// Only show response message dialog on success
 								if (jobStatus.isOK() && buildResult != null
-										&& buildResult.wasSuccessful()) {
+										&& buildResult.isSuccessful()) {
 									FedoraPackagerLogger logger = FedoraPackagerLogger
 											.getInstance();
 									// unconditionally log so that users get a

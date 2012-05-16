@@ -172,7 +172,7 @@ public class PushUpdateCommandTest {
 				.comment("Test update. Please disregard!").release("F15").requestType(RequestType.TESTING)
 				.updateType(UpdateType.ENHANCEMENT).builds(builds).call(new NullProgressMonitor());
 		assertNotNull(result.getUpdateResponse());
-		assertTrue(result.wasSuccessful());
+		assertTrue(result.isSuccessful());
 		assertEquals("ed", result.getUpdateResponse().getUpdates()[0].getBuilds()[0].getPkg().getName());
 		assertEquals(PACKAGE_UPDATE_NVR, result.getUpdateName());
 	}

@@ -30,7 +30,7 @@ public class SRPMImportResult extends Result {
 	}
 
 	@Override
-	public boolean wasSuccessful() {
+	public boolean isSuccessful() {
 		return success;
 	}
 

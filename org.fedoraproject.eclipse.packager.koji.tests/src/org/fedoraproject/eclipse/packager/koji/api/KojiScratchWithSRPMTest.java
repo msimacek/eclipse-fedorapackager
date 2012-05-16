@@ -154,7 +154,7 @@ public class KojiScratchWithSRPMTest {
 		assertTrue(uploadSRPMCommand.setKojiClient(kojiClient)
 				.setRemotePath(uploadPath)
 				.setSRPM(srpmBuildResult.getAbsoluteSRPMFilePath())
-				.call(new NullProgressMonitor()).wasSuccessful());
+				.call(new NullProgressMonitor()).isSuccessful());
 		KojiBuildCommand kojiBuildCmd = (KojiBuildCommand) packager
 				.getCommandInstance(KojiBuildCommand.ID);
 		kojiBuildCmd.setKojiClient(kojiClient);
@@ -168,7 +168,7 @@ public class KojiScratchWithSRPMTest {
 		String nvr = RPMUtils.getNVR(fpRoot, bci);
 		kojiBuildCmd.buildTarget(bci.getBuildTarget())
 				.nvr(new String[] { nvr }).isScratchBuild(true);
-		assertTrue(kojiBuildCmd.call(new NullProgressMonitor()).wasSuccessful());
+		assertTrue(kojiBuildCmd.call(new NullProgressMonitor()).isSuccessful());
 		verify(kojiClient);
 	}
 }

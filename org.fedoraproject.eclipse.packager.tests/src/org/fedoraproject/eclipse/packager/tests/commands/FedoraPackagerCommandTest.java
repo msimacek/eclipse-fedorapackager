@@ -136,6 +136,6 @@ public class FedoraPackagerCommandTest {
 		fpCmd.initialize(fpRoot);
 		fpCmd.setConfiguration(true);
 		DummyResult result = fpCmd.call(new NullProgressMonitor());
-		assertTrue(result.wasSuccessful());
+		assertTrue(result.isSuccessful());
 	}
 }

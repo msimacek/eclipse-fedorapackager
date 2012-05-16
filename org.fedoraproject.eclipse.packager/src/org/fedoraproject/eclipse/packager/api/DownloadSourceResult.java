@@ -26,10 +26,10 @@ public class DownloadSourceResult implements ICommandResult {
 	}
 
 	/**
-	 * See {@link ICommandResult#wasSuccessful()}.
+	 * See {@link ICommandResult#isSuccessful()}.
 	 */
 	@Override
-	public boolean wasSuccessful() {
+	public boolean isSuccessful() {
 		return successful;
 	}
 }

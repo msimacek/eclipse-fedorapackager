@@ -300,7 +300,7 @@ public class BodhiNewHandler extends FedoraPackagerAbstractHandler {
 			@Override
 			public void done(IJobChangeEvent event) {
 				IStatus jobStatus = event.getResult();
-				if (jobStatus.isOK() && updateResult.wasSuccessful()) {
+				if (jobStatus.isOK() && updateResult.isSuccessful()) {
 					final String updateName = updateResult.getUpdateName();
 					logger.logInfo(NLS.bind(
 							BodhiText.BodhiNewHandler_updateCreatedLogMsg,

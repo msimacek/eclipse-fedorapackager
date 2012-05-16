@@ -95,7 +95,7 @@ public class RpmEvalCommandTest {
 				.getCommandInstance(RpmEvalCommand.ID);
 		EvalResult result;
 			result = eval.variable(RpmEvalCommand.ARCH).call(new NullProgressMonitor());
-		assertTrue(result.wasSuccessful());
+		assertTrue(result.isSuccessful());
 	}
 
 }

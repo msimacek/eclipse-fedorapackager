@@ -239,7 +239,7 @@ public class UploadHandler extends FedoraPackagerAbstractHandler implements
 					// result may be null if upload file was already in
 					// lookaside
 					// cache.
-					if (result != null && !result.wasSuccessful()) {
+					if (result != null && !result.isSuccessful()) {
 						// probably a 404 or some such
 						String message = result.getErrorString();
 						logger.logDebug(message);

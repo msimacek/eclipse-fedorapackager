@@ -137,7 +137,7 @@ public class RpmBuildCommandTest {
 		distDefines.add("fedora 17"); //$NON-NLS-1$
 		build.buildType(BuildType.BINARY).branchConfig(bci);
 		result = build.call(new NullProgressMonitor());
-		assertTrue(result.wasSuccessful());
+		assertTrue(result.isSuccessful());
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());
 		IResource noArchFolder = fpRoot.getContainer().findMember(
@@ -166,7 +166,7 @@ public class RpmBuildCommandTest {
 		RpmBuildResult result;
 			result = build.buildType(BuildType.PREP).flags(nodeps)
 					.branchConfig(bci).call(new NullProgressMonitor());
-		assertTrue(result.wasSuccessful());
+		assertTrue(result.isSuccessful());
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());
 		IResource expandedSourcesFolder = fpRoot.getContainer().findMember(
@@ -193,7 +193,7 @@ public class RpmBuildCommandTest {
 				.getCommandInstance(RpmBuildCommand.ID);
 		RpmBuildResult result;
 			result = build.buildType(BuildType.COMPILE).branchConfig(bci).call(new NullProgressMonitor());
-		assertTrue(result.wasSuccessful());
+		assertTrue(result.isSuccessful());
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());
 		IResource expandedSourcesFolder = fpRoot.getContainer().findMember(
@@ -226,7 +226,7 @@ public class RpmBuildCommandTest {
 				.getCommandInstance(RpmBuildCommand.ID);
 		RpmBuildResult result;
 			result = build.buildType(BuildType.INSTALL).branchConfig(bci).call(new NullProgressMonitor());
-		assertTrue(result.wasSuccessful());
+		assertTrue(result.isSuccessful());
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());
 		IResource expandedSourcesFolder = fpRoot.getContainer().findMember(
@@ -263,7 +263,7 @@ public class RpmBuildCommandTest {
 		RpmBuildResult result;
 			result = build.buildType(BuildType.SOURCE).flags(nodeps)
 					.branchConfig(bci).call(new NullProgressMonitor());
-		assertTrue(result.wasSuccessful());
+		assertTrue(result.isSuccessful());
 		// should contain at least one SRPM
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());

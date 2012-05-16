@@ -21,5 +21,5 @@ public interface ICommandResult {
 	 * 
 	 * @return The overall success status. 
 	 */
-	public boolean wasSuccessful();
+	public boolean isSuccessful();
 }

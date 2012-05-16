@@ -42,7 +42,7 @@ public class PushUpdateResult implements ICommandResult {
 	 * Will be successful if any one of the desired builds was successfully pushed.
 	 */
 	@Override
-	public boolean wasSuccessful() {
+	public boolean isSuccessful() {
 		return response.getFlashMsg() != null
 				&& response.getFlashMsg().contains("successful"); //$NON-NLS-1$
 	}

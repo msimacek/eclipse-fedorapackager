@@ -25,7 +25,7 @@ public class DummyResult implements ICommandResult {
 	}
 	
 	@Override
-	public boolean wasSuccessful() {
+	public boolean isSuccessful() {
 		return overallStatus;
 	}
 

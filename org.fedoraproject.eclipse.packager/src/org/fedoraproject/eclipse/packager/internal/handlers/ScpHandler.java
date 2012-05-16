@@ -140,7 +140,7 @@ public class ScpHandler extends FedoraPackagerAbstractHandler {
 					try {
 						scpCmd.fasAccount(fasAccount);
 						result = scpCmd.call(monitor);
-						if (result.wasSuccessful()) {
+						if (result.isSuccessful()) {
 							String message = null;
 							message = NLS
 									.bind(FedoraPackagerText.ScpHandler_scpFilesNotifier,

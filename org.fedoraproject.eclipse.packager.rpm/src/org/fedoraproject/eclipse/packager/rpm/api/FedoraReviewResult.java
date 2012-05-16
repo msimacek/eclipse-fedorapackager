@@ -21,7 +21,7 @@ public class FedoraReviewResult extends Result {
 	}
 
 	@Override
-	public boolean wasSuccessful() {
+	public boolean isSuccessful() {
 		return successful;
 	}
 

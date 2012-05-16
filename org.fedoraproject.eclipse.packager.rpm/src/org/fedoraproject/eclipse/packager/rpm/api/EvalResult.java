@@ -43,7 +43,7 @@ public class EvalResult extends Result {
 	 * @see org.fedoraproject.eclipse.packager.api.ICommandResult#wasSuccessful()
 	 */
 	@Override
-	public boolean wasSuccessful() {
+	public boolean isSuccessful() {
 		return evalResult != null;
 	}
 

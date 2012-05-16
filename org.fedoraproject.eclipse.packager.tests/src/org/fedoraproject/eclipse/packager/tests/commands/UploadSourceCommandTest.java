@@ -230,7 +230,7 @@ public class UploadSourceCommandTest {
 					.setFileToUpload(newUploadFile)
 					.call(new NullProgressMonitor());
 		assertNotNull(result);
-		assertTrue(result.wasSuccessful());
+		assertTrue(result.isSuccessful());
 		verify(mockClient);
 	}
 
@@ -305,7 +305,7 @@ public class UploadSourceCommandTest {
 		uploadCmd.addCommandListener(sourcesUpdater);
 		UploadSourceResult result = uploadCmd.call(new NullProgressMonitor());
 		assertNotNull(result);
-		assertTrue(result.wasSuccessful());
+		assertTrue(result.isSuccessful());
 		final String sourceContentPost = TestsUtils.readContents(sourcesFile);
 		// assert sources file has been updated as expected
 		assertNotSame(sourcesFileContentPre, sourceContentPost);

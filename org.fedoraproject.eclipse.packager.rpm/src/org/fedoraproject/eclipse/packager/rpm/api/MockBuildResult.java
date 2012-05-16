@@ -73,7 +73,7 @@ public class MockBuildResult extends Result {
 	 * @see org.fedoraproject.eclipse.packager.api.ICommandResult#wasSuccessful()
 	 */
 	@Override
-	public boolean wasSuccessful() {
+	public boolean isSuccessful() {
 		return successful;
 	}
 

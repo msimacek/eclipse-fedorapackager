@@ -83,7 +83,7 @@ public abstract class AbstractMockJob extends Job {
 								.getException() instanceof MockNotInstalledException)) {
 					return;
 				}
-				if (result.wasSuccessful()) {
+				if (result.isSuccessful()) {
 					logger.logDebug(NLS.bind(
 							RpmText.AbstractMockJob_mockSucceededMsg,
 							result.getResultDirectoryPath().getLocation().toFile().getAbsolutePath()));

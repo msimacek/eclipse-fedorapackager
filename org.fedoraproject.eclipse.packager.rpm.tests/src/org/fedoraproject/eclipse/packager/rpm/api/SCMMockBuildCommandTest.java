@@ -96,7 +96,7 @@ public class SCMMockBuildCommandTest {
 								.toString()).useRepoType(RepoType.GIT)
 				.useSpec(fpRoot.getSpecFile().getName()).branchConfig(bci)
 				.call(new NullProgressMonitor());
-		assertTrue(result.wasSuccessful());
+		assertTrue(result.isSuccessful());
 		String resultDirectoryPath = result.getResultDirectoryPath().getFullPath().toOSString();
 		assertNotNull(resultDirectoryPath);
 		// should have created RPMs in the result directory

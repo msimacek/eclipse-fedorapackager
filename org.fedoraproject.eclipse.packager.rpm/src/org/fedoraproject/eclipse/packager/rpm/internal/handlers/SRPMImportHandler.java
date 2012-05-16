@@ -78,7 +78,7 @@ public class SRPMImportHandler extends FedoraPackagerAbstractHandler implements
 					monitor.setTaskName(RpmText.SRPMImportJob_ExtractingSRPM);
 					SRPMImportResult importResult;
 					importResult = srpmImport.call(monitor);
-					if (!importResult.wasSuccessful()) {
+					if (!importResult.isSuccessful()) {
 						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
 								RpmText.SRPMImportJob_ExtractFailed);
 					}
