@@ -76,14 +76,6 @@ public interface IProjectRoot {
 	public Specfile getSpecfileModel();
 
 	/**
-	 * Get the ignore file based on the project type.
-	 * 
-	 * @return The ignore file. For now this is {@code .cvsignore} or
-	 *         {@code .gitignore}.
-	 */
-	public IFile getIgnoreFile();
-
-	/**
 	 * @return the lookAsideCache
 	 */
 	public ILookasideCache getLookAsideCache();

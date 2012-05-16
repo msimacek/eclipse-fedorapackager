@@ -25,12 +25,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.egit.core.op.IgnoreOperation;
 import org.eclipse.egit.core.project.RepositoryMapping;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -339,8 +342,17 @@ public class FpGitProjectBits implements IFpProjectBits {
 
 	@Override
 	public IStatus ignoreResource(IResource resourceToIgnore) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			new IgnoreOperation(new IResource[]{resourceToIgnore}).execute(new NullProgressMonitor());
+		} catch (CoreException e) {
+			return Status.CANCEL_STATUS;
+		}
+		return Status.OK_STATUS;
+	}
+	
+	@Override
+	public String getIgnoreFileName(){
+		return Constants.GITIGNORE_FILENAME;
 	}
 
 	/**

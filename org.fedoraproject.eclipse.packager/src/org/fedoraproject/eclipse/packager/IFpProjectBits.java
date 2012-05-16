@@ -150,4 +150,11 @@ public interface IFpProjectBits {
 	 * @throws CommandListenerException
 	 */
 	public void stageChanges(String[] files) throws CommandListenerException;
+
+	/**
+	 * Returns the name of the ignore file for the given VCS.
+	 * 
+	 * @return The name of the file storing ignores.
+	 */
+	public String getIgnoreFileName();
 }

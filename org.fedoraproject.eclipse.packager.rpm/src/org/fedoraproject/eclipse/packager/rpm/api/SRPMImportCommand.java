@@ -30,14 +30,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.linuxtools.rpm.ui.SRPMImportOperation;
 import org.eclipse.linuxtools.rpm.core.RPMProjectLayout;
+import org.eclipse.linuxtools.rpm.ui.SRPMImportOperation;
 import org.eclipse.osgi.util.NLS;
+import org.fedoraproject.eclipse.packager.IFpProjectBits;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.SourcesFileUpdater;
 import org.fedoraproject.eclipse.packager.api.UploadSourceCommand;
-import org.fedoraproject.eclipse.packager.api.VCSIgnoreFileUpdater;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
@@ -240,6 +240,7 @@ public class SRPMImportCommand {
 			UploadSourceCommand upload = (UploadSourceCommand) fp
 					.getCommandInstance(UploadSourceCommand.ID);
 			boolean firstUpload = true;
+			IFpProjectBits projectBits = FedoraPackagerUtils.getVcsHandler(fpr);
 			for (String file : uploadFiles) {
 				// This won't find the .spec file since it has been removed
 				// above.
@@ -255,9 +256,7 @@ public class SRPMImportCommand {
 					// SRPM
 					sourcesUpdater.setShouldReplace(firstUpload);
 					// Note that ignore file may not exist, yet
-					IFile gitIgnore = fpr.getIgnoreFile();
-					VCSIgnoreFileUpdater vcsIgnoreFileUpdater = new VCSIgnoreFileUpdater(
-							newUploadFile, gitIgnore);
+					projectBits.ignoreResource(candidate);
 					if (uploadUrl != null) {
 						upload.setUploadURL(uploadUrl);
 					}
@@ -265,7 +264,6 @@ public class SRPMImportCommand {
 					// set SSL policy via the callback
 					sslPolicyCallback.setSSLPolicy(upload, uploadUrl);
 					upload.addCommandListener(sourcesUpdater);
-					upload.addCommandListener(vcsIgnoreFileUpdater);
 					try {
 						upload.call(new NullProgressMonitor());
 						uploadedFiles.add(file);
@@ -287,7 +285,7 @@ public class SRPMImportCommand {
 			result.setSkipped(skippedUploads.toArray(new String[0]));
 			monitor.subTask(RpmText.SRPMImportCommand_StagingChanges);
 			// Do VCS update
-			if (FedoraPackagerUtils.getVcsHandler(fpr).updateVCS(fpr, monitor)
+			if (projectBits.updateVCS(fpr, monitor)
 					.isOK()) {
 				if (monitor.isCanceled()) {
 					throw new OperationCanceledException();
@@ -295,7 +293,7 @@ public class SRPMImportCommand {
 			}
 			// stage changes
 			stageSet.add(fpr.getSourcesFile().getName());
-			stageSet.add(fpr.getIgnoreFile().getName());
+			stageSet.add(projectBits.getIgnoreFileName());
 			FedoraPackagerUtils.getVcsHandler(fpr).stageChanges(
 					stageSet.toArray(new String[0]));
 			result.setAddedToGit(stageSet.toArray(new String[0]));

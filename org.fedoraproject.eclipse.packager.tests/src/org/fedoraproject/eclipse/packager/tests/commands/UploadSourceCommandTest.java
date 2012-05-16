@@ -37,7 +37,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -48,7 +47,6 @@ import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.SourcesFileUpdater;
 import org.fedoraproject.eclipse.packager.api.UploadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.UploadSourceResult;
-import org.fedoraproject.eclipse.packager.api.VCSIgnoreFileUpdater;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
@@ -58,7 +56,6 @@ import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException
 import org.fedoraproject.eclipse.packager.api.errors.InvalidUploadFileException;
 import org.fedoraproject.eclipse.packager.api.errors.UploadFailedException;
 import org.fedoraproject.eclipse.packager.tests.SourcesFileUpdaterTest;
-import org.fedoraproject.eclipse.packager.tests.VCSIgnoreFileUpdaterTest;
 import org.fedoraproject.eclipse.packager.tests.units.UploadFileValidityTest;
 import org.fedoraproject.eclipse.packager.tests.utils.MockableUploadSourceCommand;
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
@@ -339,83 +336,6 @@ public class UploadSourceCommandTest {
 						new Path(INVALID_UPLOAD_FILE), null)).getFile();
 		File invalidUploadFile = new File(invalidUploadFileName);
 		uploadCmd.setFileToUpload(invalidUploadFile);
-	}
-
-	/**
-	 * After a file is uploaded, the VCS ignore file should be updated.
-	 * @throws IOException 
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
-	 * @throws InvalidUploadFileException 
-	 * @throws UploadFailedException 
-	 * @throws CommandMisconfiguredException 
-	 * @throws CommandListenerException 
-	 * @throws FileAvailableInLookasideCacheException 
-	 * 
-	 * @see VCSIgnoreFileUpdaterTest
-	 * 
-	 */
-	@Test
-	public void canUpdateIgnoreFile() throws IOException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, InvalidUploadFileException, CommandMisconfiguredException, UploadFailedException, FileAvailableInLookasideCacheException, CommandListenerException {
-		// Create a a temp file with checksum, which hasn't been uploaded so
-		// far. We need to upload a new non-existing file into the lookaside
-		// cache. Otherwise a file exists exception is thrown and nothing will
-		// be updated.
-		File newUploadFile = File.createTempFile(
-				"eclipse-fedorapackager-uploadsources-test-", "-REMOVE_ME.tar");
-		// add file to stack for removal after test run
-		tempFilesAndDirectories.push(newUploadFile);
-		writeRandomContentToFile(newUploadFile);
-
-		// VCS ignore file pre-update
-		IFile vcsIgnoreFile = packager.getFedoraProjectRoot().getIgnoreFile();
-		String vcsIgnoreFileContentPre = "";
-		if (vcsIgnoreFile.exists()) {
-			vcsIgnoreFileContentPre = TestsUtils.readContents(vcsIgnoreFile
-					.getLocation().toFile());
-		}
-
-		MockableUploadSourceCommand uploadCmd = (MockableUploadSourceCommand) packager
-				.getCommandInstance(MockableUploadSourceCommand.ID);
-		HttpClient mockClient = createStrictMock(HttpClient.class);
-		HttpResponse mockResponse = createMock(HttpResponse.class);
-		StatusLine mockStatus = createMock(StatusLine.class);
-		HttpEntity mockEntity = createMock(HttpEntity.class);
-		expect(mockClient.execute((HttpUriRequest) anyObject())).andReturn(
-				mockResponse);
-		expect(mockResponse.getStatusLine()).andReturn(mockStatus).anyTimes();
-		expect(mockStatus.getStatusCode()).andReturn(HttpURLConnection.HTTP_OK)
-				.anyTimes();
-		expect(mockResponse.getEntity()).andReturn(mockEntity).anyTimes();
-		expect(mockEntity.getContent()).andReturn(
-				new ByteArrayInputStream(UploadSourceCommand.RESOURCE_MISSING
-						.getBytes())).anyTimes();
-		expect(mockEntity.isStreaming()).andReturn(false);
-		expect(mockClient.getConnectionManager()).andReturn(
-				createNiceMock(ClientConnectionManager.class));
-		expect(mockClient.execute((HttpUriRequest) anyObject())).andReturn(
-				mockResponse);
-		expect(mockClient.getConnectionManager()).andReturn(
-				createNiceMock(ClientConnectionManager.class));
-		replay(mockClient);
-		replay(mockResponse);
-		replay(mockStatus);
-		replay(mockEntity);
-		uploadCmd.setClient(mockClient);
-		uploadCmd.setFileToUpload(newUploadFile);
-		uploadCmd.setUploadURL(uploadURLForTesting);
-		VCSIgnoreFileUpdater vcsUpdater = new VCSIgnoreFileUpdater(
-				newUploadFile, vcsIgnoreFile);
-		uploadCmd.addCommandListener(vcsUpdater);
-		UploadSourceResult result = uploadCmd.call(new NullProgressMonitor());
-
-		assertNotNull(result);
-		assertTrue(result.wasSuccessful());
-		String ignoreFileContentPost = TestsUtils.readContents(vcsIgnoreFile
-				.getLocation().toFile());
-		assertNotSame(vcsIgnoreFileContentPre, ignoreFileContentPost);
-		assertTrue(ignoreFileContentPost.contains(vcsIgnoreFileContentPre));
-		assertTrue(ignoreFileContentPost.contains(newUploadFile.getName()));
 	}
 
 	/**

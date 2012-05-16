@@ -10,13 +10,11 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.internal.handlers;
 
-
 import java.io.File;
 import java.net.MalformedURLException;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -40,7 +38,6 @@ import org.fedoraproject.eclipse.packager.api.IPreferenceHandler;
 import org.fedoraproject.eclipse.packager.api.SourcesFileUpdater;
 import org.fedoraproject.eclipse.packager.api.UploadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.UploadSourceResult;
-import org.fedoraproject.eclipse.packager.api.VCSIgnoreFileUpdater;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
@@ -58,7 +55,6 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
  * Class responsible for uploading source files.
  * 
  * @see UploadSourceCommand
- * @see VCSIgnoreFileUpdater
  * @see SourcesFileUpdater
  */
 public class UploadHandler extends FedoraPackagerAbstractHandler implements IPreferenceHandler {
@@ -130,8 +126,7 @@ public class UploadHandler extends FedoraPackagerAbstractHandler implements IPre
 						newUploadFile);
 				sourcesUpdater.setShouldReplace(shouldReplaceSources());
 				// Note that ignore file may not exist, yet
-				IFile gitIgnore = getProjectRoot().getIgnoreFile();
-				VCSIgnoreFileUpdater vcsIgnoreFileUpdater = new VCSIgnoreFileUpdater(newUploadFile, gitIgnore);
+				projectBits.ignoreResource(resource);
 				
 				UploadSourceResult result = null;
 				try {
@@ -145,7 +140,6 @@ public class UploadHandler extends FedoraPackagerAbstractHandler implements IPre
 					// RHEL. This should be kept in placed as it is overridden in the Red Hat version.
 					setSSLPolicy(uploadCmd, uploadUrl);
 					uploadCmd.addCommandListener(sourcesUpdater);
-					uploadCmd.addCommandListener(vcsIgnoreFileUpdater);
 					logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
 							UploadSourceCommand.class.getName()));
 					try {
@@ -156,7 +150,6 @@ public class UploadHandler extends FedoraPackagerAbstractHandler implements IPre
 						// and vcs ignore files as required.
 						logger.logDebug(e.getMessage(), e);
 						sourcesUpdater.postExecution();
-						vcsIgnoreFileUpdater.postExecution();
 						// report that there was no upload required.
 						FedoraHandlerUtils.showInformationDialog(shell,
 								getProjectRoot().getProductStrings().getProductName(),

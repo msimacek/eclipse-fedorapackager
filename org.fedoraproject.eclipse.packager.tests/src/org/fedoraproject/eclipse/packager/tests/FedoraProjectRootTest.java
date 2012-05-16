@@ -15,7 +15,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +51,6 @@ public class FedoraProjectRootTest {
 
 	private static final String SOURCE_FILE_NAME = "project_sources.zip";
 	private static final String PACKAGE_NAME = "example-fedora-project";
-	private static final String GIT_IGNOREFILE_NAME = ".gitignore";
 	private static final String EXAMPLE_FEDORA_PROJECT_ROOT = "resources/example-fedora-project"; // $NON-NLS-1$
 
 	@Before
@@ -157,25 +155,6 @@ public class FedoraProjectRootTest {
 		fpRoot = FedoraPackagerUtils
 				.getProjectRoot(gitTestProject.getProject());
 		assertNotNull(fpRoot);
-
-	}
-
-	@Test
-	public void testGetIgnoreFile() throws InterruptedException,
-			InvalidProjectRootException {
-		IFile ignoreFile = fpRoot.getIgnoreFile();
-		// we don't have an ignore file
-		assertTrue(!ignoreFile.exists());
-
-		// Git case
-		fpRoot = null;
-		gitTestProject = new GitTestProject("maven-compiler-plugin");
-		fpRoot = FedoraPackagerUtils
-				.getProjectRoot(gitTestProject.getProject());
-		assertNotNull(fpRoot);
-		ignoreFile = fpRoot.getIgnoreFile();
-		assertNotNull(ignoreFile);
-		assertEquals(GIT_IGNOREFILE_NAME, ignoreFile.getName());
 
 	}
 

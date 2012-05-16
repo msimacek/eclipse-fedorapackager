@@ -107,8 +107,7 @@ public class SRPMImportCommandTest implements ISRPMImportCommandSLLPolicyCallbac
 		SRPMImportCommand srpmImport = new SRPMImportCommand(srpmPath,
 				testProject, testProject, uploadURLForTesting, this);
 		SRPMImportResult result = srpmImport.call(new NullProgressMonitor());
-		IProjectRoot fpr;
-		fpr = FedoraPackagerUtils.getProjectRoot(testProject);
+		IProjectRoot fpr = FedoraPackagerUtils.getProjectRoot(testProject);
 		FedoraPackager packager = new FedoraPackager(fpr);
 		assertTrue(packager.getFedoraProjectRoot().getContainer().getLocation()
 				.append("/redhat-bugzilla-custom-transitions.txt").toFile() //$NON-NLS-1$
@@ -125,8 +124,7 @@ public class SRPMImportCommandTest implements ISRPMImportCommandSLLPolicyCallbac
 				.getSourcesFile().getName()));
 		assertTrue(!unaddedSet.contains(packager.getFedoraProjectRoot()
 				.getSpecFile().getName()));
-		assertTrue(!unaddedSet.contains(packager.getFedoraProjectRoot()
-				.getIgnoreFile().getName()));
+		assertTrue(!unaddedSet.contains(FedoraPackagerUtils.getVcsHandler(fpr).getIgnoreFileName()));
 		// ensure files uploaded
 		fpr.getSourcesFile().deleteSource(
 				"eclipse-mylyn-tasks-R_3_6_0-fetched-src.tar.bz2"); //$NON-NLS-1$

@@ -142,23 +142,6 @@ public class LocalFedoraPackagerProjectRoot implements IProjectRoot {
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getIgnoreFile()
-	 * @see also org.fedoraproject.eclipse.packager.FedoraProjectRoot#getIgnoreFile()
-	 */
-	@Override
-	public IFile getIgnoreFile() {
-		String ignoreFileName = ".gitignore"; //$NON-NLS-1$
-		IFile ignoreFile = getFileMember(ignoreFileName);
-		// If not existent, return a IFile handle from the container
-		if (ignoreFile == null) {
-			return this.rootContainer.getFile(new Path(ignoreFileName));
-		}
-		assert ignoreFile != null;
-		return ignoreFile;
-	}
-	
-	/*
 	 * lookaside cache not applicable for local projects
 	 * (non-Javadoc)
 	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getLookAsideCache()
@@ -186,21 +169,6 @@ public class LocalFedoraPackagerProjectRoot implements IProjectRoot {
 	@Override
 	public QualifiedName[] getSupportedProjectPropertyNames() {
 		return new QualifiedName[] { PackagerPlugin.PROJECT_LOCAL_PROP };
-	}
-
-	/**
-	 * Find the ignore file in the root container if any.
-	 * 
-	 * @param ignoreFileName The name of the VCS ignore file.
-	 * 
-	 * @return The file handle if found. {@code null} otherwise.
-	 */
-	private IFile getFileMember(String ignoreFileName) {
-		IResource resource = rootContainer.findMember(ignoreFileName);
-		if (resource instanceof IFile) {
-			return ((IFile) resource);
-		}
-		return null;
 	}
 
 	/*

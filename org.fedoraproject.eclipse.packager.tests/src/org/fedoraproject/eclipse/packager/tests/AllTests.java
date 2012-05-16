@@ -28,7 +28,6 @@ import org.junit.runners.Suite.SuiteClasses;
 	GitFpBitsTest.class,
 	SourcesFileTest.class,
 	SourcesFileUpdaterTest.class,
-	VCSIgnoreFileUpdaterTest.class,
 	FedoraSSLTest.class,
 	FedoraPackagerGitCloneOperationTest.class,
 	FedoraProjectRootTest.class,
