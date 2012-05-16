@@ -22,21 +22,6 @@ import java.net.URL;
 public interface ILookasideCache {
 
 	/**
-	 * Allow for various types of lookaside caches. E.g. Fedora, EPEL, etc.
-	 * For now only FEDORA is supported.
-	 */
-	public static enum CacheType {
-		/**
-		 * Fedora lookaside cache type.
-		 */
-		FEDORA,
-		/**
-		 * EPEL lookaside cache type.
-		 */
-		EPEL
-	}
-	
-	/**
 	 * @return the proper download URL for this lookaside cache type.
 	 */
 	public URL getDownloadUrl();
