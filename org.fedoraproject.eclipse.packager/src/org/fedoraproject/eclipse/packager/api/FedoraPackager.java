@@ -105,9 +105,6 @@ public class FedoraPackager {
 							// Do initialization
 							commandContributor.initialize(this.root);
 							return commandContributor;
-						} catch (IllegalStateException e) {
-							throw new FedoraPackagerCommandInitializationException(
-									e.getMessage(), e);
 						} catch (CoreException e) {
 							throw new FedoraPackagerCommandInitializationException(
 									e.getMessage(), e);

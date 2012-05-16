@@ -20,7 +20,6 @@ import java.util.Map;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
-import org.fedoraproject.eclipse.packager.koji.KojiText;
 import org.fedoraproject.eclipse.packager.koji.api.errors.BuildAlreadyExistsException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
@@ -206,12 +205,10 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 	/**
 	 * Set up XMLRPC client.
 	 * 
-	 * @throws IllegalStateException
-	 *             If XMLRPC configuration hasn't been properly set up.
 	 */
-	protected void setupXmlRpcClient() throws IllegalStateException {
+	protected void setupXmlRpcClient() {
 		if (xmlRpcConfig == null) {
-			throw new IllegalStateException(KojiText.xmlRPCconfigNotInitialized);
+			setupXmlRpcConfig();
 		}
 		xmlRpcClient = new XmlRpcClient();
 		xmlRpcClient.setTypeFactory(new KojiTypeFactory(this.xmlRpcClient));

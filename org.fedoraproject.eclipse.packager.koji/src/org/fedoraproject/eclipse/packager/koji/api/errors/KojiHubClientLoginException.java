@@ -41,6 +41,13 @@ public class KojiHubClientLoginException extends FedoraPackagerAPIException {
 	public KojiHubClientLoginException(Throwable cause) {
 		super(KojiText.KojiHubClientLoginException_loginFailedMsg, cause);
 	}
+	
+	/**
+	 * @param message The exception message.
+	 */
+	public KojiHubClientLoginException(String  message) {
+		super(message);
+	}
 
 	/**
 	 * Do some analysis and determine if certificate (~/.fedora.cert) expired.

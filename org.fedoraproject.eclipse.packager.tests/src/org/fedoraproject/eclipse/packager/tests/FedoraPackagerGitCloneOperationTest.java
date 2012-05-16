@@ -41,7 +41,7 @@ public class FedoraPackagerGitCloneOperationTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void shouldThrowExceptionWhenIllConfigured()
-			throws IllegalStateException, InvocationTargetException,
+			throws InvocationTargetException,
 			InterruptedException, IOException {
 		FedoraPackagerGitCloneOperation cloneOp = new FedoraPackagerGitCloneOperation();
 		cloneOp.run(null);

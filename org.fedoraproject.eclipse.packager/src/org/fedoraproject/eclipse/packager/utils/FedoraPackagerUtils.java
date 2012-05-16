@@ -326,9 +326,6 @@ public class FedoraPackagerUtils {
 								.createExecutableExtension(PROJECT_ROOT_CLASS_ATTRIBUTE_NAME);
 						assert root != null;
 						projectRootList.add(root);
-					} catch (IllegalStateException e) {
-						throw new FedoraPackagerExtensionPointException(
-								e.getMessage(), e);
 					} catch (CoreException e) {
 						throw new FedoraPackagerExtensionPointException(
 								e.getMessage(), e);

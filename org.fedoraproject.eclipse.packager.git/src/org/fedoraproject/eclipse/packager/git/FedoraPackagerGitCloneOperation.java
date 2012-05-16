@@ -78,8 +78,7 @@ public class FedoraPackagerGitCloneOperation {
 	 * @throws IOException
 	 * @return A Git API instance.
 	 */
-	public Git run(IProgressMonitor monitor) throws IllegalStateException,
-			InvocationTargetException, InterruptedException, IOException {
+	public Git run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException, IOException {
 		if (!runnable || hasRun) {
 			throw new IllegalStateException(
 					NLS.bind(

@@ -202,7 +202,7 @@ public class UploadSourceCommand extends
 	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#checkConfiguration()
 	 */
 	@Override
-	protected void checkConfiguration() throws IllegalStateException {
+	protected void checkConfiguration() {
 		if (this.fileToUpload == null) {
 			throw new IllegalStateException(
 					FedoraPackagerText.UploadSourceCommand_uploadFileUnspecified);

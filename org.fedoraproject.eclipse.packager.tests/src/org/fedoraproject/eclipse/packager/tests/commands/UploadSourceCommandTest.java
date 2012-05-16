@@ -190,7 +190,7 @@ public class UploadSourceCommandTest {
 	 * 
 	 */
 	@Test
-	public void canUploadSources() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, ClientProtocolException, IOException, IllegalStateException, FileAvailableInLookasideCacheException, CommandMisconfiguredException, CommandListenerException, UploadFailedException, InvalidUploadFileException {
+	public void canUploadSources() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, ClientProtocolException, IOException, FileAvailableInLookasideCacheException, CommandMisconfiguredException, CommandListenerException, UploadFailedException, InvalidUploadFileException {
 		MockableUploadSourceCommand uploadCmd = (MockableUploadSourceCommand) packager
 				.getCommandInstance(MockableUploadSourceCommand.ID);
 		HttpClient mockClient = createStrictMock(HttpClient.class);

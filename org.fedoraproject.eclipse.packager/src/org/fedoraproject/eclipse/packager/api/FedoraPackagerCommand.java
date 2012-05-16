@@ -84,11 +84,7 @@ public abstract class FedoraPackagerCommand<T> {
 	 *             been called more than once.
 	 */
 	public void initialize(IProjectRoot projectRoot) throws FedoraPackagerCommandInitializationException {
-		try {
-			setProjectRoot(projectRoot);
-		} catch (IllegalStateException e) {
-			throw new FedoraPackagerCommandInitializationException(e.getMessage(), e);
-		}
+		setProjectRoot(projectRoot);
 		// per default add config and state checker
 		this.cmdListeners.add(new CheckConfigListener(this));
 	}
@@ -97,11 +93,11 @@ public abstract class FedoraPackagerCommand<T> {
 	 * 
 	 * @param projectRoot
 	 *            the projectRoot to set
+	 * @throws FedoraPackagerCommandInitializationException If projectRoot is not null.
 	 */
-	private void setProjectRoot(IProjectRoot projectRoot)
-			throws IllegalStateException {
+	private void setProjectRoot(IProjectRoot projectRoot) throws FedoraPackagerCommandInitializationException {
 		if (this.projectRoot != null) {
-			throw new IllegalStateException(
+			throw new FedoraPackagerCommandInitializationException(
 					NLS.bind(
 							FedoraPackagerText.FedoraPackagerCommand_projectRootSetTwiceError,
 							projectRoot.getProductStrings().getDistributionName()));
@@ -117,7 +113,7 @@ public abstract class FedoraPackagerCommand<T> {
 	 *             when this method is called and the property {@link #callable}
 	 *             is {@code false}
 	 */
-	protected void checkCallable() throws IllegalStateException {
+	protected void checkCallable() {
 		if (!callable)
 			throw new IllegalStateException(NLS.bind(
 					FedoraPackagerText.commandWasCalledInTheWrongState,
@@ -160,7 +156,6 @@ public abstract class FedoraPackagerCommand<T> {
 	 * Configuration checking routine. This should check if all required
 	 * parameters in order to successfully execute the command is present.
 	 * 
-	 * @throws IllegalStateException
 	 */
 	protected abstract void checkConfiguration() throws CommandMisconfiguredException;
 

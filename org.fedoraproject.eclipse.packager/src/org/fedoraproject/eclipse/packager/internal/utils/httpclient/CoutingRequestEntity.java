@@ -72,7 +72,7 @@ public class CoutingRequestEntity implements HttpEntity {
 	}
 
 	@Override
-	public InputStream getContent() throws IOException, IllegalStateException {
+	public InputStream getContent() throws IOException {
 		return this.entity.getContent();
 	}
 

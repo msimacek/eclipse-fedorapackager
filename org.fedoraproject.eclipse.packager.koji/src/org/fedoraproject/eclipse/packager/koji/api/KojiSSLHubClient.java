@@ -135,8 +135,7 @@ public class KojiSSLHubClient extends AbstractKojiHubBaseClient {
 	 */
 	private void setupSSLLoginXMLRPCConfig() throws KojiHubClientLoginException {
 		if (this.xmlRpcConfig == null) {
-			throw new KojiHubClientLoginException(new IllegalStateException(
-					KojiText.xmlRPCconfigNotInitialized));
+			throw new KojiHubClientLoginException(KojiText.xmlRPCconfigNotInitialized);
 		}
 		URL sslLoginUrl = null;
 		try {

@@ -28,4 +28,8 @@ public class FedoraPackagerCommandInitializationException extends
 	public FedoraPackagerCommandInitializationException(String message, Throwable cause) {
 		super(message, cause);
 	}
+	
+	public FedoraPackagerCommandInitializationException(String message) {
+		super(message);
+	}
 }
