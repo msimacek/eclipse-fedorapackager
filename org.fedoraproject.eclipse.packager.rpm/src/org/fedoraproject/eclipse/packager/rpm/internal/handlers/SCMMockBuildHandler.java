@@ -49,8 +49,7 @@ public class SCMMockBuildHandler extends FedoraPackagerAbstractHandler
 					.getProjectRoot(eventResource);
 			Job job = new SCMMockBuildJob(projectRoot.getProductStrings()
 					.getProductName(), shell, projectRoot, RepoType.GIT,
-					FedoraPackagerUtils.getVcsHandler(projectRoot)
-							.getBranchConfig(), getPreference());
+					getPreference());
 			job.setSystem(true); // Suppress UI. That's done in sub-jobs within.
 			job.schedule();
 		} catch (InvalidProjectRootException e) {

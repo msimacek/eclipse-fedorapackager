@@ -19,7 +19,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
-import org.fedoraproject.eclipse.packager.BranchConfigInstance;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
@@ -59,13 +58,11 @@ public class SCMMockBuildJob extends AbstractMockJob {
 	 * @param shell The shell the Job is in
 	 * @param fpRoot The root of the project the Job is run in
 	 * @param repoType The type of repo containing the specfile
-	 * @param bci The configuration of the branch at time of build
 	 * @param downloadUrlPreference The preference for the download URL.
 	 */
 	public SCMMockBuildJob(String name, Shell shell, IProjectRoot fpRoot,
-			RepoType repoType, BranchConfigInstance bci,
-			String downloadUrlPreference) {
-		super(name, shell, fpRoot, bci);
+			RepoType repoType, String downloadUrlPreference) {
+		super(name, shell, fpRoot);
 		repo = repoType;
 		this.downloadUrlPreference = downloadUrlPreference;
 	}
@@ -77,13 +74,11 @@ public class SCMMockBuildJob extends AbstractMockJob {
 	 * @param fpRoot The root of the project the Job is run in
 	 * @param repoType The type of repo containing the specfile
 	 * @param localSource true to force the use of local source
-	 * @param bci The configuration of the branch at time of build
 	 * @param downloadUrlPreference The preference for the download URL.
 	 */
 	public SCMMockBuildJob(String name, Shell shell, IProjectRoot fpRoot,
-			RepoType repoType, boolean localSource, BranchConfigInstance bci,
-			String downloadUrlPreference) {
-		super(name, shell, fpRoot, bci);
+			RepoType repoType, boolean localSource,	String downloadUrlPreference) {
+		super(name, shell, fpRoot);
 		repo = repoType;
 		useRepoSource = localSource;
 		this.downloadUrlPreference = downloadUrlPreference;

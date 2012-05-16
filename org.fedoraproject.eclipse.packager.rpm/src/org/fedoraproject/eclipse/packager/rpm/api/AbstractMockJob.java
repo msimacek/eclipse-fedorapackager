@@ -26,6 +26,7 @@ import org.fedoraproject.eclipse.packager.rpm.RpmText;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.MockNotInstalledException;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.UserNotInMockGroupException;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
+import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 
 /**
  * Superclass for mock jobs, which share the same
@@ -43,13 +44,13 @@ public abstract class AbstractMockJob extends Job {
 	 * @param name
 	 * @param shell 
 	 * @param fedoraProjectRoot 
-	 * @param bci 
 	 */
-	public AbstractMockJob(String name, Shell shell, IProjectRoot fedoraProjectRoot, BranchConfigInstance bci) {
+	public AbstractMockJob(String name, Shell shell, IProjectRoot fedoraProjectRoot) {
 		super(name);
 		this.shell = shell;
 		this.fpr = fedoraProjectRoot;
-		this.bci = bci;
+		this.bci = FedoraPackagerUtils.getVcsHandler(fedoraProjectRoot)
+				.getBranchConfig();
 	}
 	
 	/**
