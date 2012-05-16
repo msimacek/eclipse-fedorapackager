@@ -101,7 +101,7 @@ public class KojiScratchWithSRPMTest {
 		bci = FedoraPackagerUtils.getVcsHandler(fpRoot).getBranchConfig();
 		SRPMBuildJob srpmBuildJob = new SRPMBuildJob(NLS.bind(
 				RpmText.MockBuildHandler_creatingSRPMForMockBuild,
-				fpRoot.getPackageName()), srpmBuild, fpRoot, bci);
+				fpRoot.getPackageName()), srpmBuild, fpRoot);
 		srpmBuildJob.setUser(false);
 		srpmBuildJob.schedule();
 		srpmBuildJob.join();

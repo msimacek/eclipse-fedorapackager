@@ -31,6 +31,7 @@ import org.fedoraproject.eclipse.packager.rpm.RpmText;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand.BuildType;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.RpmBuildCommandException;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
+import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 
 /**
  * A job for SRPM builds.
@@ -48,15 +49,15 @@ public class SRPMBuildJob extends Job {
 	 * @param jobName
 	 * @param rpmBuild
 	 * @param fedoraProjectRoot
-	 * @param bci 
 	 */
 	public SRPMBuildJob(String jobName, RpmBuildCommand rpmBuild,
-			IProjectRoot fedoraProjectRoot, BranchConfigInstance bci) {
+			IProjectRoot fedoraProjectRoot) {
 		super(jobName);
 		this.fedoraProjectRoot = fedoraProjectRoot;
 		this.logger = FedoraPackagerLogger.getInstance();
 		this.srpmBuild = rpmBuild;
-		this.bci = bci;
+		this.bci = FedoraPackagerUtils.getVcsHandler(
+				fedoraProjectRoot).getBranchConfig();
 	}
 
 	@Override

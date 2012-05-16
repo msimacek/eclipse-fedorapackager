@@ -83,8 +83,7 @@ public class SRPMBuildHandler extends LocalHandlerDispatcher {
 					// Kick off the SRPM job
 					SRPMBuildJob srpmBuildJob = new SRPMBuildJob(
 							RpmText.SRPMBuildHandler_buildingSRPM, srpmBuild,
-							projectRoot, FedoraPackagerUtils.getVcsHandler(
-									projectRoot).getBranchConfig());
+							projectRoot);
 					srpmBuildJob.setUser(true);
 					srpmBuildJob.schedule();
 					try {
