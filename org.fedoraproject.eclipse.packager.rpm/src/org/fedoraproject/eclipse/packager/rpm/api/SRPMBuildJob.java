@@ -30,21 +30,20 @@ import org.fedoraproject.eclipse.packager.rpm.RPMPlugin;
 import org.fedoraproject.eclipse.packager.rpm.RpmText;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand.BuildType;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.RpmBuildCommandException;
-import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 
 /**
  * A job for SRPM builds.
- *
+ * 
  */
 public class SRPMBuildJob extends Job {
-	
+
 	private RpmBuildCommand srpmBuild;
 	private IProjectRoot fedoraProjectRoot;
 	private FedoraPackagerLogger logger;
 	private RpmBuildResult srpmBuildResult;
 	private BranchConfigInstance bci;
-	
+
 	/**
 	 * @param jobName
 	 * @param rpmBuild
@@ -56,8 +55,8 @@ public class SRPMBuildJob extends Job {
 		this.fedoraProjectRoot = fedoraProjectRoot;
 		this.logger = FedoraPackagerLogger.getInstance();
 		this.srpmBuild = rpmBuild;
-		this.bci = FedoraPackagerUtils.getVcsHandler(
-				fedoraProjectRoot).getBranchConfig();
+		this.bci = FedoraPackagerUtils.getVcsHandler(fedoraProjectRoot)
+				.getBranchConfig();
 	}
 
 	@Override
@@ -79,25 +78,26 @@ public class SRPMBuildJob extends Job {
 				logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
 						RpmBuildCommand.class.getName()));
 				srpmBuildResult = srpmBuild.call(monitor);
-				fedoraProjectRoot.getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
+				fedoraProjectRoot.getProject().refreshLocal(
+						IResource.DEPTH_INFINITE, monitor);
 			} catch (CommandMisconfiguredException e) {
 				// This shouldn't happen, but report error anyway
 				logger.logError(e.getMessage(), e);
-				return FedoraHandlerUtils.errorStatus(RPMPlugin.PLUGIN_ID,
+				return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
 						e.getMessage(), e);
 			} catch (CommandListenerException e) {
 				// There are no command listeners registered, so shouldn't
 				// happen. Do something reasonable anyway.
 				logger.logError(e.getMessage(), e);
-				return FedoraHandlerUtils.errorStatus(RPMPlugin.PLUGIN_ID,
+				return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
 						e.getMessage(), e);
 			} catch (RpmBuildCommandException e) {
 				logger.logError(e.getMessage(), e.getCause());
-				return FedoraHandlerUtils.errorStatus(RPMPlugin.PLUGIN_ID,
+				return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
 						e.getMessage(), e.getCause());
 			} catch (CoreException e) {
 				logger.logError(e.getMessage(), e);
-				return FedoraHandlerUtils.errorStatus(RPMPlugin.PLUGIN_ID,
+				return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
 						e.getMessage(), e);
 			}
 		} finally {
@@ -105,7 +105,7 @@ public class SRPMBuildJob extends Job {
 		}
 		return Status.OK_STATUS;
 	}
-	
+
 	/**
 	 * 
 	 * @return The result of the SRPM build or {@code null} if the build failed.

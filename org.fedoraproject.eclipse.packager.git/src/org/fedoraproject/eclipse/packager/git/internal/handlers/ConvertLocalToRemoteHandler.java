@@ -72,15 +72,15 @@ public class ConvertLocalToRemoteHandler extends FedoraPackagerAbstractHandler {
 								.getCommandInstance(ConvertLocalToRemoteCommand.ID);
 					} catch (FedoraPackagerCommandNotFoundException e) {
 						logger.logError(e.getMessage(), e);
-						FedoraHandlerUtils.showErrorDialog(shell,
-								projectRoot.getProductStrings()
-										.getProductName(), e.getMessage());
+						FedoraHandlerUtils.showErrorDialog(shell, projectRoot
+								.getProductStrings().getProductName(), e
+								.getMessage());
 						return null;
 					} catch (FedoraPackagerCommandInitializationException e) {
 						logger.logError(e.getMessage(), e);
-						FedoraHandlerUtils.showErrorDialog(shell,
-								projectRoot.getProductStrings()
-										.getProductName(), e.getMessage());
+						FedoraHandlerUtils.showErrorDialog(shell, projectRoot
+								.getProductStrings().getProductName(), e
+								.getMessage());
 						return null;
 					}
 					try {
@@ -100,33 +100,30 @@ public class ConvertLocalToRemoteHandler extends FedoraPackagerAbstractHandler {
 
 					} catch (CommandMisconfiguredException e) {
 						logger.logError(e.getMessage(), e);
-						return FedoraHandlerUtils.errorStatus(
+						return new Status(IStatus.ERROR,
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
 					} catch (CommandListenerException e) {
 						logger.logError(e.getMessage(), e);
-						return FedoraHandlerUtils.errorStatus(
+						return new Status(IStatus.ERROR,
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
 					} catch (RemoteAlreadyExistsException e) {
 						logger.logError(e.getMessage(), e);
-						return FedoraHandlerUtils
-								.errorStatus(
-										PackagerPlugin.PLUGIN_ID,
-										NLS.bind(
-												FedoraPackagerGitText.ConvertLocalToRemoteHandler_failToConvert,
-												projectRoot
-														.getPackageName(), e
-														.getMessage()));
+						return new Status(
+								IStatus.ERROR,
+								PackagerPlugin.PLUGIN_ID,
+								NLS.bind(
+										FedoraPackagerGitText.ConvertLocalToRemoteHandler_failToConvert,
+										projectRoot.getPackageName(),
+										e.getMessage()));
 					} catch (LocalProjectConversionFailedException e) {
 						logger.logError(e.getCause().getMessage(), e);
-						return FedoraHandlerUtils
-								.errorStatus(
-										PackagerPlugin.PLUGIN_ID,
-										NLS.bind(
-												FedoraPackagerGitText.ConvertLocalToRemoteHandler_failToConvert,
-												projectRoot
-														.getPackageName(), e
-														.getCause()
-														.getMessage()));
+						return new Status(
+								IStatus.ERROR,
+								PackagerPlugin.PLUGIN_ID,
+								NLS.bind(
+										FedoraPackagerGitText.ConvertLocalToRemoteHandler_failToConvert,
+										projectRoot.getPackageName(), e
+												.getCause().getMessage()));
 					}
 
 				}

@@ -41,24 +41,31 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 
 /**
  * Job that configures and calls SCMMockBuildCommand.
- *
+ * 
  */
 public class SCMMockBuildJob extends AbstractMockJob {
-	
+
 	private boolean useRepoSource = false;
-	private final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
+	private final FedoraPackagerLogger logger = FedoraPackagerLogger
+			.getInstance();
 	private SCMMockBuildCommand mockBuild;
 	private DownloadSourceCommand download;
 	private RepoType repo;
 	private String downloadUrlPreference;
-	
+
 	/**
 	 * Constructor for a job that defaults to using source downloaded separately
-	 * @param name The name of the Job
-	 * @param shell The shell the Job is in
-	 * @param fpRoot The root of the project the Job is run in
-	 * @param repoType The type of repo containing the specfile
-	 * @param downloadUrlPreference The preference for the download URL.
+	 * 
+	 * @param name
+	 *            The name of the Job
+	 * @param shell
+	 *            The shell the Job is in
+	 * @param fpRoot
+	 *            The root of the project the Job is run in
+	 * @param repoType
+	 *            The type of repo containing the specfile
+	 * @param downloadUrlPreference
+	 *            The preference for the download URL.
 	 */
 	public SCMMockBuildJob(String name, Shell shell, IProjectRoot fpRoot,
 			RepoType repoType, String downloadUrlPreference) {
@@ -66,18 +73,26 @@ public class SCMMockBuildJob extends AbstractMockJob {
 		repo = repoType;
 		this.downloadUrlPreference = downloadUrlPreference;
 	}
-	
+
 	/**
-	 * Constructor for forcing Mock to try to build from source in the repo, ignoring any specfiles.
-	 * @param name The name of the Job
-	 * @param shell The shell the Job is in
-	 * @param fpRoot The root of the project the Job is run in
-	 * @param repoType The type of repo containing the specfile
-	 * @param localSource true to force the use of local source
-	 * @param downloadUrlPreference The preference for the download URL.
+	 * Constructor for forcing Mock to try to build from source in the repo,
+	 * ignoring any specfiles.
+	 * 
+	 * @param name
+	 *            The name of the Job
+	 * @param shell
+	 *            The shell the Job is in
+	 * @param fpRoot
+	 *            The root of the project the Job is run in
+	 * @param repoType
+	 *            The type of repo containing the specfile
+	 * @param localSource
+	 *            true to force the use of local source
+	 * @param downloadUrlPreference
+	 *            The preference for the download URL.
 	 */
 	public SCMMockBuildJob(String name, Shell shell, IProjectRoot fpRoot,
-			RepoType repoType, boolean localSource,	String downloadUrlPreference) {
+			RepoType repoType, boolean localSource, String downloadUrlPreference) {
 		super(name, shell, fpRoot);
 		repo = repoType;
 		useRepoSource = localSource;
@@ -89,33 +104,26 @@ public class SCMMockBuildJob extends AbstractMockJob {
 		FedoraPackager fp = new FedoraPackager(fpr);
 		try {
 			download = (DownloadSourceCommand) fp
-				.getCommandInstance(DownloadSourceCommand.ID);
+					.getCommandInstance(DownloadSourceCommand.ID);
 			mockBuild = (SCMMockBuildCommand) fp
-				.getCommandInstance(SCMMockBuildCommand.ID);
+					.getCommandInstance(SCMMockBuildCommand.ID);
 		} catch (FedoraPackagerCommandNotFoundException e) {
 			logger.logError(e.getMessage(), e);
-			FedoraHandlerUtils.showErrorDialog(shell,
-					fpr.getProductStrings().getProductName(), e.getMessage());
-			return FedoraHandlerUtils
-			.errorStatus(
-					RPMPlugin.PLUGIN_ID,
-					e.getMessage(),
-					e);
+			FedoraHandlerUtils.showErrorDialog(shell, fpr.getProductStrings()
+					.getProductName(), e.getMessage());
+			return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
+					e.getMessage(), e);
 		} catch (FedoraPackagerCommandInitializationException e) {
 			logger.logError(e.getMessage(), e);
-			FedoraHandlerUtils.showErrorDialog(shell,
-					fpr.getProductStrings().getProductName(), e.getMessage());
-			return FedoraHandlerUtils
-			.errorStatus(
-					RPMPlugin.PLUGIN_ID,
-					e.getMessage(),
-					e);
+			FedoraHandlerUtils.showErrorDialog(shell, fpr.getProductStrings()
+					.getProductName(), e.getMessage());
+			return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
+					e.getMessage(), e);
 		}
-		logger.logDebug(NLS.bind(
-				FedoraPackagerText.callingCommand,
+		logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
 				SCMMockBuildCommand.class.getName()));
-		//sources need to be downloaded
-		if (!useRepoSource){
+		// sources need to be downloaded
+		if (!useRepoSource) {
 			Job downloadSourcesJob = new DownloadSourcesJob(
 					RpmText.MockBuildHandler_downloadSourcesForMockBuild,
 					download, fpr, shell, downloadUrlPreference, true);
@@ -131,21 +139,24 @@ public class SCMMockBuildJob extends AbstractMockJob {
 				// bail if something failed
 				return downloadSourcesJob.getResult();
 			}
-			mockBuild.useDownloadedSourceDirectory(download.getDownloadFolderPath());
+			mockBuild.useDownloadedSourceDirectory(download
+					.getDownloadFolderPath());
 			mockBuild.useSpec(fpr.getSpecFile().getName());
 		}
 		mockBuild.branchConfig(bci);
-		//set repo type
+		// set repo type
 		mockBuild.useRepoType(repo);
-		if (repo == RepoType.GIT){
-			mockBuild.useRepoPath(fpr.getContainer().getParent().getRawLocation().toString());
+		if (repo == RepoType.GIT) {
+			mockBuild.useRepoPath(fpr.getContainer().getParent()
+					.getRawLocation().toString());
 		} else {
-			mockBuild.useRepoPath(fpr.getContainer().getParent().getParent().getRawLocation().toString());
+			mockBuild.useRepoPath(fpr.getContainer().getParent().getParent()
+					.getRawLocation().toString());
 		}
 		mockBuild.usePackage(fpr.getPackageName());
-		mockBuild.useBranch(FedoraPackagerUtils.getVcsHandler(fpr).getRawCurrentBranchName());
-		
-		
+		mockBuild.useBranch(FedoraPackagerUtils.getVcsHandler(fpr)
+				.getRawCurrentBranchName());
+
 		Job mockJob = new Job(fpr.getProductStrings().getProductName()) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
@@ -158,47 +169,48 @@ public class SCMMockBuildJob extends AbstractMockJob {
 					}
 					try {
 						result = mockBuild.call(monitor);
-						fpr.getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
+						fpr.getProject().refreshLocal(IResource.DEPTH_INFINITE,
+								monitor);
 					} catch (CommandMisconfiguredException e) {
 						// This shouldn't happen, but report error
 						// anyway
 						logger.logError(e.getMessage(), e);
-						return FedoraHandlerUtils.errorStatus(
-								RPMPlugin.PLUGIN_ID, e.getMessage(), e);
+						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
+								e.getMessage(), e);
 					} catch (UserNotInMockGroupException e) {
 						// nothing critical, advise the user what to do.
 						logger.logDebug(e.getMessage());
 						FedoraHandlerUtils.showInformationDialog(shell, fpr
 								.getProductStrings().getProductName(), e
 								.getMessage());
-						IStatus status = new Status(IStatus.INFO, PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
+						IStatus status = new Status(IStatus.INFO,
+								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
 						return status;
 					} catch (CommandListenerException e) {
 						// There are no command listeners registered, so
 						// shouldn't
 						// happen. Do something reasonable anyway.
 						logger.logError(e.getMessage(), e);
-						return FedoraHandlerUtils.errorStatus(
-								RPMPlugin.PLUGIN_ID, e.getMessage(), e);
+						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
+								e.getMessage(), e);
 					} catch (MockBuildCommandException e) {
 						// Some unknown error occurred
 						logger.logError(e.getMessage(), e.getCause());
-						return FedoraHandlerUtils.errorStatus(
-								RPMPlugin.PLUGIN_ID, e.getMessage(),
-								e.getCause());
+						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
+								e.getMessage(), e.getCause());
 					} catch (MockNotInstalledException e) {
 						// nothing critical, advise the user what to do.
 						logger.logDebug(e.getMessage());
 						FedoraHandlerUtils.showInformationDialog(shell, fpr
 								.getProductStrings().getProductName(), e
 								.getMessage());
-						IStatus status = new Status(IStatus.INFO, PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
+						IStatus status = new Status(IStatus.INFO,
+								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
 						return status;
 					} catch (CoreException e) {
 						logger.logError(e.getMessage(), e.getCause());
-						return FedoraHandlerUtils.errorStatus(
-								RPMPlugin.PLUGIN_ID, e.getMessage(),
-								e.getCause());
+						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
+								e.getMessage(), e.getCause());
 					}
 				} finally {
 					monitor.done();

@@ -157,20 +157,20 @@ public class ScpHandler extends FedoraPackagerAbstractHandler {
 
 					} catch (CommandMisconfiguredException e) {
 						logger.logError(e.getMessage(), e);
-						return FedoraHandlerUtils.errorStatus(
+						return new Status(IStatus.ERROR,
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
 					} catch (CommandListenerException e) {
 						logger.logError(e.getMessage(), e);
-						return FedoraHandlerUtils.errorStatus(
+						return new Status(IStatus.ERROR,
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
 					} catch (ScpFailedException e) {
 						logger.logError(e.getCause().getMessage(), e);
-						return FedoraHandlerUtils
-								.errorStatus(
-										PackagerPlugin.PLUGIN_ID,
-										NLS.bind(
-												FedoraPackagerText.ScpHandler_failToScp,
-												e.getCause().getMessage()));
+						return new Status(
+								IStatus.ERROR,
+								PackagerPlugin.PLUGIN_ID,
+								NLS.bind(
+										FedoraPackagerText.ScpHandler_failToScp,
+										e.getCause().getMessage()));
 					}
 				}
 			};

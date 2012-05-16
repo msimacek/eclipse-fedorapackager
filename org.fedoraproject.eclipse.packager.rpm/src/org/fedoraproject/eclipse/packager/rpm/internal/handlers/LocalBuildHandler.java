@@ -148,7 +148,7 @@ public class LocalBuildHandler extends FedoraPackagerAbstractHandler implements
 									// This shouldn't happen, but report error
 									// anyway
 									logger.logError(e.getMessage(), e);
-									return FedoraHandlerUtils.errorStatus(
+									return new Status(IStatus.ERROR,
 											RPMPlugin.PLUGIN_ID,
 											e.getMessage(), e);
 								} catch (CommandListenerException e) {
@@ -157,26 +157,26 @@ public class LocalBuildHandler extends FedoraPackagerAbstractHandler implements
 									// shouldn't
 									// happen. Do something reasonable anyway.
 									logger.logError(e.getMessage(), e);
-									return FedoraHandlerUtils.errorStatus(
+									return new Status(IStatus.ERROR,
 											RPMPlugin.PLUGIN_ID,
 											e.getMessage(), e);
 								} catch (RpmBuildCommandException e) {
 									logger.logError(e.getMessage(),
 											e.getCause());
-									return FedoraHandlerUtils.errorStatus(
+									return new Status(IStatus.ERROR,
 											RPMPlugin.PLUGIN_ID,
 											e.getMessage(), e.getCause());
 								} catch (IllegalArgumentException e) {
 									// setting distDefines failed
 									logger.logError(e.getMessage(), e);
-									return FedoraHandlerUtils.errorStatus(
+									return new Status(IStatus.ERROR,
 											RPMPlugin.PLUGIN_ID,
 											e.getMessage(), e);
 								} catch (CoreException e) {
 									// should not occur
 									logger.logError(e.getMessage(),
 											e.getCause());
-									return FedoraHandlerUtils.errorStatus(
+									return new Status(IStatus.ERROR,
 											RPMPlugin.PLUGIN_ID,
 											e.getMessage(), e.getCause());
 								} catch (OperationCanceledException e) {

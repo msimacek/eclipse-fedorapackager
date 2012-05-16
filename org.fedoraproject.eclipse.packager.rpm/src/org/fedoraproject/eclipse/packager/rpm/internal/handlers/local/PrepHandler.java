@@ -86,8 +86,7 @@ public class PrepHandler extends LocalHandlerDispatcher {
 			// Need to nest jobs into this job for it to show up properly in the
 			// UI
 			// in terms of progress
-			Job job = new Job(projectRoot.getProductStrings()
-					.getProductName()) {
+			Job job = new Job(projectRoot.getProductStrings().getProductName()) {
 
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
@@ -110,18 +109,18 @@ public class PrepHandler extends LocalHandlerDispatcher {
 								// This shouldn't happen, but report error
 								// anyway
 								logger.logError(e.getMessage(), e);
-								return FedoraHandlerUtils.errorStatus(
+								return new Status(IStatus.ERROR,
 										RPMPlugin.PLUGIN_ID, e.getMessage(), e);
 							} catch (CommandListenerException e) {
 								// There are no command listeners registered, so
 								// shouldn't
 								// happen. Do something reasonable anyway.
 								logger.logError(e.getMessage(), e);
-								return FedoraHandlerUtils.errorStatus(
+								return new Status(IStatus.ERROR,
 										RPMPlugin.PLUGIN_ID, e.getMessage(), e);
 							} catch (RpmBuildCommandException e) {
 								logger.logError(e.getMessage(), e.getCause());
-								return FedoraHandlerUtils.errorStatus(
+								return new Status(IStatus.ERROR,
 										RPMPlugin.PLUGIN_ID, e.getMessage(),
 										e.getCause());
 							} catch (IllegalArgumentException e) {
@@ -129,7 +128,7 @@ public class PrepHandler extends LocalHandlerDispatcher {
 							} catch (CoreException e) {
 								// should not occur
 								logger.logError(e.getMessage(), e.getCause());
-								return FedoraHandlerUtils.errorStatus(
+								return new Status(IStatus.ERROR,
 										RPMPlugin.PLUGIN_ID, e.getMessage(),
 										e.getCause());
 							} finally {

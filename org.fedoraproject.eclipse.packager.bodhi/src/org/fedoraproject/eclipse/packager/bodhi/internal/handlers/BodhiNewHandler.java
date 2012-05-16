@@ -196,8 +196,7 @@ public class BodhiNewHandler extends FedoraPackagerAbstractHandler {
 			}
 
 			// all data gathered, push update
-			Job job = new Job(projectRoot.getProductStrings()
-					.getProductName()) { //$NON-NLS-1$
+			Job job = new Job(projectRoot.getProductStrings().getProductName()) { //$NON-NLS-1$
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					monitor.beginTask(
@@ -230,20 +229,20 @@ public class BodhiNewHandler extends FedoraPackagerAbstractHandler {
 					} catch (CommandListenerException e) {
 						// no listeners registered, so should not happen
 						logger.logError(e.getMessage(), e);
-						return FedoraHandlerUtils.errorStatus(
-								BodhiPlugin.PLUGIN_ID, e.getMessage(), e);
+						return new Status(IStatus.ERROR, BodhiPlugin.PLUGIN_ID,
+								e.getMessage(), e);
 					} catch (CommandMisconfiguredException e) {
 						logger.logError(e.getMessage(), e);
-						return FedoraHandlerUtils.errorStatus(
-								BodhiPlugin.PLUGIN_ID, e.getMessage(), e);
+						return new Status(IStatus.ERROR, BodhiPlugin.PLUGIN_ID,
+								e.getMessage(), e);
 					} catch (BodhiClientLoginException e) {
 						logger.logError(e.getMessage(), e);
-						return FedoraHandlerUtils.errorStatus(
-								BodhiPlugin.PLUGIN_ID, e.getMessage(), e);
+						return new Status(IStatus.ERROR, BodhiPlugin.PLUGIN_ID,
+								e.getMessage(), e);
 					} catch (BodhiClientException e) {
 						logger.logError(e.getMessage(), e);
-						return FedoraHandlerUtils.errorStatus(
-								BodhiPlugin.PLUGIN_ID, e.getMessage(), e);
+						return new Status(IStatus.ERROR, BodhiPlugin.PLUGIN_ID,
+								e.getMessage(), e);
 					}
 				}
 
@@ -293,7 +292,8 @@ public class BodhiNewHandler extends FedoraPackagerAbstractHandler {
 	 * 
 	 * @return The job change listener.
 	 */
-	protected IJobChangeListener getJobChangeListener(final IProjectRoot projectRoot) {
+	protected IJobChangeListener getJobChangeListener(
+			final IProjectRoot projectRoot) {
 		IJobChangeListener listener = new JobChangeAdapter() {
 
 			// We are only interested in the done event
@@ -324,8 +324,7 @@ public class BodhiNewHandler extends FedoraPackagerAbstractHandler {
 								public void run() {
 									// show some error with details
 									FedoraHandlerUtils.showErrorDialog(shell,
-											projectRoot
-													.getProductStrings()
+											projectRoot.getProductStrings()
 													.getProductName(), msg);
 								}
 							});

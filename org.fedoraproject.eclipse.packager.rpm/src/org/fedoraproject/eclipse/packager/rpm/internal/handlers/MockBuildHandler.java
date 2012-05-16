@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
@@ -65,7 +66,7 @@ public class MockBuildHandler extends FedoraPackagerAbstractHandler {
 					return null;
 				} catch (CoreException e) {
 					logger.logError(e.getMessage(), e);
-					return FedoraHandlerUtils.errorStatus(RPMPlugin.PLUGIN_ID,
+					return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
 							e.getMessage(), e);
 				}
 			}

@@ -80,15 +80,14 @@ public class LocalBuildHandler extends LocalHandlerDispatcher {
 						.getProductStrings().getProductName(), e.getMessage());
 				return null;
 			}
-			Job job = new Job(projectRoot.getProductStrings()
-					.getProductName()) {
+			Job job = new Job(projectRoot.getProductStrings().getProductName()) {
 
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 
 					// Do the local build
-					Job rpmBuildjob = new Job(projectRoot
-							.getProductStrings().getProductName()) {
+					Job rpmBuildjob = new Job(projectRoot.getProductStrings()
+							.getProductName()) {
 						@Override
 						protected IStatus run(IProgressMonitor monitor) {
 							try {
@@ -107,7 +106,7 @@ public class LocalBuildHandler extends LocalHandlerDispatcher {
 									// This shouldn't happen, but report error
 									// anyway
 									logger.logError(e.getMessage(), e);
-									return FedoraHandlerUtils.errorStatus(
+									return new Status(IStatus.ERROR,
 											RPMPlugin.PLUGIN_ID,
 											e.getMessage(), e);
 								} catch (CommandListenerException e) {
@@ -116,26 +115,26 @@ public class LocalBuildHandler extends LocalHandlerDispatcher {
 									// shouldn't
 									// happen. Do something reasonable anyway.
 									logger.logError(e.getMessage(), e);
-									return FedoraHandlerUtils.errorStatus(
+									return new Status(IStatus.ERROR,
 											RPMPlugin.PLUGIN_ID,
 											e.getMessage(), e);
 								} catch (RpmBuildCommandException e) {
 									logger.logError(e.getMessage(),
 											e.getCause());
-									return FedoraHandlerUtils.errorStatus(
+									return new Status(IStatus.ERROR,
 											RPMPlugin.PLUGIN_ID,
 											e.getMessage(), e.getCause());
 								} catch (IllegalArgumentException e) {
 									// setting distDefines failed
 									logger.logError(e.getMessage(), e);
-									return FedoraHandlerUtils.errorStatus(
+									return new Status(IStatus.ERROR,
 											RPMPlugin.PLUGIN_ID,
 											e.getMessage(), e);
 								} catch (CoreException e) {
 									// should not occur
 									logger.logError(e.getMessage(),
 											e.getCause());
-									return FedoraHandlerUtils.errorStatus(
+									return new Status(IStatus.ERROR,
 											RPMPlugin.PLUGIN_ID,
 											e.getMessage(), e.getCause());
 								} catch (OperationCanceledException e) {

@@ -33,7 +33,7 @@ import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
  * Job for downloading sources.
  */
 public class DownloadSourcesJob extends Job {
-	
+
 	private DownloadSourceCommand download;
 	private IProjectRoot fedoraProjectRoot;
 	private FedoraPackagerLogger logger;
@@ -52,7 +52,8 @@ public class DownloadSourcesJob extends Job {
 	 *            A valid shell.
 	 */
 	public DownloadSourcesJob(String jobName, DownloadSourceCommand download,
-			IProjectRoot fedoraProjectRoot, Shell shell, String downloadUrlPreference) {
+			IProjectRoot fedoraProjectRoot, Shell shell,
+			String downloadUrlPreference) {
 		super(jobName);
 		this.download = download;
 		this.fedoraProjectRoot = fedoraProjectRoot;
@@ -67,14 +68,15 @@ public class DownloadSourcesJob extends Job {
 	 * @param fedoraProjectRoot
 	 * @param shell
 	 *            A valid shell.
-	 * @param downloadUrlPreference A preference to use as download URL or {@code null}.
+	 * @param downloadUrlPreference
+	 *            A preference to use as download URL or {@code null}.
 	 * @param suppressSourcesUpToDateInfo
 	 *            Indicating if information message dialog reporting sources are
 	 *            up-to-date should be suppressed.
 	 */
 	public DownloadSourcesJob(String jobName, DownloadSourceCommand download,
-			IProjectRoot fedoraProjectRoot, Shell shell, String downloadUrlPreference,
-			boolean suppressSourcesUpToDateInfo) {
+			IProjectRoot fedoraProjectRoot, Shell shell,
+			String downloadUrlPreference, boolean suppressSourcesUpToDateInfo) {
 		super(jobName);
 		this.download = download;
 		this.fedoraProjectRoot = fedoraProjectRoot;
@@ -103,35 +105,34 @@ public class DownloadSourcesJob extends Job {
 		} catch (final SourcesUpToDateException e) {
 			logger.logDebug(e.getMessage(), e);
 			if (!suppressSourcesUpToDateInfo) {
-				FedoraHandlerUtils
-						.showInformationDialog(shell,
-								fedoraProjectRoot.getProductStrings().getProductName(),
-								e.getMessage());
+				FedoraHandlerUtils.showInformationDialog(shell,
+						fedoraProjectRoot.getProductStrings().getProductName(),
+						e.getMessage());
 			}
 			return Status.OK_STATUS;
 		} catch (DownloadFailedException e) {
 			logger.logError(e.getMessage(), e);
-			return FedoraHandlerUtils.errorStatus(PackagerPlugin.PLUGIN_ID,
+			return new Status(IStatus.ERROR, PackagerPlugin.PLUGIN_ID,
 					e.getMessage(), e);
 		} catch (CommandMisconfiguredException e) {
 			// This shouldn't happen, but report error anyway
 			logger.logError(e.getMessage(), e);
-			return FedoraHandlerUtils.errorStatus(PackagerPlugin.PLUGIN_ID,
+			return new Status(IStatus.ERROR, PackagerPlugin.PLUGIN_ID,
 					e.getMessage(), e);
 		} catch (CommandListenerException e) {
 			if (e.getCause() instanceof InvalidCheckSumException) {
 				String message = e.getCause().getMessage();
 				logger.logError(message, e.getCause());
-				return FedoraHandlerUtils.errorStatus(PackagerPlugin.PLUGIN_ID,
+				return new Status(IStatus.ERROR, PackagerPlugin.PLUGIN_ID,
 						message, e.getCause());
 			}
 			logger.logError(e.getMessage(), e);
-			return FedoraHandlerUtils.errorStatus(PackagerPlugin.PLUGIN_ID,
+			return new Status(IStatus.ERROR, PackagerPlugin.PLUGIN_ID,
 					e.getMessage(), e);
 		} catch (MalformedURLException e) {
 			// setDownloadUrl failed
 			logger.logError(e.getMessage(), e);
-			return FedoraHandlerUtils.errorStatus(PackagerPlugin.PLUGIN_ID,
+			return new Status(IStatus.ERROR, PackagerPlugin.PLUGIN_ID,
 					e.getMessage(), e);
 		} finally {
 			monitor.done();

@@ -18,9 +18,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelection;
@@ -88,33 +86,6 @@ public class FedoraHandlerUtils {
 		}
 	}
 	
-	/**
-	 * Create an IStatus error
-	 * 
-	 * @param plugInID
-	 *            The plug-in ID to be used.
-	 * @param message
-	 *            The error message for the status.
-	 * @return A newly created Status instance.
-	 */
-	public static IStatus errorStatus(String plugInID, String message) {
-		return new Status(IStatus.ERROR, plugInID, message);
-	}
-	
-	/**
-	 * Create an IStatus error
-	 * 
-	 * @param plugInID
-	 *            The plug-in ID to be used.
-	 * @param message
-	 *            The error message for the status.
-	 * @param e The exception occurred (if any).
-	 * @return A newly created Status instance.
-	 */
-	public static IStatus errorStatus(String plugInID, String message, Throwable e) {
-		return new Status(IStatus.ERROR, plugInID, message, e);
-	}
-
 	/**
 	 * Show an information dialog.
 	 * 

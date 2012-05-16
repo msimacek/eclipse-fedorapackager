@@ -174,17 +174,17 @@ public class UploadHandler extends FedoraPackagerAbstractHandler implements
 								|| e.getCause() instanceof SourcesFileUpdateException) {
 							String message = e.getCause().getMessage();
 							logger.logError(message, e.getCause());
-							return FedoraHandlerUtils.errorStatus(
+							return new Status(IStatus.ERROR,
 									PackagerPlugin.PLUGIN_ID, message,
 									e.getCause());
 						}
 						// Something else failed
 						logger.logError(e.getMessage(), e);
-						return FedoraHandlerUtils.errorStatus(
+						return new Status(IStatus.ERROR,
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
 					} catch (CommandMisconfiguredException e) {
 						logger.logError(e.getMessage(), e);
-						return FedoraHandlerUtils.errorStatus(
+						return new Status(IStatus.ERROR,
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
 					} catch (UploadFailedException e) {
 						// Check if cert has expired, give some more
@@ -195,7 +195,7 @@ public class UploadHandler extends FedoraPackagerAbstractHandler implements
 											projectRoot.getProductStrings()
 													.getDistributionName());
 							logger.logError(msg, e);
-							return FedoraHandlerUtils.errorStatus(
+							return new Status(IStatus.ERROR,
 									PackagerPlugin.PLUGIN_ID, msg, e);
 						}
 						// Check if cert has been revoked, give some more
@@ -206,12 +206,12 @@ public class UploadHandler extends FedoraPackagerAbstractHandler implements
 											projectRoot.getProductStrings()
 													.getDistributionName());
 							logger.logError(msg, e);
-							return FedoraHandlerUtils.errorStatus(
+							return new Status(IStatus.ERROR,
 									PackagerPlugin.PLUGIN_ID, msg, e);
 						}
 						// something else failed
 						logger.logError(e.getMessage(), e);
-						return FedoraHandlerUtils.errorStatus(
+						return new Status(IStatus.ERROR,
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
 					} catch (InvalidUploadFileException e) {
 						logger.logDebug(e.getMessage(), e);
@@ -243,7 +243,7 @@ public class UploadHandler extends FedoraPackagerAbstractHandler implements
 						// probably a 404 or some such
 						String message = result.getErrorString();
 						logger.logDebug(message);
-						return FedoraHandlerUtils.errorStatus(
+						return new Status(IStatus.ERROR,
 								PackagerPlugin.PLUGIN_ID, message);
 					}
 

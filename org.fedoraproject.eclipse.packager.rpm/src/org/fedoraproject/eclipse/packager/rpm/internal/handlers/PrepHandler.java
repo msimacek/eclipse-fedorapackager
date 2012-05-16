@@ -136,7 +136,7 @@ public class PrepHandler extends FedoraPackagerAbstractHandler implements
 									// This shouldn't happen, but report error
 									// anyway
 									logger.logError(e.getMessage(), e);
-									return FedoraHandlerUtils.errorStatus(
+									return new Status(IStatus.ERROR,
 											RPMPlugin.PLUGIN_ID,
 											e.getMessage(), e);
 								} catch (CommandListenerException e) {
@@ -145,13 +145,13 @@ public class PrepHandler extends FedoraPackagerAbstractHandler implements
 									// shouldn't
 									// happen. Do something reasonable anyway.
 									logger.logError(e.getMessage(), e);
-									return FedoraHandlerUtils.errorStatus(
+									return new Status(IStatus.ERROR,
 											RPMPlugin.PLUGIN_ID,
 											e.getMessage(), e);
 								} catch (RpmBuildCommandException e) {
 									logger.logError(e.getMessage(),
 											e.getCause());
-									return FedoraHandlerUtils.errorStatus(
+									return new Status(IStatus.ERROR,
 											RPMPlugin.PLUGIN_ID,
 											e.getMessage(), e.getCause());
 								} catch (IllegalArgumentException e) {
@@ -159,7 +159,7 @@ public class PrepHandler extends FedoraPackagerAbstractHandler implements
 								} catch (CoreException e) {
 									logger.logError(e.getMessage(),
 											e.getCause());
-									return FedoraHandlerUtils.errorStatus(
+									return new Status(IStatus.ERROR,
 											RPMPlugin.PLUGIN_ID,
 											e.getMessage(), e.getCause());
 								}

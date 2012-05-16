@@ -40,10 +40,11 @@ import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
  * Import handler for SRPMImportCommand
  * 
  */
-public class SRPMImportHandler extends FedoraPackagerAbstractHandler implements IPreferenceHandler, ISRPMImportCommandSLLPolicyCallback{
+public class SRPMImportHandler extends FedoraPackagerAbstractHandler implements
+		IPreferenceHandler, ISRPMImportCommandSLLPolicyCallback {
 	private final FedoraPackagerLogger logger = FedoraPackagerLogger
 			.getInstance();
-	
+
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		Shell shell = getShell(event);
@@ -78,14 +79,13 @@ public class SRPMImportHandler extends FedoraPackagerAbstractHandler implements 
 					SRPMImportResult importResult;
 					importResult = srpmImport.call(monitor);
 					if (!importResult.wasSuccessful()) {
-						return FedoraHandlerUtils.errorStatus(
-								RPMPlugin.PLUGIN_ID,
+						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
 								RpmText.SRPMImportJob_ExtractFailed);
 					}
 					return Status.OK_STATUS;
 				} catch (SRPMImportCommandException e) {
 					logger.logError(e.getMessage(), e);
-					return FedoraHandlerUtils.errorStatus(RPMPlugin.PLUGIN_ID,
+					return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
 							e.getMessage(), e);
 				} finally {
 					monitor.done();

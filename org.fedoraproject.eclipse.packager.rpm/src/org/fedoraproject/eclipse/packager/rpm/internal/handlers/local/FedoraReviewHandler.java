@@ -72,14 +72,14 @@ public class FedoraReviewHandler extends FedoraPackagerAbstractHandler {
 						FedoraHandlerUtils.showErrorDialog(shell, projectRoot
 								.getProductStrings().getProductName(), e
 								.getMessage());
-						return FedoraHandlerUtils.errorStatus(
-								RPMPlugin.PLUGIN_ID, e.getMessage(), e);
+						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
+								e.getMessage(), e);
 					} catch (FedoraPackagerCommandNotFoundException e) {
 						// nothing critical, advise the user what to do.
 						logger.logDebug(e.getMessage());
-						FedoraHandlerUtils.showInformationDialog(shell, projectRoot
-								.getProductStrings().getProductName(), e
-								.getMessage());
+						FedoraHandlerUtils.showInformationDialog(shell,
+								projectRoot.getProductStrings()
+										.getProductName(), e.getMessage());
 						IStatus status = new Status(IStatus.INFO,
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
 						return status;
@@ -87,14 +87,14 @@ public class FedoraReviewHandler extends FedoraPackagerAbstractHandler {
 						// This shouldn't happen, but report error
 						// anyway
 						logger.logError(e.getMessage(), e);
-						return FedoraHandlerUtils.errorStatus(
-								RPMPlugin.PLUGIN_ID, e.getMessage(), e);
+						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
+								e.getMessage(), e);
 					} catch (UserNotInMockGroupException e) {
 						// nothing critical, advise the user what to do.
 						logger.logDebug(e.getMessage());
-						FedoraHandlerUtils.showInformationDialog(shell, projectRoot
-								.getProductStrings().getProductName(), e
-								.getMessage());
+						FedoraHandlerUtils.showInformationDialog(shell,
+								projectRoot.getProductStrings()
+										.getProductName(), e.getMessage());
 						IStatus status = new Status(IStatus.INFO,
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
 						return status;
@@ -103,20 +103,19 @@ public class FedoraReviewHandler extends FedoraPackagerAbstractHandler {
 						// shouldn't
 						// happen. Do something reasonable anyway.
 						logger.logError(e.getMessage(), e);
-						return FedoraHandlerUtils.errorStatus(
-								RPMPlugin.PLUGIN_ID, e.getMessage(), e);
+						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
+								e.getMessage(), e);
 					} catch (MockBuildCommandException e) {
 						// Some unknown error occurred
 						logger.logError(e.getMessage(), e.getCause());
-						return FedoraHandlerUtils.errorStatus(
-								RPMPlugin.PLUGIN_ID, e.getMessage(),
-								e.getCause());
+						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
+								e.getMessage(), e.getCause());
 					} catch (FedoraReviewNotInstalledException e) {
 						// nothing critical, advise the user what to do.
 						logger.logDebug(e.getMessage());
-						FedoraHandlerUtils.showInformationDialog(shell, projectRoot
-								.getProductStrings().getProductName(), e
-								.getMessage());
+						FedoraHandlerUtils.showInformationDialog(shell,
+								projectRoot.getProductStrings()
+										.getProductName(), e.getMessage());
 						IStatus status = new Status(IStatus.INFO,
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
 						return status;
