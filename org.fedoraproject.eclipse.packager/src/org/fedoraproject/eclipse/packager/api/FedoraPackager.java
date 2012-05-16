@@ -41,7 +41,7 @@ public class FedoraPackager {
 	 */
 	public FedoraPackager(IProjectRoot root) {
 		if (root == null)
-			throw new NullPointerException();
+			throw new IllegalArgumentException("Can not create FedoraPackager instance with IProjectRoot being null");
 		this.root = root;
 	}
 	
