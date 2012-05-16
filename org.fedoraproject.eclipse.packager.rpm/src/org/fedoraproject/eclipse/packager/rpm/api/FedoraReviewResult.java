@@ -29,7 +29,7 @@ public class FedoraReviewResult extends Result {
 	 * Set result to successful.
 	 * @param success The new state.
 	 */
-	public void setSuccess(boolean success) {
+	public void setSuccessful(boolean success) {
 		this.successful = success;
 		
 	}

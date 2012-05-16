@@ -13,28 +13,21 @@ package org.fedoraproject.eclipse.packager.rpm.api;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand.BuildType;
-
 /**
  * Result of a call to {@link RpmBuildCommand}.
  */
 public class RpmBuildResult extends Result {
 
 	private boolean success;
-	private BuildType buildType;
 	private Set<String> srpms;
-	private Set<String> rpms;
 	
 	/**
 	 * 
 	 * @param cmdList
-	 * @param type 
 	 */
-	public RpmBuildResult(String[] cmdList, BuildType type) {
+	public RpmBuildResult(String[] cmdList) {
 		super(cmdList);
-		this.buildType = type;
 		this.srpms = new HashSet<String>();
-		this.rpms = new HashSet<String>();
 	}
 	
 	/**
@@ -42,13 +35,6 @@ public class RpmBuildResult extends Result {
 	 */
 	public void setSuccessful(boolean success) {
 		this.success = success;
-	}
-	
-	/**
-	 * @return The build type of the build, which has this as a result.
-	 */
-	public BuildType getBuildType() {
-		return this.buildType;
 	}
 	
 	/**
@@ -61,16 +47,6 @@ public class RpmBuildResult extends Result {
 		this.srpms.add(line.split("\\s+")[1]); //$NON-NLS-1$
 	}
 	
-	/**
-	 * Collect RPM related output in this result
-	 * 
-	 * @param line
-	 */
-	public void addRpm(String line) {
-		// of the form "Wrote: path/to/rpm
-		this.rpms.add(line.split("\\s+")[1]); //$NON-NLS-1$
-	}
-
 	/* (non-Javadoc)
 	 * @see org.fedoraproject.eclipse.packager.api.ICommandResult#wasSuccessful()
 	 */
@@ -92,11 +68,4 @@ public class RpmBuildResult extends Result {
 		return null;
 	}
 
-	/**
-	 * @return a list of absolute paths to RPMs produced by the build or
-	 *         {@code null} if there are none.
-	 */
-	public Set<String> getAbsoluteRpmFilePaths() {
-		return this.rpms;
-	}
 }

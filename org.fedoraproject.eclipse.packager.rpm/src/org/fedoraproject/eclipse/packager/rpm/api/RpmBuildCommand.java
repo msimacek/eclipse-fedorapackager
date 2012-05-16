@@ -287,7 +287,7 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 		@Override
 		public void run(){
 			InputStream is = null;
-			result = new RpmBuildResult(cmdList, buildType);
+			result = new RpmBuildResult(cmdList);
 			Process child = null;
 			try {
 				// log the build command, which was issued

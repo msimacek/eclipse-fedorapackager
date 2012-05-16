@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.git.api;
 
-import org.eclipse.jgit.api.Git;
 import org.fedoraproject.eclipse.packager.api.ICommandResult;
 import org.fedoraproject.eclipse.packager.git.FedoraPackagerGitText;
 
@@ -23,7 +22,6 @@ public class ConvertLocalResult implements ICommandResult {
 	private boolean addRemote = false;
 	private boolean addBranch = false;
 	private boolean hadFetched = false;
-	private Git git;
 
 	/**
 	 * @param successful the successful to set
@@ -33,15 +31,13 @@ public class ConvertLocalResult implements ICommandResult {
 	}
 
 	/**
-	 * @param git
 	 * @param addBranch
 	 * @param addRemote
 	 * @param hadFetched
 	 */
-	public ConvertLocalResult(Git git, boolean addRemote, boolean addBranch,
+	public ConvertLocalResult(boolean addRemote, boolean addBranch,
 			boolean hadFetched) {
 		super();
-		this.git = git;
 		this.addRemote = addRemote;
 		this.addBranch = addBranch;
 		this.hadFetched = hadFetched;
@@ -53,13 +49,6 @@ public class ConvertLocalResult implements ICommandResult {
 	@Override
 	public boolean isSuccessful() {
 		return successful;
-	}
-
-	/**
-	 * @return Git
-	 */
-	public Git getGit() {
-		return this.git;
 	}
 
 	/**

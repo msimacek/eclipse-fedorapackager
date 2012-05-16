@@ -82,37 +82,4 @@ public class UploadSourceResult implements ICommandResult {
 		return null;
 	}
 	
-	/**
-	 * @return The body of the request after uploading.
-	 */
-	public String getMessage() {
-		StringBuilder responseBody = new StringBuilder();
-		// add body if there is one
-		HttpEntity responseEntity = response.getEntity();
-		if (responseEntity == null) {
-			return responseBody.toString();
-		}
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new InputStreamReader(
-					responseEntity.getContent()));
-			String line;
-			line = br.readLine();
-			while (line != null) {
-				responseBody.append(line + "\n"); //$NON-NLS-1$
-				line = br.readLine();
-			}
-		} catch (IOException e) {
-			// ignore
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
-		}
-		return responseBody.toString();
-	}
 }

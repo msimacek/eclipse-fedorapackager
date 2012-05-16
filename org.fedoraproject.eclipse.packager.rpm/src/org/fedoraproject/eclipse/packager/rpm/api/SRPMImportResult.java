@@ -18,7 +18,6 @@ public class SRPMImportResult extends Result {
 
 	private boolean success;
 	private String[] uploaded;
-	private String[] addedToGit;
 	private String[] skipped;
 
 	/**
@@ -53,27 +52,10 @@ public class SRPMImportResult extends Result {
 	}
 
 	/**
-	 * Set the files added to the project's git.
-	 * 
-	 * @param files
-	 *            The files uploaded.
-	 */
-	public void setAddedToGit(String[] files) {
-		addedToGit = files;
-	}
-
-	/**
 	 * @return The names of the successfully uploaded files.
 	 */
 	public String[] getUploaded() {
 		return uploaded;
-	}
-
-	/**
-	 * @return The names of the files added to the project's git.
-	 */
-	public String[] getAddedToGit() {
-		return addedToGit;
 	}
 
 	/**

@@ -173,7 +173,7 @@ public class ConvertLocalToRemoteCommand extends
 			(e.getMessage(), e);
 		}
 
-		ConvertLocalResult result = new ConvertLocalResult(git, addRemote,
+		ConvertLocalResult result = new ConvertLocalResult(addRemote,
 				addBranch, hadFetched);
 
 		// Call post-exec listeners
