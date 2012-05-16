@@ -111,7 +111,6 @@ public class LocalFedoraPackagerProjectRoot implements IProjectRoot {
 				}
 			}
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;

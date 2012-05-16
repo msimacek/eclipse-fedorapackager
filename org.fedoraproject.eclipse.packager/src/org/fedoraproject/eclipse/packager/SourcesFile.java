@@ -91,17 +91,14 @@ public class SourcesFile {
 				line = br.readLine();
 			}
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			if (br != null) {
 				try {
 					br.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -215,10 +212,8 @@ public class SourcesFile {
 			fis.read(buf); // read entire file into buf array
 			result = DigestUtils.md5Hex(buf);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			if (fis != null) {
@@ -270,7 +265,6 @@ public class SourcesFile {
 			try {
 				job.join();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -284,7 +278,7 @@ public class SourcesFile {
 				try {
 					out.close();
 				} catch (IOException e) {
-					// Nothing to do
+					e.printStackTrace();
 				}
 			}
 		}

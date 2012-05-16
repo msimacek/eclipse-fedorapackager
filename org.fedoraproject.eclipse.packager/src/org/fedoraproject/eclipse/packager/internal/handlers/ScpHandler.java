@@ -134,7 +134,6 @@ public class ScpHandler extends FedoraPackagerAbstractHandler {
 					scpCmd.srpmFile(((IResource)ld.getResult()[0]).getName());
 
 				} catch (CoreException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
