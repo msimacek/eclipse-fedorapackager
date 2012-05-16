@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.Specfile;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.SpecfilePackage;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.SpecfileParser;
-import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType;
 import org.fedoraproject.eclipse.packager.utils.RPMUtils;
 
 /**
@@ -39,7 +38,6 @@ import org.fedoraproject.eclipse.packager.utils.RPMUtils;
 public class LocalFedoraPackagerProjectRoot implements IProjectRoot {
 	
 	private IContainer rootContainer;
-	private ProjectType type;
 	private IProductStrings productStrings;
 
 	/**
@@ -56,10 +54,8 @@ public class LocalFedoraPackagerProjectRoot implements IProjectRoot {
 	 * Also @see org.fedoraproject.eclipse.packager.FedoraProjectRoot#initialize(container, type)
 	 */
 	@Override
-	public void initialize(IContainer container, ProjectType type) {
+	public void initialize(IContainer container) {
 		this.rootContainer = container;
-		assert type != null;
-		this.type = type;
 		this.productStrings = new ProductStringsNonTranslatable(this);
 	}
 
@@ -147,29 +143,12 @@ public class LocalFedoraPackagerProjectRoot implements IProjectRoot {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getProjectType()
-	 */
-	@Override
-	public ProjectType getProjectType() {
-		return type;
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getIgnoreFile()
 	 * @see also org.fedoraproject.eclipse.packager.FedoraProjectRoot#getIgnoreFile()
 	 */
 	@Override
 	public IFile getIgnoreFile() {
-		String ignoreFileName = null;
-		switch (type) {
-		case GIT:
-			ignoreFileName = ".gitignore"; //$NON-NLS-1$
-			break;
-		default:
-			break;
-		}
-		assert ignoreFileName != null;
+		String ignoreFileName = ".gitignore"; //$NON-NLS-1$
 		IFile ignoreFile = getFileMember(ignoreFileName);
 		// If not existent, return a IFile handle from the container
 		if (ignoreFile == null) {

@@ -15,7 +15,6 @@ import java.security.GeneralSecurityException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -65,21 +64,6 @@ public class FedoraPackagerUtils {
 	private static final String VCS_CONTRIBUTION_CONTRIB_PLUGIN_ID_ATTRIBUTE_NAME = "contribPlugin"; //$NON-NLS-1$
 	private static final String VCS_CONTRIBUTION_CLASS_ATTRIBUTE_NAME = "class"; //$NON-NLS-1$
 
-	private static final String GIT_REPOSITORY = "org.eclipse.egit.core.GitProvider"; //$NON-NLS-1$
-	private static final String CVS_REPOSITORY = "org.eclipse.team.cvs.core.cvsnature"; //$NON-NLS-1$
-
-	/**
-	 * Type of the Fedora project root based on the underlying VCS system.
-	 */
-	public static enum ProjectType {
-		/** Git project */
-		GIT,
-		/** Cvs project */
-		CVS,
-		/** Unknown */
-		UNKNOWN
-	}
-
 	/**
 	 * Returns a FedoraProjectRoot from the given resource after performing some
 	 * validations.
@@ -101,15 +85,14 @@ public class FedoraPackagerUtils {
 		} else if (resource instanceof IFile) {
 			candidate = resource.getParent();
 		}
-		ProjectType type = getProjectType(candidate);
-		if (candidate != null && type != null) {
+		if (candidate != null) {
 			try {
 				// instantiate, but do not initialize yet
-				IProjectRoot root = instantiateProjectRoot(candidate, type);
+				IProjectRoot root = instantiateProjectRoot(candidate);
 				// Make sure this root passes its own validation
 				if (root.validate(candidate)) {
 					// Do initialization
-					root.initialize(candidate, type);
+					root.initialize(candidate);
 					return root; // All good
 				} else {
 					throw new InvalidProjectRootException(
@@ -128,34 +111,6 @@ public class FedoraPackagerUtils {
 	}
 
 	/**
-	 * Returns the project type determined from the given IResource.
-	 * 
-	 * @param resource
-	 *            The base for determining the project type.
-	 * @return The project type.
-	 */
-	public static ProjectType getProjectType(IResource resource) {
-
-		Map<?, ?> persistentProperties = null;
-		try {
-			persistentProperties = resource.getProject()
-					.getPersistentProperties();
-		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		QualifiedName name = new QualifiedName("org.eclipse.team.core", //$NON-NLS-1$
-				"repository"); //$NON-NLS-1$
-		String repository = (String) persistentProperties.get(name);
-		if (GIT_REPOSITORY.equals(repository)) {
-			return ProjectType.GIT;
-		} else if (CVS_REPOSITORY.equals(repository)) {
-			return ProjectType.CVS;
-		}
-		return ProjectType.UNKNOWN;
-	}
-
-	/**
 	 * Returns the IFpProjectBits used to abstract vcs specific things.
 	 * 
 	 * @param fedoraprojectRoot
@@ -163,8 +118,6 @@ public class FedoraPackagerUtils {
 	 * @return The needed IFpProjectBits.
 	 */
 	public static IFpProjectBits getVcsHandler(IProjectRoot fedoraprojectRoot) {
-		IResource project = fedoraprojectRoot.getProject();
-		ProjectType type = getProjectType(project);
 		QualifiedName propertyName = fedoraprojectRoot
 				.getSupportedProjectPropertyNames()[0];
 		IExtensionPoint vcsExtensions = Platform.getExtensionRegistry()
@@ -185,7 +138,7 @@ public class FedoraPackagerUtils {
 								.getAttribute(VCS_CONTRIBUTION_TYPE_ATTRIBUTE_NAME) != null
 						&& elements[i].getAttribute(
 								VCS_CONTRIBUTION_TYPE_ATTRIBUTE_NAME).equals(
-								type.name())) {
+								"GIT")) { //$NON-NLS-1$
 					try {
 						IConfigurationElement bob = elements[i];
 						IFpProjectBits vcsContributor = (IFpProjectBits) bob
@@ -353,14 +306,12 @@ public class FedoraPackagerUtils {
 	/**
 	 * Instatiate a project root instance using the projectRoot extension point.
 	 * 
-	 * @param type
 	 * @param container
 	 * 
 	 * @return the newly created instance
 	 * @throws FedoraPackagerExtensionPointException
 	 */
-	private static IProjectRoot instantiateProjectRoot(IContainer container,
-			ProjectType type) throws FedoraPackagerExtensionPointException {
+	private static IProjectRoot instantiateProjectRoot(IContainer container) throws FedoraPackagerExtensionPointException {
 		IExtensionPoint projectRootExtension = Platform.getExtensionRegistry()
 				.getExtensionPoint(PackagerPlugin.PLUGIN_ID,
 						PROJECT_ROOT_EXTENSIONPOINT_NAME);

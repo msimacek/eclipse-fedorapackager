@@ -39,7 +39,6 @@ import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
-import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,7 +67,7 @@ public class FedoraProjectRootTest {
 		// this
 		// doesn't work for this case.
 		fpRoot = new FedoraProjectRoot();
-		fpRoot.initialize(projectResource, ProjectType.GIT);
+		fpRoot.initialize(projectResource);
 		assertNotNull(fpRoot);
 	}
 
@@ -88,7 +87,7 @@ public class FedoraProjectRootTest {
 		fpRoot = null;
 		assertNull(fpRoot);
 		fpRoot = new FedoraProjectRoot();
-		fpRoot.initialize(projectResource, ProjectType.GIT);
+		fpRoot.initialize(projectResource);
 		assertNotNull(fpRoot);
 
 		// Git case
@@ -97,7 +96,6 @@ public class FedoraProjectRootTest {
 		fpRoot = FedoraPackagerUtils
 				.getProjectRoot(gitTestProject.getProject());
 		assertNotNull(fpRoot);
-		assertTrue(fpRoot.getProjectType() == ProjectType.GIT);
 
 	}
 
@@ -159,7 +157,6 @@ public class FedoraProjectRootTest {
 		fpRoot = FedoraPackagerUtils
 				.getProjectRoot(gitTestProject.getProject());
 		assertNotNull(fpRoot);
-		assertEquals(ProjectType.GIT, fpRoot.getProjectType());
 
 	}
 

@@ -15,7 +15,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.Specfile;
-import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType;
 
 /**
  * Interface for project root implementations. Users are free to implement this
@@ -30,9 +29,8 @@ public interface IProjectRoot {
 	 * initialization code into this method.
 	 * 
 	 * @param container
-	 * @param type
 	 */
-	public void initialize(IContainer container, ProjectType type);
+	public void initialize(IContainer container);
 
 	/**
 	 * Returns the root container. This may be different from the project this
@@ -76,13 +74,6 @@ public interface IProjectRoot {
 	 * @return The parsed .spec file.
 	 */
 	public Specfile getSpecfileModel();
-
-	/**
-	 * Returns the project type.
-	 * 
-	 * @return The project type based on the VCS used.
-	 */
-	public ProjectType getProjectType();
 
 	/**
 	 * Get the ignore file based on the project type.

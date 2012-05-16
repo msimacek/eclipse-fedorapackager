@@ -64,7 +64,6 @@ import org.fedoraproject.eclipse.packager.tests.utils.MockableUploadSourceComman
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
-import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -100,7 +99,7 @@ public class UploadSourceCommandTest {
 		this.uploadURLForTesting = "https://pkgs.fedoraproject.org/repo/pkgs/upload.cgi";
 		this.testProject = new GitTestProject("apache-commons-codec");
 		IProjectRoot fpRoot = new FedoraProjectRoot();
-		fpRoot.initialize(this.testProject.getProject(), ProjectType.GIT);
+		fpRoot.initialize(this.testProject.getProject());
 		this.packager = new FedoraPackager(fpRoot);
 	}
 

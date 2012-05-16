@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.tests;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -36,7 +35,6 @@ import org.fedoraproject.eclipse.packager.git.FpGitProjectBits;
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
-import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -127,7 +125,6 @@ public class FedoraPackagerUtilsTest {
 		gitProject = new GitTestProject("jsch");
 		IProjectRoot fproot = FedoraPackagerUtils.getProjectRoot(gitProject.getProject());
 		assertNotNull(fproot);
-		assertEquals(ProjectType.GIT, fproot.getProjectType());
 	}
 
 	@Test

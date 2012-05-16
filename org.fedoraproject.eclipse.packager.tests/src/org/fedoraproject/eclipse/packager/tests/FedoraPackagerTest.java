@@ -28,7 +28,6 @@ import org.fedoraproject.eclipse.packager.api.UploadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
-import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +50,7 @@ public class FedoraPackagerTest {
 				
 		packagerProject = TestsUtils.createProjectFromTemplate(origSourceDir);
 		fpRoot = new FedoraProjectRoot();
-		fpRoot.initialize(packagerProject, ProjectType.GIT);
+		fpRoot.initialize(packagerProject);
 		assertNotNull(fpRoot);
 		packager = new FedoraPackager(fpRoot);
 		assertNotNull(packager);

@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.Specfile;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.SpecfilePackage;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.SpecfileParser;
-import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType;
 import org.fedoraproject.eclipse.packager.utils.RPMUtils;
 
 /**
@@ -39,7 +38,6 @@ public class FedoraProjectRoot implements IProjectRoot {
 	
 	private IContainer rootContainer;
 	private SourcesFile sourcesFile;
-	private ProjectType type;
 	private ILookasideCache lookAsideCache; // The lookaside cache abstraction
 	private IProductStrings productStrings;
 
@@ -56,12 +54,10 @@ public class FedoraProjectRoot implements IProjectRoot {
 	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#initialize(org.eclipse.core.resources.IContainer, org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType)
 	 */
 	@Override
-	public void initialize(IContainer container, ProjectType type) {
+	public void initialize(IContainer container) {
 		this.rootContainer = container;
 		this.sourcesFile = new SourcesFile(rootContainer.getFile(new Path(
 				SourcesFile.SOURCES_FILENAME)));
-		assert type != null;
-		this.type = type;
 		// statically pass Fedora type
 		this.lookAsideCache = new LookasideCache();
 		this.productStrings = new ProductStringsNonTranslatable(this);
@@ -150,14 +146,6 @@ public class FedoraProjectRoot implements IProjectRoot {
 		return specfile;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getProjectType()
-	 */
-	@Override
-	public ProjectType getProjectType() {
-		return type;
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -165,24 +153,12 @@ public class FedoraProjectRoot implements IProjectRoot {
 	 */
 	@Override
 	public IFile getIgnoreFile() {
-		String ignoreFileName = null;
-		switch (type) {
-		case GIT:
-			ignoreFileName = ".gitignore"; //$NON-NLS-1$
-			break;
-		case CVS:
-			ignoreFileName = ".cvsignore"; //$NON-NLS-1$
-			break;
-		default:
-			break;
-		}
-		assert ignoreFileName != null;
+		String ignoreFileName = ".gitignore"; //$NON-NLS-1$
 		IFile ignoreFile = getFileMember(ignoreFileName);
 		// If not existent, return a IFile handle from the container
 		if (ignoreFile == null) {
 			return this.rootContainer.getFile(new Path(ignoreFileName));
 		}
-		assert ignoreFile != null;
 		return ignoreFile;
 	}
 

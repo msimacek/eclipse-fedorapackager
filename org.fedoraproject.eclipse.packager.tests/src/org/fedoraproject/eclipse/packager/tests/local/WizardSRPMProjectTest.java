@@ -28,8 +28,6 @@ import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.fedoraproject.eclipse.packager.LocalProjectType;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.LocalFedoraPackagerProjectCreator;
-import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
-import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType;
 import org.fedoraproject.eclipse.packager.tests.utils.LocalSearchString;
 import org.junit.After;
 import org.junit.Before;
@@ -84,11 +82,6 @@ public class WizardSRPMProjectTest {
 		} catch (CoreException e) {
 			e.printStackTrace();
 		}
-
-		// Make sure the original SRPM got copied into the workspace
-		IResource resource = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT);
-		ProjectType projectType = FedoraPackagerUtils.getProjectType(resource);
-		assertTrue(projectType.equals(ProjectType.GIT));
 
 		// Make sure the original SRPM got copied into the workspace
 		IFile srpm = baseProject.getFile(new Path(SRPM));

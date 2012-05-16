@@ -26,7 +26,6 @@ import org.junit.runners.Suite.SuiteClasses;
 	AllLocalTests.class,
 	// Auxiliary plug-in tests
 	GitFpBitsTest.class,
-	GitProjectTypeTest.class,
 	SourcesFileTest.class,
 	SourcesFileUpdaterTest.class,
 	VCSIgnoreFileUpdaterTest.class,

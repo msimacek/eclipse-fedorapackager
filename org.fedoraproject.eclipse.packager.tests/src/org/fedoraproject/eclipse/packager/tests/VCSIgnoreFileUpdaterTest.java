@@ -33,7 +33,6 @@ import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.VCSIgnoreFileUpdater;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
-import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,7 +62,7 @@ public class VCSIgnoreFileUpdaterTest {
 				
 		tempProject = TestsUtils.createProjectFromTemplate(copySource);
 		fpRoot = new FedoraProjectRoot();
-		fpRoot.initialize(tempProject, ProjectType.GIT);
+		fpRoot.initialize(tempProject);
 		assertNotNull(fpRoot);
 		
 		// Get an IFile handle it shouldn't matter if it exists or not.
