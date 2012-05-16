@@ -99,7 +99,6 @@ public class LocalMockBuildHandler extends LocalHandlerDispatcher {
 			logger.logError(FedoraPackagerText.invalidFedoraProjectRootError, e);
 			FedoraHandlerUtils.showErrorDialog(shell, "Error", //$NON-NLS-1$
 					FedoraPackagerText.invalidFedoraProjectRootError);
-			return null;
 		}
 		return null;
 	}

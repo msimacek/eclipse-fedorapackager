@@ -277,7 +277,6 @@ public class UploadHandler extends FedoraPackagerAbstractHandler implements
 			logger.logError(FedoraPackagerText.invalidFedoraProjectRootError, e);
 			FedoraHandlerUtils.showErrorDialog(shell, "Error", //$NON-NLS-1$
 					FedoraPackagerText.invalidFedoraProjectRootError);
-			return null;
 		}
 		return null; // must be null
 	}

@@ -103,7 +103,6 @@ public class SRPMBuildHandler extends LocalHandlerDispatcher {
 					FedoraPackagerText.invalidLocalFedoraProjectRootError, e);
 			FedoraHandlerUtils.showErrorDialog(shell, "Error", //$NON-NLS-1$
 					FedoraPackagerText.invalidLocalFedoraProjectRootError);
-			return null;
 		}
 		return null;
 	}
