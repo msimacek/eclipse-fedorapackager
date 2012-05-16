@@ -79,13 +79,11 @@ public class GitTestProject {
 		try {
 			project.create(null);
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
 			project.open(null);
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		setPersistentProperty();
@@ -94,13 +92,11 @@ public class GitTestProject {
 		try {
 			connect.execute(null);
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -167,7 +163,6 @@ public class GitTestProject {
 			project.setPersistentProperty(PackagerPlugin.PROJECT_PROP,
 			"true" /* unused value */);
 		} catch (CoreException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}
