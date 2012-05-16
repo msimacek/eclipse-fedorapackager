@@ -12,7 +12,6 @@ package org.fedoraproject.eclipse.packager.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,12 +58,6 @@ public class FedoraPackagerTest {
 	@After
 	public void tearDown() throws CoreException {
 		this.packagerProject.delete(true, true, null);
-	}
-
-	@Test
-	public void testGetFedoraProjectRoot() {
-		assertNotNull(fpRoot);
-		assertSame(fpRoot, packager.getFedoraProjectRoot());
 	}
 
 	/**

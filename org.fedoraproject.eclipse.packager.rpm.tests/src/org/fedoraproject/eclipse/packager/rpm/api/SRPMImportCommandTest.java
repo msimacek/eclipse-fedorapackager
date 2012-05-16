@@ -53,7 +53,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.osgi.framework.FrameworkUtil;
 
-public class SRPMImportCommandTest implements ISRPMImportCommandSLLPolicyCallback {
+public class SRPMImportCommandTest implements
+		ISRPMImportCommandSLLPolicyCallback {
 	// project under test
 	private IProject testProject;
 	// main interface class
@@ -64,18 +65,18 @@ public class SRPMImportCommandTest implements ISRPMImportCommandSLLPolicyCallbac
 	private String badSrpmPath;
 
 	@Before
-	public void setup() throws IOException, CoreException  {
+	public void setup() throws IOException, CoreException {
 		String uploadURL = System.getProperty(UPLOAD_URL_PROP);
 		if (uploadURL == null) {
 			fail(UPLOAD_URL_PROP + " not set"); //$NON-NLS-1$
 		}
 		srpmPath = FileLocator
 				.toFileURL(
-						FileLocator
-								.find(FrameworkUtil.getBundle(this.getClass()),
-										new Path(
-												"resources/eclipse-mylyn-tasks-3.6.0-2.fc17.src.rpm"), //$NON-NLS-1$
-										null)).getFile();
+						FileLocator.find(
+								FrameworkUtil.getBundle(this.getClass()),
+								new Path(
+										"resources/eclipse-mylyn-tasks-3.6.0-2.fc17.src.rpm"), //$NON-NLS-1$
+								null)).getFile();
 		badSrpmPath = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path("resources/ed-1.5-2.fc16.src.rpm"), null)) //$NON-NLS-1$
@@ -98,40 +99,43 @@ public class SRPMImportCommandTest implements ISRPMImportCommandSLLPolicyCallbac
 	}
 
 	@After
-	public void tearDown() throws CoreException  {
+	public void tearDown() throws CoreException {
 		this.testProject.delete(true, null);
 	}
 
 	@Test
-	public void canImportSRPM() throws SRPMImportCommandException, InvalidProjectRootException, NoWorkTreeException, IOException, CoreException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, URISyntaxException, SourcesUpToDateException, DownloadFailedException, CommandMisconfiguredException, CommandListenerException  {
+	public void canImportSRPM() throws SRPMImportCommandException,
+			InvalidProjectRootException, NoWorkTreeException, IOException,
+			CoreException, FedoraPackagerCommandInitializationException,
+			FedoraPackagerCommandNotFoundException, URISyntaxException,
+			SourcesUpToDateException, DownloadFailedException,
+			CommandMisconfiguredException, CommandListenerException {
 		SRPMImportCommand srpmImport = new SRPMImportCommand(srpmPath,
 				testProject, testProject, uploadURLForTesting, this);
 		SRPMImportResult result = srpmImport.call(new NullProgressMonitor());
 		IProjectRoot fpr = FedoraPackagerUtils.getProjectRoot(testProject);
 		FedoraPackager packager = new FedoraPackager(fpr);
-		assertTrue(packager.getFedoraProjectRoot().getContainer().getLocation()
+		assertTrue(fpr.getContainer().getLocation()
 				.append("/redhat-bugzilla-custom-transitions.txt").toFile() //$NON-NLS-1$
 				.exists());
-		assertTrue(packager.getFedoraProjectRoot().getContainer().getLocation()
+		assertTrue(fpr.getContainer().getLocation()
 				.append("/eclipse-mylyn-tasks-R_3_6_0-fetched-src.tar.bz2") //$NON-NLS-1$
 				.toFile().exists());
-		assertTrue(packager.getFedoraProjectRoot().getContainer().getLocation()
+		assertTrue(fpr.getContainer().getLocation()
 				.append("/eclipse-mylyn-tasks-3.6.0-2.fc17.src.rpm").toFile() //$NON-NLS-1$
 				.exists());
 		// ensure files are added to git
 		Set<String> unaddedSet = git.status().call().getUntracked();
-		assertTrue(!unaddedSet.contains(packager.getFedoraProjectRoot()
-				.getSourcesFile().getName()));
-		assertTrue(!unaddedSet.contains(packager.getFedoraProjectRoot()
-				.getSpecFile().getName()));
-		assertTrue(!unaddedSet.contains(FedoraPackagerUtils.getVcsHandler(fpr).getIgnoreFileName()));
+		assertTrue(!unaddedSet.contains(fpr.getSourcesFile().getName()));
+		assertTrue(!unaddedSet.contains(fpr.getSpecFile().getName()));
+		assertTrue(!unaddedSet.contains(FedoraPackagerUtils.getVcsHandler(fpr)
+				.getIgnoreFileName()));
 		// ensure files uploaded
 		fpr.getSourcesFile().deleteSource(
 				"eclipse-mylyn-tasks-R_3_6_0-fetched-src.tar.bz2"); //$NON-NLS-1$
 		fpr.getProject().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());
-		assertTrue(!packager.getFedoraProjectRoot().getContainer()
-				.getLocation()
+		assertTrue(!fpr.getContainer().getLocation()
 				.append("/eclipse-mylyn-tasks-R_3_6_0-fetched-src.tar.bz2") //$NON-NLS-1$
 				.toFile().exists());
 		DownloadSourceCommand download = (DownloadSourceCommand) packager
@@ -141,25 +145,23 @@ public class SRPMImportCommandTest implements ISRPMImportCommandSLLPolicyCallbac
 		download.setDownloadURL("http://" //$NON-NLS-1$
 				+ new URI(uploadURLForTesting).getHost());
 		download.call(new NullProgressMonitor());
-		assertTrue(packager.getFedoraProjectRoot().getContainer().getLocation()
+		assertTrue(fpr.getContainer().getLocation()
 				.append("/eclipse-mylyn-tasks-R_3_6_0-fetched-src.tar.bz2") //$NON-NLS-1$
 				.toFile().exists());
-		assertTrue(packager.getFedoraProjectRoot().getSourcesFile()
-				.getMissingSources().isEmpty());
+		assertTrue(fpr.getSourcesFile().getMissingSources().isEmpty());
 		// ensure files are tracked
 		for (String file : result.getUploaded()) {
-			assertTrue(packager.getFedoraProjectRoot().getSourcesFile()
-					.getSources().keySet().contains(file));
+			assertTrue(fpr.getSourcesFile().getSources().keySet()
+					.contains(file));
 		}
-		assertTrue(packager.getFedoraProjectRoot().getSourcesFile()
-				.getSources().keySet()
+		assertTrue(fpr.getSourcesFile().getSources().keySet()
 				.contains("eclipse-mylyn-tasks-R_3_6_0-fetched-src.tar.bz2")); //$NON-NLS-1$
 		// ensure spec is named correctly
-		assertTrue(packager.getFedoraProjectRoot().getSpecFile().getName()
+		assertTrue(fpr.getSpecFile().getName()
 				.equals("eclipse-mylyn-tasks.spec")); //$NON-NLS-1$
 	}
 
-	@Test(expected=SRPMImportCommandException.class)
+	@Test(expected = SRPMImportCommandException.class)
 	public void incorrectSpecFails() throws SRPMImportCommandException {
 		SRPMImportCommand srpmImport = new SRPMImportCommand(badSrpmPath,
 				testProject, testProject, uploadURLForTesting, this);

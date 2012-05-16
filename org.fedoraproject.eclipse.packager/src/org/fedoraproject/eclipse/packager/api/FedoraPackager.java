@@ -46,15 +46,6 @@ public class FedoraPackager {
 	}
 	
 	/**
-	 * Get the underlying Fedora project root
-	 * 
-	 * @return The Fedora project root.
-	 */
-	public IProjectRoot getFedoraProjectRoot() {
-		return this.root;
-	}
-	
-	/**
 	 * Get a list of all registered Fedora packager command IDs. Each command id
 	 * may be used to get the desired command instance from the registry using
 	 * {@link FedoraPackager#getCommandInstance(String)}.
