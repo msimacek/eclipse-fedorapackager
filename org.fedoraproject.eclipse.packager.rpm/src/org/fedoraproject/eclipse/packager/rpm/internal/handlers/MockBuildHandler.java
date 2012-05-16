@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
+import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
 import org.fedoraproject.eclipse.packager.api.FileDialogRunable;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
@@ -47,48 +48,49 @@ public class MockBuildHandler extends FedoraPackagerAbstractHandler {
 		final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 		IResource eventResource = FedoraHandlerUtils.getResource(event);
 		try {
-			setProjectRoot(FedoraPackagerUtils
-					.getProjectRoot(eventResource));
+			final IProjectRoot projectRoot = FedoraPackagerUtils
+					.getProjectRoot(eventResource);
+
+			IPath srpmPath = null;
+			if (eventResource instanceof IFile
+					&& eventResource.getName().endsWith(".src.rpm")) { //$NON-NLS-1$
+				srpmPath = eventResource.getLocation();
+			}
+			if (srpmPath == null) {
+				try {
+					srpmPath = FedoraHandlerUtils.chooseRootFileOfType(shell,
+							projectRoot, ".src.rpm", //$NON-NLS-1$
+							RpmText.MockBuildHandler_RootListMessage);
+				} catch (OperationCanceledException e) {
+					return null;
+				} catch (CoreException e) {
+					logger.logError(e.getMessage(), e);
+					return FedoraHandlerUtils.errorStatus(RPMPlugin.PLUGIN_ID,
+							e.getMessage(), e);
+				}
+			}
+			if (srpmPath == null) {
+				FileDialogRunable fdr = new FileDialogRunable("*.src.rpm", //$NON-NLS-1$
+						RpmText.MockBuildHandler_FileSystemDialogTitle);
+				shell.getDisplay().syncExec(fdr);
+				String srpm = fdr.getFile();
+				if (srpm == null) {
+					return Status.CANCEL_STATUS;
+				}
+				srpmPath = new Path(srpm);
+			}
+			Job job = new MockBuildJob(projectRoot.getProductStrings()
+					.getProductName(), shell, projectRoot, srpmPath,
+					FedoraPackagerUtils.getVcsHandler(projectRoot)
+							.getBranchConfig());
+			job.setSystem(true); // Suppress UI. That's done in sub-jobs within.
+			job.schedule();
 		} catch (InvalidProjectRootException e) {
 			logger.logError(FedoraPackagerText.invalidFedoraProjectRootError, e);
 			FedoraHandlerUtils.showErrorDialog(shell, "Error", //$NON-NLS-1$
 					FedoraPackagerText.invalidFedoraProjectRootError);
 			return null;
 		}
-		IPath srpmPath = null;
-		if (eventResource instanceof IFile
-				&& eventResource.getName().endsWith(".src.rpm")) { //$NON-NLS-1$
-			srpmPath = eventResource.getLocation();
-		}
-		if (srpmPath == null) {
-			try {
-				srpmPath = FedoraHandlerUtils.chooseRootFileOfType(shell,
-						getProjectRoot(), ".src.rpm", //$NON-NLS-1$
-						RpmText.MockBuildHandler_RootListMessage);
-			} catch (OperationCanceledException e) {
-				return null;
-			} catch (CoreException e) {
-				logger.logError(e.getMessage(), e);
-				return FedoraHandlerUtils.errorStatus(RPMPlugin.PLUGIN_ID,
-						e.getMessage(), e);
-			}
-		}
-		if (srpmPath == null) {
-			FileDialogRunable fdr = new FileDialogRunable("*.src.rpm", //$NON-NLS-1$
-					RpmText.MockBuildHandler_FileSystemDialogTitle);
-			shell.getDisplay().syncExec(fdr);
-			String srpm = fdr.getFile();
-			if (srpm == null) {
-				return Status.CANCEL_STATUS;
-			}
-			srpmPath = new Path(srpm);
-		}
-		Job job = new MockBuildJob(getProjectRoot().getProductStrings()
-				.getProductName(), shell, getProjectRoot(), srpmPath,
-				FedoraPackagerUtils.getVcsHandler(getProjectRoot())
-						.getBranchConfig());
-		job.setSystem(true); // Suppress UI. That's done in sub-jobs within.
-		job.schedule();
 		return null;
 	}
 }

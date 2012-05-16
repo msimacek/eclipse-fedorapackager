@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
+import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
@@ -43,9 +44,7 @@ public class SRPMBuildHandler extends LocalHandlerDispatcher {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		// Perhaps need to dispatch to non-local handler
-		if (checkDispatch(
-				event,
-				getDispatchee())) {
+		if (checkDispatch(event, getDispatchee())) {
 			// dispatched, so return
 			return null;
 		}
@@ -54,7 +53,52 @@ public class SRPMBuildHandler extends LocalHandlerDispatcher {
 
 		IResource eventResource = FedoraHandlerUtils.getResource(event);
 		try {
-			setProjectRoot(FedoraPackagerUtils.getProjectRoot(eventResource));
+			final IProjectRoot projectRoot = FedoraPackagerUtils
+					.getProjectRoot(eventResource);
+
+			FedoraPackager fp = new FedoraPackager(projectRoot);
+			final RpmBuildCommand srpmBuild;
+			try {
+				// get RPM build command in order to produce an SRPM
+				srpmBuild = (RpmBuildCommand) fp
+						.getCommandInstance(RpmBuildCommand.ID);
+			} catch (FedoraPackagerCommandNotFoundException e) {
+				logger.logError(e.getMessage(), e);
+				FedoraHandlerUtils.showErrorDialog(shell, projectRoot
+						.getProductStrings().getProductName(), e.getMessage());
+				return null;
+			} catch (FedoraPackagerCommandInitializationException e) {
+				logger.logError(e.getMessage(), e);
+				FedoraHandlerUtils.showErrorDialog(shell, projectRoot
+						.getProductStrings().getProductName(), e.getMessage());
+				return null;
+			}
+
+			// Need to nest jobs into this job for it to show up properly in the
+			// UI
+			Job job = new Job(projectRoot.getProductStrings().getProductName()) {
+
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+					// Kick off the SRPM job
+					SRPMBuildJob srpmBuildJob = new SRPMBuildJob(
+							RpmText.SRPMBuildHandler_buildingSRPM, srpmBuild,
+							projectRoot, FedoraPackagerUtils.getVcsHandler(
+									projectRoot).getBranchConfig());
+					srpmBuildJob.setUser(true);
+					srpmBuildJob.schedule();
+					try {
+						// wait for job to finish
+						srpmBuildJob.join();
+					} catch (InterruptedException e1) {
+						throw new OperationCanceledException();
+					}
+					return srpmBuildJob.getResult();
+				}
+
+			};
+			job.setSystem(true); // avoid UI for this job
+			job.schedule();
 		} catch (InvalidProjectRootException e) {
 			logger.logError(
 					FedoraPackagerText.invalidLocalFedoraProjectRootError, e);
@@ -62,51 +106,6 @@ public class SRPMBuildHandler extends LocalHandlerDispatcher {
 					FedoraPackagerText.invalidLocalFedoraProjectRootError);
 			return null;
 		}
-		FedoraPackager fp = new FedoraPackager(getProjectRoot());
-		final RpmBuildCommand srpmBuild;
-		try {
-			// get RPM build command in order to produce an SRPM
-			srpmBuild = (RpmBuildCommand) fp
-					.getCommandInstance(RpmBuildCommand.ID);
-		} catch (FedoraPackagerCommandNotFoundException e) {
-			logger.logError(e.getMessage(), e);
-			FedoraHandlerUtils.showErrorDialog(shell, getProjectRoot()
-					.getProductStrings().getProductName(), e.getMessage());
-			return null;
-		} catch (FedoraPackagerCommandInitializationException e) {
-			logger.logError(e.getMessage(), e);
-			FedoraHandlerUtils.showErrorDialog(shell, getProjectRoot()
-					.getProductStrings().getProductName(), e.getMessage());
-			return null;
-		}
-
-		// Need to nest jobs into this job for it to show up properly in the
-		// UI
-		Job job = new Job(getProjectRoot().getProductStrings()
-				.getProductName()) {
-
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				// Kick off the SRPM job
-				SRPMBuildJob srpmBuildJob = new SRPMBuildJob(
-						RpmText.SRPMBuildHandler_buildingSRPM, srpmBuild,
-						getProjectRoot(), FedoraPackagerUtils
-								.getVcsHandler(getProjectRoot())
-								.getBranchConfig());
-				srpmBuildJob.setUser(true);
-				srpmBuildJob.schedule();
-				try {
-					// wait for job to finish
-					srpmBuildJob.join();
-				} catch (InterruptedException e1) {
-					throw new OperationCanceledException();
-				}
-				return srpmBuildJob.getResult();
-			}
-
-		};
-		job.setSystem(true); // avoid UI for this job
-		job.schedule();
 		return null;
 	}
 

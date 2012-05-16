@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerPreferencesConstants;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
+import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.DownloadSourcesJob;
@@ -39,16 +40,17 @@ public class DownloadHandler extends FedoraPackagerAbstractHandler implements IP
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		final Shell shell = getShell(event);
 		final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
+		IProjectRoot projectRoot = null;
 		try {
 			IResource eventResource = FedoraHandlerUtils.getResource(event);
-			setProjectRoot(FedoraPackagerUtils.getProjectRoot(eventResource));
+			projectRoot = FedoraPackagerUtils.getProjectRoot(eventResource);
 		} catch (InvalidProjectRootException e) {
 			logger.logError(FedoraPackagerText.invalidFedoraProjectRootError, e);
 			FedoraHandlerUtils.showErrorDialog(shell, "Error", //$NON-NLS-1$
 					FedoraPackagerText.invalidFedoraProjectRootError);
 			return null;
 		}
-		FedoraPackager fp = new FedoraPackager(getProjectRoot());
+		FedoraPackager fp = new FedoraPackager(projectRoot);
 		final DownloadSourceCommand download;
 		try {
 			// Get DownloadSourceCommand from Fedora packager registry
@@ -57,18 +59,18 @@ public class DownloadHandler extends FedoraPackagerAbstractHandler implements IP
 		} catch (FedoraPackagerCommandNotFoundException e) {
 			logger.logError(e.getMessage(), e);
 			FedoraHandlerUtils.showErrorDialog(shell,
-					getProjectRoot().getProductStrings().getProductName(), e.getMessage());
+					projectRoot.getProductStrings().getProductName(), e.getMessage());
 			return null;
 		} catch (FedoraPackagerCommandInitializationException e) {
 			logger.logError(e.getMessage(), e);
 			FedoraHandlerUtils.showErrorDialog(shell,
-					getProjectRoot().getProductStrings().getProductName(), e.getMessage());
+					projectRoot.getProductStrings().getProductName(), e.getMessage());
 			return null;
 		}
 		final String downloadUrlPreference = getPreference();
 		Job downloadJob = new DownloadSourcesJob(
-				getProjectRoot().getProductStrings().getProductName(), download,
-				getProjectRoot(), shell, downloadUrlPreference);
+				projectRoot.getProductStrings().getProductName(), download,
+				projectRoot, shell, downloadUrlPreference);
 		downloadJob.setUser(true);
 		downloadJob.schedule();
 		return null; // must be null

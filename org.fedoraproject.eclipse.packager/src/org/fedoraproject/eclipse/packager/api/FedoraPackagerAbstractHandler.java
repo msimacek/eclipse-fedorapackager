@@ -15,15 +15,12 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
-import org.fedoraproject.eclipse.packager.IProjectRoot;
 
 /**
  * Common super class for Fedora Packager for Eclipse Handlers.
  */
 public abstract class FedoraPackagerAbstractHandler extends AbstractHandler {
 
-	private IProjectRoot projectRoot;
-	
 	/**
 	 * Retrieve a valid shell from the given {@link ExecutionEvent}.
 	 * 
@@ -36,22 +33,4 @@ public abstract class FedoraPackagerAbstractHandler extends AbstractHandler {
 		return HandlerUtil.getActiveShellChecked(event);
 	}
 	
-	/**
-	 * Get the project root for this handler. May be null.
-	 * 
-	 * @return The project root.
-	 */
-	protected IProjectRoot getProjectRoot() {
-		return projectRoot;
-	}
-	
-	/**
-	 * Set the project root for this handler. Usually from the execute() method
-	 * of the implementing handler.
-	 * 
-	 * @param projectRoot
-	 */
-	protected void setProjectRoot(IProjectRoot projectRoot) {
-		this.projectRoot = projectRoot;
-	}
 }

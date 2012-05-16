@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
+import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
 import org.fedoraproject.eclipse.packager.api.FileDialogRunable;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
@@ -33,17 +34,20 @@ import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 
 /**
- * Handler for building an SRPM inside mock for a local Fedora RPM project.
- * This is the modified version of org.fedoraproject.eclipse.packager.rpm.internal.handlers.MockBuildHandler.java
+ * Handler for building an SRPM inside mock for a local Fedora RPM project. This
+ * is the modified version of
+ * org.fedoraproject.eclipse.packager.rpm.internal.handlers
+ * .MockBuildHandler.java
  * 
- * A few things (most importantly the project root and dispatching) are different.
+ * A few things (most importantly the project root and dispatching) are
+ * different.
  */
 public class LocalMockBuildHandler extends LocalHandlerDispatcher {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		// Perhaps need to dispatch to non-local handler
-		if(checkDispatch(event, getDispatchee())) {
+		if (checkDispatch(event, getDispatchee())) {
 			// dispatched, so return
 			return null;
 		}
@@ -52,50 +56,52 @@ public class LocalMockBuildHandler extends LocalHandlerDispatcher {
 		IResource eventResource = null;
 		try {
 			eventResource = FedoraHandlerUtils.getResource(event);
-			setProjectRoot(FedoraPackagerUtils.getProjectRoot(eventResource));
+			final IProjectRoot projectRoot = FedoraPackagerUtils
+					.getProjectRoot(eventResource);
+
+			// If SRPM already selected, don't prompt
+			IPath srpmPath = null;
+			if (eventResource instanceof IFile
+					&& eventResource.getName().endsWith(".src.rpm")) { //$NON-NLS-1$
+				srpmPath = eventResource.getLocation();
+			}
+			// Let user choose from the SRPMs available in the project root
+			if (srpmPath == null) {
+				try {
+					srpmPath = FedoraHandlerUtils.chooseRootFileOfType(shell,
+							projectRoot, ".src.rpm", //$NON-NLS-1$
+							RpmText.MockBuildHandler_RootListMessage);
+				} catch (OperationCanceledException e) {
+					return null;
+				} catch (CoreException e) {
+					logger.logError(e.getMessage(), e);
+					return FedoraHandlerUtils.errorStatus(RPMPlugin.PLUGIN_ID,
+							e.getMessage(), e);
+				}
+			}
+			// As a last resort, let the user pick any SRPM on their system
+			if (srpmPath == null) {
+				FileDialogRunable fdr = new FileDialogRunable("*.src.rpm", //$NON-NLS-1$
+						RpmText.MockBuildHandler_FileSystemDialogTitle);
+				shell.getDisplay().syncExec(fdr);
+				String srpm = fdr.getFile();
+				if (srpm == null) {
+					return Status.CANCEL_STATUS;
+				}
+				srpmPath = new Path(srpm);
+			}
+			Job job = new MockBuildJob(projectRoot.getProductStrings()
+					.getProductName(), shell, projectRoot, srpmPath,
+					FedoraPackagerUtils.getVcsHandler(projectRoot)
+							.getBranchConfig());
+			job.setSystem(true); // Suppress UI. That's done in sub-jobs within.
+			job.schedule();
 		} catch (InvalidProjectRootException e) {
 			logger.logError(FedoraPackagerText.invalidFedoraProjectRootError, e);
 			FedoraHandlerUtils.showErrorDialog(shell, "Error", //$NON-NLS-1$
 					FedoraPackagerText.invalidFedoraProjectRootError);
 			return null;
 		}
-		// If SRPM already selected, don't prompt
-		IPath srpmPath = null;
-		if (eventResource instanceof IFile
-				&& eventResource.getName().endsWith(".src.rpm")) { //$NON-NLS-1$
-			srpmPath = eventResource.getLocation();
-		}
-		// Let user choose from the SRPMs available in the project root
-		if (srpmPath == null) {
-			try {
-				srpmPath = FedoraHandlerUtils.chooseRootFileOfType(shell,
-						getProjectRoot(), ".src.rpm", //$NON-NLS-1$
-						RpmText.MockBuildHandler_RootListMessage);
-			} catch (OperationCanceledException e) {
-				return null;
-			} catch (CoreException e) {
-				logger.logError(e.getMessage(), e);
-				return FedoraHandlerUtils.errorStatus(RPMPlugin.PLUGIN_ID,
-						e.getMessage(), e);
-			}
-		}
-		// As a last resort, let the user pick any SRPM on their system
-		if (srpmPath == null) {
-			FileDialogRunable fdr = new FileDialogRunable("*.src.rpm", //$NON-NLS-1$
-					RpmText.MockBuildHandler_FileSystemDialogTitle);
-			shell.getDisplay().syncExec(fdr);
-			String srpm = fdr.getFile();
-			if (srpm == null) {
-				return Status.CANCEL_STATUS;
-			}
-			srpmPath = new Path(srpm);
-		}
-		Job job = new MockBuildJob(getProjectRoot().getProductStrings()
-				.getProductName(), shell, getProjectRoot(), srpmPath,
-				FedoraPackagerUtils.getVcsHandler(getProjectRoot())
-						.getBranchConfig());
-		job.setSystem(true); // Suppress UI. That's done in sub-jobs within.
-		job.schedule();
 		return null;
 	}
 

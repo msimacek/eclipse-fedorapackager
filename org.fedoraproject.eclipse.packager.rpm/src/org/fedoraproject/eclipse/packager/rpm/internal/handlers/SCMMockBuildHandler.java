@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerPreferencesConstants;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
+import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
 import org.fedoraproject.eclipse.packager.api.IPreferenceHandler;
@@ -32,7 +33,8 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
  * Handler for building locally using mock with SCM.
  * 
  */
-public class SCMMockBuildHandler extends FedoraPackagerAbstractHandler implements IPreferenceHandler {
+public class SCMMockBuildHandler extends FedoraPackagerAbstractHandler
+		implements IPreferenceHandler {
 
 	protected Shell shell;
 	protected MockBuildCommand mockBuild;
@@ -43,20 +45,20 @@ public class SCMMockBuildHandler extends FedoraPackagerAbstractHandler implement
 		final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 		try {
 			IResource eventResource = FedoraHandlerUtils.getResource(event);
-			setProjectRoot(FedoraPackagerUtils
-					.getProjectRoot(eventResource));
+			final IProjectRoot projectRoot = FedoraPackagerUtils
+					.getProjectRoot(eventResource);
+			Job job = new SCMMockBuildJob(projectRoot.getProductStrings()
+					.getProductName(), shell, projectRoot, RepoType.GIT,
+					FedoraPackagerUtils.getVcsHandler(projectRoot)
+							.getBranchConfig(), getPreference());
+			job.setSystem(true); // Suppress UI. That's done in sub-jobs within.
+			job.schedule();
 		} catch (InvalidProjectRootException e) {
 			logger.logError(FedoraPackagerText.invalidFedoraProjectRootError, e);
 			FedoraHandlerUtils.showErrorDialog(shell, "Error", //$NON-NLS-1$
 					FedoraPackagerText.invalidFedoraProjectRootError);
 			return null;
 		}
-		Job job = new SCMMockBuildJob(getProjectRoot().getProductStrings()
-				.getProductName(), shell, getProjectRoot(), RepoType.GIT,
-				FedoraPackagerUtils.getVcsHandler(getProjectRoot())
-						.getBranchConfig(), getPreference());
-		job.setSystem(true); // Suppress UI. That's done in sub-jobs within.
-		job.schedule();
 		return null;
 	}
 
