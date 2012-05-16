@@ -323,10 +323,10 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 			consoleWriterThread.start();
 			try {
 				consoleWriterThread.join();
-				result.setSuccess(child.waitFor() == 0);
+				result.setSuccessful(child.waitFor() == 0);
 			} catch (InterruptedException e) {
 				child.destroy();
-				result.setSuccess(false);
+				result.setSuccessful(false);
 			}
 		}
 		

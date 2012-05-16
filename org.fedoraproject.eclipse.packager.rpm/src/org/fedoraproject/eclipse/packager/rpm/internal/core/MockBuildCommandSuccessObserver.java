@@ -39,7 +39,7 @@ public class MockBuildCommandSuccessObserver implements Observer {
 			// if Error shows up in the console there was likely an error
 			// so set status accordingly.
 			if (line.toLowerCase().contains(MOCK_ERROR_OUTPUT_STRING)) {
-				mockBuildResult.setSuccess(false);
+				mockBuildResult.setSuccessful(false);
 			}
 		}
 	}

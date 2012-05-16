@@ -316,7 +316,7 @@ public class SRPMImportCommand {
 		} catch (UploadFailedException e) {
 			throw new SRPMImportCommandException(e.getMessage(), e);
 		}
-		result.setSuccess(true);
+		result.setSuccessful(true);
 		return result;
 	}
 

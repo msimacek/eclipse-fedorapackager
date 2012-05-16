@@ -55,9 +55,11 @@ public class MockBuildResult extends Result {
 	}
 	
 	/**
+	 * Sets the successful state of the result.
 	 * 
+	 * @param success The new success state.
 	 */
-	public void setSuccess(boolean success) {
+	public void setSuccessful(boolean success) {
 		this.successful = success;
 	}
 	

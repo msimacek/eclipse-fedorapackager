@@ -38,7 +38,7 @@ public class SRPMImportResult extends Result {
 	 * @param success
 	 *            the success to set
 	 */
-	public void setSuccess(boolean success) {
+	public void setSuccessful(boolean success) {
 		this.success = success;
 	}
 
