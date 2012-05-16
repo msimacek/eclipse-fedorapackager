@@ -401,8 +401,7 @@ public class ChainBuildDialog extends Dialog {
 											.getProject(item.getText()));
 							rootList.add(projectRoot);
 							buildList.add(FedoraPackagerUtils.getVcsHandler(
-									projectRoot).getScmUrlForKoji(projectRoot,
-									null));
+									projectRoot).getScmUrlForKoji(null));
 						} catch (InvalidProjectRootException e1) {
 							// probably deleted/renamed spec, just skip package
 						}

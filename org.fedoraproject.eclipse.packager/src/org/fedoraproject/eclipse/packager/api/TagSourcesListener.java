@@ -73,7 +73,7 @@ public class TagSourcesListener implements ICommandListener {
 				FedoraPackagerLogger logger = FedoraPackagerLogger
 						.getInstance();
 				logger.logDebug(FedoraPackagerText.TagSourcesListener_tagSourcesMsg);
-				projectBits.tagVcs(projectRoot, mainMonitor, bci);
+				projectBits.tagVcs(mainMonitor, bci);
 			}
 		}
 		mainMonitor.worked(20);

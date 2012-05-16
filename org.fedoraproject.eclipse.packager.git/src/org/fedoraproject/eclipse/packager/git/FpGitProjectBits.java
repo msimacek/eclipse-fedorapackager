@@ -150,12 +150,10 @@ public class FpGitProjectBits implements IFpProjectBits {
 	/**
 	 * Git should always return anonymous checkout with git protocol for koji.
 	 * 
-	 * @see org.fedoraproject.eclipse.packager.IFpProjectBits#getScmUrlForKoji(IProjectRoot,
-	 *      BranchConfigInstance)
+	 * @see org.fedoraproject.eclipse.packager.IFpProjectBits#getScmUrlForKoji(BranchConfigInstance)
 	 */
 	@Override
-	public String getScmUrlForKoji(IProjectRoot projectRoot,
-			BranchConfigInstance bci) {
+	public String getScmUrlForKoji(BranchConfigInstance bci) {
 		if (!isInitialized()) {
 			return null;
 		}
@@ -283,10 +281,10 @@ public class FpGitProjectBits implements IFpProjectBits {
 	}
 
 	/**
-	 * See {@link IFpProjectBits#updateVCS(IProjectRoot, IProgressMonitor)}
+	 * See {@link IFpProjectBits#updateVCS(IProgressMonitor)}
 	 */
 	@Override
-	public IStatus updateVCS(IProjectRoot projectRoot, IProgressMonitor monitor) {
+	public IStatus updateVCS(IProgressMonitor monitor) {
 		// FIXME: Not working just, yet. Use projectRoot and monitor!.
 		// return performPull();
 		// Return OK status to not see NPEs
@@ -359,10 +357,10 @@ public class FpGitProjectBits implements IFpProjectBits {
 	 * Determine if Git tag exists.
 	 * 
 	 * See
-	 * {@link IFpProjectBits#isVcsTagged(IProjectRoot, String, BranchConfigInstance)}
+	 * {@link IFpProjectBits#isVcsTagged(String, BranchConfigInstance)}
 	 */
 	@Override
-	public boolean isVcsTagged(IProjectRoot fedoraProjectRoot, String tag,
+	public boolean isVcsTagged(String tag,
 			BranchConfigInstance bci) {
 		if (!isInitialized()) {
 			return false; // If we are not initialized we can't go any further!
@@ -388,10 +386,10 @@ public class FpGitProjectBits implements IFpProjectBits {
 	 * Create new Git tag.
 	 * 
 	 * See
-	 * {@link IFpProjectBits#tagVcs(IProjectRoot, IProgressMonitor, BranchConfigInstance)}
+	 * {@link IFpProjectBits#tagVcs(IProgressMonitor, BranchConfigInstance)}
 	 */
 	@Override
-	public IStatus tagVcs(IProjectRoot projectRoot, IProgressMonitor monitor,
+	public IStatus tagVcs(IProgressMonitor monitor,
 			BranchConfigInstance bci) {
 		if (!isInitialized()) {
 			return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
@@ -417,7 +415,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 	 * @return If there are unpushed changes.
 	 */
 	@Override
-	public boolean hasLocalChanges(IProjectRoot fedoraProjectRoot) {
+	public boolean hasLocalChanges() {
 		if (!isInitialized()) {
 			// FIXME: raise exception instead.
 			return true; // If we are not initialized we can't go any further!

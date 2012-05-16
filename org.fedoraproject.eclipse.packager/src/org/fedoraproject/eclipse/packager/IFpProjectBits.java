@@ -64,13 +64,11 @@ public interface IFpProjectBits {
 	/**
 	 * Updates the given project from the remote
 	 * 
-	 * @param projectRoot
-	 *            The project root to update.
 	 * @param monitor
 	 *            The monitor to show progress.
 	 * @return The status of the operation.
 	 */
-	public IStatus updateVCS(IProjectRoot projectRoot, IProgressMonitor monitor);
+	public IStatus updateVCS(IProgressMonitor monitor);
 
 	/**
 	 * Ignores the given resource.
@@ -92,23 +90,21 @@ public interface IFpProjectBits {
 	/**
 	 * Tag a revision of the VCS.
 	 * 
-	 * @param projectRoot
 	 * @param monitor
 	 * @param bci
 	 * @return The status of the tagging operation.
 	 */
-	public IStatus tagVcs(IProjectRoot projectRoot, IProgressMonitor monitor,
+	public IStatus tagVcs(IProgressMonitor monitor,
 			BranchConfigInstance bci);
 
 	/**
 	 * Determine if tag exists in VCS.
 	 * 
-	 * @param fedoraProjectRoot
 	 * @param tag
 	 * @param bci
 	 * @return True if tag exists, false otherwise.
 	 */
-	public boolean isVcsTagged(IProjectRoot fedoraProjectRoot, String tag,
+	public boolean isVcsTagged(String tag,
 			BranchConfigInstance bci);
 
 	/**
@@ -121,25 +117,19 @@ public interface IFpProjectBits {
 	/**
 	 * Returns the scm url in format suitable for koji.
 	 * 
-	 * @param fedoraProjectRoot
-	 *            The fedora project root.
 	 * @param bci
 	 *            The current branch configuration.
 	 * @return The scm url as expected by koji.
 	 */
-	public String getScmUrlForKoji(IProjectRoot fedoraProjectRoot,
-			BranchConfigInstance bci);
+	public String getScmUrlForKoji(BranchConfigInstance bci);
 
 	/**
 	 * Checks whether there are local changes.
 	 * 
-	 * @param fedoraProjectRoot
-	 *            The project root to check for local changes.
-	 * 
 	 * @return Whether there are local changes or not.
 	 * @throws CommandListenerException
 	 */
-	public boolean hasLocalChanges(IProjectRoot fedoraProjectRoot)
+	public boolean hasLocalChanges()
 			throws CommandListenerException;
 
 	/**

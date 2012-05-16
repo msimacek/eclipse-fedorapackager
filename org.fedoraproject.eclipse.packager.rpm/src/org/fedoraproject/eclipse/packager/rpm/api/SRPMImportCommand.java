@@ -285,7 +285,7 @@ public class SRPMImportCommand {
 			result.setSkipped(skippedUploads.toArray(new String[0]));
 			monitor.subTask(RpmText.SRPMImportCommand_StagingChanges);
 			// Do VCS update
-			if (projectBits.updateVCS(fpr, monitor)
+			if (projectBits.updateVCS(monitor)
 					.isOK()) {
 				if (monitor.isCanceled()) {
 					throw new OperationCanceledException();

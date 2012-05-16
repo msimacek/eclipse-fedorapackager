@@ -249,7 +249,7 @@ public class UploadHandler extends FedoraPackagerAbstractHandler implements
 
 					IStatus res = Status.OK_STATUS;
 					// Do VCS update
-					res = projectBits.updateVCS(projectRoot, monitor);
+					res = projectBits.updateVCS(monitor);
 					if (res.isOK()) {
 						if (monitor.isCanceled()) {
 							throw new OperationCanceledException();

@@ -136,7 +136,7 @@ public class KojiBuildJob extends Job {
 		kojiBuildCmd.setKojiClient(kojiClient);
 		List<String> sourceLocation = new ArrayList<String>();
 		sourceLocation.add(projectBits
-				.getScmUrlForKoji(fedoraProjectRoot, bci));
+				.getScmUrlForKoji(bci));
 		kojiBuildCmd.sourceLocation(sourceLocation);
 		String nvr;
 		try {

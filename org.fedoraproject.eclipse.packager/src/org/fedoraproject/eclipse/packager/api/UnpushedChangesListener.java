@@ -55,7 +55,7 @@ public class UnpushedChangesListener implements ICommandListener {
 		logger.logDebug(FedoraPackagerText.UnpushedChangesListener_checkUnpushedChangesMsg);
 		mainMonitor.subTask(FedoraPackagerText.UnpushedChangesListener_checkUnpushedChangesMsg);
 		IFpProjectBits projectBits = FedoraPackagerUtils.getVcsHandler(projectRoot);
-		if (projectBits.hasLocalChanges(projectRoot)) {
+		if (projectBits.hasLocalChanges()) {
 			throw new CommandListenerException(new UnpushedChangesException(FedoraPackagerText.UnpushedChangesListener_unpushedChangesError));
 		}
 		mainMonitor.worked(15);
