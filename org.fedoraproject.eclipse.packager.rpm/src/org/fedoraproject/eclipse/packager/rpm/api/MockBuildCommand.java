@@ -377,12 +377,12 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 				if (MockUtils.runCommand(cmdList, new Observer[] {
 						new MockBuildStatusObserver(monitor),
 						new MockBuildCommandSuccessObserver(result) }, null) == 0) {
-					result.setSuccess();
+					result.setSuccess(true);
 				} else {
-					result.setFailure();
+					result.setSuccess(false);
 				}
 			} catch (InterruptedException e) {
-				result.setFailure();
+				result.setSuccess(false);
 			} catch (IOException e) {
 				FedoraHandlerUtils.showErrorDialog(new Shell(),
 						RpmText.RpmBuildCommand_BuildFailure,

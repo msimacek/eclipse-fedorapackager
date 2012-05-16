@@ -102,7 +102,7 @@ public class KojiUploadSRPMCommand extends FedoraPackagerCommand<BuildResult> {
 			}
 			BuildResult result = new BuildResult();
 			if (success){
-				result.setSuccessful();
+				result.setSuccessful(true);
 			}
 			return result;
 		}

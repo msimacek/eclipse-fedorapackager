@@ -87,7 +87,7 @@ public class FedoraReviewCommand extends
 					RpmText.FedoraReviewCommand_IOErrorTitle,
 					RpmText.FedoraReviewCommand_IOErrorText);
 		} catch (InterruptedException e) {
-			result.setFailure();
+			result.setSuccess(false);
 		}
 		return result;
 	}

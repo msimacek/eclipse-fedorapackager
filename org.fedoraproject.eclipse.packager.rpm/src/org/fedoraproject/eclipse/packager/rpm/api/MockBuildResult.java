@@ -23,7 +23,7 @@ public class MockBuildResult extends Result {
 
 	private IContainer resultDir;
 	
-	private boolean success;
+	private boolean successful;
 	
 	/**
 	 * The MockBuildResult(String[], IResource) constructor should be used instead.
@@ -38,7 +38,7 @@ public class MockBuildResult extends Result {
 		IContainer dir = workspace.getRoot().getContainerForLocation(resultLocation);
 		this.resultDir = dir;
 		// will be set to false by an observer if there was an error
-		this.success = true;
+		this.successful = true;
 	}
 	
 	/**
@@ -51,21 +51,14 @@ public class MockBuildResult extends Result {
 		super(cmdList);
 		this.resultDir = resultDir;
 		// will be set to false by an observer if there was an error
-		this.success = true;
+		this.successful = true;
 	}
 	
 	/**
 	 * 
 	 */
-	public void setFailure() {
-		this.success = false;
-	}
-	
-	/**
-	 * 
-	 */
-	public void setSuccess() {
-		this.success = true;
+	public void setSuccess(boolean success) {
+		this.successful = success;
 	}
 	
 	/**
@@ -81,7 +74,7 @@ public class MockBuildResult extends Result {
 	 */
 	@Override
 	public boolean wasSuccessful() {
-		return success;
+		return successful;
 	}
 
 }

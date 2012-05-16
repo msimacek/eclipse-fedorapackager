@@ -206,7 +206,7 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 		monitor.worked(90);
 		callPostExecListeners();
 		setCallable(false); // reuse of instance's call() not allowed
-		result.setSuccessful();
+		result.setSuccessful(true);
 		monitor.done();
 		return result;
 	}

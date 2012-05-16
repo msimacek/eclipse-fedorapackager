@@ -8,7 +8,7 @@ import org.eclipse.core.resources.IFile;
  */
 public class FedoraReviewResult extends Result {
 	
-	private boolean success;
+	private boolean successful;
 	private IFile review = null;
 
 	/**
@@ -17,29 +17,22 @@ public class FedoraReviewResult extends Result {
 	 */
 	public FedoraReviewResult(String[] cmdList) {
 		super(cmdList);
-		success = true;
+		successful = true;
 	}
 
 	@Override
 	public boolean wasSuccessful() {
-		return success;
+		return successful;
 	}
 
 	/**
-	 * Set result to success.
+	 * Set result to successful.
 	 */
-	public void setSuccess() {
-		success = true;
+	public void setSuccess(boolean success) {
+		this.successful = success;
 		
 	}
 
-	/**
-	 * Set result to failure.
-	 */
-	public void setFailure() {
-		success = false;
-	}
-	
 	/**
 	 * Set the file containing the review.
 	 * @param review The file.

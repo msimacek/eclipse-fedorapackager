@@ -46,17 +46,10 @@ public class BuildResult implements ICommandResult {
 	}
 	
 	/**
-	 * Invoke if some error occurred during build.
-	 */
-	public void setFailure() {
-		this.successful = false;
-	}
-	
-	/**
 	 * Invoke if build was successful.
 	 */
-	public void setSuccessful() {
-		this.successful = true;
+	public void setSuccessful(boolean success) {
+		this.successful = success;
 	}
 	
 	/*
