@@ -175,7 +175,7 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 	/**
 	 * Creates the base of the project.
 	 *
-	 * @param IProgressMonitor
+	 * @param monitor
 	 *            Progress monitor to report back status
 	 */
 	protected void createBaseProject(IProgressMonitor monitor) {
@@ -197,7 +197,7 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 	/**
 	 * Creates a new instance of the FedoraRPM project.
 	 *
-	 * @param IProgressMonitor
+	 * @param monitor
 	 *            Progress monitor to report back status
 	 * @throws WrongRepositoryStateException
 	 * @throws JGitInternalException

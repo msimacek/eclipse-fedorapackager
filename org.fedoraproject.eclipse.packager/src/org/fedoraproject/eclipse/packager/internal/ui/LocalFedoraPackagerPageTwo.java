@@ -189,7 +189,7 @@ public class LocalFedoraPackagerPageTwo extends WizardPage {
 	/**
 	 * Sets the layout for Link widgets
 	 * 
-	 * @param Link
+	 * @param link
 	 */
 	private void setLayout(Link link) {
 		GridData layout = new GridData();

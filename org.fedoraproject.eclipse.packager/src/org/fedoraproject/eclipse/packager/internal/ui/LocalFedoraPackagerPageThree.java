@@ -230,7 +230,7 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 	/**
 	 * Return created Text widget
 	 *
-	 * @param Group
+	 * @param grp
 	 * @return Text
 	 */
 	private Text createText(Group grp) {
@@ -243,8 +243,8 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 	/**
 	 * Return the created Label widget
 	 *
-	 * @param Group
-	 * @param String
+	 * @param grp
+	 * @param text
 	 *            label's text
 	 * @return Button
 	 */
@@ -260,8 +260,8 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 	/**
 	 * Return the created push button widget
 	 *
-	 * @param Group
-	 * @param String
+	 * @param grp
+	 * @param text
 	 *            push button's text
 	 * @return Button
 	 */
@@ -274,8 +274,8 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 	/**
 	 * Return the created radio button widget
 	 *
-	 * @param Group
-	 * @param String
+	 * @param grp
+	 * @param text
 	 *            radio button's text
 	 * @return Button
 	 */
@@ -292,12 +292,10 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 	 * Runs the filaDialog and sets the project type and externalFile to be
 	 * passed to project creator
 	 *
-	 * @param String
+	 * @param filter
 	 *            filter for the fileDialog
-	 * @param Text
+	 * @param text
 	 *            text box for file location
-	 * @param String
-	 *            type of the project that user selected
 	 */
 	private void fileDialog(String filter, Text text) {
 		FileDialogRunable fdr = new FileDialogRunable(filter, NLS.bind(

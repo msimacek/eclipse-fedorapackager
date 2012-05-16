@@ -244,8 +244,6 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 	/**
 	 * Get a default mock config for the configured build architecture.
 	 * 
-	 * @param projectRoot
-	 * @param buildarch
 	 * @return
 	 */
 	private String getDefaultMockcfg() {

@@ -201,13 +201,10 @@ public class DownloadSourceCommand extends
 	 *            A sub progress monitor to indicate progress for this file
 	 *            only.
 	 * @param fileToDownload
-	 * @param fileConnection
 	 * @throws IOException
 	 *             If download failed.
 	 * @throws CoreException
 	 *             Something else failed, unrecoverable error.
-	 * @throws DownloadFailedException
-	 *             If getting the URL of fileToDownload returned a 404.
 	 */
 	private void download(IProgressMonitor subMonitor, IFile fileToDownload,
 			URL fileURL) throws IOException, CoreException {

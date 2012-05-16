@@ -106,7 +106,7 @@ public abstract class AbstractMockJob extends Job {
 	 * Helper method for showing the custom message dialog with a link to the
 	 * build result directory.
 	 * 
-	 * @param msg
+	 * @param htmlMsg
 	 */
 	private void showMessageDialog(String htmlMsg) {
 		final LinkedMessageDialog messageDialog = new LinkedMessageDialog(shell, fpr

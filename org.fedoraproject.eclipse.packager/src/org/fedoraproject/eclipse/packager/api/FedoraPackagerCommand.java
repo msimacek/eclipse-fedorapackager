@@ -62,7 +62,7 @@ public abstract class FedoraPackagerCommand<T> {
 	private final ArrayList<ICommandListener> cmdListeners = new ArrayList<ICommandListener>();
 	
 	/**
-	 * a state which tells whether it is allowed to call {@link #call()} on this
+	 * a state which tells whether it is allowed to call {@link #call(IProgressMonitor)} on this
 	 * instance.
 	 */
 	private boolean callable = true;
