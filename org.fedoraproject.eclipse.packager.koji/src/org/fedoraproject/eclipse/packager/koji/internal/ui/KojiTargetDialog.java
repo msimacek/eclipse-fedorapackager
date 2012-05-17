@@ -29,6 +29,7 @@ public class KojiTargetDialog extends TitleAreaDialog {
 	private List targetList;
 	private Collection<String> targets;
 	private String returnTarget;
+	private boolean sort;
 
 	/**
 	 * @param parent
@@ -39,6 +40,24 @@ public class KojiTargetDialog extends TitleAreaDialog {
 	public KojiTargetDialog(Shell parent, Collection<String> targets) {
 		super(parent);
 		this.targets = targets;
+		this.sort = true;
+	}
+
+	/**
+	 * Use this constructor if you have a list of targets that is already
+	 * ordered in the way it is intended to be displayed.
+	 * 
+	 * @param parent
+	 *            The dialog's parent shell.
+	 * @param targets
+	 *            The list of targets
+	 * @param sort
+	 *            Whether or not to sort the given list before displaying it.
+	 */
+	public KojiTargetDialog(Shell parent, Collection<String> targets,
+			boolean sort) {
+		this(parent, targets);
+		this.sort = sort;
 	}
 
 	@Override
@@ -85,14 +104,19 @@ public class KojiTargetDialog extends TitleAreaDialog {
 
 		});
 		String[] listItems = targets.toArray(new String[0]);
-		Arrays.sort(listItems);
+
+		if (this.sort){
+			Arrays.sort(listItems);
+		}
+
 		targetList.setItems(listItems);
 		targetText.pack();
 		return parent;
 	}
 
 	/**
-	 * Create and open the dialog, returning the chosen target.
+	 * Create and open the dialog, returning the chosen target. If there user
+	 * hits cancel instead of OK return null.
 	 * 
 	 * @return The chosen target.
 	 */
