@@ -12,6 +12,8 @@ import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
+import org.fedoraproject.eclipse.packager.koji.internal.utils.KojiClientFactory;
+import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 
 /**
  * Generic base class for a koji job. All Koji job object should extend this.
@@ -49,7 +51,7 @@ public abstract class KojiJob extends Job {
 	 * @return The koji client.
 	 */
 	protected IKojiHubClient getHubClient() throws MalformedURLException {
-		return new KojiSSLHubClient(kojiInfo[1]);
+		return KojiClientFactory.getHubClient(kojiInfo[1]);
 	}
 
 	/**
