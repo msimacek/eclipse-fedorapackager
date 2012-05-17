@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.koji.api;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -129,15 +128,7 @@ public class KojiBuildJob extends KojiJob {
 		List<String> sourceLocation = new ArrayList<String>();
 		sourceLocation.add(projectBits.getScmUrlForKoji(bci));
 		kojiBuildCmd.sourceLocation(sourceLocation);
-		String nvr;
-		try {
-			nvr = RPMUtils.getNVR(fedoraProjectRoot, bci);
-		} catch (IOException e) {
-			logger.logError(KojiText.KojiBuildHandler_errorGettingNVR, e);
-			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID, NLS.bind(
-					KojiText.KojiBuildHandler_invalidHubUrl, fedoraProjectRoot
-							.getProductStrings().getBuildToolName()), e);
-		}
+		String nvr = RPMUtils.getNVR(fedoraProjectRoot, bci);
 		kojiBuildCmd.nvr(new String[] { nvr }).isScratchBuild(isScratch);
 		logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
 				KojiBuildCommand.class.getName()));

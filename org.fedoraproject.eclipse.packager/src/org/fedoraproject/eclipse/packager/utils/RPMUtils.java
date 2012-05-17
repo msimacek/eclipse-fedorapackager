@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.linuxtools.rpm.core.utils.Utils;
+import org.eclipse.linuxtools.rpm.ui.editor.parser.Specfile;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 
@@ -87,10 +88,9 @@ public class RPMUtils {
 	 * @param bci
 	 *            Current branch configuration.
 	 * @return The tag name.
-	 * @throws IOException
 	 */
 	public static String makeTagName(IProjectRoot projectRoot,
-			BranchConfigInstance bci) throws IOException {
+			BranchConfigInstance bci) {
 		return getNVR(projectRoot, bci).replaceAll("\\.", "_"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
@@ -102,15 +102,11 @@ public class RPMUtils {
 	 * @param bci
 	 *            Current branch configuration.
 	 * @return N-V-R (Name-Version-Release) retrieved.
-	 * @throws IOException
-	 *             if RPM query failed.
 	 */
 	public static String getNVR(IProjectRoot projectRoot,
-			BranchConfigInstance bci) throws IOException {
-		String name = rpmQuery(projectRoot, "NAME", bci).replaceAll("^[0-9]+", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		String version = rpmQuery(projectRoot, "VERSION", bci); //$NON-NLS-1$
-		String release = rpmQuery(projectRoot, "RELEASE", bci); //$NON-NLS-1$
-		return (name + "-" + version + "-" + release); //$NON-NLS-1$ //$NON-NLS-2$
+			BranchConfigInstance bci) {
+		Specfile specfile = projectRoot.getSpecfileModel();
+		return (specfile.getName() + "-" + specfile.getVersion() + "-" + specfile.getRelease().replace("%{?dist}", bci.getDist())); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**

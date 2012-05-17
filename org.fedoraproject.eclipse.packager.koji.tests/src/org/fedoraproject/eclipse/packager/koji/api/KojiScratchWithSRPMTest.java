@@ -132,7 +132,7 @@ public class KojiScratchWithSRPMTest {
 	 * 
 	 */
 	@Test
-	public void canUploadSRPMAndRequestBuild() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, KojiHubClientLoginException, KojiHubClientException, CommandMisconfiguredException, CommandListenerException, IOException, UnpushedChangesException, TagSourcesException  {
+	public void canUploadSRPMAndRequestBuild() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, KojiHubClientLoginException, KojiHubClientException, CommandMisconfiguredException, CommandListenerException, UnpushedChangesException, TagSourcesException  {
 		KojiUploadSRPMCommand uploadSRPMCommand = (KojiUploadSRPMCommand) packager
 				.getCommandInstance(KojiUploadSRPMCommand.ID);
 		final String uploadPath = "cli-build/"

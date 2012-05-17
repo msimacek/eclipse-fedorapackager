@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.bodhi.internal.handlers;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -157,15 +156,8 @@ public class BodhiNewHandler extends FedoraPackagerAbstractHandler {
 			final String bugIDs = findBug(clog);
 			final IFpProjectBits projectBits = FedoraPackagerUtils
 					.getVcsHandler(projectRoot);
-			String nvr = null;
-			try {
-				nvr = RPMUtils.getNVR(projectRoot,
+			String nvr = RPMUtils.getNVR(projectRoot,
 						projectBits.getBranchConfig());
-			} catch (IOException e1) {
-				FedoraPackagerLogger logger = FedoraPackagerLogger
-						.getInstance();
-				logger.logError(e1.getMessage(), e1);
-			}
 			final String[] selectedBuild = { nvr };
 
 			// open update dialog
@@ -446,14 +438,9 @@ public class BodhiNewHandler extends FedoraPackagerAbstractHandler {
 				IProjectRoot root = null;
 				try {
 					root = FedoraPackagerUtils.getProjectRoot(fedoraProject);
-					String nvr = null;
-					try {
-						nvr = RPMUtils.getNVR(root, FedoraPackagerUtils
+					String nvr = RPMUtils.getNVR(root, FedoraPackagerUtils
 								.getVcsHandler(root).getBranchConfig());
-						nvrs.add(nvr);
-					} catch (IOException e) {
-						// skip
-					}
+					nvrs.add(nvr);
 				} catch (InvalidProjectRootException e) {
 					// skip
 				}

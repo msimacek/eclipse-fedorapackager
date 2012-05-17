@@ -9,19 +9,9 @@ import java.util.List;
 
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 public class TestAbstractKojiHubBaseClientTest {
-
-	@Before
-	protected void setUp() {
-	}
-
-	@After
-	protected void tearDown() {
-	}
 
 	@Test
 	public void testGetRepo() throws KojiHubClientException,

@@ -219,15 +219,11 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 	/**
 	 * Set the result directory as to where the build results/logs will be put.
 	 */
-	private void setResultDir() throws MockBuildCommandException {
+	private void setResultDir() {
 		resultDir = new String();
 		resultDir += projectRoot.getContainer().getLocation().toOSString();
 		resultDir += IPath.SEPARATOR;
-		try {
-			resultDir += RPMUtils.getNVR(projectRoot, bci);
-		} catch (IOException e) {
-			throw new MockBuildCommandException(e.getMessage(), e);
-		}
+		resultDir += RPMUtils.getNVR(projectRoot, bci);
 		resultDir += "-" + this.mockConfig; //$NON-NLS-1$
 	}
 

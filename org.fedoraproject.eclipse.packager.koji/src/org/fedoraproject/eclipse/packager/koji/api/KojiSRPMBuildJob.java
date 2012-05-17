@@ -10,16 +10,15 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.koji.api;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -176,14 +175,7 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 		List<String> sourceLocation = new ArrayList<String>();
 		sourceLocation.add(uploadPath + "/" + srpmPath.lastSegment()); //$NON-NLS-1$
 		kojiBuildCmd.sourceLocation(sourceLocation);
-		String nvr;
-		try {
-			nvr = RPMUtils.getNVR(fedoraProjectRoot, bci);
-		} catch (IOException e) {
-			logger.logError(KojiText.KojiBuildHandler_errorGettingNVR, e);
-			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
-					KojiText.KojiBuildHandler_errorGettingNVR, e);
-		}
+		String nvr = RPMUtils.getNVR(fedoraProjectRoot, bci);
 		kojiBuildCmd.nvr(new String[] { nvr }).isScratchBuild(true);
 		logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
 				KojiBuildCommand.class.getName()));
