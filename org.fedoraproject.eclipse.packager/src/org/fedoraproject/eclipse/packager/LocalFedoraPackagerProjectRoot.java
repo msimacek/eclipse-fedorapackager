@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.Specfile;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.SpecfilePackage;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.SpecfileParser;
-import org.fedoraproject.eclipse.packager.utils.RPMUtils;
 
 /**
  * This class is representing a root directory for a Local Fedora RPM package in a given
@@ -176,15 +175,11 @@ public class LocalFedoraPackagerProjectRoot implements IProjectRoot {
 	 */
 	@Override
 	public String[] getPackageNVRs(BranchConfigInstance bci) {
-		String version = null, release = null;
-		try {
-			version = RPMUtils.rpmQuery(this, "VERSION", bci); //$NON-NLS-1$
-			release = RPMUtils.rpmQuery(this, "RELEASE", bci); //$NON-NLS-1$
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Specfile specfile = getSpecfileModel();
+		String version = specfile.getVersion(); 
+		String release = specfile.getRelease().replace("%{?dist}", bci.getDist());  //$NON-NLS-1$
 		List<String> rawNvrs = new ArrayList<String>();
-		for (SpecfilePackage p: getSpecfileModel().getPackages().getPackages()) {
+		for (SpecfilePackage p: specfile.getPackages().getPackages()) {
 			rawNvrs.add(p.getFullPackageName() + "-" + version + "-" + release); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		String[] nvrs = rawNvrs.toArray(new String[]{});

@@ -106,7 +106,7 @@ public class RPMUtils {
 	public static String getNVR(IProjectRoot projectRoot,
 			BranchConfigInstance bci) {
 		Specfile specfile = projectRoot.getSpecfileModel();
-		return (specfile.getName() + "-" + specfile.getVersion() + "-" + specfile.getRelease().replace("%{?dist}", bci.getDist())); //$NON-NLS-1$ //$NON-NLS-2$
+		return (specfile.getName() + "-" + specfile.getVersion() + "-" + specfile.getRelease().replace("%{?dist}", bci.getDist())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/**
