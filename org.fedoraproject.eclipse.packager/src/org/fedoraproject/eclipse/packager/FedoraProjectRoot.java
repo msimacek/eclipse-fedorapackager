@@ -55,6 +55,16 @@ public class FedoraProjectRoot implements IProjectRoot {
 	@Override
 	public void initialize(IContainer container) {
 		this.rootContainer = container;
+
+		if (!rootContainer.isSynchronized(IResource.DEPTH_INFINITE)){
+			try {
+				rootContainer.refreshLocal(IResource.DEPTH_INFINITE, null);
+			} catch (CoreException e) {
+				// Failed to refresh resource
+				e.printStackTrace();
+			}
+		}
+
 		this.sourcesFile = new SourcesFile(rootContainer.getFile(new Path(
 				SourcesFile.SOURCES_FILENAME)));
 		// statically pass Fedora type
