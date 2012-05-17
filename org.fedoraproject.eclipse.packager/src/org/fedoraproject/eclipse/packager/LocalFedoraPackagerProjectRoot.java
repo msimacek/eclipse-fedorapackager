@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2011 Red Hat Inc. and others.
+ * Copyright (c) 2011-2012 Red Hat Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,23 +10,10 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.linuxtools.rpm.ui.editor.parser.Specfile;
-import org.eclipse.linuxtools.rpm.ui.editor.parser.SpecfilePackage;
-import org.eclipse.linuxtools.rpm.ui.editor.parser.SpecfileParser;
 
 /**
  * This class is representing a root directory for a Local Fedora RPM package in a given
@@ -34,11 +21,8 @@ import org.eclipse.linuxtools.rpm.ui.editor.parser.SpecfileParser;
  * This class is a local version of org.fedoraproject.eclipse.packager.FedoraProjectRoot
  * 
  */
-public class LocalFedoraPackagerProjectRoot implements IProjectRoot {
+public class LocalFedoraPackagerProjectRoot extends FedoraProjectRoot {
 	
-	private IContainer rootContainer;
-	private IProductStrings productStrings;
-
 	/**
 	 * Default no-arg constructor. Required for instance creation via
 	 * reflections.
@@ -59,24 +43,6 @@ public class LocalFedoraPackagerProjectRoot implements IProjectRoot {
 	}
 
 	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getContainer()
-	 */
-	@Override
-	public IContainer getContainer() {
-		return rootContainer;
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getProject()
-	 */
-	@Override
-	public IProject getProject() {
-		return this.rootContainer.getProject();
-	}
-
-	/*
 	 * sources file not applicable for local projects
 	 * (non-Javadoc)
 	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getSourcesFile()
@@ -86,59 +52,6 @@ public class LocalFedoraPackagerProjectRoot implements IProjectRoot {
 		return null;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getPackageName()
-	 */
-	@Override
-	public String getPackageName() {
-		return this.getSpecfileModel().getName();
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getSpecFile()
-	 */
-	@Override
-	public IFile getSpecFile() {
-		try {
-			for (IResource resource : rootContainer.members()) {
-				if (resource instanceof IFile) {
-					String ext = ((IFile) resource).getFileExtension();
-					if (ext != null && ext.equals("spec")) //$NON-NLS-1$
-						return (IFile) resource;
-				}
-			}
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getSpecfileModel()
-	 */
-	@Override
-	public Specfile getSpecfileModel() {
-		SpecfileParser parser = new SpecfileParser();
-		StringBuilder sb = new StringBuilder();
-		String line = null;
-		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					getSpecFile().getContents()));
-			while ((line = reader.readLine()) != null) {
-				sb.append(line + "\n"); //$NON-NLS-1$
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-		Specfile specfile = parser.parse(sb.toString());
-		return specfile;
-	}
-
 	/*
 	 * lookaside cache not applicable for local projects
 	 * (non-Javadoc)
@@ -152,39 +65,12 @@ public class LocalFedoraPackagerProjectRoot implements IProjectRoot {
 	
 	/*
 	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getProductStrings()
-	 */
-	@Override
-	public IProductStrings getProductStrings() {
-		return this.productStrings;
-	}
-	
-	/*
-	 * (non-Javadoc)
 	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getSupportedProjectPropertyNames()
 	 * @see also org.fedoraproject.eclipse.packager.FedoraProjectRoot#getSupportedProjectPropertyNames()
 	 */
 	@Override
 	public QualifiedName[] getSupportedProjectPropertyNames() {
 		return new QualifiedName[] { PackagerPlugin.PROJECT_LOCAL_PROP };
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getPackageNVRs()
-	 */
-	@Override
-	public String[] getPackageNVRs(BranchConfigInstance bci) {
-		Specfile specfile = getSpecfileModel();
-		String version = specfile.getVersion(); 
-		String release = specfile.getRelease().replace("%{?dist}", bci.getDist());  //$NON-NLS-1$
-		List<String> rawNvrs = new ArrayList<String>();
-		for (SpecfilePackage p: specfile.getPackages().getPackages()) {
-			rawNvrs.add(p.getFullPackageName() + "-" + version + "-" + release); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		String[] nvrs = rawNvrs.toArray(new String[]{});
-		Arrays.sort(nvrs);
-		return nvrs;
 	}
 
 	/*
@@ -201,11 +87,6 @@ public class LocalFedoraPackagerProjectRoot implements IProjectRoot {
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	public String getPluginID() {
-		return PackagerPlugin.PLUGIN_ID;
 	}
 
 }

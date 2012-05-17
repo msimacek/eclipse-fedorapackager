@@ -35,10 +35,10 @@ import org.eclipse.linuxtools.rpm.ui.editor.parser.SpecfileParser;
  */
 public class FedoraProjectRoot implements IProjectRoot {
 	
-	private IContainer rootContainer;
+	protected IContainer rootContainer;
 	private SourcesFile sourcesFile;
 	private ILookasideCache lookAsideCache; // The lookaside cache abstraction
-	private IProductStrings productStrings;
+	protected IProductStrings productStrings;
 
 	/**
 	 * Default no-arg constructor. Required for instance creation via
