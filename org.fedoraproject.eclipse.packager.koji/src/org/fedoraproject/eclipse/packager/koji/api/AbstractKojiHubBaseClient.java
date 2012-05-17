@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
@@ -264,5 +266,17 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 		} catch (XmlRpcException e) {
 			throw new KojiHubClientException(e);
 		}
+	}
+	
+	@Override
+	public Set<String> listBuildTags() throws KojiHubClientException {
+		HashMap<?, ?> targets[] = this.listTargets();
+		TreeSet<String> tags = new TreeSet<String>();
+		for (int i = 0; i < targets.length; i++) {
+			HashMap<?, ?> target = targets[i];
+			tags.add((String) target.get("build_tag_name")); //$NON-NLS-1$
+		}
+
+		return tags.descendingSet();
 	}
 }

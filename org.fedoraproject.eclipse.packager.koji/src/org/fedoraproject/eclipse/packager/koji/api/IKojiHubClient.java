@@ -11,6 +11,7 @@
 package org.fedoraproject.eclipse.packager.koji.api;
 
 import java.util.HashMap;
+import java.util.Set;
 import java.util.List;
 
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
@@ -110,4 +111,12 @@ public interface IKojiHubClient {
 	 * @throws KojiHubClientException
 	 */
 	public KojiRepoInfo getRepo(String tag) throws KojiHubClientException;
+	
+	
+	/**
+	 * @return A list of all the unique available build targets for the current
+	 *         list of tags as returned by {@link #listTargets()}
+	 * @throws KojiHubClientException
+	 */
+	public Set<String> listBuildTags() throws KojiHubClientException;
 }
