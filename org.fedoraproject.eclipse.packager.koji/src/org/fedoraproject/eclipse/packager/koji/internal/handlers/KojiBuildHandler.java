@@ -12,16 +12,10 @@ package org.fedoraproject.eclipse.packager.koji.internal.handlers;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.jobs.Job;
-import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
-import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
-import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.koji.KojiUtils;
 import org.fedoraproject.eclipse.packager.koji.api.KojiBuildJob;
-import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
-import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 
 /**
  * Handler to kick off a remote Koji build.
@@ -31,14 +25,10 @@ public class KojiBuildHandler extends KojiHandler {
 
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
-		final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-		IResource eventResource = FedoraHandlerUtils.getResource(event);
-		try {
-			final IProjectRoot projectRoot = FedoraPackagerUtils
-					.getProjectRoot(eventResource);
 
-			setKojiInfo(event);
-
+		setKojiInfo(event);
+		final IProjectRoot projectRoot = getProjectRoot(event);
+		if (projectRoot != null) {
 			Job job = new KojiBuildJob(projectRoot.getProductStrings()
 					.getProductName(), getShell(event), projectRoot, kojiInfo,
 					isScratchBuild());
@@ -46,10 +36,6 @@ public class KojiBuildHandler extends KojiHandler {
 					projectRoot));
 			job.setUser(true);
 			job.schedule();
-		} catch (InvalidProjectRootException e) {
-			logger.logError(FedoraPackagerText.invalidFedoraProjectRootError, e);
-			FedoraHandlerUtils.showErrorDialog(shell, "Error", //$NON-NLS-1$
-					FedoraPackagerText.invalidFedoraProjectRootError);
 		}
 		return null; // must be null
 	}
