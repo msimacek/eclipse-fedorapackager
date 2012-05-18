@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.koji.api.errors;
 
+import org.eclipse.core.runtime.IStatus;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 
 /**
@@ -18,6 +19,8 @@ import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 public class KojiHubClientException extends FedoraPackagerAPIException {
 
 	private static final long serialVersionUID = -3622365505538797782L;
+
+	private IStatus status;
 
 	/**
 	 * Default constructor
@@ -33,7 +36,24 @@ public class KojiHubClientException extends FedoraPackagerAPIException {
 	public KojiHubClientException(String msg, Throwable cause) {
 		super(msg, cause);
 	}
-	
+
+	/**
+	 * Create a new KojiHubClientException with a status object to be used for
+	 * functions which are required to return a status object.
+	 * 
+	 * @param msg
+	 *            The error message.
+	 * @param cause
+	 *            The causing Throwable
+	 * @param status
+	 *            The status object representing the result of the requested
+	 *            operation
+	 */
+	public KojiHubClientException(String msg, Throwable cause, IStatus status) {
+		this(msg, cause);
+		this.status = status;
+	}
+
 	/**
 	 * @param cause
 	 */
@@ -46,5 +66,13 @@ public class KojiHubClientException extends FedoraPackagerAPIException {
 	 */
 	public KojiHubClientException(String msg) {
 		super(msg);
+	}
+	
+	/**
+	 * @return The status object representing the error for which this exception
+	 *         was created.
+	 */
+	public IStatus getStatus() {
+		return this.status;
 	}
 }

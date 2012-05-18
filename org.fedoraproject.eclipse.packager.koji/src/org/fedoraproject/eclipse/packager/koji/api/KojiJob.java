@@ -11,9 +11,9 @@ import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
+import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
 import org.fedoraproject.eclipse.packager.koji.internal.utils.KojiClientFactory;
-import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 
 /**
  * Generic base class for a koji job. All Koji job object should extend this.
@@ -46,12 +46,27 @@ public abstract class KojiJob extends Job {
 	/**
 	 * Create a hub client based on set preferences.
 	 * 
-	 * @throws MalformedURLException
-	 *             If the koji hub URL preference was invalid.
 	 * @return The koji client.
+	 * @throws KojiHubClientException
+	 *             Thrown if login is unsuccessful. This Exception is provided
+	 *             with an {@link IStatus} object which callers should return.
 	 */
-	protected IKojiHubClient getHubClient() throws MalformedURLException {
-		return KojiClientFactory.getHubClient(kojiInfo[1]);
+	protected IKojiHubClient getHubClient() throws KojiHubClientException {
+		FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
+		try {
+			return KojiClientFactory.getHubClient(kojiInfo[1]);
+		} catch (MalformedURLException e) {
+			logger.logError(NLS.bind(KojiText.KojiBuildHandler_invalidHubUrl,
+					fedoraProjectRoot.getProductStrings().getBuildToolName()),
+					e);
+			IStatus status = new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
+					NLS.bind(KojiText.KojiBuildHandler_invalidHubUrl,
+							fedoraProjectRoot.getProductStrings()
+									.getBuildToolName()), e);
+
+			throw new KojiHubClientException(
+					KojiText.KojiBuildHandler_invalidHubUrl, e, status);
+		}
 	}
 
 	/**
@@ -60,7 +75,7 @@ public abstract class KojiJob extends Job {
 	 * @param client
 	 *            The client to login.
 	 * 
-	 * @return
+	 * @return the status of the operation .
 	 */
 	protected IStatus loginHubClient(IKojiHubClient client) {
 		FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
