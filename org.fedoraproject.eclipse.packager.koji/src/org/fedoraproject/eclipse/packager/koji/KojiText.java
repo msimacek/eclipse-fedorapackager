@@ -114,6 +114,15 @@ public class KojiText extends NLS {
 	// Generic Strings
 	/****/ public static String xmlRPCconfigNotInitialized;
 	/****/ public static String ServerEntryTemplate;
+
+	// Koji Wait Repo Strings
+	/****/ public static String KojiWaitForRepoJob_repoUpdatedDialogTitle;
+	/****/ public static String KojiWaitForRepoJob_repoUpdatedDialogText;
+	/****/ public static String KojiWaitForRepoJob_collectingRepoTags;
+	/****/ public static String KojiWaitForRepoJob_WaitingForUpdateMessage;
+
+	// Generic Koji Strings
+	/****/ public static String KojiWaitForRepoHandler_errorGettingRepoInfo;
 	
 	static {
 		initializeMessages(BUNDLE_NAME,	KojiText.class);

@@ -122,6 +122,70 @@
                            </or>
                         </visibleWhen>
                      </command>
+                     <command
+                           commandId="org.fedoraproject.eclipse.packager.koji.WaitForRepo"
+                           icon="icons/Artwork_DesignService_koji-icon-16.png"
+                           label="%command.label.4"
+                           style="push"
+                           tooltip="%command.tooltip.4">
+                        <visibleWhen
+                              checkEnabled="false">
+                           <or>
+                              <with
+                                    variable="activeMenuSelection">
+                                 <reference
+                                       definitionId="org.fedoraproject.eclipse.packager.project">
+                                 </reference>
+                              </with>
+                              <with
+                                    variable="activeMenuEditorInput">
+                                 <reference
+                                       definitionId="org.fedoraproject.eclipse.packager.project">
+                                 </reference>
+                              </with>
+                              <with
+                                    variable="activeMenuSelection">
+                                 <and>
+                                    <reference
+                                          definitionId="org.fedoraproject.eclipse.packager.localproject">
+                                    </reference>
+                                    <iterate
+                                          ifEmpty="false"
+                                          operator="and">
+                                       <adapt
+                                             type="org.eclipse.core.resources.IResource">
+                                          <test
+                                                forcePluginActivation="false"
+                                                property="org.fedoraproject.eclipse.packager.fedoraCertExists"
+                                                value="true">
+                                          </test>
+                                       </adapt>
+                                    </iterate>
+                                 </and>
+                              </with>
+                              <with
+                                    variable="activeMenuEditorInput">
+                                 <and>
+                                    <reference
+                                          definitionId="org.fedoraproject.eclipse.packager.localproject">
+                                    </reference>
+                                    <iterate
+                                          ifEmpty="false"
+                                          operator="and">
+                                       <adapt
+                                             type="org.eclipse.core.resources.IResource">
+                                          <test
+                                                forcePluginActivation="false"
+                                                property="org.fedoraproject.eclipse.packager.fedoraCertExists"
+                                                value="true">
+                                          </test>
+                                       </adapt>
+                                    </iterate>
+                                 </and>
+                              </with>
+                           </or>
+                        </visibleWhen>
+                     </command>
       </menuContribution>
       <menuContribution
             allPopups="false"
@@ -167,6 +231,11 @@
             defaultHandler="org.fedoraproject.eclipse.packager.koji.internal.handlers.ChainBuildHandler"
             id="org.fedoraproject.eclipse.packager.koji.ChainBuildCommand"
             name="%command.name.3">
+      </command>
+      <command
+            defaultHandler="org.fedoraproject.eclipse.packager.koji.internal.handlers.KojiWaitForRepoHandler"
+            id="org.fedoraproject.eclipse.packager.koji.WaitForRepo"
+            name="%command.name.4">
       </command>
    </extension>
    <extension
@@ -247,18 +316,27 @@
             webUrl="http://koji.fedoraproject.org/koji"
             xmlrpcUrl="https://koji.fedoraproject.org/kojihub">
       </instance>
+   </extension>
+   <extension
+         point="org.fedoraproject.eclipse.packager.koji.instance">
       <instance
             customTargets="true"
             name="Fedora ARM"
             webUrl="http://arm.koji.fedoraproject.org/koji"
             xmlrpcUrl="https://arm.koji.fedoraproject.org/kojihub">
       </instance>
+   </extension>
+   <extension
+         point="org.fedoraproject.eclipse.packager.koji.instance">
       <instance
             customTargets="true"
             name="Fedora s390x"
             webUrl="http://s390.koji.fedoraproject.org/koji"
             xmlrpcUrl="https://s390.koji.fedoraproject.org/kojihub">
       </instance>
+   </extension>
+   <extension
+         point="org.fedoraproject.eclipse.packager.koji.instance">
       <instance
             customTargets="true"
             name="Fedora PowerPC"
