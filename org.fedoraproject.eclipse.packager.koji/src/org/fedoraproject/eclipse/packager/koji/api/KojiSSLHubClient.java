@@ -107,6 +107,12 @@ public class KojiSSLHubClient extends AbstractKojiHubBaseClient {
 		return hashMap;
 	}
 
+	protected SSLContext getInitializedSSLContext()
+			throws FileNotFoundException, GeneralSecurityException, IOException {
+		FedoraSSL fedoraSSL = FedoraSSLFactory.getInstance();
+		return fedoraSSL.getInitializedSSLContext();
+	}
+
 	/**
 	 * Initialize SSL connection
 	 */
@@ -118,10 +124,9 @@ public class KojiSSLHubClient extends AbstractKojiHubBaseClient {
 				return true;
 			}
 		};
-		FedoraSSL fedoraSSL = FedoraSSLFactory.getInstance();
 		SSLContext ctxt = null;
 		// may throw exceptions (dealt with in login())
- 	    ctxt = fedoraSSL.getInitializedSSLContext();
+ 	    ctxt = getInitializedSSLContext();
 		// set up the proper socket
 		HttpsURLConnection.setDefaultSSLSocketFactory(ctxt.getSocketFactory());
 		HttpsURLConnection.setDefaultHostnameVerifier(hv);

@@ -10,20 +10,20 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.koji.api;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.net.MalformedURLException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient;
-import org.fedoraproject.eclipse.packager.koji.api.KojiBuildInfo;
-import org.fedoraproject.eclipse.packager.koji.api.KojiSSLHubClient;
+import javax.net.ssl.SSLContext;
+
+import org.apache.xmlrpc.client.XmlRpcClient;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -42,29 +42,61 @@ public class KojiSSLHubClientTest {
 	 */
 	private static final String EFP_SCM_URL = "git://pkgs.fedoraproject.org/eclipse-fedorapackager.git?#302d36c1427a0d8578d0a1d88b4c9337a4407dde";
 
-	private IKojiHubClient kojiClient;
-	
-	@Before
-	public void setUp() throws MalformedURLException  {
-		// a bare SSL Koji client
-		kojiClient = new KojiSSLHubClient("https://koji.fedoraproject.org/kojihub");
-	}
+	private static class MockKojiSSLHubClient extends KojiSSLHubClient {
 
-	@After
-	public void tearDown() throws KojiHubClientException  {
-		kojiClient.logout();
-	}
+		public MockKojiSSLHubClient(XmlRpcClient client)
+				throws MalformedURLException {
+			super("http://www.example.com");
+			this.xmlRpcClient = client;
+		}
+		
+		@Override
+		protected void setupXmlRpcClient() {
+			// Do nothing the mock client was set in the constructor.
+		};
+		
+		@Override
+		protected SSLContext getInitializedSSLContext()
+				throws GeneralSecurityException {
+			return SSLContext.getInstance("SSL");
+		}
+		
+		@Override
+		protected void initSSLConnection(){}
+
+	};
 	
+	private MockKojiSSLHubClient kojiClient;
+
 	/**
 	 * Log on to Koji using SSL authentication.
 	 * This test requires proper certificates to be set up.
 	 * @throws KojiHubClientLoginException 
+	 * @throws MalformedURLException 
 	 * 
 	 */
 	@Test
-	public void canLoginUsingSSLCertificate() throws KojiHubClientLoginException  {
+	public void canLoginUsingSSLCertificate() throws KojiHubClientLoginException, MalformedURLException  {
+		// Mock session data
+		final HashMap<String, Object> mockSessionData = new HashMap<String, Object>();
+		mockSessionData.put("session-id", new Integer(99));
+		mockSessionData.put("session-key", "sessionKey");
+		
+		// Create a mock XML-RPC client
+		final XmlRpcClient mockXmlRpcClinet = new XmlRpcClient(){
+			@Override
+			public Object execute(String methodName, @SuppressWarnings("rawtypes") List params) {
+				if (methodName.equals("sslLogin"))
+					return mockSessionData;
+
+				return null;
+			};
+		};
+
+		KojiSSLHubClient mockKojiClient = new MockKojiSSLHubClient(mockXmlRpcClinet){};
+		
 		// Logging in to koji should return session data
-		HashMap<?, ?> sessionData = kojiClient.login();
+		HashMap<?, ?> sessionData = mockKojiClient.login();
 		assertNotNull(sessionData);
 		assertNotNull(sessionData.get("session-id"));
 		assertTrue(sessionData.get("session-id") instanceof Integer);
