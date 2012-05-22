@@ -13,13 +13,9 @@ package org.fedoraproject.eclipse.packager.koji.api;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.net.MalformedURLException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import javax.net.ssl.SSLContext;
 
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
@@ -31,7 +27,7 @@ import org.junit.Test;
  * these tests, one has to have valid Fedora certificates in ~/
  * 
  */
-public class KojiSSLHubClientTest {
+public class KojiSSLHubClientTest extends KojiClientTest {
 	
 	/**
 	 * Name-version-release of some successful build.
@@ -42,41 +38,14 @@ public class KojiSSLHubClientTest {
 	 */
 	private static final String EFP_SCM_URL = "git://pkgs.fedoraproject.org/eclipse-fedorapackager.git?#302d36c1427a0d8578d0a1d88b4c9337a4407dde";
 
-	private static class MockKojiSSLHubClient extends KojiSSLHubClient {
-
-		public MockKojiSSLHubClient(XmlRpcClient client)
-				throws MalformedURLException {
-			super("http://www.example.com");
-			this.xmlRpcClient = client;
-		}
-		
-		@Override
-		protected void setupXmlRpcClient() {
-			// Do nothing the mock client was set in the constructor.
-		};
-		
-		@Override
-		protected SSLContext getInitializedSSLContext()
-				throws GeneralSecurityException {
-			return SSLContext.getInstance("SSL");
-		}
-		
-		@Override
-		protected void initSSLConnection(){}
-
-	};
-	
-	private MockKojiSSLHubClient kojiClient;
-
 	/**
 	 * Log on to Koji using SSL authentication.
 	 * This test requires proper certificates to be set up.
 	 * @throws KojiHubClientLoginException 
-	 * @throws MalformedURLException 
 	 * 
 	 */
 	@Test
-	public void canLoginUsingSSLCertificate() throws KojiHubClientLoginException, MalformedURLException  {
+	public void canLoginUsingSSLCertificate() throws KojiHubClientLoginException  {
 		// Mock session data
 		final HashMap<String, Object> mockSessionData = new HashMap<String, Object>();
 		mockSessionData.put("session-id", new Integer(99));
@@ -93,10 +62,10 @@ public class KojiSSLHubClientTest {
 			};
 		};
 
-		KojiSSLHubClient mockKojiClient = new MockKojiSSLHubClient(mockXmlRpcClinet){};
+		kojiClient.setXmlRpcClient(mockXmlRpcClinet);
 		
 		// Logging in to koji should return session data
-		HashMap<?, ?> sessionData = mockKojiClient.login();
+		HashMap<?, ?> sessionData = kojiClient.login();
 		assertNotNull(sessionData);
 		assertNotNull(sessionData.get("session-id"));
 		assertTrue(sessionData.get("session-id") instanceof Integer);
@@ -106,11 +75,10 @@ public class KojiSSLHubClientTest {
 	/**
 	 * Get build info test.
 	 * @throws KojiHubClientException 
-	 * @throws MalformedURLException 
 	 * 
 	 */
 	@Test
-	public void canGetBuildInfo() throws KojiHubClientException, MalformedURLException  {
+	public void canGetBuildInfo() throws KojiHubClientException  {
 		
 		final HashMap<String, Object> mockBuildInfo = new HashMap<String, Object>();
 		mockBuildInfo.put(KojiBuildInfo.KEY_TASK_ID, new Integer(99));
@@ -131,7 +99,7 @@ public class KojiSSLHubClientTest {
 				return null;
 			};
 		};
-		this.kojiClient = new MockKojiSSLHubClient(mockXmlRpcClinet);
+		this.kojiClient.setXmlRpcClient(mockXmlRpcClinet);
 
 		// get build info for eclipse-fedorapackager-0.1.12-1.fc15
 		KojiBuildInfo info = kojiClient.getBuild(EFP_NVR);
@@ -145,11 +113,10 @@ public class KojiSSLHubClientTest {
 	/**
 	 * Push scratch build test.
 	 * @throws KojiHubClientException 
-	 * @throws MalformedURLException 
 	 * 
 	 */
 	@Test
-	public void canPushScratchBuild() throws KojiHubClientException, MalformedURLException  {
+	public void canPushScratchBuild() throws KojiHubClientException  {
 		// Create a mock XML-RPC client
 		final XmlRpcClient mockXmlRpcClinet = new XmlRpcClient(){
 			@Override
@@ -160,7 +127,7 @@ public class KojiSSLHubClientTest {
 				return null;
 			};
 		};
-		this.kojiClient = new MockKojiSSLHubClient(mockXmlRpcClinet);
+		this.kojiClient.setXmlRpcClient(mockXmlRpcClinet);
 
 		// get build info for eclipse-fedorapackager-0.1.13-fc15
 		boolean isScratchBuild = true;
