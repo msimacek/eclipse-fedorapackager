@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
@@ -56,4 +57,42 @@ public class TestAbstractKojiHubBaseClientTest {
 				info.equals(testInfo));
 	}
 
+	@Test
+	public void testListBuildTags() throws MalformedURLException, KojiHubClientException{
+
+		// Create a list of build targets
+		HashMap<String, String> tag1 = new HashMap<String, String>();
+		tag1.put("build_tag_name", "tag1-build");
+		HashMap<String, String> tag2 = new HashMap<String, String>();
+		tag2.put("build_tag_name", "tag2-build");
+		final HashMap<?,?>[] testMapArray = {tag1,tag2};
+
+		// Create an xmlRpcClient which returns the above list.
+		final XmlRpcClient mockXmlRpcClient = new XmlRpcClient(){
+			@Override
+			public Object execute(String method, Object[] params) {
+				if (method.equals("getBuildTargets"))
+					return testMapArray;
+
+				return null;
+			}
+		};
+
+		// Create a Koji client which uses the above client
+		AbstractKojiHubBaseClient client = new AbstractKojiHubBaseClient("http://example.com"){
+			public HashMap<?,?> login(){
+				return null;
+			}
+			
+			protected void setupXmlRpcClient(){
+				this.xmlRpcClient = mockXmlRpcClient;
+			}
+		};
+
+		// Test listBuildTags
+		Set<String> list = client.listBuildTags();
+		assertTrue("first build root found", list.contains("tag1-build"));
+		assertTrue("second build root found", list.contains("tag2-build"));
+		
+	}
 }
