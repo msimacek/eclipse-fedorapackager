@@ -37,15 +37,24 @@ import java.util.Map;
 public class KojiBuildInfo {
 
 	/* relevant keys of the returned map */
-	private static final String KEY_ID = "id"; //$NON-NLS-1$
-	private static final String KEY_PACKAGE_ID = "package_id"; //$NON-NLS-1$
-	private static final String KEY_PACKAGE_NAME = "package_name"; //$NON-NLS-1$
-	private static final String KEY_VERSION = "version"; //$NON-NLS-1$
-	private static final String KEY_RELEASE = "release"; //$NON-NLS-1$
-	private static final String KEY_EPOCH = "epoch"; //$NON-NLS-1$
-	private static final String KEY_NVR = "nvr"; //$NON-NLS-1$
-	private static final String KEY_STATE = "state"; //$NON-NLS-1$
-	private static final String KEY_TASK_ID = "task_id"; //$NON-NLS-1$
+	/** Koji info key for build id */
+	public static final String KEY_ID = "id"; //$NON-NLS-1$
+	/** Koji info key for package_id */
+	public static final String KEY_PACKAGE_ID = "package_id"; //$NON-NLS-1$
+	/** Koji info key for package name */
+	public static final String KEY_PACKAGE_NAME = "package_name"; //$NON-NLS-1$
+	/** Koji info key for package version */
+	public static final String KEY_VERSION = "version"; //$NON-NLS-1$
+	/** Koji info key for id for release for which the build is tagged */
+	public static final String KEY_RELEASE = "release"; //$NON-NLS-1$
+	/** Koji info key for the epoch of the package */
+	public static final String KEY_EPOCH = "epoch"; //$NON-NLS-1$
+	/** Koji info key for the nvr of the package */
+	public static final String KEY_NVR = "nvr"; //$NON-NLS-1$
+	/** Koji info key for the state of the build */
+	public static final String KEY_STATE = "state"; //$NON-NLS-1$
+	/** Koji info key for the task id of the build job */
+	public static final String KEY_TASK_ID = "task_id"; //$NON-NLS-1$
 
 	private int state;
 	private int taskId;
