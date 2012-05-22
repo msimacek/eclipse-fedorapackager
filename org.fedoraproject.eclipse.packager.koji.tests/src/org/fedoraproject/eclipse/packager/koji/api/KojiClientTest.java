@@ -34,6 +34,9 @@ public class KojiClientTest {
 		public void setXmlRpcClient(XmlRpcClient client){
 			this.xmlRpcClient = client;
 		}
+		
+		@Override
+		public void logout() {}
 	};
 	
 	protected MockKojiSSLHubClient kojiClient;

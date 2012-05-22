@@ -10,16 +10,18 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.koji.api;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.net.MalformedURLException;
 import java.util.HashMap;
+import java.util.List;
 
-import org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient;
-import org.fedoraproject.eclipse.packager.koji.api.KojiBuildInfo;
-import org.fedoraproject.eclipse.packager.koji.api.KojiSSLHubClient;
+import org.apache.xmlrpc.client.XmlRpcClient;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
-import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,7 +30,7 @@ import org.junit.Test;
  * these tests, one has to have valid Fedora certificates in ~/
  * 
  */
-public class KojiBuildInfoTest {
+public class KojiBuildInfoTest extends KojiClientTest {
 	
 	/**
 	 * Name-version-release of some successful build.
@@ -46,7 +48,8 @@ public class KojiBuildInfoTest {
 	private HashMap<String, Object> rawBuildinfoMap;
 	
 	@Before
-	public void setUp()  {
+	public void setUp() throws MalformedURLException  {
+		super.setUp();
 		rawBuildinfoMap = new HashMap<String, Object>();
 		rawBuildinfoMap.put("state", new Integer(2));
 		rawBuildinfoMap.put("task_id", new Integer(3333));
@@ -61,56 +64,57 @@ public class KojiBuildInfoTest {
 	/**
 	 * Get build info from koji via XMLRPC. This test requires
 	 * a valid .fedora.cert in ~/
-	 * @throws MalformedURLException 
-	 * @throws KojiHubClientLoginException 
 	 * @throws KojiHubClientException 
 	 * 
 	 */
 	@Test
-	public void canGetBuildInfoFromKoji() throws MalformedURLException, KojiHubClientLoginException, KojiHubClientException {
-		IKojiHubClient kojiClient = new KojiSSLHubClient("https://koji.fedoraproject.org/kojihub");
-		// log in first
-		try {
-			HashMap<?, ?> sessionData = kojiClient.login();
-			assertNotNull(sessionData);
-			KojiBuildInfo info = kojiClient.getBuild(EFP_NVR);
-			assertNotNull(info);
-			assertEquals("1.fc14", info.getRelease());
-			assertEquals("eclipse-fedorapackager", info.getPackageName());
-			assertEquals("0.1.12", info.getVersion());
-			assertTrue(info.isComplete());
-			assertEquals(2827415 /* task id of
-								  * eclipse-fedorapackager-0.1.12-1.fc14 */,
-					    info.getTaskId());
-			assertEquals(1, info.getState());
-			assertEquals(0, info.getEpoch());
-			assertEquals(EFP_NVR, info.getNvr());
-			assertEquals(10555, info.getPackageId());
-		} finally {
-			kojiClient.logout();
-		}
+	public void canGetBuildInfoFromKoji() throws KojiHubClientException {
+		// Create a mock XML-RPC client
+		final XmlRpcClient mockXmlRpcClinet = new XmlRpcClient(){
+			@Override
+			public Object execute(String methodName, @SuppressWarnings("rawtypes") List params) {
+				if (methodName.equals("getBuild") && params.get(0).equals(EFP_NVR))
+					return rawBuildinfoMap;
+
+				return null;
+			};
+		};
+		this.kojiClient.setXmlRpcClient(mockXmlRpcClinet);
+		KojiBuildInfo info = kojiClient.getBuild(EFP_NVR);
+		assertNotNull(info);
+		assertEquals("2.fc15", info.getRelease());
+		assertEquals("eclipse-fedorapackager", info.getPackageName());
+		assertEquals("0.1.12", info.getVersion());
+		assertFalse(info.isComplete());
+		assertEquals(3333, info.getTaskId());
+		assertEquals(2, info.getState());
+		assertEquals(1, info.getEpoch());
+		assertEquals("eclipse-fedorapackager-0.1.12-2.fc15", info.getNvr());
+		assertEquals(9999, info.getPackageId());
+		kojiClient.logout();
 	}
 	
 	/**
 	 * Get build non-existent build from koji via XMLRPC. This test requires
 	 * a valid .fedora.cert in ~/
-	 * @throws MalformedURLException 
-	 * @throws KojiHubClientLoginException 
 	 * @throws KojiHubClientException 
 	 * 
 	 */
 	@Test
-	public void canGetNonExistingBuildInfoFromKoji() throws MalformedURLException, KojiHubClientLoginException, KojiHubClientException {
-		IKojiHubClient kojiClient = new KojiSSLHubClient("https://koji.fedoraproject.org/kojihub");
-		// log in first
-		try {
-			HashMap<?, ?> sessionData = kojiClient.login();
-			assertNotNull(sessionData);
-			KojiBuildInfo info = kojiClient.getBuild(NON_EXISTING_NVR);
-			assertNull(info);
-		} finally {
-			kojiClient.logout();
-		}
+	public void canGetNonExistingBuildInfoFromKoji() throws KojiHubClientException {
+		final XmlRpcClient mockXmlRpcClinet = new XmlRpcClient(){
+			@Override
+			public Object execute(String methodName, @SuppressWarnings("rawtypes") List params) {
+				if (methodName.equals("getBuild") && params.get(0).equals(EFP_NVR))
+					return rawBuildinfoMap;
+
+				return null;
+			};
+		};
+		this.kojiClient.setXmlRpcClient(mockXmlRpcClinet);
+		KojiBuildInfo info = kojiClient.getBuild(NON_EXISTING_NVR);
+		assertNull(info);
+		kojiClient.logout();
 	}
 	
 	
