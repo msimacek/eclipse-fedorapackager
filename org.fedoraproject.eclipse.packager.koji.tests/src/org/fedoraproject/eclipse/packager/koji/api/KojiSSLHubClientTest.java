@@ -105,15 +105,34 @@ public class KojiSSLHubClientTest {
 	
 	/**
 	 * Get build info test.
-	 * @throws KojiHubClientLoginException 
 	 * @throws KojiHubClientException 
+	 * @throws MalformedURLException 
 	 * 
 	 */
 	@Test
-	public void canGetBuildInfo() throws KojiHubClientLoginException, KojiHubClientException  {
-		// First log in
-		HashMap<?, ?> sessionData = kojiClient.login();
-		assertNotNull(sessionData);
+	public void canGetBuildInfo() throws KojiHubClientException, MalformedURLException  {
+		
+		final HashMap<String, Object> mockBuildInfo = new HashMap<String, Object>();
+		mockBuildInfo.put(KojiBuildInfo.KEY_TASK_ID, new Integer(99));
+		mockBuildInfo.put(KojiBuildInfo.KEY_RELEASE, "1.fc15");
+		mockBuildInfo.put(KojiBuildInfo.KEY_PACKAGE_NAME, "eclipse-fedorapackager");
+		mockBuildInfo.put(KojiBuildInfo.KEY_PACKAGE_ID, new Integer(99));
+		mockBuildInfo.put(KojiBuildInfo.KEY_NVR, EFP_NVR);
+		mockBuildInfo.put(KojiBuildInfo.KEY_VERSION, "0.1.12");
+		mockBuildInfo.put(KojiBuildInfo.KEY_STATE, new Integer(1));
+		
+		// Create a mock XML-RPC client
+		final XmlRpcClient mockXmlRpcClinet = new XmlRpcClient(){
+			@Override
+			public Object execute(String methodName, @SuppressWarnings("rawtypes") List params) {
+				if (methodName.equals("getBuild") && params.get(0).equals(EFP_NVR))
+					return mockBuildInfo;
+
+				return null;
+			};
+		};
+		this.kojiClient = new MockKojiSSLHubClient(mockXmlRpcClinet);
+
 		// get build info for eclipse-fedorapackager-0.1.12-1.fc15
 		KojiBuildInfo info = kojiClient.getBuild(EFP_NVR);
 		assertNotNull(info);
