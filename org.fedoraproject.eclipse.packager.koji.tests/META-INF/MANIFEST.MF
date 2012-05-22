@@ -10,3 +10,4 @@ Require-Bundle: org.easymock,
  org.fedoraproject.eclipse.packager.tests,
  org.fedoraproject.eclipse.packager.rpm,
  org.eclipse.jgit
+Import-Package: org.fedoraproject.eclipse.packager.koji.api.errors
