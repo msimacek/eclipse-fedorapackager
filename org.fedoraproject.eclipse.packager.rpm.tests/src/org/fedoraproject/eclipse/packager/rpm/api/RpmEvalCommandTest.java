@@ -10,59 +10,20 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.rpm.api;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.fedoraproject.eclipse.packager.IProjectRoot;
-import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
-import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
-import org.fedoraproject.eclipse.packager.rpm.api.EvalResult;
-import org.fedoraproject.eclipse.packager.rpm.api.RpmEvalCommand;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.RpmEvalCommandException;
-import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
-import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
  * Tests for the RPM eval command.
  */
-public class RpmEvalCommandTest {
-
-	// project under test
-	private GitTestProject testProject;
-	// main interface class
-	private FedoraPackager packager;
-	// Fedora packager root
-	private IProjectRoot fpRoot;
-	
-	/**
-	 * Clone a test project to be used for testing.
-	 * @throws InterruptedException 
-	 * @throws InvalidProjectRootException 
-	 * 
-	 */
-	@Before
-	public void setUp() throws InterruptedException, InvalidProjectRootException {
-		this.testProject = new GitTestProject("eclipse-fedorapackager"); //$NON-NLS-1$
-		this.fpRoot = FedoraPackagerUtils.getProjectRoot((this.testProject
-				.getProject()));
-		this.packager = new FedoraPackager(fpRoot);
-	}
-
-	/**
-	 * @throws CoreException 
-	 */
-	@After
-	public void tearDown() throws CoreException {
-		this.testProject.dispose();
-	}
+public class RpmEvalCommandTest extends FedoraPackagerTest {
 
 	/**
 	 * Test method for 
