@@ -77,6 +77,8 @@ public class ConvertLocalToRemoteCommandTest {
 	@After
 	public void tearDown() throws Exception  {
 		this.testProject.dispose();
+		org.eclipse.egit.core.Activator
+		.getDefault().getRepositoryCache().clear();
 	}
 
 	/**
