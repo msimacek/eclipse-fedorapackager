@@ -14,86 +14,28 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jgit.api.errors.InvalidRefNameException;
-import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
-import org.fedoraproject.eclipse.packager.BranchConfigInstance;
-import org.fedoraproject.eclipse.packager.IProjectRoot;
-import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
-import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand.BuildType;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.RpmBuildCommandException;
-import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
-import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.osgi.framework.FrameworkUtil;
 
 /**
  * Tests for the RPM build command. This includes source RPM and prep tests.
  * 
  */
-public class RpmBuildCommandTest {
+public class RpmBuildCommandTest extends FedoraPackagerTest {
 
-	private static final String EXAMPLE_GIT_PROJECT_ROOT = "resources/example-git-project"; //$NON-NLS-1$
-
-	// project under test
-	private GitTestProject testProject;
-	// main interface class
-	private FedoraPackager packager;
-	// Fedora packager root
-	private IProjectRoot fpRoot;
-	private BranchConfigInstance bci;
-
-	/**
-	 * Clone a test project to be used for testing.
-	 * @throws InterruptedException 
-	 * @throws CoreException 
-	 * @throws InvalidRefNameException 
-	 * @throws RefNotFoundException 
-	 * @throws RefAlreadyExistsException 
-	 * @throws JGitInternalException 
-	 * @throws InvalidProjectRootException 
-	 * @throws IOException 
-	 * 
-	 */
-	@Before
-	public void setUp() throws InterruptedException, JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException, InvalidProjectRootException, IOException  {
-		String dirName = FileLocator.toFileURL(
-				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
-						new Path(EXAMPLE_GIT_PROJECT_ROOT), null)).getFile();
-
-		this.testProject = new GitTestProject("example", dirName); //$NON-NLS-1$
-		testProject.checkoutBranch("f17"); //$NON-NLS-1$
-		this.fpRoot = FedoraPackagerUtils.getProjectRoot((this.testProject
-				.getProject()));
-		this.packager = new FedoraPackager(fpRoot);
-		bci = FedoraPackagerUtils.getVcsHandler(fpRoot).getBranchConfig();
-	}
-
-	/**
-	 * @throws CoreException 
-	 */
-	@After
-	public void tearDown() throws CoreException  {
-		this.testProject.dispose();
-	}
 
 	/**
 	 * Test method for
