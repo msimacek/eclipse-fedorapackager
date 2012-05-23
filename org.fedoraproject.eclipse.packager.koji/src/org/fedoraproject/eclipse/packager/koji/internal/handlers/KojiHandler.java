@@ -41,7 +41,7 @@ public abstract class KojiHandler extends FedoraPackagerAbstractHandler {
 								.getPreferenceStore()
 								.getString(
 										KojiPreferencesConstants.PREF_KOJI_SERVER_INFO));
-		if (kojiInfoString == KojiText.FedoraPackagerKojiPreferencePage_DefaultPlaceholder) {
+		if (kojiInfoString.contentEquals(KojiText.FedoraPackagerKojiPreferencePage_DefaultPlaceholder)) {
 			kojiInfo = KojiPlugin.getDefault().getPreferenceStore()
 					.getString(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO)
 					.split(","); //$NON-NLS-1$
