@@ -14,12 +14,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
@@ -28,15 +30,12 @@ import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
-import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.DownloadFailedException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
-import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand.BuildType;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.RpmBuildCommandException;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
@@ -44,12 +43,15 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.osgi.framework.FrameworkUtil;
 
 /**
  * Tests for the RPM build command. This includes source RPM and prep tests.
  * 
  */
 public class RpmBuildCommandTest {
+
+	private static final String EXAMPLE_GIT_PROJECT_ROOT = "resources/example-git-project"; //$NON-NLS-1$
 
 	// project under test
 	private GitTestProject testProject;
@@ -68,26 +70,21 @@ public class RpmBuildCommandTest {
 	 * @throws RefAlreadyExistsException 
 	 * @throws JGitInternalException 
 	 * @throws InvalidProjectRootException 
-	 * @throws CommandListenerException 
-	 * @throws CommandMisconfiguredException 
-	 * @throws DownloadFailedException 
-	 * @throws SourcesUpToDateException 
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
+	 * @throws IOException 
 	 * 
 	 */
 	@Before
-	public void setUp() throws InterruptedException, JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException, InvalidProjectRootException, SourcesUpToDateException, DownloadFailedException, CommandMisconfiguredException, CommandListenerException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException  {
-		this.testProject = new GitTestProject("eclipse-fedorapackager"); //$NON-NLS-1$
+	public void setUp() throws InterruptedException, JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException, InvalidProjectRootException, IOException  {
+		String dirName = FileLocator.toFileURL(
+				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
+						new Path(EXAMPLE_GIT_PROJECT_ROOT), null)).getFile();
+
+		this.testProject = new GitTestProject("example", dirName); //$NON-NLS-1$
 		testProject.checkoutBranch("f17"); //$NON-NLS-1$
 		this.fpRoot = FedoraPackagerUtils.getProjectRoot((this.testProject
 				.getProject()));
 		this.packager = new FedoraPackager(fpRoot);
 		bci = FedoraPackagerUtils.getVcsHandler(fpRoot).getBranchConfig();
-		// need to have sources ready
-		DownloadSourceCommand download = (DownloadSourceCommand) packager
-				.getCommandInstance(DownloadSourceCommand.ID);
-		download.call(new NullProgressMonitor());
 	}
 
 	/**
@@ -170,7 +167,7 @@ public class RpmBuildCommandTest {
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());
 		IResource expandedSourcesFolder = fpRoot.getContainer().findMember(
-				new Path("eclipse-fedorapackager")); //$NON-NLS-1$
+				new Path("example-1")); //$NON-NLS-1$
 		assertNotNull(expandedSourcesFolder);
 		// there should be some files in that folder
 		assertTrue(((IContainer) expandedSourcesFolder).members().length > 0);
@@ -197,15 +194,15 @@ public class RpmBuildCommandTest {
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());
 		IResource expandedSourcesFolder = fpRoot.getContainer().findMember(
-				new Path("eclipse-fedorapackager")); //$NON-NLS-1$
+				new Path("example-1")); //$NON-NLS-1$
 		assertNotNull(expandedSourcesFolder);
 		// there should be some files in that folder
 		assertTrue(((IContainer) expandedSourcesFolder).members().length > 0);
 		// put some confidence into returned result
 		assertTrue(result.getBuildCommand().contains("-bc")); //$NON-NLS-1$
-		// should have created zip with jars
+		// should have created a binary example.out 
 		assertNotNull(fpRoot.getContainer().findMember(
-				new Path("eclipse-fedorapackager/build/rpmBuild/org.fedoraproject.eclipse.packager.zip"))); //$NON-NLS-1$
+				new Path("example-1/build/example.out"))); //$NON-NLS-1$
 		// should not have produced any RPMs
 		assertNull(fpRoot.getContainer().findMember(
 				new Path("noarch"))); //$NON-NLS-1$
@@ -230,15 +227,15 @@ public class RpmBuildCommandTest {
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());
 		IResource expandedSourcesFolder = fpRoot.getContainer().findMember(
-				new Path("eclipse-fedorapackager")); //$NON-NLS-1$
+				new Path("example-1")); //$NON-NLS-1$
 		assertNotNull(expandedSourcesFolder);
 		// there should be some files in that folder
 		assertTrue(((IContainer) expandedSourcesFolder).members().length > 0);
 		// put some confidence into returned result
 		assertTrue(result.getBuildCommand().contains("-bi")); //$NON-NLS-1$
-		// should have created zip with jars
+		// should have binary example.out
 		assertNotNull(fpRoot.getContainer().findMember(
-				new Path("eclipse-fedorapackager/build/rpmBuild/org.fedoraproject.eclipse.packager.zip"))); //$NON-NLS-1$
+				new Path("example-1/build/example.out"))); //$NON-NLS-1$
 		// should not have produced any RPMs
 		assertNull(fpRoot.getContainer().findMember(
 				new Path("noarch"))); //$NON-NLS-1$

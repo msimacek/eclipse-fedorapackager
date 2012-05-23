@@ -44,14 +44,27 @@ public class GitTestProject {
 	protected IProject project;
 	protected Git git;
 	
-	public GitTestProject(final String packageName) throws InterruptedException {
+	public GitTestProject(String packageName) throws InterruptedException {
+		this(packageName, getGitCloneUrl(packageName));
+	}
+
+	/**
+	 * Use this constructor if you are cloning a local repo
+	 * 
+	 * @param packageName
+	 *            name of the package.
+	 * @param URI
+	 *            where to clone from.
+	 * @throws InterruptedException
+	 */
+	public GitTestProject(final String packageName, final String URI) throws InterruptedException {
 		Job cloneProjectJob = new Job(packageName) {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				FedoraPackagerGitCloneOperation cloneOp = new FedoraPackagerGitCloneOperation();
 				try {
-					cloneOp.setCloneURI(getGitCloneUrl(packageName))
+					cloneOp.setCloneURI(URI)
 							.setPackageName(packageName);
 				} catch (URISyntaxException e1) {
 					// ignore
@@ -153,7 +166,7 @@ public class GitTestProject {
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 	}
 	
-	public String getGitCloneUrl(String packageName) {
+	private static String getGitCloneUrl(String packageName) {
 		return GitUtils.getFullGitURL(GitUtils.getAnonymousGitBaseUrl(),
 				packageName);
 	}
