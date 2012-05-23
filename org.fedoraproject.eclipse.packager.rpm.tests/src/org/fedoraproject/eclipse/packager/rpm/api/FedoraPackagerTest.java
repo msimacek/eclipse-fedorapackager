@@ -12,7 +12,12 @@ import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
+import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
+import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
+import org.fedoraproject.eclipse.packager.rpm.api.errors.RpmBuildCommandException;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.junit.After;
@@ -24,7 +29,7 @@ public class FedoraPackagerTest {
 	private static final String EXAMPLE_GIT_PROJECT_ROOT = "resources/example-git-project"; //$NON-NLS-1$
 
 	// project under test
-	private GitTestProject testProject;
+	protected GitTestProject testProject;
 	// main interface class
 	protected FedoraPackager packager;
 	// Fedora packager root
@@ -41,10 +46,16 @@ public class FedoraPackagerTest {
 	 * @throws JGitInternalException 
 	 * @throws InvalidProjectRootException 
 	 * @throws IOException 
+	 * @throws RpmBuildCommandException 
+	 * @throws CommandListenerException 
+	 * @throws CommandMisconfiguredException 
+	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandInitializationException 
 	 * 
 	 */
+	@SuppressWarnings("unused")
 	@Before
-	public void setUp() throws InterruptedException, JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException, InvalidProjectRootException, IOException  {
+	public void setUp() throws InterruptedException, JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException, InvalidProjectRootException, IOException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException  {
 		String dirName = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_GIT_PROJECT_ROOT), null)).getFile();

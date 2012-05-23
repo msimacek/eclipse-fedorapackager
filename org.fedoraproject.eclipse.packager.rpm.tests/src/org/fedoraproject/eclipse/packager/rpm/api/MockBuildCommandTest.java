@@ -16,6 +16,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,69 +29,36 @@ import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
-import org.fedoraproject.eclipse.packager.BranchConfigInstance;
-import org.fedoraproject.eclipse.packager.IProjectRoot;
-import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
-import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.DownloadFailedException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
-import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
-import org.fedoraproject.eclipse.packager.rpm.api.MockBuildCommand;
-import org.fedoraproject.eclipse.packager.rpm.api.MockBuildResult;
-import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand.BuildType;
-import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildResult;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.MockBuildCommandException;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.MockNotInstalledException;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.RpmBuildCommandException;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.UserNotInMockGroupException;
-import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
-import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
  * Some basic tests for the mock build command.
  */
-public class MockBuildCommandTest {
+public class MockBuildCommandTest extends FedoraPackagerTest {
 
-	// project under test
-	private GitTestProject testProject;
-	// main interface class
-	private FedoraPackager packager;
-	// Fedora packager root
-	private IProjectRoot fpRoot;
-	// Path to SRPM
 	private String srpmPath;
-	private BranchConfigInstance bci;
-	
+
+	@Override
 	@Before
-	public void setUp() throws InterruptedException, JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException, InvalidProjectRootException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, SourcesUpToDateException, DownloadFailedException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException  {
-		this.testProject = new GitTestProject("eclipse-fedorapackager"); //$NON-NLS-1$
-		// switch to F15
+	public void setUp() throws InterruptedException, JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException, InvalidProjectRootException, IOException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException  {
+		super.setUp();
 		testProject.checkoutBranch("f15"); //$NON-NLS-1$
 		testProject.getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-		this.fpRoot = FedoraPackagerUtils.getProjectRoot((this.testProject
-				.getProject()));
-		this.packager = new FedoraPackager(fpRoot);
-		// need to have sources ready
-		DownloadSourceCommand download = (DownloadSourceCommand) packager
-				.getCommandInstance(DownloadSourceCommand.ID);
-		download.call(new NullProgressMonitor());
-		this.bci = FedoraPackagerUtils.getVcsHandler(fpRoot).getBranchConfig();
+
 		// build fresh SRPM
 		RpmBuildResult srpmBuildResult = createSRPM();
 		this.srpmPath = srpmBuildResult.getAbsoluteSRPMFilePath();
-	}
-
-	@After
-	public void tearDown() throws CoreException {
-		this.testProject.dispose();
 	}
 
 	/**
