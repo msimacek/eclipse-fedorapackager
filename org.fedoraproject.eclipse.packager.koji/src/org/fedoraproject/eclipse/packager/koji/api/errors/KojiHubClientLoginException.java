@@ -11,6 +11,7 @@
 package org.fedoraproject.eclipse.packager.koji.api.errors;
 
 import org.apache.xmlrpc.XmlRpcException;
+import org.fedoraproject.eclipse.packager.FedoraSSL;
 import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
@@ -49,6 +50,10 @@ public class KojiHubClientLoginException extends FedoraPackagerAPIException {
 		super(message);
 	}
 
+	protected FedoraSSL getFedoraSSLInstance(){
+		return FedoraSSLFactory.getInstance();
+	}
+
 	/**
 	 * Do some analysis and determine if certificate (~/.fedora.cert) expired.
 	 * 
@@ -56,7 +61,7 @@ public class KojiHubClientLoginException extends FedoraPackagerAPIException {
 	 *         certificate expired.
 	 */
 	public boolean isCertificateExpired() {
-		if (!FedoraSSLFactory.getInstance().isFedoraCertValid()) {
+		if (!getFedoraSSLInstance().isFedoraCertValid()) {
 			return true;
 		}
 		return false;

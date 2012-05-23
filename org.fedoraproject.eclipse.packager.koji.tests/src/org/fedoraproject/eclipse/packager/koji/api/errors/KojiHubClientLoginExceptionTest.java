@@ -10,21 +10,40 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.koji.api.errors;
 
-
 import static org.junit.Assert.assertFalse;
 
 import java.security.GeneralSecurityException;
 
+import org.fedoraproject.eclipse.packager.FedoraSSL;
+import org.fedoraproject.eclipse.packager.MockableFedoraSSL;
 import org.junit.Before;
 import org.junit.Test;
 
 public class KojiHubClientLoginExceptionTest {
 
 	private KojiHubClientLoginException exceptionUnderTest;
-	
+
+	private static class MockFedoraSSL extends MockableFedoraSSL {
+		@Override
+		public boolean isFedoraCertValid() {
+			// Mock this function here as this function is unit tested in
+			// FedoraSSLTest
+			return true;
+		}
+	};
+
 	@Before
 	public void setUp() {
-		exceptionUnderTest = new KojiHubClientLoginException(new GeneralSecurityException());
+		final MockFedoraSSL mockFedoraSSL = new MockFedoraSSL();
+		exceptionUnderTest = new KojiHubClientLoginException(
+				new GeneralSecurityException()) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected FedoraSSL getFedoraSSLInstance() {
+				return mockFedoraSSL;
+			}
+		};
 	}
 
 	/**
