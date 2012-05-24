@@ -1,5 +1,6 @@
 package org.fedoraproject.eclipse.packager.rpm.api;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
@@ -18,6 +19,7 @@ import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitia
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.RpmBuildCommandException;
+import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.junit.After;
@@ -56,11 +58,19 @@ public class FedoraPackagerTest {
 	@SuppressWarnings("unused")
 	@Before
 	public void setUp() throws InterruptedException, JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException, InvalidProjectRootException, IOException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException  {
-		String dirName = FileLocator.toFileURL(
+		String exampleGitdirPath = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_GIT_PROJECT_ROOT), null)).getFile();
 
-		this.testProject = new GitTestProject("example", dirName); //$NON-NLS-1$
+		File exampleGitDir = new File(exampleGitdirPath);
+		
+		File tempGitDir = TestsUtils.copyFolderContentsToTemp(exampleGitDir, null);
+		tempGitDir.deleteOnExit();
+		// Set up the git repo
+		File gitDir = new File(tempGitDir, "git_dir"); //$NON-NLS-1$
+		gitDir.renameTo(new File(tempGitDir, ".git")); //$NON-NLS-1$
+		
+		this.testProject = new GitTestProject("example", tempGitDir.getAbsolutePath()); //$NON-NLS-1$
 		testProject.checkoutBranch("f17"); //$NON-NLS-1$
 		this.fpRoot = FedoraPackagerUtils.getProjectRoot((this.testProject
 				.getProject()));
