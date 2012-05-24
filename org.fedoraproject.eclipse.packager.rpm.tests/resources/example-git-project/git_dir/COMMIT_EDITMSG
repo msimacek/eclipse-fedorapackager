@@ -1,0 +1,22 @@
+Initial commit
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+#
+# Initial commit
+#
+# Changes to be committed:
+#   (use "git rm --cached <file>..." to unstage)
+#
+#	new file:   example-1.tar.gz
+#	new file:   example.spec
+#	new file:   sources
+#
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+#	.build-1-1.fc17.log
+#	example-1-1.fc17.src.rpm
+#	example-1/
+#	noarch/
