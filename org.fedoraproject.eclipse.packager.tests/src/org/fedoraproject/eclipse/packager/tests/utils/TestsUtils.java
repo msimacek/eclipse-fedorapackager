@@ -97,6 +97,14 @@ public class TestsUtils {
 	public static File copyFolderContentsToTemp(File fromDir,
 			FileFilter fileFilter) throws IOException {
 		File destination = createTempDirectory();
+		copyFolderContent(fromDir, destination, fileFilter);
+		return destination;
+	}
+
+	private static void copyFolderContent(File fromDir, File destination, FileFilter fileFilter) throws IOException{
+		if(!destination.exists())
+			destination.mkdir();
+
 		File[] files = null;
 		if (fileFilter == null) {
 			files = fromDir.listFiles();
@@ -104,9 +112,12 @@ public class TestsUtils {
 			files = fromDir.listFiles(fileFilter);
 		}
 		for (File file: files) {
-			copyFileContents(file, destination, false);
+			if (file.isDirectory()){
+				copyFolderContent(file, new File(destination, file.getName()), fileFilter);
+			}else{
+				copyFileContents(file, destination, false);
+			}
 		}
-		return destination;
 	}
 
 	/**
