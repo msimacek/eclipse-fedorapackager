@@ -198,7 +198,7 @@ public class TestsUtils {
 	 * @return
 	 * @throws IOException
 	 */
-	private static File copyFileContents(File fromFile, File destination,
+	public static File copyFileContents(File fromFile, File destination,
 			boolean useTempFilenames) throws IOException {
 		FileInputStream from = null;
 		FileOutputStream to = null;
