@@ -11,18 +11,18 @@
 package org.fedoraproject.eclipse.packager.rpm.api;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
@@ -34,8 +34,8 @@ import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.ChecksumValidListener;
 import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
-import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.UploadSourceCommand;
+import org.fedoraproject.eclipse.packager.api.UploadSourceResult;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.DownloadFailedException;
@@ -43,10 +43,8 @@ import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitia
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
-import org.fedoraproject.eclipse.packager.rpm.api.ISRPMImportCommandSLLPolicyCallback;
-import org.fedoraproject.eclipse.packager.rpm.api.SRPMImportCommand;
-import org.fedoraproject.eclipse.packager.rpm.api.SRPMImportResult;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.SRPMImportCommandException;
+import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -55,33 +53,40 @@ import org.osgi.framework.FrameworkUtil;
 
 public class SRPMImportCommandTest implements
 		ISRPMImportCommandSLLPolicyCallback {
+	
+	private static final String MOCK_DOWNLOAD_FILE = "resources/eclipse-mylyn-tasks-R_3_7_0-fetched-src.tar.bz2"; //$NON-NLS-1$
+
 	// project under test
 	private IProject testProject;
 	// main interface class
-	private static final String UPLOAD_URL_PROP = "org.fedoraproject.eclipse.packager.tests.LookasideUploadUrl"; //$NON-NLS-1$
 	private String uploadURLForTesting;
 	private String srpmPath;
 	private Git git;
 	private String badSrpmPath;
 
+	private File mockDownloadFile;
+
 	@Before
 	public void setup() throws IOException, CoreException {
-		String uploadURL = System.getProperty(UPLOAD_URL_PROP);
-		if (uploadURL == null) {
-			fail(UPLOAD_URL_PROP + " not set"); //$NON-NLS-1$
-		}
+		String exampleGitdirPath = FileLocator.toFileURL(
+				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
+						new Path(MOCK_DOWNLOAD_FILE), null)).getFile();
+
+		mockDownloadFile = new File(exampleGitdirPath);
+
+		this.uploadURLForTesting = "https://pkgs.fedoraproject.org/repo/pkgs/"; //$NON-NLS-1$
 		srpmPath = FileLocator
 				.toFileURL(
 						FileLocator.find(
 								FrameworkUtil.getBundle(this.getClass()),
 								new Path(
-										"resources/eclipse-mylyn-tasks-3.6.0-2.fc17.src.rpm"), //$NON-NLS-1$
+										"resources/eclipse-mylyn-tasks-3.7.0-3.fc17.src.rpm"), //$NON-NLS-1$
 								null)).getFile();
 		badSrpmPath = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path("resources/ed-1.5-2.fc16.src.rpm"), null)) //$NON-NLS-1$
 				.getFile();
-		this.uploadURLForTesting = uploadURL;
+
 		testProject = ResourcesPlugin.getWorkspace().getRoot()
 				.getProject("eclipse-mylyn-tasks"); //$NON-NLS-1$
 		testProject.create(null);
@@ -107,22 +112,40 @@ public class SRPMImportCommandTest implements
 	public void canImportSRPM() throws SRPMImportCommandException,
 			InvalidProjectRootException, NoWorkTreeException, IOException,
 			CoreException, FedoraPackagerCommandInitializationException,
-			FedoraPackagerCommandNotFoundException, URISyntaxException,
 			SourcesUpToDateException, DownloadFailedException,
 			CommandMisconfiguredException, CommandListenerException {
-		SRPMImportCommand srpmImport = new SRPMImportCommand(srpmPath,
-				testProject, testProject, uploadURLForTesting, this);
+
+		SRPMImportCommand srpmImport = new SRPMImportCommand(
+				srpmPath, testProject, testProject, uploadURLForTesting, this){
+			@Override
+			protected UploadSourceCommand getUploadSourceCommand() {
+				return new UploadSourceCommand() {
+					@Override
+					public UploadSourceResult call(IProgressMonitor subMonitor) throws CommandListenerException {
+						callPreExecListeners();
+						callPostExecListeners();
+						return null;
+					}
+					
+					@Override
+					public UploadSourceCommand setUploadURL(String uploadURL){
+						return this;
+					}
+				};
+			}
+		};
+		
 		SRPMImportResult result = srpmImport.call(new NullProgressMonitor());
-		IProjectRoot fpr = FedoraPackagerUtils.getProjectRoot(testProject);
-		FedoraPackager packager = new FedoraPackager(fpr);
+		final IProjectRoot fpr = FedoraPackagerUtils.getProjectRoot(testProject);
+
 		assertTrue(fpr.getContainer().getLocation()
 				.append("/redhat-bugzilla-custom-transitions.txt").toFile() //$NON-NLS-1$
 				.exists());
 		assertTrue(fpr.getContainer().getLocation()
-				.append("/eclipse-mylyn-tasks-R_3_6_0-fetched-src.tar.bz2") //$NON-NLS-1$
+				.append("/eclipse-mylyn-tasks-R_3_7_0-fetched-src.tar.bz2") //$NON-NLS-1$
 				.toFile().exists());
 		assertTrue(fpr.getContainer().getLocation()
-				.append("/eclipse-mylyn-tasks-3.6.0-2.fc17.src.rpm").toFile() //$NON-NLS-1$
+				.append("/eclipse-mylyn-tasks-3.7.0-3.fc17.src.rpm").toFile() //$NON-NLS-1$
 				.exists());
 		// ensure files are added to git
 		Set<String> unaddedSet = git.status().call().getUntracked();
@@ -132,21 +155,28 @@ public class SRPMImportCommandTest implements
 				.getIgnoreFileName()));
 		// ensure files uploaded
 		fpr.getSourcesFile().deleteSource(
-				"eclipse-mylyn-tasks-R_3_6_0-fetched-src.tar.bz2"); //$NON-NLS-1$
+				"eclipse-mylyn-tasks-R_3_7_0-fetched-src.tar.bz2"); //$NON-NLS-1$
 		fpr.getProject().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());
 		assertTrue(!fpr.getContainer().getLocation()
-				.append("/eclipse-mylyn-tasks-R_3_6_0-fetched-src.tar.bz2") //$NON-NLS-1$
+				.append("/eclipse-mylyn-tasks-R_3_7_0-fetched-src.tar.bz2") //$NON-NLS-1$
 				.toFile().exists());
-		DownloadSourceCommand download = (DownloadSourceCommand) packager
-				.getCommandInstance(DownloadSourceCommand.ID);
+		
+		DownloadSourceCommand download = new DownloadSourceCommand(){
+			@Override
+			protected void download(IProgressMonitor subMonitor, IFile fileToDownload, java.net.URL fileURL) throws IOException, CoreException {
+				TestsUtils.copyFileContents(mockDownloadFile, new File(fileToDownload.getParent().getLocationURI()), false);
+				fpr.getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+			};
+		};
+		download.initialize(fpr);
+
 		ChecksumValidListener md5sumListener = new ChecksumValidListener(fpr);
 		download.addCommandListener(md5sumListener); // want md5sum checking
-		download.setDownloadURL("http://" //$NON-NLS-1$
-				+ new URI(uploadURLForTesting).getHost());
+		download.setDownloadURL(uploadURLForTesting);
 		download.call(new NullProgressMonitor());
 		assertTrue(fpr.getContainer().getLocation()
-				.append("/eclipse-mylyn-tasks-R_3_6_0-fetched-src.tar.bz2") //$NON-NLS-1$
+				.append("/eclipse-mylyn-tasks-R_3_7_0-fetched-src.tar.bz2") //$NON-NLS-1$
 				.toFile().exists());
 		assertTrue(fpr.getSourcesFile().getMissingSources().isEmpty());
 		// ensure files are tracked
@@ -155,7 +185,7 @@ public class SRPMImportCommandTest implements
 					.contains(file));
 		}
 		assertTrue(fpr.getSourcesFile().getSources().keySet()
-				.contains("eclipse-mylyn-tasks-R_3_6_0-fetched-src.tar.bz2")); //$NON-NLS-1$
+				.contains("eclipse-mylyn-tasks-R_3_7_0-fetched-src.tar.bz2")); //$NON-NLS-1$
 		// ensure spec is named correctly
 		assertTrue(fpr.getSpecFile().getName()
 				.equals("eclipse-mylyn-tasks.spec")); //$NON-NLS-1$
