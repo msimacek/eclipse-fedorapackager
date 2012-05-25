@@ -103,6 +103,16 @@ public class SRPMImportCommand {
 		}
 	}
 
+	protected UploadSourceCommand getUploadSourceCommand()
+			throws InvalidProjectRootException,
+			FedoraPackagerCommandInitializationException,
+			FedoraPackagerCommandNotFoundException {
+		IProjectRoot fpr = FedoraPackagerUtils.getProjectRoot(fprContainer);
+		FedoraPackager fp = new FedoraPackager(fpr);
+		return (UploadSourceCommand) fp
+				.getCommandInstance(UploadSourceCommand.ID);
+	}
+
 	/**
 	 * Calling method for this command.
 	 * 
@@ -234,11 +244,9 @@ public class SRPMImportCommand {
 								.getSpecfileModel().getName());
 				throw new SRPMImportCommandException(errorMsg);
 			}
-			FedoraPackager fp = new FedoraPackager(fpr);
 
-			// get upload source command
-			UploadSourceCommand upload = (UploadSourceCommand) fp
-					.getCommandInstance(UploadSourceCommand.ID);
+			UploadSourceCommand upload = getUploadSourceCommand();
+
 			boolean firstUpload = true;
 			IFpProjectBits projectBits = FedoraPackagerUtils.getVcsHandler(fpr);
 			for (String file : uploadFiles) {
