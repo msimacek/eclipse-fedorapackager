@@ -32,6 +32,7 @@ import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.api.errors.NoMessageException;
 import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.linuxtools.rpmstubby.InputType;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.fedoraproject.eclipse.packager.api.LocalFedoraPackagerProjectCreator;
@@ -49,20 +50,22 @@ public class WizardStubbyProjectTest {
 	private IProject baseProject;
 	private LocalFedoraPackagerProjectCreator testMainProject;
 	private File externalFile;
+	private IEditorPart openEditor;
 
 	@Before
-	public void setUp() throws CoreException, IOException  {
+	public void setUp() throws CoreException, IOException {
 		// Create a base project for the test
 		baseProject = ResourcesPlugin.getWorkspace().getRoot()
 				.getProject(PROJECT);
-		if (baseProject.exists()){
+		if (baseProject.exists()) {
 			baseProject.delete(true, new NullProgressMonitor());
 		}
 		baseProject.create(null);
 		baseProject.open(null);
 
-		testMainProject = new LocalFedoraPackagerProjectCreator(baseProject, null);
-		
+		testMainProject = new LocalFedoraPackagerProjectCreator(baseProject,
+				null);
+
 		// Find the test feature.xml file and install it
 		URL url = FileLocator.find(FrameworkUtil
 				.getBundle(WizardStubbyProjectTest.class), new Path(
@@ -76,26 +79,41 @@ public class WizardStubbyProjectTest {
 	}
 
 	@Test
-	public void testPopulateStubby() throws NoFilepatternException, NoHeadException, NoMessageException, ConcurrentRefUpdateException, JGitInternalException, WrongRepositoryStateException, CoreException, IOException  {
-		// poulate project using imported feature.xml
-		testMainProject.create(InputType.ECLIPSE_FEATURE, externalFile);
-
+	public void testPopulateStubby() throws NoFilepatternException,
+			NoHeadException, NoMessageException, ConcurrentRefUpdateException,
+			JGitInternalException, WrongRepositoryStateException,
+			CoreException, IOException {
+		// populate project using imported feature.xml
+		try {
+			testMainProject.create(InputType.ECLIPSE_FEATURE, externalFile);
+		} catch (NullPointerException e) {
+			// when run with tycho no active windows exist
+		}
 		// Make sure the original feature.xml got copied into the workspace
 		IFile featureFile = baseProject.getFile(new Path(FEATURE));
 		assertTrue(featureFile.exists());
 
 		// Make sure the proper .spec file is generated
 		IFile specFile = baseProject.getFile(new Path(SPEC));
-		IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), specFile);
+		try {
+			openEditor = IDE.openEditor(PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getActivePage(), specFile);
+		} catch (NullPointerException e) {
+			// when run with tycho no active windows exist
+		}
 		assertTrue(specFile.exists());
 
 		// Check if the generated .spec file contains the correct information
 		LocalSearchString localSearch = new LocalSearchString();
-		assertTrue(localSearch.searchString("Name:           eclipse-packager", specFile)); //$NON-NLS-1$	
+		assertTrue(localSearch.searchString(
+				"Name:           eclipse-packager", specFile)); //$NON-NLS-1$	
 	}
 
 	@After
 	public void tearDown() throws CoreException {
+		if (openEditor != null) {
+			openEditor.dispose();
+		}
 		baseProject.delete(true, true, null);
 	}
 }
