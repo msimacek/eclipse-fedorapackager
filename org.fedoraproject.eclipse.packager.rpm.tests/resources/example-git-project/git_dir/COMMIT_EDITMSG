@@ -2,6 +2,7 @@ Initial commit
 
 # Please enter the commit message for your changes. Lines starting
 # with '#' will be ignored, and an empty message aborts the commit.
+# Explicit paths specified without -i nor -o; assuming --only paths...
 # On branch master
 #
 # Initial commit
@@ -13,10 +14,3 @@ Initial commit
 #	new file:   example.spec
 #	new file:   sources
 #
-# Untracked files:
-#   (use "git add <file>..." to include in what will be committed)
-#
-#	.build-1-1.fc17.log
-#	example-1-1.fc17.src.rpm
-#	example-1/
-#	noarch/
