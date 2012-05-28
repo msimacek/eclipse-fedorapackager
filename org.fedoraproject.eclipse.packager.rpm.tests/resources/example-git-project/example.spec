@@ -16,7 +16,7 @@ Example package.
 %build
 mkdir build
 pushd build
-  gcc -o example.out ../example.c
+  cp example.out ../example.c
 popd
 
 %install
