@@ -33,7 +33,6 @@ import java.util.Map;
  * If there is no build matching the buildInfo given, and strict is specified,
  * raise an error. Otherwise return None.
  */
-@SuppressWarnings("unused")
 public class KojiBuildInfo {
 
 	/* relevant keys of the returned map */
@@ -68,7 +67,7 @@ public class KojiBuildInfo {
 	/**
 	 * Construct the build info from the map returned by the API call.
 	 * 
-	 * @param buildInfo
+	 * @param buildInfo Parameters needed to be passed to Koji.
 	 */
 	public KojiBuildInfo(Map<String, Object> buildInfo) {
 		parseBuildInfo(buildInfo);
