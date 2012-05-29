@@ -42,11 +42,12 @@ public class FedoraSSLTest {
 
 	private FedoraSSL expiredFedoraSSL;
 	private FedoraSSL anonymousFedoraSSL;
+	private FedoraSSL validFedoraSSL;
 	private static final String CERT_FILE = "resources/fedora-ssl/fedora-example-invalid.cert";
 	private static final String UPLOAD_CERT_FILE = "resources/fedora-ssl/fedora-upload-ca.cert";
 	private static final String SERVER_CERT_FILE = "resources/fedora-ssl/fedora-server-ca.cert";
-	
-	
+	private static final String VALID_CERT_FILE = "/resources/fedora-ssl/valid.cert";
+
 	/**
 	 * @throws IOException 
 	 */
@@ -55,6 +56,9 @@ public class FedoraSSLTest {
 		String fedCertName = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(CERT_FILE), null)).getFile();
+		String validCertName = FileLocator.toFileURL(
+				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
+						new Path(VALID_CERT_FILE), null)).getFile();
 		String fedUploadCertName = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(UPLOAD_CERT_FILE), null)).getFile();
@@ -64,9 +68,12 @@ public class FedoraSSLTest {
 		File fedoraCert = new File(fedCertName);
 		File fedoraUploadCert = new File(fedUploadCertName);
 		File fedoraServerCert = new File(fedServerCertName);
+		File validCert = new File(validCertName);
 		this.expiredFedoraSSL = FedoraSSLFactory.getInstance(fedoraCert,
 				fedoraUploadCert, fedoraServerCert);
 		this.anonymousFedoraSSL = FedoraSSLFactory.getInstance(new File("/tmp/i_do_not_exist.cert"),
+				fedoraUploadCert, fedoraServerCert);
+		this.validFedoraSSL = FedoraSSLFactory.getInstance(validCert,
 				fedoraUploadCert, fedoraServerCert);
 	}
 
@@ -127,7 +134,6 @@ public class FedoraSSLTest {
 	 */
 	@Test
 	public void canDetermineCertificateValidity()  {
-		FedoraSSL validFedoraSSL = FedoraSSLFactory.getInstance();
 		// should be valid
 		assertTrue(validFedoraSSL.isFedoraCertValid());
 		// should not be valid
