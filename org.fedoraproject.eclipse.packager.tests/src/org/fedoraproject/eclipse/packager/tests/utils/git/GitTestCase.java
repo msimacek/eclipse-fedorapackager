@@ -20,18 +20,19 @@ import org.junit.Before;
 import org.junit.Ignore;
 
 @Ignore
-public class GitTestCase  {
-	
+public class GitTestCase {
+
 	private GitTestProject project;
 	private IProject iProject;
 	private IProjectRoot fedoraprojectRoot;
-	
+
 	@Before
-	public void setUp() throws InterruptedException, InvalidProjectRootException  {
+	public void setUp() throws InterruptedException,
+			InvalidProjectRootException {
 		project = new GitTestProject("eclipse-rpm-editor");
 		iProject = project.getProject();
 		// create a fedoraprojectRoot for this project
-		fedoraprojectRoot = FedoraPackagerUtils.getProjectRoot((iProject));		
+		fedoraprojectRoot = FedoraPackagerUtils.getProjectRoot((iProject));
 	}
 
 	/**
@@ -42,8 +43,10 @@ public class GitTestCase  {
 	}
 
 	@After
-	public void tearDown() throws CoreException  {
+	public void tearDown() throws CoreException {
 		project.dispose();
+		org.eclipse.egit.core.Activator.getDefault().getRepositoryCache()
+				.clear();
 	}
 
 	/**
