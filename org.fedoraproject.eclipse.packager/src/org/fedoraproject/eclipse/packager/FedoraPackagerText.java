@@ -90,6 +90,8 @@ public class FedoraPackagerText extends NLS {
 	/****/ public static String FedoraPackagerPreferencePage_debugSwitchLabel;
 	// FedoraPackagerCommand
 	/****/ public static String FedoraPackagerCommand_projectRootSetTwiceError;
+	public static String FedoraPackager_Cant_Create;
+
 	// FedoraPackager
 	/****/ public static String FedoraPackager_commandNotFoundError;
 	// Generic strings
