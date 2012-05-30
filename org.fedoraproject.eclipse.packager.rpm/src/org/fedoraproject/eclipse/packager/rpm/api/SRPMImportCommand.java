@@ -119,7 +119,7 @@ public class SRPMImportCommand {
 	 * @param monitor
 	 *            Monitor for this command's runtime.
 	 * @return The result of calling this command.
-	 * @throws SRPMImportCommandException
+	 * @throws SRPMImportCommandException If the import fails, the message contains the details.
 	 */
 	public SRPMImportResult call(IProgressMonitor monitor)
 			throws SRPMImportCommandException {
@@ -327,27 +327,4 @@ public class SRPMImportCommand {
 		return result;
 	}
 
-	/**
-	 * Set the SRPM this command imports.
-	 * 
-	 * @param path
-	 *            The path to the SRPM.
-	 * @return This command.
-	 */
-	public SRPMImportCommand setSRPM(String path) {
-		this.srpm = path;
-		return this;
-	}
-
-	/**
-	 * Set the project to import the SRPM into.
-	 * 
-	 * @param project
-	 *            The project being imported to.
-	 * @return This command.
-	 */
-	public SRPMImportCommand setProject(IProject project) {
-		this.project = project;
-		return this;
-	}
 }
