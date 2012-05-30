@@ -15,14 +15,10 @@ package org.fedoraproject.eclipse.packager;
  */
 public class ProductStringsNonTranslatable implements IProductStrings {
 
-	@SuppressWarnings("unused")
-	private IProjectRoot root;
-	
 	// NOTE:
 	// This has been implemented this way for a reason. If you think this must
 	// absolutely change, please ask first.
-	ProductStringsNonTranslatable(IProjectRoot root) {
-		this.root = root;
+	ProductStringsNonTranslatable() {
 	}
 	
 	/**

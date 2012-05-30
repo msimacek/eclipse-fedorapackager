@@ -39,7 +39,7 @@ public class LocalFedoraPackagerProjectRoot extends FedoraProjectRoot {
 	@Override
 	public void initialize(IContainer container) {
 		this.rootContainer = container;
-		this.productStrings = new ProductStringsNonTranslatable(this);
+		this.productStrings = new ProductStringsNonTranslatable();
 	}
 
 	/*

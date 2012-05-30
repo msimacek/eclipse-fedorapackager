@@ -69,7 +69,7 @@ public class FedoraProjectRoot implements IProjectRoot {
 				SourcesFile.SOURCES_FILENAME)));
 		// statically pass Fedora type
 		this.lookAsideCache = new LookasideCache();
-		this.productStrings = new ProductStringsNonTranslatable(this);
+		this.productStrings = new ProductStringsNonTranslatable();
 	}
 
 	/*
