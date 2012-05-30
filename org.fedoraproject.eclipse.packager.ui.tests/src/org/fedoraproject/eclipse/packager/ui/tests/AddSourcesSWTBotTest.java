@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.ui.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -25,11 +27,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.widgets.Widget;
 import org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot;
-import org.eclipse.swtbot.eclipse.finder.matchers.WidgetMatcherFactory;
-import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.junit.SWTBotJunit4ClassRunner;
 import org.eclipse.swtbot.swt.finder.waits.Conditions;
@@ -58,8 +56,6 @@ public class AddSourcesSWTBotTest {
 	private boolean fedoraCertExisted = false;
 	
 	// Filenames used for this test
-	private final String EMPTY_FILE_NAME_VALID = "REMOVE_ME.tar";
-	private final String NON_EMPTY_FILE_NAME_INVALID = "REMOVE_ME.exe";
 	private final String VALID_SOURCE_FILENAME_NON_EMPTY = "REMOVE_ME.tar.bz2";
  
 	@BeforeClass
@@ -84,47 +80,7 @@ public class AddSourcesSWTBotTest {
 		IResource efpSpec = efpProject.getProject().findMember(new Path("eclipse-fedorapackager.spec"));
 		assertNotNull(efpSpec);
 	}
- 
-	/**
-	 * Upload Sources test (Add to existing sources) with empty
-	 * source file.
-	 * 
-	 * @throws Exception
-	 */
-	@SuppressWarnings({ "unchecked" })
-	@Test
-	public void cannotUploadEmptySourceFileAddToSourcesHandler() throws Exception {
-		// Create empty source file and try to upload
-		IResource emptySourceFile;
-		emptySourceFile = createNewFile(EMPTY_FILE_NAME_VALID, null);
-		assertNotNull(emptySourceFile);
-		
-		SWTBotTree packagerTree = PackageExplorer.getTree();
-		
-		// Select empty file
-		final SWTBotTreeItem efpItem = PackageExplorer.getProjectItem(packagerTree,
-				"eclipse-fedorapackager");
-		efpItem.expand();
-    	efpItem.select(EMPTY_FILE_NAME_VALID);
-		
-		// Click on file and try to upload
-		clickOnAddNewSources(packagerTree);
-		// Wait for error to pop up
-		bot.waitUntil(Conditions.shellIsActive("Fedora Packager"));
-		SWTBotShell efpErrorWindow = bot.shell("Fedora Packager");
-		assertNotNull(efpErrorWindow);
-		SWTBot errorDialogBot = efpErrorWindow.bot();
-		// Get widget with expected error message
-		Widget errorMessageWidget = errorDialogBot.widget(
-				WidgetMatcherFactory.allOf(
-				WidgetMatcherFactory.withText(
-						NLS.bind(
-								org.fedoraproject.eclipse.packager.FedoraPackagerText.UploadSourceCommand_uploadFileInvalid,
-								EMPTY_FILE_NAME_VALID))));
-		assertNotNull(errorMessageWidget);
-		efpErrorWindow.close();
-	}
-	
+ 	
 	/**
 	 * Upload Sources test (Add to existing sources) with valid source
 	 * file. This assumes a valid ~/.fedora.cert_tests is present or

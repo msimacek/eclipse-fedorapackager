@@ -37,7 +37,9 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.fedoraproject.eclipse.packager.FedoraProjectRoot;
@@ -81,6 +83,9 @@ public class UploadSourceCommandTest {
 	private FedoraPackager packager;
 	private static final String EXAMPLE_UPLOAD_FILE = "resources/callgraph-factorial.zip"; // $NON-NLS-1$
 	private static final String INVALID_UPLOAD_FILE = "resources/invalid_upload_file.exe"; // $NON-NLS-1$
+	
+	private final String EMPTY_FILE_NAME_VALID = "REMOVE_ME.zip";
+
 	private String uploadURLForTesting;
 
 	// List of temporary resources which should get deleted after test runs
@@ -338,6 +343,19 @@ public class UploadSourceCommandTest {
 		uploadCmd.setFileToUpload(invalidUploadFile);
 	}
 
+	@Test(expected = InvalidUploadFileException.class)
+	public void cannotUploadEmptyFile() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, IOException, InvalidUploadFileException{
+		UploadSourceCommand uploadCmd = (UploadSourceCommand) packager
+				.getCommandInstance(UploadSourceCommand.ID);
+		
+		IProject project = testProject.getProject();
+		File emptyUploadFile = new File(project.getLocation().toOSString() +
+				IPath.SEPARATOR + EMPTY_FILE_NAME_VALID);
+		emptyUploadFile.createNewFile();
+		
+		uploadCmd.setFileToUpload(emptyUploadFile);
+	}
+	
 	/**
 	 * Make sure to write some randomly generated content to this temporary file
 	 * 
