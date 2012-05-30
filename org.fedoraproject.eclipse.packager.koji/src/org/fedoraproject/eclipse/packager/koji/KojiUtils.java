@@ -38,8 +38,8 @@ public class KojiUtils {
 	/**
 	 * Construct the correct URL to a task on koji.
 	 * 
-	 * @param taskId
-	 * @param kojiWebUrl
+	 * @param taskId The id of the koji task
+	 * @param kojiWebUrl The URL to koji.
 	 * @return The URL as a string.
 	 */
 	public static String constructTaskUrl(int taskId, URL kojiWebUrl) {

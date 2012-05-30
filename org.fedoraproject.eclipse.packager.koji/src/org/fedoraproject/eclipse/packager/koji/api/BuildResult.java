@@ -30,7 +30,7 @@ public class BuildResult implements ICommandResult {
 	/**
 	 * Set the task ID of the pushed build.
 	 * 
-	 * @param taskId
+	 * @param taskId The id of the task in Koji.
 	 */
 	public void setTaskId(int taskId) {
 		this.taskId = taskId;
@@ -47,6 +47,8 @@ public class BuildResult implements ICommandResult {
 	
 	/**
 	 * Invoke if build was successful.
+	 * 
+	 * @param success The state - successful or not.
 	 */
 	public void setSuccessful(boolean success) {
 		this.successful = success;
