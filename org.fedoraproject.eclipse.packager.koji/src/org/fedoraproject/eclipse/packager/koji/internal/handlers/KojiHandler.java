@@ -1,15 +1,16 @@
 package org.fedoraproject.eclipse.packager.koji.internal.handlers;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
-import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiPreferencesConstants;
@@ -21,14 +22,14 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
  * A root KojiHandler which sets up information used be all KojiHandlers.
  * 
  */
-public abstract class KojiHandler extends FedoraPackagerAbstractHandler {
+public abstract class KojiHandler extends AbstractHandler {
 
 	protected Shell shell;
 	protected String[] kojiInfo;
 
 	protected String[] setKojiInfo(ExecutionEvent event)
 			throws ExecutionException {
-		this.shell = getShell(event);
+		this.shell =  HandlerUtil.getActiveShellChecked(event);
 		IResource eventResource = FedoraHandlerUtils.getResource(event);
 
 		IEclipsePreferences projectPreferences = new ProjectScope(

@@ -1,5 +1,6 @@
 package org.fedoraproject.eclipse.packager.git.internal.handlers;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IResource;
@@ -9,12 +10,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
-import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
@@ -32,7 +33,7 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
  * Class responsible for converting local project to the main fedora packager
  * 
  */
-public class ConvertLocalToRemoteHandler extends FedoraPackagerAbstractHandler {
+public class ConvertLocalToRemoteHandler extends AbstractHandler {
 
 	/**
 	 * Converts the Local project to a remote fedora packager project Adds the
@@ -43,7 +44,7 @@ public class ConvertLocalToRemoteHandler extends FedoraPackagerAbstractHandler {
 	 */
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		final Shell shell = getShell(event);
+		final Shell shell =  HandlerUtil.getActiveShellChecked(event);
 		final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 		try {
 			IResource eventResource = FedoraHandlerUtils.getResource(event);

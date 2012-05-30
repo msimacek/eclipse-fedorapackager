@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
@@ -40,6 +41,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.IProgressService;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
@@ -47,7 +49,6 @@ import org.fedoraproject.eclipse.packager.IFpProjectBits;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.QuestionMessageDialog;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
-import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
@@ -72,7 +73,7 @@ import org.fedoraproject.eclipse.packager.utils.RPMUtils;
 /**
  * Handler for pushing Bodhi updates.
  */
-public class BodhiNewHandler extends FedoraPackagerAbstractHandler {
+public class BodhiNewHandler extends AbstractHandler {
 
 	private static final String BODHI_INSTANCE_URL_PROP = "org.fedoraproject.eclipse.packager.bodhi.instanceUrl"; //$NON-NLS-1$
 	private Shell shell;
@@ -87,7 +88,7 @@ public class BodhiNewHandler extends FedoraPackagerAbstractHandler {
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		// Need to have shell variable on heap not on a thread's stack.
 		// Hence, the instance variable "shell".
-		shell = getShell(event);
+		shell =  HandlerUtil.getActiveShellChecked(event);
 		// May set the bodhi URL via system property
 		bodhiUrl = getBodhiUrl();
 		try {

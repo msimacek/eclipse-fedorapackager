@@ -13,6 +13,7 @@ package org.fedoraproject.eclipse.packager.internal.handlers;
 import java.io.File;
 import java.net.MalformedURLException;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
@@ -26,6 +27,7 @@ import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerPreferencesConstants;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
@@ -34,7 +36,6 @@ import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.SourcesFile;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
-import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
 import org.fedoraproject.eclipse.packager.api.IPreferenceHandler;
 import org.fedoraproject.eclipse.packager.api.SourcesFileUpdater;
 import org.fedoraproject.eclipse.packager.api.UploadSourceCommand;
@@ -58,7 +59,7 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
  * @see UploadSourceCommand
  * @see SourcesFileUpdater
  */
-public class UploadHandler extends FedoraPackagerAbstractHandler implements
+public class UploadHandler extends AbstractHandler implements
 		IPreferenceHandler {
 
 	/**
@@ -69,7 +70,7 @@ public class UploadHandler extends FedoraPackagerAbstractHandler implements
 	 */
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
-		final Shell shell = getShell(event);
+		final Shell shell =  HandlerUtil.getActiveShellChecked(event);
 		final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 		final IResource resource = FedoraHandlerUtils.getResource(event);
 		try {

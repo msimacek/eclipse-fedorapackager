@@ -10,11 +10,13 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.internal.handlers;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerPreferencesConstants;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
@@ -23,7 +25,6 @@ import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.DownloadSourcesJob;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
-import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
 import org.fedoraproject.eclipse.packager.api.IPreferenceHandler;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
@@ -34,11 +35,11 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 /**
  * Handler responsible for downloading sources as listed in sources files.
  */
-public class DownloadHandler extends FedoraPackagerAbstractHandler implements IPreferenceHandler {
+public class DownloadHandler extends AbstractHandler implements IPreferenceHandler {
 
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
-		final Shell shell = getShell(event);
+		final Shell shell =  HandlerUtil.getActiveShellChecked(event);
 		final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 		IProjectRoot projectRoot = null;
 		try {
@@ -70,7 +71,7 @@ public class DownloadHandler extends FedoraPackagerAbstractHandler implements IP
 		final String downloadUrlPreference = getPreference();
 		Job downloadJob = new DownloadSourcesJob(
 				projectRoot.getProductStrings().getProductName(), download,
-				projectRoot, shell, downloadUrlPreference);
+				projectRoot, downloadUrlPreference);
 		downloadJob.setUser(true);
 		downloadJob.schedule();
 		return null; // must be null

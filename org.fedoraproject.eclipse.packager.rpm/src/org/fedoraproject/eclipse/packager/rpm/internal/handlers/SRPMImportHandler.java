@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.rpm.internal.handlers;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IContainer;
@@ -20,11 +21,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerPreferencesConstants;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
-import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
 import org.fedoraproject.eclipse.packager.api.FileDialogRunable;
 import org.fedoraproject.eclipse.packager.api.IPreferenceHandler;
 import org.fedoraproject.eclipse.packager.api.UploadSourceCommand;
@@ -40,14 +41,14 @@ import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
  * Import handler for SRPMImportCommand
  * 
  */
-public class SRPMImportHandler extends FedoraPackagerAbstractHandler implements
+public class SRPMImportHandler extends AbstractHandler implements
 		IPreferenceHandler, ISRPMImportCommandSLLPolicyCallback {
 	private final FedoraPackagerLogger logger = FedoraPackagerLogger
 			.getInstance();
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		Shell shell = getShell(event);
+		Shell shell =  HandlerUtil.getActiveShellChecked(event);
 		IResource eventResource = FedoraHandlerUtils.getResource(event);
 		FileDialogRunable fdr = new FileDialogRunable("*.src.rpm", //$NON-NLS-1$
 				RpmText.SRPMImportHandler_FileDialogTitle);
@@ -76,8 +77,7 @@ public class SRPMImportHandler extends FedoraPackagerAbstractHandler implements
 							fprContainer.getProject(), fprContainer,
 							getPreference(), self);
 					monitor.setTaskName(RpmText.SRPMImportJob_ExtractingSRPM);
-					SRPMImportResult importResult;
-					importResult = srpmImport.call(monitor);
+					SRPMImportResult importResult = srpmImport.call(monitor);
 					if (!importResult.isSuccessful()) {
 						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
 								RpmText.SRPMImportJob_ExtractFailed);

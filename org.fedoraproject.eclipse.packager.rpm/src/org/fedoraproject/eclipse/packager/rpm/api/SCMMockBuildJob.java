@@ -126,7 +126,7 @@ public class SCMMockBuildJob extends AbstractMockJob {
 		if (!useRepoSource) {
 			Job downloadSourcesJob = new DownloadSourcesJob(
 					RpmText.MockBuildHandler_downloadSourcesForMockBuild,
-					download, fpr, shell, downloadUrlPreference, true);
+					download, fpr, downloadUrlPreference, true);
 			downloadSourcesJob.setUser(true);
 			downloadSourcesJob.schedule();
 			try {

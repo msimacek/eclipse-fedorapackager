@@ -3,6 +3,7 @@ package org.fedoraproject.eclipse.packager.koji.internal.handlers;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 
 /**
@@ -17,7 +18,7 @@ public class KojiWaitForRepoHandler extends KojiHandler {
 		final IProjectRoot projectRoot = getProjectRoot(event);
 		if (projectRoot != null){
 			Job job = new KojiWaitForRepoJob(projectRoot
-					.getProductStrings().getProductName(), getShell(event),
+					.getProductStrings().getProductName(),  HandlerUtil.getActiveShellChecked(event),
 					projectRoot, kojiInfo);
 			job.setUser(true);
 			job.schedule();

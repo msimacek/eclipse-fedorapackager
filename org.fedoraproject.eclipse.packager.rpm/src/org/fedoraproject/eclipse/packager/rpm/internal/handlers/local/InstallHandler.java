@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.rpm.internal.handlers.local;
 
-import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
+import org.eclipse.core.commands.AbstractHandler;
 import org.fedoraproject.eclipse.packager.rpm.RpmText;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand.BuildType;
 
@@ -31,7 +31,7 @@ public class InstallHandler extends LocalBuildHandler {
 	}
 	
 	@Override
-	protected FedoraPackagerAbstractHandler getDispatchee() {
+	protected AbstractHandler getDispatchee() {
 		return new org.fedoraproject.eclipse.packager.rpm.internal.handlers.LocalBuildHandler(
 				getBuildType(), getTaskName());
 	}

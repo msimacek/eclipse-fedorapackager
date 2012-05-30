@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.rpm.internal.handlers.local;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IResource;
@@ -18,7 +19,6 @@ import org.eclipse.osgi.util.NLS;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
-import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 
 /**
@@ -27,7 +27,7 @@ import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
  *
  */
 public abstract class LocalHandlerDispatcher extends
-		FedoraPackagerAbstractHandler {
+		AbstractHandler {
 
 	/**
 	 * Check if the underlying resource of the event has property
@@ -41,7 +41,7 @@ public abstract class LocalHandlerDispatcher extends
 	 * @throws ExecutionException
 	 * @return {@code true} if dispatched to passed handler, {@code false} otherwise.
 	 */
-	protected boolean checkDispatch(ExecutionEvent event, FedoraPackagerAbstractHandler handler) throws ExecutionException {
+	protected boolean checkDispatch(ExecutionEvent event, AbstractHandler handler) throws ExecutionException {
 		IResource eventResource = FedoraHandlerUtils.getResource(event);
 		FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 		String nonLocalProperty;
@@ -66,5 +66,5 @@ public abstract class LocalHandlerDispatcher extends
 	 * 
 	 * @return The Handler to dispatch to if chechDispatch() returned true.
 	 */
-	protected abstract FedoraPackagerAbstractHandler getDispatchee();
+	protected abstract AbstractHandler getDispatchee();
 }

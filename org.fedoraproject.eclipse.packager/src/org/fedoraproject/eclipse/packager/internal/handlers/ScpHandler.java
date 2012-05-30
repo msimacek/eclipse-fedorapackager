@@ -12,6 +12,7 @@ package org.fedoraproject.eclipse.packager.internal.handlers;
 
 import java.util.HashSet;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IResource;
@@ -26,6 +27,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListDialog;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
@@ -33,7 +35,6 @@ import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
-import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
 import org.fedoraproject.eclipse.packager.api.ScpCommand;
 import org.fedoraproject.eclipse.packager.api.ScpResult;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
@@ -48,7 +49,7 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 /**
  * Class responsible for copying necessary files for review to fedorapeople.org
  */
-public class ScpHandler extends FedoraPackagerAbstractHandler {
+public class ScpHandler extends AbstractHandler {
 
 	/**
 	 * Copies existing .spec and .src.rpm files from the local location of the
@@ -58,7 +59,7 @@ public class ScpHandler extends FedoraPackagerAbstractHandler {
 	 */
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
-		final Shell shell = getShell(event);
+		final Shell shell =  HandlerUtil.getActiveShellChecked(event);
 		final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 		try {
 			IResource eventResource = FedoraHandlerUtils.getResource(event);

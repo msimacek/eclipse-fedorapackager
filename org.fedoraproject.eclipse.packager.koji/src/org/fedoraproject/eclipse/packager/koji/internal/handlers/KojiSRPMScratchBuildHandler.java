@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FileDialogRunable;
@@ -39,7 +40,7 @@ public class KojiSRPMScratchBuildHandler extends KojiBuildHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
 		final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-		this.shell = getShell(event);
+		this.shell =  HandlerUtil.getActiveShellChecked(event);
 		IResource eventResource = FedoraHandlerUtils.getResource(event);
 		final IProjectRoot projectRoot = getProjectRoot(event);
 		if (projectRoot == null)
@@ -76,7 +77,7 @@ public class KojiSRPMScratchBuildHandler extends KojiBuildHandler {
 		}
 		setKojiInfo(event);
 		Job job = new KojiSRPMBuildJob(projectRoot.getProductStrings()
-				.getProductName(), getShell(event), projectRoot, kojiInfo,
+				.getProductName(),  HandlerUtil.getActiveShellChecked(event), projectRoot, kojiInfo,
 				srpmPath);
 		job.addJobChangeListener(KojiUtils.getJobChangeListener(kojiInfo,
 				projectRoot));

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.rpm.internal.handlers;
 
+import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
@@ -22,10 +23,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.handlers.HandlerUtil;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
-import org.fedoraproject.eclipse.packager.api.FedoraPackagerAbstractHandler;
 import org.fedoraproject.eclipse.packager.api.FileDialogRunable;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.rpm.RPMPlugin;
@@ -39,13 +40,13 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
  * Handler for building locally using mock.
  * 
  */
-public class MockBuildHandler extends FedoraPackagerAbstractHandler {
+public class MockBuildHandler extends AbstractHandler {
 	protected Shell shell;
 	protected MockBuildCommand mockBuild;
 
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
-		shell = getShell(event);
+		shell =  HandlerUtil.getActiveShellChecked(event);
 		final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 		IResource eventResource = FedoraHandlerUtils.getResource(event);
 		try {
