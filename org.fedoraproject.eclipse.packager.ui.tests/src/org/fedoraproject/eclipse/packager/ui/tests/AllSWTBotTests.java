@@ -17,7 +17,6 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({
 	DistGitImportSWTBotTest.class,
-	BodhiUpdateSWTBotTest.class,
 	DownloadSourcesSWTBotTest.class,
 	KojiBuildSWTBotTest.class,
 	LocalBuildSWTBotTest.class,
