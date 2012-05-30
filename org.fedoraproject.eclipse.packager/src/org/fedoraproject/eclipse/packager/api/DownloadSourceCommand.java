@@ -200,7 +200,7 @@ public class DownloadSourceCommand extends
 	 * @param subMonitor
 	 *            A sub progress monitor to indicate progress for this file
 	 *            only.
-	 * @param fileToDownload
+	 * @param fileToDownload The file to be downloaded.
 	 * @throws IOException
 	 *             If download failed.
 	 * @throws CoreException
