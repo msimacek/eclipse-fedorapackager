@@ -81,68 +81,6 @@ public class AddSourcesSWTBotTest {
 		assertNotNull(efpSpec);
 	}
  	
-	/**
-	 * Upload Sources test (Add to existing sources) with valid source
-	 * file. This assumes a valid ~/.fedora.cert_tests is present or
-	 * system property "eclipseFedoraPackagerTestsCertificate" is set to
-	 * the path to a valid .fedora.cert. The latter takes precedence.
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void canUploadValidSourceFileAddSourcesHandler() throws Exception {
-		
-		// Set up .fedora.cert, return may be null
-		tmpExistingFedoraCert = setupFedoraCert();
-		
-		// Create valid source file in project
-		IResource validSourceFile;
-		validSourceFile = createNewFile(VALID_SOURCE_FILENAME_NON_EMPTY, 0x90);
-		assertNotNull(validSourceFile);
-		
-		// Set up expectations
-		final String newLineSources = "fcd3dfe8777d16d64235bc7ae6bdcb8a  " + VALID_SOURCE_FILENAME_NON_EMPTY + "\n";
-		final String newLineGitIgnore = VALID_SOURCE_FILENAME_NON_EMPTY + "\n";
-		final String sourcesFileBefore = readSourcesFile();
-		final String gitIgnoreBefore = readGitIgnore();
-		
-		SWTBotTree packagerTree = PackageExplorer.getTree();
-		
-		// Select source file to be uploaded
-		final SWTBotTreeItem efpItem = PackageExplorer.getProjectItem(packagerTree,
-		"eclipse-fedorapackager");
-		efpItem.expand();
-		efpItem.select(VALID_SOURCE_FILENAME_NON_EMPTY);
-		
-		// Click on file and try to upload
-		clickOnAddNewSources(packagerTree);
-		// Wait for upload process to start
-		bot.waitUntil(Conditions.shellIsActive(org.fedoraproject.
-				eclipse.packager.FedoraPackagerText.UploadHandler_taskName));
-		SWTBotShell efpUploadWindow = bot.shell(org.fedoraproject.eclipse.
-				packager.FedoraPackagerText.UploadHandler_taskName);
-		assertNotNull(efpUploadWindow);
-		// Wait for upload process to finish
-		bot.waitUntil(Conditions.shellCloses(efpUploadWindow));
-		
-		// Assert success
-		final String sourcesFileAfter = readSourcesFile();
-		final String gitIgnoreAfter = readGitIgnore();
-		assertEquals(
-				(sourcesFileBefore + newLineSources),
-				sourcesFileAfter
-		);
-		assertEquals(
-				(gitIgnoreBefore + newLineGitIgnore),
-				gitIgnoreAfter
-		);
-		// Make sure sources file is still around
-		IResource newSource = efpProject.getProject().findMember(new Path(VALID_SOURCE_FILENAME_NON_EMPTY));
-		assertNotNull(newSource);
-		
-		// reestablish .fedora.cert handled by tearDown() to make sure
-		// cert files are cleaned up properly
-	}
 	
 	@After
 	public void tearDown() throws Exception {
