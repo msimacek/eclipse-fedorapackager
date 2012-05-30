@@ -90,9 +90,9 @@ public class DownloadSourceCommandTest {
 	public void canDownloadSeveralFilesWithoutErrors() throws CoreException, InterruptedException, InvalidProjectRootException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, SourcesUpToDateException, DownloadFailedException, CommandMisconfiguredException, CommandListenerException {
 		// not using eclipse-fedorapackager for this test
 		this.testProject.dispose();
-		// The eclipse package usually has 2 source files. That's why we
-		// use the eclipse package for testing
-		this.testProject = new GitTestProject("eclipse");
+		// The jpackage-utils package usually has 2 source files. That's why we
+		// use the jpackage-utils package for testing
+		this.testProject = new GitTestProject("jpackage-utils");
 		this.fpRoot = FedoraPackagerUtils.getProjectRoot(this.testProject
 				.getProject());
 		this.packager = new FedoraPackager(fpRoot);
