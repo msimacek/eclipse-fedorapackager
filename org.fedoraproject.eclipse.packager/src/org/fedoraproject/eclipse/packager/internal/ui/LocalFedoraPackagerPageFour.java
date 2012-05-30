@@ -38,10 +38,9 @@ public class LocalFedoraPackagerPageFour extends SpecfileNewWizardPage {
 	/**
 	 * Create the wizard.
 	 * 
-	 * @param pageName
 	 * @param projectName
 	 */
-	public LocalFedoraPackagerPageFour(String pageName, String projectName) {
+	public LocalFedoraPackagerPageFour(String projectName) {
 		super(null);
 		PackagerPlugin
 				.getImageDescriptor(FedoraPackagerText.LocalFedoraPackagerWizardPage_image);

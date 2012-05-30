@@ -51,7 +51,6 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 	private static final String PAGE_ONE = "PageOne"; //$NON-NLS-1$
 	private static final String PAGE_TWO = "PageTwo"; //$NON-NLS-1$
 	private static final String PAGE_THREE = "PageThree"; //$NON-NLS-1$
-	private static final String PAGE_FOUR = "PageFour"; //$NON-NLS-1$
 
 	private LocalFedoraPackagerPageOne pageOne;
 	private LocalFedoraPackagerPageTwo pageTwo;
@@ -161,7 +160,7 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 		if (page instanceof LocalFedoraPackagerPageThree) {
 			// check if user chooses to use the Specfile template
 			if (!((LocalFedoraPackagerPageThree) page).pageCanFinish()) {
-				pageFour = new LocalFedoraPackagerPageFour(PAGE_FOUR,
+				pageFour = new LocalFedoraPackagerPageFour(
 						this.pageOne.getProjectName());
 				addPage(pageFour);
 				return pageFour;
