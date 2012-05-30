@@ -126,46 +126,6 @@ public class AddSourcesSWTBotTest {
 	}
 	
 	/**
-	 * Upload Sources test (Add to existing sources) with non-empty
-	 * source file which has an invalid extension.
-	 * 
-	 * @throws Exception
-	 */
-	@SuppressWarnings({ "unchecked" })
-	@Test
-	public void cannotUploadNonEmptySourceFileWithInvalidExtensionAddSourcesHandler() throws Exception {
-		// Create non-empty, invalid source file in project
-		IResource invalidSourceFile;
-		invalidSourceFile = createNewFile(NON_EMPTY_FILE_NAME_INVALID, 0x900);
-		assertNotNull(invalidSourceFile);
-		
-		SWTBotTree packagerTree = PackageExplorer.getTree();
-		
-		// Select source file
-		final SWTBotTreeItem efpItem = PackageExplorer.getProjectItem(packagerTree,
-		"eclipse-fedorapackager");
-		efpItem.expand();
-		efpItem.select(NON_EMPTY_FILE_NAME_INVALID);
-		
-		// Click on file and try to upload
-		clickOnAddNewSources(packagerTree);
-		// Wait for error to pop up
-		bot.waitUntil(Conditions.shellIsActive("Fedora Packager"));
-		SWTBotShell efpErrorWindow = bot.shell("Fedora Packager");
-		assertNotNull(efpErrorWindow);
-		SWTBot errorDialogBot = efpErrorWindow.bot();
-		// Get widget with expected error message
-		Widget errorMessageWidget = errorDialogBot.widget(
-				WidgetMatcherFactory.allOf(
-				WidgetMatcherFactory.withText(
-						NLS.bind(
-								org.fedoraproject.eclipse.packager.FedoraPackagerText.UploadSourceCommand_uploadFileInvalid,
-								NON_EMPTY_FILE_NAME_INVALID))));
-		assertNotNull(errorMessageWidget);
-		efpErrorWindow.close();
-	}
-	
-	/**
 	 * Upload Sources test (Add to existing sources) with valid source
 	 * file. This assumes a valid ~/.fedora.cert_tests is present or
 	 * system property "eclipseFedoraPackagerTestsCertificate" is set to
