@@ -21,7 +21,6 @@ import org.junit.runners.Suite.SuiteClasses;
 	KojiBuildSWTBotTest.class,
 	LocalBuildSWTBotTest.class,
 	MockSWTBotTest.class,
-	CreateSRPMSWTBotTest.class,
 	PrepSourcesSWTBotTest.class,
 	ReplaceSourcesSWTBotTest.class}
 )
