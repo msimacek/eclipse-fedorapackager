@@ -66,15 +66,8 @@ public class FedoraPackagerTest {
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_GIT_PROJECT_ROOT), null)).getFile();
 
-		File exampleGitDir = new File(exampleGitdirPath);
-		
-		File tempGitDir = TestsUtils.copyFolderContentsToTemp(exampleGitDir, null);
-		tempGitDir.deleteOnExit();
-		// Set up the git repo
-		File gitDir = new File(tempGitDir, "git_dir"); //$NON-NLS-1$
-		gitDir.renameTo(new File(tempGitDir, ".git")); //$NON-NLS-1$
-		
-		this.testProject = new GitTestProject("example", tempGitDir.getAbsolutePath()); //$NON-NLS-1$
+		this.testProject = new GitTestProject("example", TestsUtils.prepLocalGitTestProject(exampleGitdirPath)); //$NON-NLS-1$
+
 		testProject.checkoutBranch("f17"); //$NON-NLS-1$
 		this.fpRoot = FedoraPackagerUtils.getProjectRoot((this.testProject
 				.getProject()));
