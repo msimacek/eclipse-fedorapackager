@@ -24,10 +24,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
-import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
-import org.osgi.framework.FrameworkUtil;
 
 /**
  * Utility class for Fedora Packager tests.
@@ -240,7 +236,7 @@ public class TestsUtils {
 		return toFile;
 	}
 	
-	public static String prepLocalGitTestProject (String path) throws IOException, InterruptedException{
+	public static String prepLocalGitTestProject (String path) throws IOException{
 
 		File exampleGitDir = new File(path);
 		

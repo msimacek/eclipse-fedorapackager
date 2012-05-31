@@ -1,6 +1,5 @@
 package org.fedoraproject.eclipse.packager.rpm.api;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.core.runtime.CoreException;
