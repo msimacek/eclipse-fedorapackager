@@ -23,14 +23,8 @@ import org.eclipse.egit.core.RepositoryCache;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.MergeCommand;
-import org.eclipse.jgit.api.errors.CheckoutConflictException;
-import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
-import org.eclipse.jgit.api.errors.InvalidMergeHeadsException;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.eclipse.jgit.api.errors.NoHeadException;
-import org.eclipse.jgit.api.errors.NoMessageException;
-import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
@@ -241,7 +235,7 @@ public class ConvertLocalToRemoteCommand extends
 		} catch (JGitInternalException e) {
 			throw new LocalProjectConversionFailedException(e.getCause()
 					.getMessage(), e);
-		} catch (InvalidRemoteException e) {
+		} catch (GitAPIException e) {
 			throw new LocalProjectConversionFailedException(e.getCause()
 					.getMessage(), e);
 		} catch (IOException e) {
@@ -267,22 +261,7 @@ public class ConvertLocalToRemoteCommand extends
 				throw new OperationCanceledException();
 			}
 			merge.call();
-		} catch (NoHeadException e) {
-			throw new LocalProjectConversionFailedException(e.getCause()
-					.getMessage(), e);
-		} catch (ConcurrentRefUpdateException e) {
-			throw new LocalProjectConversionFailedException(e.getCause()
-					.getMessage(), e);
-		} catch (CheckoutConflictException e) {
-			throw new LocalProjectConversionFailedException(e.getCause()
-					.getMessage(), e);
-		} catch (InvalidMergeHeadsException e) {
-			throw new LocalProjectConversionFailedException(e.getCause()
-					.getMessage(), e);
-		} catch (WrongRepositoryStateException e) {
-			throw new LocalProjectConversionFailedException(e.getCause()
-					.getMessage(), e);
-		} catch (NoMessageException e) {
+		} catch (GitAPIException e) {
 			throw new LocalProjectConversionFailedException(e.getCause()
 					.getMessage(), e);
 		} catch (IOException e) {

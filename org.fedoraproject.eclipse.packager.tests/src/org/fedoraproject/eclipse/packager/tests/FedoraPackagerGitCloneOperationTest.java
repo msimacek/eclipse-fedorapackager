@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.fedoraproject.eclipse.packager.git.FedoraPackagerGitCloneOperation;
@@ -53,7 +54,7 @@ public class FedoraPackagerGitCloneOperationTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void canCloneFromFedoraGit() {
+	public void canCloneFromFedoraGit() throws GitAPIException { //exception is thrown from jgit 2.0+
 		final FedoraPackagerGitCloneOperation cloneOp = new FedoraPackagerGitCloneOperation();
 		final String fedoraPackager = "eclipse-fedorapackager";
 		Job cloneJob = new Job("Clone Me!") {

@@ -26,6 +26,7 @@ import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.jgit.api.CheckoutCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
@@ -146,7 +147,7 @@ public class GitTestProject {
 	 * @throws RefAlreadyExistsException
 	 * @throws JGitInternalException
 	 */
-	public void checkoutBranch(String branchName) throws JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException {
+	public void checkoutBranch(String branchName) throws JGitInternalException, GitAPIException, CoreException {
 		boolean branchExists = false;
 			ListBranchCommand lsBranchCmd = this.git.branchList();
 			for (Ref branch: lsBranchCmd.call()) {

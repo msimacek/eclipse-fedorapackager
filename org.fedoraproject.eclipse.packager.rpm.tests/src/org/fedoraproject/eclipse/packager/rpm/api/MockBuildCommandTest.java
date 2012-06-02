@@ -25,10 +25,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jgit.api.errors.InvalidRefNameException;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.DownloadFailedException;
@@ -53,7 +51,7 @@ public class MockBuildCommandTest extends FedoraPackagerTest {
 
 	@Override
 	@Before
-	public void setUp() throws InterruptedException, JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException, InvalidProjectRootException, IOException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException, SourcesUpToDateException, DownloadFailedException  {
+	public void setUp() throws InterruptedException, JGitInternalException, GitAPIException, CoreException, InvalidProjectRootException, IOException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException, SourcesUpToDateException, DownloadFailedException  {
 		super.setUp();
 		testProject.checkoutBranch("f15"); //$NON-NLS-1$
 		testProject.getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());

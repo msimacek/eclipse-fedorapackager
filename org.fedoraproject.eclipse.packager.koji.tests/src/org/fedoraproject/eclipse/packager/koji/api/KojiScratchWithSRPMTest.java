@@ -31,10 +31,8 @@ import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.jgit.api.errors.InvalidRefNameException;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.osgi.util.NLS;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
@@ -49,9 +47,6 @@ import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException
 import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
 import org.fedoraproject.eclipse.packager.api.errors.TagSourcesException;
 import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
-import org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient;
-import org.fedoraproject.eclipse.packager.koji.api.KojiBuildCommand;
-import org.fedoraproject.eclipse.packager.koji.api.KojiUploadSRPMCommand;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
 import org.fedoraproject.eclipse.packager.rpm.RpmText;
@@ -81,8 +76,7 @@ public class KojiScratchWithSRPMTest {
 
 	@Before
 	public void setUp() throws InterruptedException, JGitInternalException,
-			RefAlreadyExistsException, RefNotFoundException,
-			InvalidRefNameException, CoreException,
+			GitAPIException, CoreException,
 			InvalidProjectRootException,
 			FedoraPackagerCommandInitializationException,
 			FedoraPackagerCommandNotFoundException, MalformedURLException,

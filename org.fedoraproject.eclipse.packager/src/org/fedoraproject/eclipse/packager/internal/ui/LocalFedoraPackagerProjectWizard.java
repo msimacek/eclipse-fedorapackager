@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.eclipse.jgit.api.errors.NoHeadException;
@@ -127,6 +128,8 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 						e.printStackTrace();
 					} catch (NoFilepatternException e) {
 						e.printStackTrace();
+					} catch (GitAPIException e) {
+						e.printStackTrace();
 					} catch (IOException e) {
 						e.printStackTrace();
 					} catch (CoreException e) {
@@ -198,20 +201,15 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 	 *
 	 * @param monitor
 	 *            Progress monitor to report back status
-	 * @throws WrongRepositoryStateException
 	 * @throws JGitInternalException
-	 * @throws ConcurrentRefUpdateException
-	 * @throws NoMessageException
-	 * @throws NoHeadException
 	 * @throws IOException
-	 * @throws NoFilepatternException
 	 * @throws CoreException
+	 * @throws GitAPIException 
 	 */
 	protected void createMainProject(IProgressMonitor monitor)
-			throws NoHeadException, NoMessageException,
-			ConcurrentRefUpdateException, JGitInternalException,
-			WrongRepositoryStateException, NoFilepatternException, IOException,
-			CoreException {
+			throws JGitInternalException,
+			IOException,
+			CoreException, GitAPIException {
 
 		LocalFedoraPackagerProjectCreator fedoraRPMProjectCreator = new LocalFedoraPackagerProjectCreator(
 				project, monitor);

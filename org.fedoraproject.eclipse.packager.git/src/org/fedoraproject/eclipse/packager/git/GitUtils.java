@@ -19,10 +19,8 @@ import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
-import org.eclipse.jgit.api.errors.InvalidRefNameException;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.fedoraproject.eclipse.packager.FedoraSSL;
@@ -121,11 +119,7 @@ public class GitUtils {
 			}
 		} catch (JGitInternalException e) {
 			e.printStackTrace();
-		} catch (RefAlreadyExistsException e) {
-			e.printStackTrace();
-		} catch (RefNotFoundException e) {
-			e.printStackTrace();
-		} catch (InvalidRefNameException e) {
+		} catch (GitAPIException e) {
 			e.printStackTrace();
 		}
 	}

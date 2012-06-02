@@ -39,7 +39,7 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
@@ -451,9 +451,9 @@ public class FpGitProjectBits implements IFpProjectBits {
 			        fetch.call(); 
 			} catch (JGitInternalException e) { 
 			        e.printStackTrace(); 
-			} catch (InvalidRemoteException e) { 
-			        e.printStackTrace(); 
-			}
+			} catch (GitAPIException e) {
+				e.printStackTrace();
+			} 
 			RevWalk rw = new RevWalk(git.getRepository());
 			ObjectId objHead = git.getRepository().resolve(branchName);
 			if (trackingRemoteBranch == null) {
@@ -493,7 +493,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 			for (String filePattern : files) {
 				git.add().addFilepattern(filePattern).call();
 			}
-		} catch (NoFilepatternException e) {
+		} catch (GitAPIException e) {
 			// ignore, allow adds with no files
 		}
 	}

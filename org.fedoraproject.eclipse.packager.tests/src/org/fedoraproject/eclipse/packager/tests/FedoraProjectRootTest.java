@@ -24,10 +24,8 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jgit.api.errors.InvalidRefNameException;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.Specfile;
 import org.fedoraproject.eclipse.packager.FedoraPackagerPreferencesConstants;
 import org.fedoraproject.eclipse.packager.FedoraProjectRoot;
@@ -171,8 +169,7 @@ public class FedoraProjectRootTest {
 
 	@Test
 	public void canRetrieveNVRs() throws InterruptedException,
-			JGitInternalException, RefAlreadyExistsException,
-			RefNotFoundException, InvalidRefNameException, CoreException,
+			JGitInternalException, GitAPIException, CoreException,
 			InvalidProjectRootException {
 		fpRoot = null;
 		gitTestProject = new GitTestProject("eclipse-mylyn-tasks");

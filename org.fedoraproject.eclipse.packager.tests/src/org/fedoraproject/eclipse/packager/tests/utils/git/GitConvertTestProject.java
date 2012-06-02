@@ -27,13 +27,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.eclipse.jgit.api.errors.NoFilepatternException;
-import org.eclipse.jgit.api.errors.NoHeadException;
-import org.eclipse.jgit.api.errors.NoMessageException;
-import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
@@ -50,7 +46,7 @@ public class GitConvertTestProject {
 	private IProject project;
 	private LocalFedoraPackagerProjectCreator mainProject;
 
-	public GitConvertTestProject(final String packageName, final String fileName) throws CoreException, IOException, NoFilepatternException, NoHeadException, NoMessageException, ConcurrentRefUpdateException, JGitInternalException, WrongRepositoryStateException
+	public GitConvertTestProject(final String packageName, final String fileName) throws CoreException, IOException, JGitInternalException, GitAPIException
 			 {
 
 		// Create a base project for the test
@@ -113,7 +109,7 @@ public class GitConvertTestProject {
 	 * @throws CoreException 
 	 *
 	 */
-	public void addRemoteRepository(String uri, Git git) throws URISyntaxException, IOException, JGitInternalException, InvalidRemoteException, CoreException  {
+	public void addRemoteRepository(String uri, Git git) throws URISyntaxException, IOException, JGitInternalException, GitAPIException, CoreException  {
 
 		RemoteConfig config = new RemoteConfig(git.getRepository()
 				.getConfig(), "origin"); //$NON-NLS-1$

@@ -21,10 +21,8 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jgit.api.errors.InvalidRefNameException;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
 import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
@@ -50,7 +48,7 @@ public class SCMMockBuildCommandTest extends FedoraPackagerTest{
 
 	@Override
 	@Before
-	public void setUp() throws InterruptedException, JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException, InvalidProjectRootException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CommandMisconfiguredException, CommandListenerException, SourcesUpToDateException, DownloadFailedException, RpmBuildCommandException, IOException  {
+	public void setUp() throws InterruptedException, JGitInternalException, GitAPIException, CoreException, InvalidProjectRootException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CommandMisconfiguredException, CommandListenerException, SourcesUpToDateException, DownloadFailedException, RpmBuildCommandException, IOException  {
 		super.setUp();
 		// need to have sources ready
 		download = (DownloadSourceCommand) packager

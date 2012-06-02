@@ -26,6 +26,7 @@ import org.eclipse.egit.core.RepositoryUtil;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.InitCommand;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.eclipse.jgit.api.errors.NoHeadException;
@@ -73,18 +74,13 @@ public class LocalFedoraPackagerProjectCreator {
 	 * 		contents of the spec template
 	 * @throws CoreException
 	 * @throws IOException
-	 * @throws WrongRepositoryStateException
 	 * @throws JGitInternalException
-	 * @throws ConcurrentRefUpdateException
-	 * @throws NoMessageException
-	 * @throws NoHeadException
-	 * @throws NoFilepatternException
+	 * @throws GitAPIException 
 	 *
 	 */
 	public void create(String content) throws CoreException,
-			NoFilepatternException, NoHeadException, NoMessageException,
-			ConcurrentRefUpdateException, JGitInternalException,
-			WrongRepositoryStateException, IOException {
+			JGitInternalException,
+			IOException, GitAPIException {
 		final String projectName = project.getName();
 		final String fileName = projectName + ".spec"; //$NON-NLS-1$
 
@@ -115,17 +111,11 @@ public class LocalFedoraPackagerProjectCreator {
 	 * @throws CoreException
 	 * @throws FileNotFoundException
 	 * @throws IOException
-	 * @throws WrongRepositoryStateException
 	 * @throws JGitInternalException
-	 * @throws ConcurrentRefUpdateException
-	 * @throws NoMessageException
-	 * @throws NoHeadException
-	 * @throws NoFilepatternException
+	 * @throws GitAPIException 
 	 */
 	public void create(File externalFile, LocalProjectType projectType)
-			throws CoreException, NoFilepatternException, NoHeadException,
-			NoMessageException, ConcurrentRefUpdateException,
-			JGitInternalException, WrongRepositoryStateException, IOException {
+			throws CoreException, JGitInternalException, IOException, GitAPIException {
 		switch(projectType) {
 		case PLAIN:
 			IFile specFile = project.getFile(externalFile.getName());
@@ -149,19 +139,14 @@ public class LocalFedoraPackagerProjectCreator {
 	 * 		the external xml file uploaded from file system
 	 * @throws CoreException
 	 * @throws FileNotFoundException
-	 * @throws WrongRepositoryStateException
 	 * @throws JGitInternalException
-	 * @throws ConcurrentRefUpdateException
-	 * @throws NoMessageException
-	 * @throws NoHeadException
-	 * @throws NoFilepatternException
 	 * @throws IOException
+	 * @throws GitAPIException 
 	 *
 	 */
 	public void create(InputType inputType, File stubby) throws CoreException,
-			NoFilepatternException, NoHeadException, NoMessageException,
-			ConcurrentRefUpdateException, JGitInternalException,
-			WrongRepositoryStateException, IOException {
+			JGitInternalException,
+			IOException, GitAPIException {
 			IFile stubbyFile = project.getFile(stubby.getName());
 			stubbyFile.create(new FileInputStream(stubby), false, monitor);
 
@@ -185,7 +170,7 @@ public class LocalFedoraPackagerProjectCreator {
 	 */
 	public void createProjectStructure() throws NoFilepatternException,
 			NoHeadException, NoMessageException, ConcurrentRefUpdateException,
-			JGitInternalException, WrongRepositoryStateException, IOException {
+			JGitInternalException, WrongRepositoryStateException, IOException, GitAPIException {
 
 		File directory = new File(project.getLocation().toString());
 		FileUtils.mkdirs(directory, true);

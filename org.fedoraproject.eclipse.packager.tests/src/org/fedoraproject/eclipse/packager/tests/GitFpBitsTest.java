@@ -10,23 +10,22 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jgit.api.errors.InvalidRefNameException;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
 import org.fedoraproject.eclipse.packager.git.FpGitProjectBits;
-import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestCase;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
+import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.junit.Test;
 
 public class GitFpBitsTest extends GitTestCase {
 
 	@Test
-	public void testGetCurrentBranchName() throws JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException  {
+	public void testGetCurrentBranchName() throws JGitInternalException, GitAPIException, CoreException  {
 		FpGitProjectBits projectBits = (FpGitProjectBits) FedoraPackagerUtils
 				.getVcsHandler(getFedoraprojectRoot());
 		assertNotNull(projectBits);
@@ -53,7 +52,7 @@ public class GitFpBitsTest extends GitTestCase {
 	}
 
 	@Test
-	public void testGetDistVal() throws JGitInternalException, RefAlreadyExistsException, RefNotFoundException, InvalidRefNameException, CoreException  {
+	public void testGetDistVal() throws JGitInternalException, GitAPIException, CoreException  {
 		FpGitProjectBits projectBits = (FpGitProjectBits) FedoraPackagerUtils
 				.getVcsHandler(getFedoraprojectRoot());
 		assertNotNull(projectBits);
@@ -70,8 +69,7 @@ public class GitFpBitsTest extends GitTestCase {
 
 	@Test
 	public void testNonExactNamedBranches() throws JGitInternalException,
-			RefAlreadyExistsException, RefNotFoundException,
-			InvalidRefNameException, CoreException {
+			GitAPIException, CoreException {
 		FpGitProjectBits projectBits = (FpGitProjectBits) FedoraPackagerUtils
 				.getVcsHandler(getFedoraprojectRoot());
 		assertNotNull(projectBits);
@@ -86,8 +84,7 @@ public class GitFpBitsTest extends GitTestCase {
 	
 	@Test
 	public void testElRhelNonExactBranches() throws JGitInternalException,
-			RefAlreadyExistsException, RefNotFoundException,
-			InvalidRefNameException, CoreException {
+			GitAPIException, CoreException {
 		FpGitProjectBits projectBits = (FpGitProjectBits) FedoraPackagerUtils
 				.getVcsHandler(getFedoraprojectRoot());
 		assertNotNull(projectBits);

@@ -25,12 +25,8 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.eclipse.jgit.api.errors.NoFilepatternException;
-import org.eclipse.jgit.api.errors.NoHeadException;
-import org.eclipse.jgit.api.errors.NoMessageException;
-import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.linuxtools.rpmstubby.InputType;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
@@ -79,10 +75,7 @@ public class WizardStubbyProjectTest {
 	}
 
 	@Test
-	public void testPopulateStubby() throws NoFilepatternException,
-			NoHeadException, NoMessageException, ConcurrentRefUpdateException,
-			JGitInternalException, WrongRepositoryStateException,
-			CoreException, IOException {
+	public void testPopulateStubby() throws JGitInternalException, CoreException, IOException, GitAPIException {
 		// populate project using imported feature.xml
 		try {
 			testMainProject.create(InputType.ECLIPSE_FEATURE, externalFile);
