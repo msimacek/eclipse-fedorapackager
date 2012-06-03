@@ -13,7 +13,6 @@ package org.fedoraproject.eclipse.packager.api;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -25,13 +24,8 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.egit.core.RepositoryUtil;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.InitCommand;
-import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.eclipse.jgit.api.errors.NoFilepatternException;
-import org.eclipse.jgit.api.errors.NoHeadException;
-import org.eclipse.jgit.api.errors.NoMessageException;
-import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.util.FileUtils;
 import org.eclipse.linuxtools.rpm.core.RPMProject;
@@ -109,7 +103,6 @@ public class LocalFedoraPackagerProjectCreator {
 	 *            the xml file uploaded from file system
 	 * @param projectType
 	 * @throws CoreException
-	 * @throws FileNotFoundException
 	 * @throws IOException
 	 * @throws JGitInternalException
 	 * @throws GitAPIException 
@@ -137,8 +130,7 @@ public class LocalFedoraPackagerProjectCreator {
 	 *		type of the stubby project
 	 * @param stubby
 	 * 		the external xml file uploaded from file system
-	 * @throws CoreException
-	 * @throws FileNotFoundException
+	 * @throws CoreException 
 	 * @throws JGitInternalException
 	 * @throws IOException
 	 * @throws GitAPIException 
@@ -160,17 +152,12 @@ public class LocalFedoraPackagerProjectCreator {
 	 * Creates project structure inside the base project
 	 *
 	 * @throws IOException
-	 * @throws WrongRepositoryStateException
 	 * @throws JGitInternalException
-	 * @throws ConcurrentRefUpdateException
-	 * @throws NoMessageException
-	 * @throws NoHeadException
-	 * @throws NoFilepatternException
+	 * @throws GitAPIException 
 	 *
 	 */
-	public void createProjectStructure() throws NoFilepatternException,
-			NoHeadException, NoMessageException, ConcurrentRefUpdateException,
-			JGitInternalException, WrongRepositoryStateException, IOException, GitAPIException {
+	public void createProjectStructure() throws 			
+			JGitInternalException, IOException, GitAPIException {
 
 		File directory = new File(project.getLocation().toString());
 		FileUtils.mkdirs(directory, true);

@@ -207,8 +207,7 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 	 * @throws GitAPIException 
 	 */
 	protected void createMainProject(IProgressMonitor monitor)
-			throws JGitInternalException,
-			IOException,
+			throws JGitInternalException, IOException,
 			CoreException, GitAPIException {
 
 		LocalFedoraPackagerProjectCreator fedoraRPMProjectCreator = new LocalFedoraPackagerProjectCreator(

@@ -72,7 +72,6 @@ public class FedoraPackagerGitCloneOperation {
 	 * Execute the clone including local branch name creation.
 	 *
 	 * @param monitor
-	 * @throws IllegalStateException
 	 * @throws InvocationTargetException
 	 * @throws InterruptedException
 	 * @throws IOException

@@ -41,7 +41,6 @@ import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
@@ -450,8 +449,6 @@ public class FpGitProjectBits implements IFpProjectBits {
 			        fetch.call(); 
 			} catch (JGitInternalException e) { 
 			        e.printStackTrace(); 
-			} catch (GitAPIException e) {
-				e.printStackTrace();
 			} 
 			RevWalk rw = new RevWalk(git.getRepository());
 			ObjectId objHead = git.getRepository().resolve(branchName);
@@ -471,7 +468,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 							trackingRemoteBranch);
 			RevCommit remoteCommitHead = rw.parseCommit(objRemoteTrackingHead);
 			return !commitHead.equals(remoteCommitHead);
-		} catch (NoWorkTreeException e) {
+		} catch (GitAPIException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();

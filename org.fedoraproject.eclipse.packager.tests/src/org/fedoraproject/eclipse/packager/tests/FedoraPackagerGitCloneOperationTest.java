@@ -51,7 +51,7 @@ public class FedoraPackagerGitCloneOperationTest {
 	/**
 	 * Fedora Git clones create local branches. Test for that.
 	 *
-	 * @throws Exception
+	 * @throws GitAPIException
 	 */
 	@Test
 	public void canCloneFromFedoraGit() throws GitAPIException { //exception is thrown from jgit 2.0+
