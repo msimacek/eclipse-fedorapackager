@@ -49,7 +49,6 @@ import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException
 import org.fedoraproject.eclipse.packager.api.errors.InvalidUploadFileException;
 import org.fedoraproject.eclipse.packager.api.errors.SourcesFileUpdateException;
 import org.fedoraproject.eclipse.packager.api.errors.UploadFailedException;
-import org.fedoraproject.eclipse.packager.api.errors.VCSIgnoreFileUpdateException;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 
@@ -171,8 +170,7 @@ public class UploadHandler extends AbstractHandler implements
 					} catch (CommandListenerException e) {
 						// sources file updating or vcs ignore file updating may
 						// have caused an exception.
-						if (e.getCause() instanceof VCSIgnoreFileUpdateException
-								|| e.getCause() instanceof SourcesFileUpdateException) {
+						if (e.getCause() instanceof SourcesFileUpdateException) {
 							String message = e.getCause().getMessage();
 							logger.logError(message, e.getCause());
 							return new Status(IStatus.ERROR,
