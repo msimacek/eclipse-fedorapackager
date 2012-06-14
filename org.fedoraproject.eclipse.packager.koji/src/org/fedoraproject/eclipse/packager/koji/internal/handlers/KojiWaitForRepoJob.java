@@ -109,7 +109,7 @@ public class KojiWaitForRepoJob extends KojiJob {
 		KojiRepoInfo oldRepo = getRepo(tag);
 
 		monitor.beginTask(NLS.bind(
-				KojiText.KojiWaitForRepoJob_repoUpdatedDialogText, tag),
+				KojiText.KojiWaitForRepoJob_WaitingForUpdateMessage, tag),
 				IProgressMonitor.UNKNOWN);
 
 		while (!monitor.isCanceled()) {
