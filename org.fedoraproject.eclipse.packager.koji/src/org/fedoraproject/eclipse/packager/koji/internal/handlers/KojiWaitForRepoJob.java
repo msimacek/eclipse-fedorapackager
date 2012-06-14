@@ -107,14 +107,12 @@ public class KojiWaitForRepoJob extends KojiJob {
 
 		
 		KojiRepoInfo oldRepo = getRepo(tag);
-		System.out.println(oldRepo);
 
 		monitor.beginTask(NLS.bind(
 				KojiText.KojiWaitForRepoJob_repoUpdatedDialogText, tag),
 				IProgressMonitor.UNKNOWN);
 
 		while (!monitor.isCanceled()) {
-			System.out.println(oldRepo);
 			try {
 				// Sleep for 60 seconds but check for cancellation
 				// every 10 seconds.
@@ -129,7 +127,6 @@ public class KojiWaitForRepoJob extends KojiJob {
 
 			if (!oldRepo.equals(getRepo(tag))) {
 				// The repository has been updated.
-				System.out.println(getRepo(tag));
 				FedoraHandlerUtils
 						.showInformationDialog(
 								shell,
@@ -144,7 +141,6 @@ public class KojiWaitForRepoJob extends KojiJob {
 		if (monitor.isCanceled()) {
 			return Status.CANCEL_STATUS;
 		}
-		System.out.println(oldRepo);
 
 		monitor.done();
 		return Status.OK_STATUS;
