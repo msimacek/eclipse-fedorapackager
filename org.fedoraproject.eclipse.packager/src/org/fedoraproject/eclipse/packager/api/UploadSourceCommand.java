@@ -64,7 +64,7 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
  */
 public class UploadSourceCommand extends
 		FedoraPackagerCommand<UploadSourceResult> {
-	
+
 	/**
 	 * Response body text if a resource is available in the lookaside cache.
 	 */
@@ -78,14 +78,13 @@ public class UploadSourceCommand extends
 	 * The unique ID of this command.
 	 */
 	public static final String ID = "UploadSourceCommand"; //$NON-NLS-1$
-	
-	
+
 	// Parameter name constants
 	private static final String FILENAME_PARAM_NAME = "filename"; //$NON-NLS-1$
 	private static final String CHECKSUM_PARAM_NAME = "md5sum"; //$NON-NLS-1$
 	private static final String PACKAGENAME_PARAM_NAME = "name"; //$NON-NLS-1$
 	private static final String FILE_PARAM_NAME = "file"; //$NON-NLS-1$
-	
+
 	// Use 30 sec connection timeout
 	private static final int CONNECTION_TIMEOUT = 30000;
 
@@ -96,10 +95,13 @@ public class UploadSourceCommand extends
 	// State info if a basic all trusting https enabled client
 	// should be used or not
 	private boolean trustAllSSLEnabled = false;
-	
+
 	/*
 	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#initialize(org.fedoraproject.eclipse.packager.FedoraProjectRoot)
+	 * 
+	 * @see
+	 * org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#initialize
+	 * (org.fedoraproject.eclipse.packager.FedoraProjectRoot)
 	 */
 	@Override
 	public void initialize(IProjectRoot projectRoot)
@@ -108,33 +110,38 @@ public class UploadSourceCommand extends
 	}
 
 	/**
-	 * @param uploadURL the uploadURL to set. Optional.
+	 * @param uploadURL
+	 *            the uploadURL to set. Optional.
 	 * @return this instance.
-	 * @throws MalformedURLException If the provided URL was not well formed.
+	 * @throws MalformedURLException
+	 *             If the provided URL was not well formed.
 	 */
 	public UploadSourceCommand setUploadURL(String uploadURL)
 			throws MalformedURLException {
 		this.projectRoot.getLookAsideCache().setUploadUrl(uploadURL);
 		return this;
 	}
-	
+
 	/**
 	 * Set to true if upload host requires Fedora SSL authentication.
 	 * 
 	 * @param newValue
+	 *            True if SSL is required, false otherwise.
 	 * @return this instance.
 	 */
 	public UploadSourceCommand setFedoraSSLEnabled(boolean newValue) {
 		this.fedoraSslEnabled = newValue;
 		return this;
 	}
-	
+
 	/**
-	 * Set to true if a basic accept-all hostname verifier should be
-	 * used. Useful for {@code https} based connections, which do not
-	 * require authentication via SSL.
+	 * Set to true if a basic accept-all hostname verifier should be used.
+	 * Useful for {@code https} based connections, which do not require
+	 * authentication via SSL.
 	 * 
 	 * @param newValue
+	 *            True if a basic accept-all hostname verifier should be used,
+	 *            false otherwise.
 	 * @return this instance.
 	 */
 	public UploadSourceCommand setAcceptAllSSLEnabled(boolean newValue) {
@@ -185,7 +192,7 @@ public class UploadSourceCommand extends
 		} catch (CommandListenerException e) {
 			if (e.getCause() instanceof CommandMisconfiguredException) {
 				// explicitly throw the specific exception
-				throw (CommandMisconfiguredException)e.getCause();
+				throw (CommandMisconfiguredException) e.getCause();
 			}
 			throw e;
 		}
@@ -196,10 +203,12 @@ public class UploadSourceCommand extends
 		callPostExecListeners();
 		return result;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#checkConfiguration()
+	 * 
+	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#
+	 * checkConfiguration()
 	 */
 	@Override
 	protected void checkConfiguration() {
@@ -229,7 +238,7 @@ public class UploadSourceCommand extends
 			uploadURI = this.projectRoot.getLookAsideCache().getUploadUrl()
 					.toString();
 			assert uploadURI != null;
-			
+
 			if (fedoraSslEnabled) {
 				// user requested Fedora SSL enabled client
 				try {
@@ -245,7 +254,7 @@ public class UploadSourceCommand extends
 					throw new UploadFailedException(e.getMessage(), e);
 				}
 			}
-			
+
 			HttpPost post = new HttpPost(uploadURI);
 
 			// provide hint which URL is going to be used
@@ -287,7 +296,8 @@ public class UploadSourceCommand extends
 				}
 				// If this file has already been uploaded bail out
 				if (resString.toLowerCase().equals(RESOURCE_AVAILABLE)) {
-					throw new FileAvailableInLookasideCacheException(fileToUpload.getName());
+					throw new FileAvailableInLookasideCacheException(
+							fileToUpload.getName());
 				} else if (resString.toLowerCase().equals(RESOURCE_MISSING)) {
 					// check passed
 					return;
@@ -314,6 +324,7 @@ public class UploadSourceCommand extends
 	 * {@link UploadSourceCommand#checkSourceAvailable()}.
 	 * 
 	 * @param subMonitor
+	 *            Monitor to show progress.
 	 * @return The result of the upload.
 	 */
 	private UploadSourceResult upload(final IProgressMonitor subMonitor)
@@ -322,7 +333,7 @@ public class UploadSourceCommand extends
 		try {
 			String uploadUrl = projectRoot.getLookAsideCache().getUploadUrl()
 					.toString();
-			
+
 			if (fedoraSslEnabled) {
 				// user requested a Fedora SSL enabled client
 				client = fedoraSslEnable(client);
@@ -330,33 +341,41 @@ public class UploadSourceCommand extends
 				// use an trust-all SSL enabled client
 				client = FedoraPackagerUtils.trustAllSslEnable(client);
 			}
-			
+
 			HttpPost post = new HttpPost(uploadUrl);
 			FileBody uploadFileBody = new FileBody(fileToUpload);
 			// For the actual upload we must not provide the
 			// "filename" parameter (FILENAME_PARAM_NAME). Otherwise,
 			// the file won't be stored in the lookaside cache.
-            MultipartEntity reqEntity = new MultipartEntity();
-            reqEntity.addPart(FILE_PARAM_NAME, uploadFileBody);
-            reqEntity.addPart(PACKAGENAME_PARAM_NAME, new StringBody(
-            		projectRoot.getSpecfileModel().getName()));
-            reqEntity.addPart(CHECKSUM_PARAM_NAME, new StringBody(
-            		SourcesFile.calculateChecksum(fileToUpload)));
-			
+			MultipartEntity reqEntity = new MultipartEntity();
+			reqEntity.addPart(FILE_PARAM_NAME, uploadFileBody);
+			reqEntity.addPart(PACKAGENAME_PARAM_NAME, new StringBody(
+					projectRoot.getSpecfileModel().getName()));
+			reqEntity
+					.addPart(
+							CHECKSUM_PARAM_NAME,
+							new StringBody(SourcesFile
+									.calculateChecksum(fileToUpload)));
+
 			// Not sure why it's ~ content-length * 2, but that's what it is...
-            final long totalsize = reqEntity.getContentLength() * 2;
-            subMonitor.beginTask(
-            		NLS.bind(FedoraPackagerText.UploadSourceCommand_uploadingFileSubTaskName,
-            				fileToUpload.getName()), 100 /* use percentage */);
-            subMonitor.worked(0);
-            
-            // Custom listener for progress reporting of the file upload
+			final long totalsize = reqEntity.getContentLength() * 2;
+			subMonitor
+					.beginTask(
+							NLS.bind(
+									FedoraPackagerText.UploadSourceCommand_uploadingFileSubTaskName,
+									fileToUpload.getName()), 100 /*
+																 * use
+																 * percentage
+																 */);
+			subMonitor.worked(0);
+
+			// Custom listener for progress reporting of the file upload
 			IRequestProgressListener progL = new IRequestProgressListener() {
-				
+
 				private int count = 0;
 				private int worked = 0;
 				private int updatedWorked = 0;
-				
+
 				@Override
 				public void transferred(final long bytesWritten) {
 					count++;
@@ -367,10 +386,10 @@ public class UploadSourceCommand extends
 					// Since this listener may be called *a lot*, don't
 					// do the calculation to often.
 					if ((count % 1024) == 0) {
-						updatedWorked = 
-							// multiply by 85 (instead of 100) since upload
-						    // progress cannot be 100% accurate.
-							(int)( (double)bytesWritten/totalsize * 85 );
+						updatedWorked =
+						// multiply by 85 (instead of 100) since upload
+						// progress cannot be 100% accurate.
+						(int) ((double) bytesWritten / totalsize * 85);
 						if (updatedWorked > worked) {
 							worked = updatedWorked;
 							subMonitor.worked(updatedWorked);
@@ -380,16 +399,16 @@ public class UploadSourceCommand extends
 			};
 			// We need to wrap the entity which we want to upload in our
 			// custom entity, which allows for progress listening.
-			CoutingRequestEntity countingEntity = 
-				new CoutingRequestEntity(reqEntity, progL);
-            post.setEntity(countingEntity);
-            
-            // TODO: This may throw some certificate exception. We should
-            // handle this case and throw a specific exception in order to
-            // report this to the user. I.e. advise to use use $ fedora-cert -n
-            HttpResponse response = client.execute(post);
-            
-            subMonitor.done();
+			CoutingRequestEntity countingEntity = new CoutingRequestEntity(
+					reqEntity, progL);
+			post.setEntity(countingEntity);
+
+			// TODO: This may throw some certificate exception. We should
+			// handle this case and throw a specific exception in order to
+			// report this to the user. I.e. advise to use use $ fedora-cert -n
+			HttpResponse response = client.execute(post);
+
+			subMonitor.done();
 			return new UploadSourceResult(response);
 		} catch (IOException e) {
 			throw new UploadFailedException(e.getMessage(), e);
@@ -397,12 +416,12 @@ public class UploadSourceCommand extends
 			throw new UploadFailedException(e.getMessage(), e);
 		} finally {
 			// When HttpClient instance is no longer needed,
-            // shut down the connection manager to ensure
-            // immediate deallocation of all system resources
+			// shut down the connection manager to ensure
+			// immediate deallocation of all system resources
 			client.getConnectionManager().shutdown();
 		}
 	}
-	
+
 	/**
 	 * @return A properly configured HTTP client instance
 	 */
@@ -415,17 +434,20 @@ public class UploadSourceCommand extends
 	}
 
 	/**
-	 * Wrap a basic HttpClient object in a Fedora SSL enabled HttpClient (which includes
-	 * Fedora SSL authentication cert) object.
+	 * Wrap a basic HttpClient object in a Fedora SSL enabled HttpClient (which
+	 * includes Fedora SSL authentication cert) object.
 	 * 
-	 * @param base The HttpClient to wrap.
+	 * @param base
+	 *            The HttpClient to wrap.
 	 * @return The SSL wrapped HttpClient.
 	 * @throws GeneralSecurityException
+	 *             The method fails for security reasons.
 	 * @throws IOException
+	 *             If method cannot use streams properly.
 	 */
 	private HttpClient fedoraSslEnable(HttpClient base)
 			throws GeneralSecurityException, FileNotFoundException, IOException {
-		
+
 		// Get a SSL related instance for setting up SSL connections.
 		FedoraSSL fedoraSSL = FedoraSSLFactory.getInstance();
 		SSLSocketFactory sf = new SSLSocketFactory(
@@ -442,11 +464,12 @@ public class UploadSourceCommand extends
 	 * Helper to read response from response entity.
 	 * 
 	 * @param responseEntity
-	 * @return
+	 *            The response being parsed.
+	 * @return The parsed response.
 	 * @throws IOException
+	 *             If method cannot use streams properly.
 	 */
-	private String parseResponse(HttpEntity responseEntity)
-			throws IOException {
+	private String parseResponse(HttpEntity responseEntity) throws IOException {
 
 		String responseText = ""; //$NON-NLS-1$
 		BufferedReader br = null;

@@ -36,7 +36,7 @@ import org.fedoraproject.eclipse.packager.api.FileDialogRunable;
 
 /**
  * Adding functions to enable user to chose a way to populate the project
- *
+ * 
  */
 public class LocalFedoraPackagerPageThree extends WizardPage {
 
@@ -61,8 +61,9 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 
 	/**
 	 * Create the wizard.
-	 *
+	 * 
 	 * @param pageName
+	 *            The name of this page.
 	 */
 	public LocalFedoraPackagerPageThree(String pageName) {
 		super(pageName);
@@ -74,8 +75,9 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 
 	/**
 	 * Create contents of the wizard.
-	 *
+	 * 
 	 * @param parent
+	 *            The parent SWT Composite containing the wizard page.
 	 */
 	@Override
 	public void createControl(Composite parent) {
@@ -173,7 +175,6 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 			}
 		});
 
-
 		// Project Type = STUBBY
 		btnCheckStubby = createRadioButton(grpSpec,
 				FedoraPackagerText.LocalFedoraPackagerPageThree_btnCheckStubby);
@@ -229,8 +230,9 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 
 	/**
 	 * Return created Text widget
-	 *
+	 * 
 	 * @param grp
+	 *            The group in which the controls are created.
 	 * @return Text
 	 */
 	private Text createText(Group grp) {
@@ -242,8 +244,9 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 
 	/**
 	 * Return the created Label widget
-	 *
+	 * 
 	 * @param grp
+	 *            The group in which the controls are created.
 	 * @param text
 	 *            label's text
 	 * @return Button
@@ -259,8 +262,9 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 
 	/**
 	 * Return the created push button widget
-	 *
+	 * 
 	 * @param grp
+	 *            The group in which the controls are created.
 	 * @param text
 	 *            push button's text
 	 * @return Button
@@ -273,8 +277,9 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 
 	/**
 	 * Return the created radio button widget
-	 *
+	 * 
 	 * @param grp
+	 *            The group in which the controls are created.
 	 * @param text
 	 *            radio button's text
 	 * @return Button
@@ -291,7 +296,7 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 	/**
 	 * Runs the filaDialog and sets the project type and externalFile to be
 	 * passed to project creator
-	 *
+	 * 
 	 * @param filter
 	 *            filter for the fileDialog
 	 * @param text
@@ -311,18 +316,17 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 
 	/**
 	 * Sets the external file based on the provided filePath
-	 *
+	 * 
 	 */
 	private void setExternalFile(String filePath) {
 		setErrorMessage(null);
 		if (filePath.length() != 0) {
 			externalFile = new File(filePath);
 			if (!externalFile.exists()) {
-				setErrorMessage(NLS.bind(
-						FedoraPackagerText.LocalFedoraPackagerPageThree_fileExistence,
-						externalFile));
-			}
-			else {
+				setErrorMessage(NLS
+						.bind(FedoraPackagerText.LocalFedoraPackagerPageThree_fileExistence,
+								externalFile));
+			} else {
 				setPageStatus(true, true);
 			}
 		}
@@ -330,7 +334,7 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 
 	/**
 	 * Return the external file to the user's selected file
-	 *
+	 * 
 	 * @return File
 	 */
 	public File getExternalFile() {
@@ -339,7 +343,7 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 
 	/**
 	 * Return the type of the populated project based on the user's selection
-	 *
+	 * 
 	 * @return LocalProjectType
 	 */
 	public LocalProjectType getProjectType() {
@@ -347,19 +351,19 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 	}
 
 	/**
-	 * Sets InputType for stubby projects based on
-	 * the selected external file's type
-	 *
+	 * Sets InputType for stubby projects based on the selected external file's
+	 * type
+	 * 
 	 */
 	private void setInputType() {
 		int comboIndex = comboStubby.getCombo().getSelectionIndex();
-		inputType = InputType.valueOf(comboStubby.getCombo().getItem(
-				comboIndex));
+		inputType = InputType.valueOf(comboStubby.getCombo()
+				.getItem(comboIndex));
 	}
 
 	/**
 	 * Returns the input type of the stubby_project
-	 *
+	 * 
 	 * @return InputType
 	 */
 	public InputType getInputType() {
@@ -368,7 +372,7 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 
 	/**
 	 * Returns the button for later reference in main wizard
-	 *
+	 * 
 	 * @return Button
 	 */
 	public Button btnSpecTemplate() {
@@ -377,7 +381,7 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 
 	/**
 	 * If Finish button can be enabled, return true
-	 *
+	 * 
 	 * @return pageCanFinish
 	 */
 	public boolean pageCanFinish() {
@@ -386,7 +390,7 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 
 	/**
 	 * Sets the status of page
-	 *
+	 * 
 	 * @param pageIsComplete
 	 *            next or finish can be enabled
 	 * @param pageCanFinish

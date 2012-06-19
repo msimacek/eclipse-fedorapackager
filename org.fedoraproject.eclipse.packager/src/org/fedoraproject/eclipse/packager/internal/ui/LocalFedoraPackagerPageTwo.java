@@ -54,6 +54,7 @@ public class LocalFedoraPackagerPageTwo extends WizardPage {
 	 * Create the wizard.
 	 * 
 	 * @param pageName
+	 *            The name of this page.
 	 */
 	public LocalFedoraPackagerPageTwo(String pageName) {
 		super(pageName);
@@ -67,6 +68,7 @@ public class LocalFedoraPackagerPageTwo extends WizardPage {
 	 * Create contents of the wizard.
 	 * 
 	 * @param parent
+	 *            The parent SWT Composite containing the wizard page.
 	 */
 	@Override
 	public void createControl(Composite parent) {
@@ -152,15 +154,15 @@ public class LocalFedoraPackagerPageTwo extends WizardPage {
 		link.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
-					IWorkbenchBrowserSupport support = PlatformUI
-							.getWorkbench().getBrowserSupport();
-					try {
-						support.getExternalBrowser().openURL(new URL(url));
-					} catch (PartInitException e) {
-						e.printStackTrace();
-					} catch (MalformedURLException e) {
-						e.printStackTrace();
-					}
+				IWorkbenchBrowserSupport support = PlatformUI.getWorkbench()
+						.getBrowserSupport();
+				try {
+					support.getExternalBrowser().openURL(new URL(url));
+				} catch (PartInitException e) {
+					e.printStackTrace();
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}
@@ -190,6 +192,7 @@ public class LocalFedoraPackagerPageTwo extends WizardPage {
 	 * Sets the layout for Link widgets
 	 * 
 	 * @param link
+	 *            Link widget to set layout on.
 	 */
 	private void setLayout(Link link) {
 		GridData layout = new GridData();

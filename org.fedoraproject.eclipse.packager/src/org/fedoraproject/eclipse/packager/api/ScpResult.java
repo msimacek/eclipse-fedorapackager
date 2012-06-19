@@ -12,7 +12,7 @@ package org.fedoraproject.eclipse.packager.api;
 
 /**
  * Represents the result of a {@code ScpCommand}.
- *
+ * 
  */
 public class ScpResult implements ICommandResult {
 
@@ -22,7 +22,9 @@ public class ScpResult implements ICommandResult {
 
 	/**
 	 * @param spec
+	 *            The name of the specfile used by the command.
 	 * @param srpm
+	 *            The name of the srpm used by the command.
 	 */
 	public ScpResult(String spec, String srpm) {
 		super();
@@ -52,8 +54,7 @@ public class ScpResult implements ICommandResult {
 	 * @return String the name of the files to scp to be shown to the user
 	 */
 	public String getHumanReadableMessage(String message) {
-		message = message.
-				concat("\n*" + specFile + "\n*" + srpmFile); //$NON-NLS-1$ //$NON-NLS-2$
+		message = message.concat("\n*" + specFile + "\n*" + srpmFile); //$NON-NLS-1$ //$NON-NLS-2$
 
 		return message;
 	}

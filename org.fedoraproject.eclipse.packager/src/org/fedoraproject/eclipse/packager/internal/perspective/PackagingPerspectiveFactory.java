@@ -28,13 +28,14 @@ public class PackagingPerspectiveFactory implements IPerspectiveFactory {
 	/**
 	 * 
 	 * @param layout
+	 *            The layout that the actions are added to.
 	 */
 	public void defineActions(IPageLayout layout) {
 		// Add "new wizards".
 		layout.addNewWizardShortcut("org.fedoraproject.eclipse.packager.newlocalprojectwizard"); //$NON-NLS-1$
 		layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.folder"); //$NON-NLS-1$
 		layout.addNewWizardShortcut("org.eclipse.ui.wizards.new.file"); //$NON-NLS-1$
-		
+
 		// Add "show views".
 		layout.addShowViewShortcut(IPageLayout.ID_PROJECT_EXPLORER);
 		layout.addShowViewShortcut(IPageLayout.ID_OUTLINE);
@@ -46,6 +47,7 @@ public class PackagingPerspectiveFactory implements IPerspectiveFactory {
 	/**
 	 * 
 	 * @param layout
+	 *            The layout to which this perspective is added.
 	 */
 	public void defineLayout(IPageLayout layout) {
 		// Editors are placed for free.

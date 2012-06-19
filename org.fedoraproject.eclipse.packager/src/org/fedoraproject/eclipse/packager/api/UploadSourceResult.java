@@ -19,16 +19,17 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 
 /**
- * Represents the result of a {@code UploadSourceCommand}.
- * This may be more useful in future.
+ * Represents the result of a {@code UploadSourceCommand}. This may be more
+ * useful in future.
  */
 public class UploadSourceResult implements ICommandResult {
-	
+
 	private boolean successful;
 	private HttpResponse response;
 
 	/**
 	 * @param response
+	 *            The remote response from the upload.
 	 */
 	public UploadSourceResult(HttpResponse response) {
 		this.successful = (response.getStatusLine().getStatusCode() == HttpURLConnection.HTTP_OK);
@@ -42,7 +43,7 @@ public class UploadSourceResult implements ICommandResult {
 	public boolean isSuccessful() {
 		return successful;
 	}
-	
+
 	/**
 	 * @return Error message if upload was not successful, null otherwise.
 	 */
@@ -81,5 +82,5 @@ public class UploadSourceResult implements ICommandResult {
 		}
 		return null;
 	}
-	
+
 }

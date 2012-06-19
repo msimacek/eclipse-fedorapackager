@@ -13,10 +13,16 @@ public class BranchConfigInstance {
 
 	/**
 	 * @param dist
+	 *            The rpm dist for the build.
 	 * @param distVal
+	 *            The number of the distribution the branch is intended for.
 	 * @param distVariable
+	 *            The name of the distribution the branch is intended for.
 	 * @param buildTarget
+	 *            The Koji build target for this branch.
 	 * @param equivalentBranch
+	 *            A mapped branch name that corresponds to this configuration,
+	 *            irrespective of the actual name of the branch.
 	 */
 	public BranchConfigInstance(String dist, String distVal,
 			String distVariable, String buildTarget, String equivalentBranch) {
@@ -28,7 +34,7 @@ public class BranchConfigInstance {
 	}
 
 	/**
-	 * @return The build target.
+	 * @return The Koji build target for this branch.
 	 */
 	public String getBuildTarget() {
 		return buildTarget;
@@ -36,13 +42,14 @@ public class BranchConfigInstance {
 
 	/**
 	 * @param buildTarget
+	 *            The Koji build target for this branch.
 	 */
 	public void setBuildTarget(String buildTarget) {
 		this.buildTarget = buildTarget;
 	}
 
 	/**
-	 * @return The dist.
+	 * @return The rpm dist for the build.
 	 */
 	public String getDist() {
 		return dist;
@@ -50,13 +57,14 @@ public class BranchConfigInstance {
 
 	/**
 	 * @param dist
+	 *            The rpm dist for the build.
 	 */
 	public void setDist(String dist) {
 		this.dist = dist;
 	}
 
 	/**
-	 * @return The dist-value.
+	 * @return The number of the distribution the branch is intended for.
 	 */
 	public String getDistVal() {
 		return distVal;
@@ -64,13 +72,14 @@ public class BranchConfigInstance {
 
 	/**
 	 * @param distVal
+	 *            The number of the distribution the branch is intended for.
 	 */
 	public void setDistVal(String distVal) {
 		this.distVal = distVal;
 	}
 
 	/**
-	 * @return The dist-variable.
+	 * @return The name of the distribution the branch is intended for.
 	 */
 	public String getDistVariable() {
 		return distVariable;
@@ -78,6 +87,7 @@ public class BranchConfigInstance {
 
 	/**
 	 * @param distVariable
+	 *            The name of the distribution the branch is intended for.
 	 */
 	public void setDistVariable(String distVariable) {
 		this.distVariable = distVariable;
@@ -93,6 +103,8 @@ public class BranchConfigInstance {
 
 	/**
 	 * @param equivalentBranch
+	 *            A mapped branch name that corresponds to this configuration,
+	 *            irrespective of the actual name of the branch.
 	 */
 	public void setEquivalentBranch(String equivalentBranch) {
 		this.equivalentBranch = equivalentBranch;

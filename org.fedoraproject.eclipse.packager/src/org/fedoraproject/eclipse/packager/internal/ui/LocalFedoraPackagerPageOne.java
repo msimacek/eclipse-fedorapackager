@@ -27,6 +27,7 @@ public class LocalFedoraPackagerPageOne extends WizardNewProjectCreationPage {
 	 * Create the wizard.
 	 * 
 	 * @param pageName
+	 *            The name of this page.
 	 */
 	public LocalFedoraPackagerPageOne(String pageName) {
 		super(pageName);
@@ -40,6 +41,7 @@ public class LocalFedoraPackagerPageOne extends WizardNewProjectCreationPage {
 	 * Create contents of the wizard.
 	 * 
 	 * @param parent
+	 *            The parent SWT Composite containing the wizard page.
 	 */
 	@Override
 	public void createControl(Composite parent) {
@@ -48,7 +50,7 @@ public class LocalFedoraPackagerPageOne extends WizardNewProjectCreationPage {
 
 		GridLayout layout = new GridLayout();
 		container.setLayout(layout);
-		
+
 		// Advise the user that a new Git repository will be created
 		setMessage(FedoraPackagerText.LocalFedoraPackagerPageOne_lblNoteGit,
 				IMessageProvider.INFORMATION);

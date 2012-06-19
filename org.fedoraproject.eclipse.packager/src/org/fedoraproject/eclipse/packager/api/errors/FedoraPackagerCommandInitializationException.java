@@ -20,15 +20,22 @@ public class FedoraPackagerCommandInitializationException extends
 	 * 
 	 */
 	private static final long serialVersionUID = -8053342144830979684L;
-	
+
 	/**
 	 * @param message
+	 *            The message associated with this exception.
 	 * @param cause
+	 *            The throwable that caused the exception to be thrown.
 	 */
-	public FedoraPackagerCommandInitializationException(String message, Throwable cause) {
+	public FedoraPackagerCommandInitializationException(String message,
+			Throwable cause) {
 		super(message, cause);
 	}
-	
+
+	/**
+	 * @param message
+	 *            The message associated with this exception.
+	 */
 	public FedoraPackagerCommandInitializationException(String message) {
 		super(message);
 	}

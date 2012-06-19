@@ -42,7 +42,7 @@ import org.eclipse.core.runtime.jobs.Job;
  * 
  */
 public class SourcesFile {
-	
+
 	/**
 	 * The name of the file containing checksums and file names of sources of a
 	 * Fedora package.
@@ -115,7 +115,8 @@ public class SourcesFile {
 	}
 
 	/**
-	 * @param sources the sources to set
+	 * @param sources
+	 *            the sources to set
 	 */
 	public void setSources(Map<String, String> sources) {
 		this.sources = sources;
@@ -160,7 +161,7 @@ public class SourcesFile {
 	 */
 	public Set<String> getAllSources() {
 		HashSet<String> allSources = new HashSet<String>();
-		for (String source: sources.keySet()) {
+		for (String source : sources.keySet()) {
 			allSources.add(source);
 		}
 		return allSources;
@@ -172,6 +173,7 @@ public class SourcesFile {
 	 * @param file
 	 *            The source file to be deleted.
 	 * @throws CoreException
+	 *             If sources file could not be accessed.
 	 */
 	public void deleteSource(String file) throws CoreException {
 		IContainer branch = sourcesFile.getParent();
@@ -183,9 +185,13 @@ public class SourcesFile {
 
 	/**
 	 * Checks whether given md5 corresponds to the given resource.
-	 * @param storedMd5 The md5 to check.
-	 * @param resource The file whose md5 should be compared.
-	 * @return True if the given md5 is the same as the calculated one, false otherwise.
+	 * 
+	 * @param storedMd5
+	 *            The md5 to check.
+	 * @param resource
+	 *            The file whose md5 should be compared.
+	 * @return True if the given md5 is the same as the calculated one, false
+	 *         otherwise.
 	 */
 	private boolean checkMD5(String storedMd5, IResource resource) {
 		// open file
@@ -230,10 +236,12 @@ public class SourcesFile {
 
 	/**
 	 * Saves the sources file to the underlying file.
+	 * 
 	 * @throws CoreException
+	 *             If sources file could not be accessed.
 	 */
 	public void save() throws CoreException {
-		
+
 		final PipedInputStream in = new PipedInputStream();
 		// create an OutputStream with the InputStream from above as input
 		PipedOutputStream out = null;
@@ -254,7 +262,8 @@ public class SourcesFile {
 					try {
 						// Potentially long running so do as job.
 						file.setContents(in, false, true, monitor);
-						file.getParent().refreshLocal(IResource.DEPTH_ONE, null);
+						file.getParent()
+								.refreshLocal(IResource.DEPTH_ONE, null);
 					} catch (CoreException e) {
 						e.printStackTrace();
 					}

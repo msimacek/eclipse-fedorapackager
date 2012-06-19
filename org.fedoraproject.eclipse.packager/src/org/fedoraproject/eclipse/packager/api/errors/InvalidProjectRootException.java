@@ -20,6 +20,7 @@ public class InvalidProjectRootException extends FedoraPackagerAPIException {
 	
 	/**
 	 * @param message
+	 *            The message associated with this exception.
 	 */
 	public InvalidProjectRootException(String message) {
 		super(message);

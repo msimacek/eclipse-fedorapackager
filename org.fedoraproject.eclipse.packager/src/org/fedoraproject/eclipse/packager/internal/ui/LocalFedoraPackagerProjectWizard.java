@@ -44,7 +44,7 @@ import org.fedoraproject.eclipse.packager.utils.UiUtils;
 
 /**
  * wizard to ease the process of creating fedora packages
- *
+ * 
  */
 public class LocalFedoraPackagerProjectWizard extends Wizard implements
 		INewWizard {
@@ -71,7 +71,7 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.jface.wizard.Wizard#addPages()
 	 */
 	@Override
@@ -90,7 +90,7 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
 	 */
 	@Override
@@ -105,14 +105,18 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 						createMainProject(monitor != null ? monitor
 								: new NullProgressMonitor());
 
-						// Set persistent property so that we know when to show the context
+						// Set persistent property so that we know when to show
+						// the context
 						// menu item.
-						project.setPersistentProperty(PackagerPlugin.PROJECT_LOCAL_PROP, "true" /* unused value */); //$NON-NLS-1$
+						project.setPersistentProperty(
+								PackagerPlugin.PROJECT_LOCAL_PROP, "true" /* unused value */); //$NON-NLS-1$
 
-						ConnectProviderOperation connect = new ConnectProviderOperation(project);
+						ConnectProviderOperation connect = new ConnectProviderOperation(
+								project);
 						connect.execute(null);
 
-						// Finally ask if the Fedora Packaging perspective should be opened
+						// Finally ask if the Fedora Packaging perspective
+						// should be opened
 						// if not already open.
 						UiUtils.openPerspective(getShell());
 
@@ -148,7 +152,7 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.eclipse.jface.wizard.wizard#canFinish()
 	 */
 	@Override
@@ -176,7 +180,7 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 
 	/**
 	 * Creates the base of the project.
-	 *
+	 * 
 	 * @param monitor
 	 *            Progress monitor to report back status
 	 */
@@ -198,17 +202,21 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 
 	/**
 	 * Creates a new instance of the FedoraRPM project.
-	 *
+	 * 
 	 * @param monitor
 	 *            Progress monitor to report back status
-	 * @throws JGitInternalException
-	 * @throws IOException
 	 * @throws CoreException
-	 * @throws GitAPIException 
+	 *             If interaction with the file system fails.
+	 * @throws IOException
+	 *             If input or output processes fail.
+	 * @throws JGitInternalException
+	 *             If there is some problem in JGit.
+	 * @throws GitAPIException
+	 *             If there is some problem with the expected Git objects.
 	 */
 	protected void createMainProject(IProgressMonitor monitor)
-			throws JGitInternalException, IOException,
-			CoreException, GitAPIException {
+			throws JGitInternalException, IOException, CoreException,
+			GitAPIException {
 
 		LocalFedoraPackagerProjectCreator fedoraRPMProjectCreator = new LocalFedoraPackagerProjectCreator(
 				project, monitor);

@@ -22,13 +22,16 @@ public class InvalidUploadFileException extends FedoraPackagerAPIException {
 	
 	/**
 	 * @param message
+	 *            The message associated with this exception.
 	 * @param cause
+	 *            The throwable that caused the exception to be thrown.
 	 */
 	public InvalidUploadFileException(String message, Throwable cause) {
 		super(message, cause);
 	}
 	/**
 	 * @param message
+	 *            The message associated with this exception.
 	 */
 	public InvalidUploadFileException(String message) {
 		super(message);

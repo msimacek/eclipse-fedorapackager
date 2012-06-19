@@ -27,6 +27,7 @@ public class FedoraPackagerCommandNotFoundException extends
 
 	/**
 	 * @param message
+	 *            The message associated with this exception.
 	 */
 	public FedoraPackagerCommandNotFoundException(String message) {
 		super(message);

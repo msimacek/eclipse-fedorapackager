@@ -23,22 +23,27 @@ import org.fedoraproject.eclipse.packager.QuestionMessageDialog;
 
 /**
  * Utility class for UI related items
- *
+ * 
  */
 public class UiUtils {
 
 	/**
 	 * Opens Fedora Packaging specific perspective
+	 * 
 	 * @param shell
+	 *            The shell the perspective is to be opened in.
 	 * @throws WorkbenchException
+	 *             If the actvie workbench could not be accessed.
 	 */
 	public static void openPerspective(Shell shell) throws WorkbenchException {
 		// Finally ask if the Fedora Packaging perspective should be opened
 		// if not already open.
 		IWorkbench workbench = PlatformUI.getWorkbench();
 		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-		IPerspectiveDescriptor perspective = window.getActivePage().getPerspective();
-		if (!perspective.getId().equals(PackagerPlugin.FEDORA_PACKAGING_PERSPECTIVE_ID)) {
+		IPerspectiveDescriptor perspective = window.getActivePage()
+				.getPerspective();
+		if (!perspective.getId().equals(
+				PackagerPlugin.FEDORA_PACKAGING_PERSPECTIVE_ID)) {
 			// Ask if Fedora Packager perspective should be opened.
 			QuestionMessageDialog op = new QuestionMessageDialog(
 					FedoraPackagerText.UiUtils_switchPerspectiveQuestionTitle,
@@ -47,7 +52,8 @@ public class UiUtils {
 			Display.getDefault().syncExec(op);
 			if (op.isOkPressed()) {
 				// open the perspective
-				workbench.showPerspective(PackagerPlugin.FEDORA_PACKAGING_PERSPECTIVE_ID, window);
+				workbench.showPerspective(
+						PackagerPlugin.FEDORA_PACKAGING_PERSPECTIVE_ID, window);
 			}
 		}
 	}

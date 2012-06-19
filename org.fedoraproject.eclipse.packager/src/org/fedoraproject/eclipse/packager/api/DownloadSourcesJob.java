@@ -43,15 +43,16 @@ public class DownloadSourcesJob extends Job {
 
 	/**
 	 * @param jobName
+	 *            The name of this job.
 	 * @param download
 	 *            The download command to use
 	 * @param downloadUrlPreference
 	 *            A preference to use as download URL or {@code null}.
 	 * @param fedoraProjectRoot
+	 *            The project root associated with this job.
 	 */
 	public DownloadSourcesJob(String jobName, DownloadSourceCommand download,
-			IProjectRoot fedoraProjectRoot,
-			String downloadUrlPreference) {
+			IProjectRoot fedoraProjectRoot, String downloadUrlPreference) {
 		super(jobName);
 		this.download = download;
 		this.fedoraProjectRoot = fedoraProjectRoot;
@@ -61,9 +62,11 @@ public class DownloadSourcesJob extends Job {
 
 	/**
 	 * @param jobName
+	 *            The name of this job.
 	 * @param download
 	 *            The download command to use
 	 * @param fedoraProjectRoot
+	 *            The project root associated with this job.
 	 * @param downloadUrlPreference
 	 *            A preference to use as download URL or {@code null}.
 	 * @param suppressSourcesUpToDateInfo
@@ -71,7 +74,8 @@ public class DownloadSourcesJob extends Job {
 	 *            up-to-date should be suppressed.
 	 */
 	public DownloadSourcesJob(String jobName, DownloadSourceCommand download,
-			IProjectRoot fedoraProjectRoot, String downloadUrlPreference, boolean suppressSourcesUpToDateInfo) {
+			IProjectRoot fedoraProjectRoot, String downloadUrlPreference,
+			boolean suppressSourcesUpToDateInfo) {
 		super(jobName);
 		this.download = download;
 		this.fedoraProjectRoot = fedoraProjectRoot;

@@ -29,6 +29,7 @@ public class UploadFailedException extends FedoraPackagerAPIException {
 	
 	/**
 	 * @param message
+	 *            The message associated with this exception.
 	 * @param response
 	 *            The HTTP response. Pass if some HTTP error occured. I.e.
 	 *            status code != 200.
@@ -40,7 +41,9 @@ public class UploadFailedException extends FedoraPackagerAPIException {
 	
 	/**
 	 * @param message
+	 *            The message associated with this exception.
 	 * @param cause
+	 *            The throwable that caused the exception to be thrown.
 	 */
 	public UploadFailedException(String message, Throwable cause) {
 		super(message, cause);
@@ -48,6 +51,7 @@ public class UploadFailedException extends FedoraPackagerAPIException {
 	}
 	/**
 	 * @param message
+	 *            The message associated with this exception.
 	 */
 	public UploadFailedException(String message) {
 		super(message);

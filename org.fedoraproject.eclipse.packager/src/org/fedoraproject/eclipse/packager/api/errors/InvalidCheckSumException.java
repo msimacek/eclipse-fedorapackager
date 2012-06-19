@@ -21,13 +21,16 @@ public class InvalidCheckSumException extends FedoraPackagerAPIException {
 	
 	/**
 	 * @param message
+	 *            The message associated with this exception.
 	 * @param cause
+	 *            The throwable that caused the exception to be thrown.
 	 */
 	public InvalidCheckSumException(String message, Throwable cause) {
 		super(message, cause);
 	}
 	/**
 	 * @param message
+	 *            The message associated with this exception.
 	 */
 	public InvalidCheckSumException(String message) {
 		super(message);

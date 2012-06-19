@@ -35,8 +35,11 @@ public class FedoraSSLFactory {
 	 * Instantiate a Fedora SSL object given the certificate files.
 	 * 
 	 * @param fedoraCert
+	 *            The certificate file.
 	 * @param fedoraUploadCert
+	 *            The upload certificate file.
 	 * @param fedoraServerCert
+	 *            The server certificate file.
 	 * @return A FedoraSSL instance.
 	 */
 	public static FedoraSSL getInstance(File fedoraCert, File fedoraUploadCert,

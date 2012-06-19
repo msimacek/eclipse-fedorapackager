@@ -39,6 +39,7 @@ public class LocalFedoraPackagerPageFour extends SpecfileNewWizardPage {
 	 * Create the wizard.
 	 * 
 	 * @param projectName
+	 *            The default name of the project being created.
 	 */
 	public LocalFedoraPackagerPageFour(String projectName) {
 		super(null);
@@ -51,6 +52,7 @@ public class LocalFedoraPackagerPageFour extends SpecfileNewWizardPage {
 	 * Create contents of the wizard.
 	 * 
 	 * @param parent
+	 *            The parent SWT Composite containing the wizard page.
 	 */
 	@Override
 	public void createControl(Composite parent) {

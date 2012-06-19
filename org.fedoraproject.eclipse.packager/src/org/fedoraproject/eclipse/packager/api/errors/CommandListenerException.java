@@ -21,7 +21,7 @@ public class CommandListenerException extends FedoraPackagerAPIException {
 	/**
 	 * Wrap a listener exception in a CommandListenerException. 
 	 * 
-	 * @param cause
+	 * @param cause The throwable that caused the exception to be thrown.
 	 */
 	public CommandListenerException(Throwable cause) {
 		super("unused", cause); //$NON-NLS-1$

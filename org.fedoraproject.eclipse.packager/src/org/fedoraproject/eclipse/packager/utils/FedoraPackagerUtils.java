@@ -169,6 +169,7 @@ public class FedoraPackagerUtils {
 	 *            'cpio', 'jisp', 'egg', 'gem'</code>
 	 * 
 	 * @param candidate
+	 *            The file being examined.
 	 * @return <code>true</code> if <code>candidate</code> is a valid file for
 	 *         uploading <code>false</code> otherwise.
 	 */
@@ -212,6 +213,7 @@ public class FedoraPackagerUtils {
 	 * This function gets the likely target from the SRPM name.
 	 * 
 	 * @param srpmName
+	 *            The filename of the SRPM.
 	 * @return The target build platform for the SRPM.
 	 */
 	public static String getTargetFromSRPM(String srpmName) {
@@ -242,6 +244,7 @@ public class FedoraPackagerUtils {
 	 *            The HttpClient to wrap.
 	 * @return The SSL wrapped HttpClient.
 	 * @throws GeneralSecurityException
+	 *             Function fails for security reasons.
 	 */
 	public static HttpClient trustAllSslEnable(HttpClient base)
 			throws GeneralSecurityException {
@@ -307,11 +310,14 @@ public class FedoraPackagerUtils {
 	 * Instatiate a project root instance using the projectRoot extension point.
 	 * 
 	 * @param container
+	 *            The container to act as the root for the project.
 	 * 
 	 * @return the newly created instance
 	 * @throws FedoraPackagerExtensionPointException
+	 *             If project root providing plugin could not be found.
 	 */
-	private static IProjectRoot instantiateProjectRoot(IContainer container) throws FedoraPackagerExtensionPointException {
+	private static IProjectRoot instantiateProjectRoot(IContainer container)
+			throws FedoraPackagerExtensionPointException {
 		IExtensionPoint projectRootExtension = Platform.getExtensionRegistry()
 				.getExtensionPoint(PackagerPlugin.PLUGIN_ID,
 						PROJECT_ROOT_EXTENSIONPOINT_NAME);
@@ -358,8 +364,8 @@ public class FedoraPackagerUtils {
 	 * Determine the project root, which is the best match for the given
 	 * container.
 	 * 
-	 * @param projectRootList
-	 * @param container
+	 * @param projectRootList The list of known roots.
+	 * @param container The container the root is being found in respect to.
 	 * @return The project root which has support for the project property of
 	 *         the container or {@code null} if no such project root exists.
 	 */

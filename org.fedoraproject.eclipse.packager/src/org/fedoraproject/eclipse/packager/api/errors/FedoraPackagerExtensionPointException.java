@@ -20,7 +20,9 @@ public class FedoraPackagerExtensionPointException extends FedoraPackagerAPIExce
 
 	/**
 	 * @param message
+	 *            The message associated with this exception.
 	 * @param cause
+	 *            The throwable that caused the exception to be thrown.
 	 */
 	public FedoraPackagerExtensionPointException(String message, Throwable cause) {
 		super(message, cause);
@@ -28,6 +30,7 @@ public class FedoraPackagerExtensionPointException extends FedoraPackagerAPIExce
 	
 	/**
 	 * @param message
+	 *            The message associated with this exception.
 	 */
 	public FedoraPackagerExtensionPointException(String message) {
 		super(message);

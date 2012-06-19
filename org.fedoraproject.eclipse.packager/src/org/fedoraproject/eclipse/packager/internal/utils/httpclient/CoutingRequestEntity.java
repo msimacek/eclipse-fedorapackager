@@ -21,17 +21,15 @@ import org.apache.http.HttpEntity;
 /**
  * Requires hc-httpclient >= 4.0
  * 
- * Recall, that in hc-httpclient terminology an Entity is
- * anything that should be transported as the payload to
- * the server.
+ * Recall, that in hc-httpclient terminology an Entity is anything that should
+ * be transported as the payload to the server.
  * 
- * CountingRequestEntity is a wrapper for any entity which
- * requires upload progress reporting. Every time writing of
- * a undefined amount of bytes occurs, a ProgressListener is
- * invoked. By implementing this listener and wrapping any
- * HttpEntity with a CountingRequestentity allows you to
- * provide feedback on upload progres.
- *
+ * CountingRequestEntity is a wrapper for any entity which requires upload
+ * progress reporting. Every time writing of a undefined amount of bytes occurs,
+ * a ProgressListener is invoked. By implementing this listener and wrapping any
+ * HttpEntity with a CountingRequestentity allows you to provide feedback on
+ * upload progres.
+ * 
  */
 public class CoutingRequestEntity implements HttpEntity {
 
@@ -39,8 +37,10 @@ public class CoutingRequestEntity implements HttpEntity {
 	private final IRequestProgressListener listener;
 
 	/**
-	 * @param entity The HttpEntity which gets wrapped.
-	 * @param listener The listener to notify.
+	 * @param entity
+	 *            The HttpEntity which gets wrapped.
+	 * @param listener
+	 *            The listener to notify.
 	 */
 	public CoutingRequestEntity(final HttpEntity entity,
 			final IRequestProgressListener listener) {
@@ -48,7 +48,6 @@ public class CoutingRequestEntity implements HttpEntity {
 		this.entity = entity;
 		this.listener = listener;
 	}
-
 
 	@Override
 	@SuppressWarnings("deprecation")
@@ -97,8 +96,8 @@ public class CoutingRequestEntity implements HttpEntity {
 	}
 
 	/**
-	 * Simple wrapper to allow for progress reporting when
-	 * writing to the OutputStream.
+	 * Simple wrapper to allow for progress reporting when writing to the
+	 * OutputStream.
 	 */
 	public static class CountingOutputStream extends FilterOutputStream {
 
@@ -107,7 +106,9 @@ public class CoutingRequestEntity implements HttpEntity {
 
 		/**
 		 * @param out
+		 *            The output stream being wrapped.
 		 * @param listener
+		 *            The progress listener.
 		 */
 		public CountingOutputStream(final OutputStream out,
 				final IRequestProgressListener listener) {
@@ -117,7 +118,8 @@ public class CoutingRequestEntity implements HttpEntity {
 		}
 
 		@Override
-		public void write(final byte[] b, final int off, final int len) throws IOException {
+		public void write(final byte[] b, final int off, final int len)
+				throws IOException {
 			super.write(b, off, len);
 			this.transferred += len;
 			this.listener.transferred(this.transferred);

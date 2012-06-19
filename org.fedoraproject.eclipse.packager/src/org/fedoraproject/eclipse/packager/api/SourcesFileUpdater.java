@@ -23,10 +23,10 @@ import org.fedoraproject.eclipse.packager.api.errors.SourcesFileUpdateException;
 /**
  * Post exec hook for {@link UploadSourceCommand}, responsible for updating the
  * {@code sources} file.
- *
+ * 
  */
 public class SourcesFileUpdater implements ICommandListener {
-	
+
 	private IProjectRoot fpRoot;
 	private File fileToAdd;
 	private boolean shouldReplace = false;
@@ -48,6 +48,7 @@ public class SourcesFileUpdater implements ICommandListener {
 	 * Setter for state info if {@code sources} file should be replaced or not.
 	 * 
 	 * @param newValue
+	 *            True if value should be replaced, false otherwise.
 	 */
 	public void setShouldReplace(boolean newValue) {
 		this.shouldReplace = newValue;

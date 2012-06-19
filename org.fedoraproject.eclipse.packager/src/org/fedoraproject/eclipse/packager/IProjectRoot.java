@@ -29,6 +29,7 @@ public interface IProjectRoot {
 	 * initialization code into this method.
 	 * 
 	 * @param container
+	 *            The root of the packager project.
 	 */
 	public void initialize(IContainer container);
 

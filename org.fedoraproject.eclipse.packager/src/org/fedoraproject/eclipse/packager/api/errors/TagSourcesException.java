@@ -21,6 +21,7 @@ public class TagSourcesException extends FedoraPackagerAPIException {
 
 	/**
 	 * @param msg
+	 *            The message associated with this exception.
 	 */
 	public TagSourcesException(String msg) {
 		super(msg);
@@ -28,7 +29,9 @@ public class TagSourcesException extends FedoraPackagerAPIException {
 	
 	/**
 	 * @param msg
+	 *            The message associated with this exception.
 	 * @param cause
+	 *            The throwable that caused the exception to be thrown.
 	 */
 	public TagSourcesException(String msg, Throwable cause) {
 		super(msg, cause);

@@ -51,9 +51,9 @@ public class RPMUtils {
 	/**
 	 * Submit a query to RPM. Uses org.eclipse.linuxtools.rpm.Utils.
 	 * 
-	 * @param projectRoot
-	 * @param format
-	 * @param bci
+	 * @param projectRoot The root under which the query is occuring.
+	 * @param format The format of the query result String.
+	 * @param bci The configuration for the current branch.
 	 * @return The result of the query.
 	 * @throws IOException
 	 *             If rpm command failed.

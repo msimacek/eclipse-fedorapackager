@@ -179,7 +179,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 	/**
 	 * Parse available branch names from Git remote branches.
 	 * 
-	 * @return
+	 * @return The branch map.
 	 */
 	private HashMap<String, String> getBranches() {
 		HashMap<String, String> branches = new HashMap<String, String>();
@@ -266,8 +266,8 @@ public class FpGitProjectBits implements IFpProjectBits {
 	 * I.e. if branchName has been created by doing repo.getBranch(), it would
 	 * return SHA1 Strings for remote branches. We don't want that.
 	 * 
-	 * @param branchName
-	 * @return
+	 * @param branchName The branch name being examined.
+	 * @return true if given branch name is NOT an ObjectId in string format, false otherwise.
 	 */
 	private boolean isNamedBranch(String branchName) {
 		if (branchName.startsWith(Constants.R_HEADS)

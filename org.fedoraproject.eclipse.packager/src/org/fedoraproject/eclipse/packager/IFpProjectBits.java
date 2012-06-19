@@ -13,7 +13,6 @@ package org.fedoraproject.eclipse.packager;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 
 /**
  * Interface for VCS specific bits of an FpProject. Implementations should
@@ -90,8 +89,8 @@ public interface IFpProjectBits {
 	/**
 	 * Tag a revision of the VCS.
 	 * 
-	 * @param monitor
-	 * @param bci
+	 * @param monitor The monitor to show progress.
+	 * @param bci The branch configuration.
 	 * @return The status of the tagging operation.
 	 */
 	public IStatus tagVcs(IProgressMonitor monitor,
@@ -100,8 +99,8 @@ public interface IFpProjectBits {
 	/**
 	 * Determine if tag exists in VCS.
 	 * 
-	 * @param tag
-	 * @param bci
+	 * @param tag The tag being looked for.
+	 * @param bci The branch configuration.
 	 * @return True if tag exists, false otherwise.
 	 */
 	public boolean isVcsTagged(String tag,
@@ -127,19 +126,16 @@ public interface IFpProjectBits {
 	 * Checks whether there are local changes.
 	 * 
 	 * @return Whether there are local changes or not.
-	 * @throws CommandListenerException
 	 */
-	public boolean hasLocalChanges()
-			throws CommandListenerException;
+	public boolean hasLocalChanges();
 
 	/**
 	 * Stage changes to an array of files.
 	 * 
 	 * @param files
 	 *            The files to add the changes to the repository.
-	 * @throws CommandListenerException
 	 */
-	public void stageChanges(String[] files) throws CommandListenerException;
+	public void stageChanges(String[] files);
 
 	/**
 	 * Returns the name of the ignore file for the given VCS.

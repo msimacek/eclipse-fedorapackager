@@ -145,7 +145,7 @@ public class UploadHandler extends AbstractHandler implements
 						// Fedora and
 						// RHEL. This should be kept in placed as it is
 						// overridden in the Red Hat version.
-						setSSLPolicy(uploadCmd, uploadUrl);
+						setSSLPolicy(uploadCmd);
 						uploadCmd.addCommandListener(sourcesUpdater);
 						logger.logDebug(NLS.bind(
 								FedoraPackagerText.callingCommand,
@@ -294,7 +294,7 @@ public class UploadHandler extends AbstractHandler implements
 	/**
 	 * Sets the SSL policy for this handler.
 	 */
-	protected void setSSLPolicy(UploadSourceCommand uploadCmd, String uploadUrl) {
+	protected void setSSLPolicy(UploadSourceCommand uploadCmd) {
 		// enable SLL authentication
 		uploadCmd.setFedoraSSLEnabled(true);
 	}

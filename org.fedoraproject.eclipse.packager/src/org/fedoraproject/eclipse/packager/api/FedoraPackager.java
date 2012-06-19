@@ -27,24 +27,25 @@ import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFou
  * Eclipse Fedora Packager main interface for commands.
  */
 public class FedoraPackager {
-	
+
 	private static final String CMD_ID_ATTRIBUTE_NAME = "id"; //$NON-NLS-1$
-	private static final String CMD_EXTENSIONPOINT_NAME =
-		"packagerCommandContribution"; //$NON-NLS-1$
+	private static final String CMD_EXTENSIONPOINT_NAME = "packagerCommandContribution"; //$NON-NLS-1$
 	private static final String CMD_ELEMENT_NAME = "command"; //$NON-NLS-1$
 	private static final String CMD_CLASS_ATTRIBUTE_NAME = "class"; //$NON-NLS-1$
-	
+
 	private final IProjectRoot root;
-	
+
 	/**
 	 * @param root
+	 *            The project root associated with this packager instance.
 	 */
 	public FedoraPackager(IProjectRoot root) {
 		if (root == null)
-			throw new IllegalArgumentException(FedoraPackagerText.FedoraPackager_Cant_Create);
+			throw new IllegalArgumentException(
+					FedoraPackagerText.FedoraPackager_Cant_Create);
 		this.root = root;
 	}
-	
+
 	/**
 	 * Get a list of all registered Fedora packager command IDs. Each command id
 	 * may be used to get the desired command instance from the registry using
@@ -71,7 +72,7 @@ public class FedoraPackager {
 		String[] result = new String[cmdIdList.size()];
 		return cmdIdList.toArray(result);
 	}
-	
+
 	/**
 	 * Get a command instance from the Eclipse Fedora Packager command registry
 	 * if available.
@@ -114,7 +115,7 @@ public class FedoraPackager {
 			}
 		}
 		throw new FedoraPackagerCommandNotFoundException(NLS.bind(
-				FedoraPackagerText.FedoraPackager_commandNotFoundError,
-				root.getProductStrings().getDistributionName(), commandId));
+				FedoraPackagerText.FedoraPackager_commandNotFoundError, root
+						.getProductStrings().getDistributionName(), commandId));
 	}
 }

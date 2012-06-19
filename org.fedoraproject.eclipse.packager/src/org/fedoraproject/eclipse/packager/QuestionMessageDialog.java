@@ -27,9 +27,9 @@ public class QuestionMessageDialog implements Runnable {
 
 	/**
 	 * 
-	 * @param question
-	 * @param shell
-	 * @param fpRoot 
+	 * @param question The question text to be displayed.
+	 * @param shell The shell the dialog is opened in.
+	 * @param fpRoot The root the dialog is run under.
 	 */
 	public QuestionMessageDialog(String question, Shell shell, IProjectRoot fpRoot) {
 		this.question = question;
@@ -39,8 +39,8 @@ public class QuestionMessageDialog implements Runnable {
 	
 	/**
 	 * 
-	 * @param question
-	 * @param shell
+	 * @param question The question text to be displayed.
+	 * @param shell The shell the dialog is opened in.
 	 * @param title The title of the question dialog.
 	 */
 	public QuestionMessageDialog(String title, String question, Shell shell) {

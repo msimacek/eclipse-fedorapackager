@@ -20,9 +20,8 @@ public class UnpushedChangesException extends FedoraPackagerAPIException {
 	private static final long serialVersionUID = 8776718118316661590L;
 
 	/**
-	 * Default constructor.
-	 * 
 	 * @param msg
+	 *            The message associated with this exception.
 	 */
 	public UnpushedChangesException(String msg) {
 		super(msg);

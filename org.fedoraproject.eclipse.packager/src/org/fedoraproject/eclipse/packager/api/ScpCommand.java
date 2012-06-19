@@ -61,9 +61,9 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 	 * The unique ID of this command.
 	 */
 	public static final String ID = "ScpCommand"; //$NON-NLS-1$
-	private static final String FEDORAHOST  = "fedorapeople.org"; //$NON-NLS-1$
+	private static final String FEDORAHOST = "fedorapeople.org"; //$NON-NLS-1$
 	private static final String PUBLIC_HTML = "public_html"; //$NON-NLS-1$
-	private static final String REMOTE_DIR  = "fpe-rpm-review"; //$NON-NLS-1$
+	private static final String REMOTE_DIR = "fpe-rpm-review"; //$NON-NLS-1$
 
 	private String fasAccount;
 	private String specFile;
@@ -73,25 +73,27 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 	private String fileScpConfirm;
 	private ScpResult result = null;
 
-	final static FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
+	final static FedoraPackagerLogger logger = FedoraPackagerLogger
+			.getInstance();
 
 	/*
 	 * Implementation of the {@code ScpCommand}.
-	 *
+	 * 
 	 * @param monitor
-	 *
+	 * 
 	 * @throws CommandMisconfiguredException If the command was not properly
 	 * configured when it was called.
-	 *
+	 * 
 	 * @throws CommandListenerException If some listener detected a problem.
-	 *
+	 * 
 	 * @throws ScpFailedException if .src.rpm file does not exist to be copied
-	 *
+	 * 
 	 * @return The result of this command.
 	 */
 	@Override
 	public ScpResult call(IProgressMonitor monitor)
-			throws CommandMisconfiguredException, CommandListenerException, ScpFailedException {
+			throws CommandMisconfiguredException, CommandListenerException,
+			ScpFailedException {
 		try {
 			callPreExecListeners();
 		} catch (CommandListenerException e) {
@@ -104,15 +106,16 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 		JSch jsch = new JSch();
 
-	    IPreferencesService service = Platform.getPreferencesService();
-	    String ssh_home = service.getString(JSchCorePlugin.ID,
-	        IConstants.KEY_SSH2HOME, PreferenceInitializer.SSH_HOME_DEFAULT, null);
+		IPreferencesService service = Platform.getPreferencesService();
+		String ssh_home = service.getString(JSchCorePlugin.ID,
+				IConstants.KEY_SSH2HOME,
+				PreferenceInitializer.SSH_HOME_DEFAULT, null);
 		String ssh_keys = service.getString(JSchCorePlugin.ID,
-	        IConstants.KEY_PRIVATEKEY, "id_rsa", null); //$NON-NLS-1$
+				IConstants.KEY_PRIVATEKEY, "id_rsa", null); //$NON-NLS-1$
 
-	    String[] ssh_key = ssh_keys.split(","); //$NON-NLS-1$
+		String[] ssh_key = ssh_keys.split(","); //$NON-NLS-1$
 
-	    String privateKeyFile = ssh_home.concat("/").concat(ssh_key[1]); //$NON-NLS-1$
+		String privateKeyFile = ssh_home.concat("/").concat(ssh_key[1]); //$NON-NLS-1$
 
 		try {
 			if (privateKeyFile != null) {
@@ -136,7 +139,8 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 			}
 
 			if (srpmFile.isEmpty()) {
-				throw new ScpFailedException(FedoraPackagerText.ScpCommand_filesToScpMissing);
+				throw new ScpFailedException(
+						FedoraPackagerText.ScpCommand_filesToScpMissing);
 			}
 
 			// Creates the remote 'fpe-rpm-review' directory in public_html
@@ -166,8 +170,7 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 		if (scpconfirmed) {
 			result.setSuccessful(true);
-		}
-		else {
+		} else {
 			result.setSuccessful(false);
 		}
 		setCallable(false);
@@ -177,13 +180,14 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 	/**
 	 * check the public_html and create the remote directory if it doesn't exist
-	 * If it exists, make sure the files to copy don't already exist
-	 * If they do, check with the user to replace or cancel the operation
-	 *
+	 * If it exists, make sure the files to copy don't already exist If they do,
+	 * check with the user to replace or cancel the operation
+	 * 
 	 * @param session
 	 *            of the current operation
 	 * @throws ScpFailedException
-	 *
+	 *             If transfer of directory to remote is unsuccessful.
+	 * 
 	 */
 	private void createRemoteDir(Session session) throws ScpFailedException {
 		boolean dirFound = false;
@@ -212,7 +216,8 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 			// check if the files to scp already exist in the remote directory
 			// if yes, ask for confirmation
-			Vector<?> existFile = channelSftp.ls(PUBLIC_HTML + IPath.SEPARATOR + REMOTE_DIR );
+			Vector<?> existFile = channelSftp.ls(PUBLIC_HTML + IPath.SEPARATOR
+					+ REMOTE_DIR);
 			it = existFile.iterator();
 			while (it.hasNext() && !fileFound) {
 				LsEntry entry = (LsEntry) it.next();
@@ -221,19 +226,21 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 					fileFound = true;
 			}
 			if (fileFound) {
-				fileScpConfirm =
-						NLS.bind(FedoraPackagerText.ScpCommand_filesToScpExist, srpmFile);
+				fileScpConfirm = NLS
+						.bind(FedoraPackagerText.ScpCommand_filesToScpExist,
+								srpmFile);
 				PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 					@Override
 					public void run() {
-						scpconfirmed = MessageDialog.openConfirm
-								(null, FedoraPackagerText.ScpCommand_notificationTitle,
+						scpconfirmed = MessageDialog
+								.openConfirm(
+										null,
+										FedoraPackagerText.ScpCommand_notificationTitle,
 										fileScpConfirm);
 					}
 				});
 
-			}
-			else {
+			} else {
 				scpconfirmed = true;
 			}
 
@@ -249,15 +256,17 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 	/**
 	 * Copies the localFile to remote location at remoteFile
-	 *
+	 * 
 	 * @param fileToScp
 	 *            to be copied remotely
 	 * @param session
 	 *            of the current operation
 	 * @throws ScpFailedException
-	 *
+	 *             If transfer of file to remote is unsuccessful.
+	 * 
 	 */
-	private void copyFileToRemote(String fileToScp, Session session) throws ScpFailedException {
+	private void copyFileToRemote(String fileToScp, Session session)
+			throws ScpFailedException {
 		FileInputStream fis = null;
 
 		// exec 'scp -t remoteFile' remotely
@@ -277,7 +286,8 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 			channel.connect();
 
 			if (checkAck(in) != 0) {
-				throw new ScpFailedException(FedoraPackagerText.ScpCommand_filesToScpNonReadable);
+				throw new ScpFailedException(
+						FedoraPackagerText.ScpCommand_filesToScpNonReadable);
 			}
 
 			// send "C0644 filesize filename", where filename should not include
@@ -297,7 +307,8 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 			out.write(command.getBytes());
 			out.flush();
 			if (checkAck(in) != 0) {
-				throw new ScpFailedException(FedoraPackagerText.ScpCommand_filesToScpNonReadable);
+				throw new ScpFailedException(
+						FedoraPackagerText.ScpCommand_filesToScpNonReadable);
 			}
 
 			// send a content of localFile
@@ -316,8 +327,8 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 			out.write(buf, 0, 1);
 			out.flush();
 			if (checkAck(in) != 0) {
-				throw new ScpFailedException
-					(FedoraPackagerText.ScpCommand_filesToScpNonReadable);
+				throw new ScpFailedException(
+						FedoraPackagerText.ScpCommand_filesToScpNonReadable);
 			}
 			out.close();
 
@@ -348,18 +359,20 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 	 *            sets the FAS account
 	 * @return this instance
 	 * @throws ScpFailedException
+	 *             If account info could not be found.
 	 */
 	public ScpCommand fasAccount(String fasAccount) throws ScpFailedException {
 		this.fasAccount = fasAccount;
 		if (fasAccount == FedoraSSL.UNKNOWN_USER) {
-			throw new ScpFailedException
-				(FedoraPackagerText.ScpHandler_fasAccountMissing);
+			throw new ScpFailedException(
+					FedoraPackagerText.ScpHandler_fasAccountMissing);
 		}
 		return this;
 	}
 
 	/**
 	 * @param specFile
+	 *            The specfile to be copied.
 	 */
 	public void specFile(String specFile) {
 		this.specFile = specFile;
@@ -367,6 +380,7 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 	/**
 	 * @param srpmFile
+	 *            The srpm to be copied.
 	 */
 	public void srpmFile(String srpmFile) {
 		this.srpmFile = srpmFile;
@@ -374,9 +388,9 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 	/*
 	 * @param in
-	 *
+	 * 
 	 * @throws IOException
-	 *
+	 * 
 	 * @return 0 if successful
 	 */
 	static int checkAck(InputStream in) throws IOException {

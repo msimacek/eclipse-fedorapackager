@@ -13,17 +13,17 @@ package org.fedoraproject.eclipse.packager.api.errors;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 
 /**
- * Thrown if copying spec and srpm files to the fedorapeople.org
- * was not successful
- *
+ * Thrown if copying spec and srpm files to the fedorapeople.org was not
+ * successful
+ * 
  */
-public class ScpFailedException extends
-		FedoraPackagerAPIException {
+public class ScpFailedException extends FedoraPackagerAPIException {
 
 	private static final long serialVersionUID = 9098621863061603960L;
 
 	/**
 	 * @param message
+	 *            The message associated with this exception.
 	 */
 	public ScpFailedException(String message) {
 		super(message);
@@ -31,7 +31,9 @@ public class ScpFailedException extends
 
 	/**
 	 * @param message
+	 *            The message associated with this exception.
 	 * @param cause
+	 *            The throwable that caused the exception to be thrown.
 	 */
 	public ScpFailedException(String message, Throwable cause) {
 		super(message, cause);

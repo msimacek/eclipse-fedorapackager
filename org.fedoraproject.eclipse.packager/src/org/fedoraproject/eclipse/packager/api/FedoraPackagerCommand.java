@@ -50,20 +50,20 @@ import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitia
  *            {@link #call(IProgressMonitor)}
  */
 public abstract class FedoraPackagerCommand<T> {
-	
+
 	/**
 	 * The project root to work with.
 	 */
 	protected IProjectRoot projectRoot;
-	
+
 	/**
 	 * A list of command listeners to call
 	 */
 	private final ArrayList<ICommandListener> cmdListeners = new ArrayList<ICommandListener>();
-	
+
 	/**
-	 * a state which tells whether it is allowed to call {@link #call(IProgressMonitor)} on this
-	 * instance.
+	 * a state which tells whether it is allowed to call
+	 * {@link #call(IProgressMonitor)} on this instance.
 	 */
 	private boolean callable = true;
 
@@ -73,17 +73,19 @@ public abstract class FedoraPackagerCommand<T> {
 	protected FedoraPackagerCommand() {
 		// nothing
 	}
-	
+
 	/**
-	 * Initialize a FedoraPackagerCommand instance with the
-	 * {@link IProjectRoot} to work with. Called on object creation.
+	 * Initialize a FedoraPackagerCommand instance with the {@link IProjectRoot}
+	 * to work with. Called on object creation.
 	 * 
 	 * @param projectRoot
+	 *            The project root to run the command under.
 	 * @throws FedoraPackagerCommandInitializationException
 	 *             If the project root was already set. I.e. this method has
 	 *             been called more than once.
 	 */
-	public void initialize(IProjectRoot projectRoot) throws FedoraPackagerCommandInitializationException {
+	public void initialize(IProjectRoot projectRoot)
+			throws FedoraPackagerCommandInitializationException {
 		setProjectRoot(projectRoot);
 		// per default add config and state checker
 		this.cmdListeners.add(new CheckConfigListener(this));
@@ -93,14 +95,17 @@ public abstract class FedoraPackagerCommand<T> {
 	 * 
 	 * @param projectRoot
 	 *            the projectRoot to set
-	 * @throws FedoraPackagerCommandInitializationException If projectRoot is not null.
+	 * @throws FedoraPackagerCommandInitializationException
+	 *             If projectRoot is not null.
 	 */
-	private void setProjectRoot(IProjectRoot projectRoot) throws FedoraPackagerCommandInitializationException {
+	private void setProjectRoot(IProjectRoot projectRoot)
+			throws FedoraPackagerCommandInitializationException {
 		if (this.projectRoot != null) {
 			throw new FedoraPackagerCommandInitializationException(
 					NLS.bind(
 							FedoraPackagerText.FedoraPackagerCommand_projectRootSetTwiceError,
-							projectRoot.getProductStrings().getDistributionName()));
+							projectRoot.getProductStrings()
+									.getDistributionName()));
 		}
 		this.projectRoot = projectRoot;
 	}
@@ -108,7 +113,7 @@ public abstract class FedoraPackagerCommand<T> {
 	/**
 	 * Checks that the property {@link #callable} is {@code true}. If not then
 	 * an {@link IllegalStateException} is thrown.
-	 *
+	 * 
 	 * @throws IllegalStateException
 	 *             when this method is called and the property {@link #callable}
 	 *             is {@code false}
@@ -116,66 +121,72 @@ public abstract class FedoraPackagerCommand<T> {
 	protected void checkCallable() {
 		if (!callable)
 			throw new IllegalStateException(NLS.bind(
-					FedoraPackagerText.commandWasCalledInTheWrongState,
-					this.getClass().getName()));
+					FedoraPackagerText.commandWasCalledInTheWrongState, this
+							.getClass().getName()));
 	}
 
 	/**
-	 * @param callable the callable to set
+	 * @param callable
+	 *            the callable to set
 	 */
 	protected void setCallable(boolean callable) {
 		this.callable = callable;
 	}
-	
+
 	/**
-	 * Call pre-exec command listeners in order they have been
-	 * added.
+	 * Call pre-exec command listeners in order they have been added.
 	 * 
-	 * @throws CommandListenerException If any listener detected a problem.
+	 * @throws CommandListenerException
+	 *             If any listener detected a problem.
 	 * 
 	 */
 	protected void callPreExecListeners() throws CommandListenerException {
-		for (ICommandListener listener: cmdListeners) {
+		for (ICommandListener listener : cmdListeners) {
 			listener.preExecution();
 		}
 	}
-	
+
 	/**
-	 * Call pre-exec command listeners in order they have been
-	 * added.
+	 * Call pre-exec command listeners in order they have been added.
 	 * 
-	 * @throws CommandListenerException If any listener detected a problem.
+	 * @throws CommandListenerException
+	 *             If any listener detected a problem.
 	 */
 	protected void callPostExecListeners() throws CommandListenerException {
-		for (ICommandListener listener: cmdListeners) {
+		for (ICommandListener listener : cmdListeners) {
 			listener.postExecution();
 		}
 	}
-	
+
 	/**
 	 * Configuration checking routine. This should check if all required
 	 * parameters in order to successfully execute the command is present.
 	 * 
 	 */
-	protected abstract void checkConfiguration() throws CommandMisconfiguredException;
+	protected abstract void checkConfiguration()
+			throws CommandMisconfiguredException;
 
 	/**
 	 * Add/register a command listener.
 	 * 
 	 * @param listener
+	 *            The command listener.
 	 */
 	public void addCommandListener(ICommandListener listener) {
 		this.cmdListeners.add(listener);
 	}
 
 	/**
-	 * Executes the specific command. Each instance of this
-	 * class should only be used for one invocation of the command. Don't call
-	 * this method twice on an instance.
+	 * Executes the specific command. Each instance of this class should only be
+	 * used for one invocation of the command. Don't call this method twice on
+	 * an instance.
 	 * 
 	 * @param monitor
+	 *            The monitor to show progress.
 	 * @return The result of executing the command.
-	 * @throws FedoraPackagerAPIException indicating the error which occurred.
+	 * @throws FedoraPackagerAPIException
+	 *             indicating the error which occurred.
 	 */
-	public abstract T call(IProgressMonitor monitor) throws FedoraPackagerAPIException;
+	public abstract T call(IProgressMonitor monitor)
+			throws FedoraPackagerAPIException;
 }

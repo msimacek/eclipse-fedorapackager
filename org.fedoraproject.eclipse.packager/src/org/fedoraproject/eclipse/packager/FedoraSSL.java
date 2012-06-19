@@ -32,46 +32,52 @@ import org.apache.commons.ssl.TrustMaterial;
 import org.eclipse.osgi.util.NLS;
 
 /**
- * Helper class for Fedora related SSL things.
- * Uses org.apache.commons.ssl (from not-yet-commons).
+ * Helper class for Fedora related SSL things. Uses org.apache.commons.ssl (from
+ * not-yet-commons).
  */
 public class FedoraSSL {
-	
+
 	/**
 	 * Constant returned when unable to determine the username from the Fedora
 	 * SSL certificate.
 	 */
 	public static final String UNKNOWN_USER = "anonymous"; //$NON-NLS-1$
-	
+
 	/**
 	 * Default certificate path.
 	 */
-	public static final String DEFAULT_CERT_FILE = System.getProperty("user.home") //$NON-NLS-1$
+	public static final String DEFAULT_CERT_FILE = System
+			.getProperty("user.home") //$NON-NLS-1$
 			+ File.separatorChar + ".fedora.cert"; //$NON-NLS-1$
 	/**
 	 * Default upload CA cert.
 	 */
-	public static final String DEFAULT_UPLOAD_CA_CERT = System.getProperty("user.home") //$NON-NLS-1$
+	public static final String DEFAULT_UPLOAD_CA_CERT = System
+			.getProperty("user.home") //$NON-NLS-1$
 			+ File.separatorChar + ".fedora-upload-ca.cert"; //$NON-NLS-1$
 	/**
 	 * Default server CA cert.
 	 */
-	public static final String DEFAULT_SERVER_CA_CERT = System.getProperty("user.home") //$NON-NLS-1$
+	public static final String DEFAULT_SERVER_CA_CERT = System
+			.getProperty("user.home") //$NON-NLS-1$
 			+ File.separatorChar + ".fedora-server-ca.cert"; //$NON-NLS-1$
-	
+
 	private File fedoraCert;
 	private File fedoraUploadCert;
 	private File fedoraServerCert;
 	private boolean allCertsExist = false;
-	
+
 	/**
 	 * Create a Fedora SSL object from given cert files. The use of this
-	 * constructor is discouraged. Use
-	 * {@link FedoraSSLFactory#getInstance()} instead.
+	 * constructor is discouraged. Use {@link FedoraSSLFactory#getInstance()}
+	 * instead.
 	 * 
 	 * @param fedoraCert
+	 *            The certificate file.
 	 * @param fedoraUploadCert
+	 *            The upload certificate file.
 	 * @param fedoraServerCert
+	 *            The server certificate file.
 	 */
 	FedoraSSL(File fedoraCert, File fedoraUploadCert, File fedoraServerCert) {
 		this.fedoraCert = fedoraCert;
@@ -82,18 +88,21 @@ public class FedoraSSL {
 			this.allCertsExist = true;
 		}
 	}
-	
+
 	/**
 	 * Set up an SSLContext, and initialize it properly.
 	 * 
 	 * @throws GeneralSecurityException
+	 *             If there is an issue in the security aspect of the SSL
+	 *             connection.
 	 * @throws IOException
+	 *             If method cannot use streams properly.
 	 * @return The initialized SSLConext instance.
 	 * @throws FileNotFoundException
 	 *             If one of the three certificates is missing.
 	 */
-	public SSLContext getInitializedSSLContext() throws GeneralSecurityException,
-		FileNotFoundException, IOException  {
+	public SSLContext getInitializedSSLContext()
+			throws GeneralSecurityException, FileNotFoundException, IOException {
 		if (!allCertsExist) {
 			Object[] bindings = { fedoraCert.getAbsolutePath(),
 					fedoraServerCert.getAbsolutePath(),
@@ -108,8 +117,9 @@ public class FedoraSSL {
 
 		SSLContext sc = SSLContext.getInstance("SSL"); //$NON-NLS-1$
 
-		sc.init((KeyManager[]) kmat.getKeyManagers(), (TrustManager[]) tc
-				.getTrustManagers(), new java.security.SecureRandom());
+		sc.init((KeyManager[]) kmat.getKeyManagers(),
+				(TrustManager[]) tc.getTrustManagers(),
+				new java.security.SecureRandom());
 		return sc;
 	}
 
@@ -118,9 +128,11 @@ public class FedoraSSL {
 	 * 
 	 * @return The key material.
 	 * @throws GeneralSecurityException
+	 *             If there is some problem with the key.
 	 * @throws FileNotFoundException
 	 *             If one of the three certificates is missing.
 	 * @throws IOException
+	 *             If certificate cannot be accessed.
 	 */
 	public KeyMaterial getFedoraCertKeyMaterial()
 			throws GeneralSecurityException, FileNotFoundException, IOException {
@@ -132,11 +144,10 @@ public class FedoraSSL {
 					FedoraPackagerText.FedoraSSL_certificatesMissingError,
 					bindings));
 		}
-		KeyMaterial kmat = new KeyMaterial(fedoraCert, fedoraCert,
-				new char[0]);
+		KeyMaterial kmat = new KeyMaterial(fedoraCert, fedoraCert, new char[0]);
 		return kmat;
 	}
-	
+
 	/**
 	 * Determine FAS username from fedora cert file.
 	 * 
@@ -171,12 +182,14 @@ public class FedoraSSL {
 
 	/**
 	 * 
-	 * @return
+	 * @return The trust chain for the SSL.
 	 * @throws GeneralSecurityException
+	 *             If there is some problem with the key.
 	 * @throws IOException
+	 *             If problem accessing certs.
 	 */
-	private TrustChain getTrustChain()
-			throws GeneralSecurityException, IOException {
+	private TrustChain getTrustChain() throws GeneralSecurityException,
+			IOException {
 		TrustChain tc = new TrustChain();
 		tc.addTrustMaterial(new TrustMaterial(fedoraUploadCert));
 		tc.addTrustMaterial(new TrustMaterial(fedoraServerCert));

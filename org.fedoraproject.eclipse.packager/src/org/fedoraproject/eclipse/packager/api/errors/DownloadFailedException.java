@@ -20,13 +20,16 @@ public class DownloadFailedException extends FedoraPackagerAPIException {
 	private static final long serialVersionUID = -4530245999844216895L;
 	/**
 	 * @param message
+	 *            The message associated with this exception.
 	 * @param cause
+	 *            The throwable that caused the exception to be thrown.
 	 */
 	public DownloadFailedException(String message, Throwable cause) {
 		super(message, cause);
 	}
 	/**
 	 * @param message
+	 *            The message associated with this exception.
 	 */
 	public DownloadFailedException(String message) {
 		super(message);
