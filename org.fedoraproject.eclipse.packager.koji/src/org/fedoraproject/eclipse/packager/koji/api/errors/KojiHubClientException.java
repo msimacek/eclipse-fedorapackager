@@ -28,10 +28,12 @@ public class KojiHubClientException extends FedoraPackagerAPIException {
 	public KojiHubClientException() {
 		// empty
 	}
-	
+
 	/**
-	 * @param msg 
+	 * @param msg
+	 *            The message associated with this exception.
 	 * @param cause
+	 *            The throwable that caused the exception to be thrown.
 	 */
 	public KojiHubClientException(String msg, Throwable cause) {
 		super(msg, cause);
@@ -56,18 +58,20 @@ public class KojiHubClientException extends FedoraPackagerAPIException {
 
 	/**
 	 * @param cause
+	 *            The throwable that caused the exception to be thrown.
 	 */
 	public KojiHubClientException(Throwable cause) {
 		super("Client error", cause); //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * @param msg
+	 *            The message associated with this exception.
 	 */
 	public KojiHubClientException(String msg) {
 		super(msg);
 	}
-	
+
 	/**
 	 * @return The status object representing the error for which this exception
 	 *         was created.

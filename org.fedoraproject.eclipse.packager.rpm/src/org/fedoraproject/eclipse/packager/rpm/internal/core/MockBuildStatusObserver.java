@@ -17,14 +17,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
  * Observes status prints on the console and updates the progress monitor.
- *
+ * 
  */
 public class MockBuildStatusObserver implements Observer {
 
 	private IProgressMonitor monitor;
-	
+
 	/**
 	 * @param monitor
+	 *            The monitor to show progress.
 	 */
 	public MockBuildStatusObserver(IProgressMonitor monitor) {
 		this.monitor = monitor;
@@ -34,7 +35,7 @@ public class MockBuildStatusObserver implements Observer {
 	public void update(Observable object, Object arg) {
 		if (arg instanceof String) {
 			// update the subtask
-			monitor.subTask((String)arg);
+			monitor.subTask((String) arg);
 		}
 	}
 

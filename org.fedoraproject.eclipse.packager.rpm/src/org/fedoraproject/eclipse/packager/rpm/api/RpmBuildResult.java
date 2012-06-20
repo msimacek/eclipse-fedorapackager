@@ -20,35 +20,42 @@ public class RpmBuildResult extends Result {
 
 	private boolean success;
 	private Set<String> srpms;
-	
+
 	/**
 	 * 
 	 * @param cmdList
+	 *            The command and arguments run.
 	 */
 	public RpmBuildResult(String[] cmdList) {
 		super(cmdList);
 		this.srpms = new HashSet<String>();
 	}
-	
+
 	/**
-	 * @param success the success to set
+	 * @param success
+	 *            the success to set
 	 */
 	public void setSuccessful(boolean success) {
 		this.success = success;
 	}
-	
+
 	/**
 	 * Collect SRPM related output in this result
 	 * 
 	 * @param line
+	 *            The output line from the command describing the location of
+	 *            the srpm.
 	 */
 	public void addSrpm(String line) {
 		// of the form "Wrote: path/to/src.rpm
 		this.srpms.add(line.split("\\s+")[1]); //$NON-NLS-1$
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.api.ICommandResult#wasSuccessful()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.fedoraproject.eclipse.packager.api.ICommandResult#wasSuccessful()
 	 */
 	@Override
 	public boolean isSuccessful() {
@@ -62,7 +69,7 @@ public class RpmBuildResult extends Result {
 	 *         none.
 	 */
 	public String getAbsoluteSRPMFilePath() {
-		for (String srpm: srpms) {
+		for (String srpm : srpms) {
 			return srpm; // there really should only be one
 		}
 		return null;

@@ -23,8 +23,8 @@ public class LocalProjectConversionFailedException extends
 	private static final long serialVersionUID = 9098621863061603960L;
 
 	/**
-	 * @param message
-	 * @param cause
+	 * @param message The message associated with this exception.
+	 * @param cause The Throwable that caused this exception.
 	 */
 	public LocalProjectConversionFailedException(String message,
 			Throwable cause) {

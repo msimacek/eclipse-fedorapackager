@@ -52,12 +52,12 @@ import org.fedoraproject.eclipse.packager.git.GitPreferencesConstants;
 import org.fedoraproject.eclipse.packager.git.GitUtils;
 import org.fedoraproject.eclipse.packager.utils.UiUtils;
 
-
 /**
  * Wizard to checkout package content from Fedora Git.
- *
+ * 
  */
-public class FedoraPackagerGitCloneWizard extends Wizard implements IImportWizard {
+public class FedoraPackagerGitCloneWizard extends Wizard implements
+		IImportWizard {
 
 	private SelectModulePage page;
 	private IStructuredSelection selection;
@@ -99,7 +99,8 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements IImportWizar
 		try {
 			IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
 			// Bail out if project already exists
-			IResource project = wsRoot.findMember(new Path(page.getPackageName()));
+			IResource project = wsRoot.findMember(new Path(page
+					.getPackageName()));
 			if (project != null && project.exists()) {
 				final String confirmOverwriteProjectMessage = NLS
 						.bind(FedoraPackagerGitText.FedoraPackagerGitCloneWizard_confirmOverwirteProjectExists,
@@ -113,8 +114,8 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements IImportWizar
 			}
 			// Make sure to be created directory does not exist or is
 			// empty
-			File newDir = new File(wsRoot.getLocation().toOSString() +
-			IPath.SEPARATOR + page.getPackageName() );
+			File newDir = new File(wsRoot.getLocation().toOSString()
+					+ IPath.SEPARATOR + page.getPackageName());
 			if (newDir.exists() && newDir.isDirectory()) {
 				String contents[] = newDir.list();
 				if (contents.length != 0) {
@@ -131,7 +132,8 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements IImportWizar
 
 			// prepare the clone op
 			final FedoraPackagerGitCloneOperation cloneOp = new FedoraPackagerGitCloneOperation();
-			cloneOp.setCloneURI(getGitCloneURL()).setPackageName(page.getPackageName());
+			cloneOp.setCloneURI(getGitCloneURL()).setPackageName(
+					page.getPackageName());
 			// Make sure we report a nice error if repo not found
 			try {
 				// Perform clone in ModalContext thread with progress
@@ -154,24 +156,28 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements IImportWizar
 				});
 			} catch (InvocationTargetException e) {
 				// if repo wasn't found make this apparent
-				if (e.getTargetException().getCause() instanceof NoRemoteRepositoryException ||
-						e.getTargetException().getCause() instanceof InvalidRemoteException) {
+				if (e.getTargetException().getCause() instanceof NoRemoteRepositoryException
+						|| e.getTargetException().getCause() instanceof InvalidRemoteException) {
 					// Refuse to clone, give user a chance to correct
 					final String errorMessage = NLS
 							.bind(FedoraPackagerGitText.FedoraPackagerGitCloneWizard_repositoryNotFound,
 									page.getPackageName());
 					cloneFailChecked(errorMessage);
 					return false; // let user correct
-				} else if (e.getTargetException().getCause().getCause() != null &&
-							e.getTargetException().getCause().getCause().getMessage() == "Auth fail"){ //$NON-NLS-1$
+				} else if (e.getTargetException().getCause().getCause() != null
+						&& e.getTargetException().getCause().getCause()
+								.getMessage() == "Auth fail") { //$NON-NLS-1$
 					cloneFailChecked(FedoraPackagerGitText.FedoraPackagerGitCloneWizard_authFail);
 					return false;
-				// Caused by: org.eclipse.jgit.errors.NotSupportedException: URI not supported: ssh:///jeraal@alkldal.test.comeclipse-callgraph.git
-				} else if (e.getTargetException().getCause() instanceof NotSupportedException ||
-							e.getTargetException().getCause() instanceof TransportException) {
+					// Caused by: org.eclipse.jgit.errors.NotSupportedException:
+					// URI not supported:
+					// ssh:///jeraal@alkldal.test.comeclipse-callgraph.git
+				} else if (e.getTargetException().getCause() instanceof NotSupportedException
+						|| e.getTargetException().getCause() instanceof TransportException) {
 					final String errorMessage = NLS
-					.bind(FedoraPackagerGitText.FedoraPackagerGitCloneWizard_badURIError,
-							Activator.getStringPreference(GitPreferencesConstants.PREF_CLONE_BASE_URL));
+							.bind(FedoraPackagerGitText.FedoraPackagerGitCloneWizard_badURIError,
+									Activator
+											.getStringPreference(GitPreferencesConstants.PREF_CLONE_BASE_URL));
 					cloneFailChecked(errorMessage);
 					return false; // let user correct
 				}
@@ -192,7 +198,8 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements IImportWizar
 			// Add new project to working sets, if requested
 			IWorkingSet[] workingSets = page.getWorkingSets();
 			if (workingSets.length > 0) {
-				PlatformUI.getWorkbench().getWorkingSetManager().addToWorkingSets(newProject, workingSets);
+				PlatformUI.getWorkbench().getWorkingSetManager()
+						.addToWorkingSets(newProject, workingSets);
 			}
 
 			// Finally ask if the Fedora Packaging perspective should be opened
@@ -200,54 +207,67 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements IImportWizar
 			UiUtils.openPerspective(getShell());
 			return true;
 		} catch (InterruptedException e) {
-			MessageDialog.openInformation(getShell(), FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail,
-					FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneCancel);
+			MessageDialog
+					.openInformation(
+							getShell(),
+							FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail,
+							FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneCancel);
 			return false;
 		} catch (CoreException e) {
-			org.fedoraproject.eclipse.packager.git.Activator.handleError(
-					FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail, e, true);
+			org.fedoraproject.eclipse.packager.git.Activator
+					.handleError(
+							FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail,
+							e, true);
 			return false;
 		} catch (InvocationTargetException e) {
-			org.fedoraproject.eclipse.packager.git.Activator.handleError(
-					FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail, e, true);
+			org.fedoraproject.eclipse.packager.git.Activator
+					.handleError(
+							FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail,
+							e, true);
 			return false;
 		} catch (URISyntaxException e) {
-			org.fedoraproject.eclipse.packager.git.Activator.handleError(
-					FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail, e, true);
+			org.fedoraproject.eclipse.packager.git.Activator
+					.handleError(
+							FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail,
+							e, true);
 			return false;
 		}
 	}
 
 	/**
-	 * Prompt for confirmation if a resource exists, either the project already exists,
-	 * or a folder exists in the workspace and would conflict with the newly created project.
-	 *
+	 * Prompt for confirmation if a resource exists, either the project already
+	 * exists, or a folder exists in the workspace and would conflict with the
+	 * newly created project.
+	 * 
 	 * @param errorMessage
+	 *            The error message to be displayed.
 	 * @return {@code true} if the user confirmed, {@code false} otherwise.
 	 */
 	private boolean confirmOverwriteQuestion(String errorMessage) {
-		QuestionMessageDialog op = new QuestionMessageDialog(FedoraPackagerGitText.FedoraPackagerGitCloneWizard_confirmDialogTitle,
-				errorMessage,
-				getShell());
+		QuestionMessageDialog op = new QuestionMessageDialog(
+				FedoraPackagerGitText.FedoraPackagerGitCloneWizard_confirmDialogTitle,
+				errorMessage, getShell());
 		Display.getDefault().syncExec(op);
 		return op.isOkPressed();
 	}
 
 	/**
 	 * Opens error dialog with provided reason in error message.
-	 *
-	 * @param errorMsg The error message to use.
+	 * 
+	 * @param errorMsg
+	 *            The error message to use.
 	 */
 	private void cloneFailChecked(String errorMsg) {
 		ErrorDialog
-		.openError(
-				getShell(),
-				getWindowTitle() + FedoraPackagerGitText.FedoraPackagerGitCloneWizard_problem,
-				FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail,
-				new Status(
-						IStatus.ERROR,
-						org.fedoraproject.eclipse.packager.git.Activator.PLUGIN_ID,
-						0, errorMsg, null));
+				.openError(
+						getShell(),
+						getWindowTitle()
+								+ FedoraPackagerGitText.FedoraPackagerGitCloneWizard_problem,
+						FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail,
+						new Status(
+								IStatus.ERROR,
+								org.fedoraproject.eclipse.packager.git.Activator.PLUGIN_ID,
+								0, errorMsg, null));
 	}
 
 	/**
@@ -256,10 +276,10 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements IImportWizar
 	 * <li>Use the Git base URL as set by the preference (if any) or</li>
 	 * <li>Check if ~/.fedora.cert is present, and if so retrieve the user name
 	 * from it.</li>
-	 * <li>If all else fails, or anonymous checkout is specified,
-	 * construct an anonymous clone URL</li>
+	 * <li>If all else fails, or anonymous checkout is specified, construct an
+	 * anonymous clone URL</li>
 	 * </ol>
-	 *
+	 * 
 	 * @return The full clone URL based on the package name.
 	 */
 	private String getGitCloneURL() {
@@ -267,7 +287,8 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements IImportWizar
 				.getStringPreference(GitPreferencesConstants.PREF_CLONE_BASE_URL);
 		if (gitBaseURL != null && !page.getCloneAnonymousButtonChecked()) {
 			return GitUtils.getFullGitURL(gitBaseURL, page.getPackageName());
-		} else if (!fasUserName.equals(FedoraSSL.UNKNOWN_USER) && !page.getCloneAnonymousButtonChecked()) {
+		} else if (!fasUserName.equals(FedoraSSL.UNKNOWN_USER)
+				&& !page.getCloneAnonymousButtonChecked()) {
 			return GitUtils.getFullGitURL(
 					GitUtils.getAuthenticatedGitBaseUrl(fasUserName),
 					page.getPackageName());

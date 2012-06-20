@@ -25,15 +25,15 @@ public class BodhiClientLoginException extends FedoraPackagerAPIException {
 	private HttpResponse response;
 	
 	/**
-	 * @param msg
-	 * @param cause
+	 * @param msg The message associated with this exception.
+	 * @param cause The Throwable that caused this exception.
 	 */
 	public BodhiClientLoginException(String msg, Throwable cause) {
 		super(msg, cause);
 	}
 	
 	/**
-	 * @param message
+	 * @param message The message associated with this exception.
 	 * @param response
 	 *            The HTTP response.
 	 */

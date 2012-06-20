@@ -22,8 +22,8 @@ public class UserNotInMockGroupException extends FedoraPackagerAPIException {
 	private static final long serialVersionUID = 7699978530785831168L;
 
 	/**
-	 * 
 	 * @param msg
+	 *            The message associated with this exception.
 	 */
 	public UserNotInMockGroupException(String msg) {
 		super(msg);

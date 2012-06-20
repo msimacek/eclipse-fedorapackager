@@ -31,10 +31,10 @@ public class ValidationJob implements IRunnableWithProgress {
 	
 	/**
 	 * 
-	 * @param jobName 
-	 * @param username
-	 * @param password
-	 * @param bodhiUrl
+	 * @param jobName The name of this job.
+	 * @param username The username used for login.
+	 * @param password The password used for login.
+	 * @param bodhiUrl The url of the Bodhi instance being used.
 	 */
 	public ValidationJob(String jobName, String username, String password, URL bodhiUrl) {
 		this.jobName = jobName;

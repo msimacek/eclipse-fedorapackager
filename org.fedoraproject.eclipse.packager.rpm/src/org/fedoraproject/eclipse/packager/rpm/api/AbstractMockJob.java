@@ -29,9 +29,8 @@ import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 
 /**
- * Superclass for mock jobs, which share the same
- * job listener.
- *
+ * Superclass for mock jobs, which share the same job listener.
+ * 
  */
 public abstract class AbstractMockJob extends Job {
 
@@ -39,20 +38,24 @@ public abstract class AbstractMockJob extends Job {
 	protected Shell shell;
 	protected IProjectRoot fpr;
 	protected BranchConfigInstance bci;
-	
+
 	/**
 	 * @param name
-	 * @param shell 
-	 * @param fedoraProjectRoot 
+	 *            The name of this job.
+	 * @param shell
+	 *            The shell the job is run in.
+	 * @param fedoraProjectRoot
+	 *            The root the job is run under.
 	 */
-	public AbstractMockJob(String name, Shell shell, IProjectRoot fedoraProjectRoot) {
+	public AbstractMockJob(String name, Shell shell,
+			IProjectRoot fedoraProjectRoot) {
 		super(name);
 		this.shell = shell;
 		this.fpr = fedoraProjectRoot;
 		this.bci = FedoraPackagerUtils.getVcsHandler(fedoraProjectRoot)
 				.getBranchConfig();
 	}
-	
+
 	/**
 	 * 
 	 * @return A job listener for the {@code done} event.
@@ -75,7 +78,8 @@ public abstract class AbstractMockJob extends Job {
 					return;
 				}
 				// Handle NPE case of the result when user is not in mock group
-				// of when mock is not installed. Just return in that case, since
+				// of when mock is not installed. Just return in that case,
+				// since
 				// The job will show appropriate messages to the user.
 				if (jobStatus.getSeverity() == IStatus.INFO
 						&& jobStatus.getException() != null
@@ -85,33 +89,39 @@ public abstract class AbstractMockJob extends Job {
 				}
 				if (result.isSuccessful()) {
 					logger.logDebug(NLS.bind(
-							RpmText.AbstractMockJob_mockSucceededMsg,
-							result.getResultDirectoryPath().getLocation().toFile().getAbsolutePath()));
+							RpmText.AbstractMockJob_mockSucceededMsg, result
+									.getResultDirectoryPath().getLocation()
+									.toFile().getAbsolutePath()));
 					showMessageDialog(NLS.bind(
 							RpmText.AbstractMockJob_mockSucceededMsgHTML,
-							result.getResultDirectoryPath().getFullPath().toOSString()));
+							result.getResultDirectoryPath().getFullPath()
+									.toOSString()));
 				} else {
 					logger.logDebug(NLS.bind(
-							RpmText.AbstractMockJob_mockFailedMsg,
-							result.getResultDirectoryPath().getLocation().toFile().getAbsolutePath()));
+							RpmText.AbstractMockJob_mockFailedMsg, result
+									.getResultDirectoryPath().getLocation()
+									.toFile().getAbsolutePath()));
 					showMessageDialog(NLS.bind(
-							RpmText.AbstractMockJob_mockFailedMsgHTML,
-							result.getResultDirectoryPath().getFullPath().toOSString()));
+							RpmText.AbstractMockJob_mockFailedMsgHTML, result
+									.getResultDirectoryPath().getFullPath()
+									.toOSString()));
 				}
 			}
 		};
 		return listener;
 	}
-	
+
 	/**
 	 * Helper method for showing the custom message dialog with a link to the
 	 * build result directory.
 	 * 
 	 * @param htmlMsg
+	 *            The pseudohtml String to be converted into a message displayed
+	 *            to the user.
 	 */
 	private void showMessageDialog(String htmlMsg) {
-		final LinkedMessageDialog messageDialog = new LinkedMessageDialog(shell, fpr
-				.getProductStrings().getProductName(), htmlMsg,
+		final LinkedMessageDialog messageDialog = new LinkedMessageDialog(
+				shell, fpr.getProductStrings().getProductName(), htmlMsg,
 				result.getResultDirectoryPath());
 		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
 			@Override

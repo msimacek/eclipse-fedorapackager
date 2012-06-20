@@ -40,13 +40,14 @@ import org.apache.xmlrpc.serializer.SerializableSerializer;
 /**
  * 
  * Type mapper for XMLRPC calls.
- *
+ * 
  */
 public class KojiTypeFactory extends TypeFactoryImpl {
 
 	/**
 	 * 
 	 * @param pController
+	 *            The controller used by this factory.
 	 */
 	public KojiTypeFactory(XmlRpcController pController) {
 		super(pController);

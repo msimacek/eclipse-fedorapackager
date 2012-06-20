@@ -58,7 +58,9 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 	 * Store session info in XMLRPC configuration.
 	 * 
 	 * @param sessionKey
+	 *            The key for the Koji session.
 	 * @param sessionID
+	 *            The ID for the Koji session.
 	 */
 	protected void saveSessionInfo(String sessionKey, String sessionID) {
 		try {
@@ -154,15 +156,16 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public KojiRepoInfo getRepo(String tag) throws KojiHubClientException{
+	public KojiRepoInfo getRepo(String tag) throws KojiHubClientException {
 		ArrayList<Object> params = new ArrayList<Object>();
 		params.add(tag);
 
 		HashMap<String, Object> result;
 		try {
-			result = (HashMap<String, Object>) xmlRpcClient.execute("getRepo", params); //$NON-NLS-1$
+			result = (HashMap<String, Object>) xmlRpcClient.execute(
+					"getRepo", params); //$NON-NLS-1$
 		} catch (XmlRpcException e) {
-			throw new KojiHubClientException (e);
+			throw new KojiHubClientException(e);
 		}
 
 		return new KojiRepoInfo(result);
@@ -267,7 +270,7 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 			throw new KojiHubClientException(e);
 		}
 	}
-	
+
 	@Override
 	public Set<String> listBuildTags() throws KojiHubClientException {
 		HashMap<?, ?> targets[] = this.listTargets();

@@ -14,7 +14,7 @@ import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 
 /**
  * Thrown if some error during a mock build occurred.
- *
+ * 
  */
 public class MockBuildCommandException extends FedoraPackagerAPIException {
 
@@ -22,14 +22,17 @@ public class MockBuildCommandException extends FedoraPackagerAPIException {
 
 	/**
 	 * @param msg
+	 *            The message associated with this exception.
 	 * @param cause
+	 *            The throwable that caused the exception to be thrown.
 	 */
 	public MockBuildCommandException(String msg, Throwable cause) {
 		super(msg, cause);
 	}
-	
+
 	/**
 	 * @param msg
+	 *            The message associated with this exception.
 	 */
 	public MockBuildCommandException(String msg) {
 		super(msg);

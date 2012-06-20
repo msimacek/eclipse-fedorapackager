@@ -24,15 +24,15 @@ public class BodhiClientException extends FedoraPackagerAPIException {
 	private static final long serialVersionUID = -2076679215232309371L;
 	
 	/**
-	 * @param msg
-	 * @param cause
+	 * @param msg The message associated with this exception.
+	 * @param cause The Throwable that caused this exception.
 	 */
 	public BodhiClientException(String msg, Throwable cause) {
 		super(msg, cause);
 	}
 	
 	/**
-	 * @param message
+	 * @param message The message associated with this exception.
 	 * @param response
 	 *            The HTTP response. Pass if some HTTP error occured. I.e.
 	 *            status code != 200.

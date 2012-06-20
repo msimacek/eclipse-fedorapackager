@@ -24,10 +24,9 @@ import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 /**
  * 
  * Abstract super class for dispatched keyboard shortcut handlers.
- *
+ * 
  */
-public abstract class LocalHandlerDispatcher extends
-		AbstractHandler {
+public abstract class LocalHandlerDispatcher extends AbstractHandler {
 
 	/**
 	 * Check if the underlying resource of the event has property
@@ -39,21 +38,27 @@ public abstract class LocalHandlerDispatcher extends
 	 * @param handler
 	 *            The handler to potentially dispatch to.
 	 * @throws ExecutionException
-	 * @return {@code true} if dispatched to passed handler, {@code false} otherwise.
+	 *             If handler fails to execute.
+	 * @return {@code true} if dispatched to passed handler, {@code false}
+	 *         otherwise.
 	 */
-	protected boolean checkDispatch(ExecutionEvent event, AbstractHandler handler) throws ExecutionException {
+	protected boolean checkDispatch(ExecutionEvent event,
+			AbstractHandler handler) throws ExecutionException {
 		IResource eventResource = FedoraHandlerUtils.getResource(event);
 		FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 		String nonLocalProperty;
 		try {
-			nonLocalProperty = eventResource.getProject().getPersistentProperty(PackagerPlugin.PROJECT_PROP);
+			nonLocalProperty = eventResource.getProject()
+					.getPersistentProperty(PackagerPlugin.PROJECT_PROP);
 		} catch (CoreException e) {
 			logger.logDebug(e.getMessage(), e);
 			return false; // can't continue
 		}
 		if (nonLocalProperty != null) {
 			// dispatch to non-local handler
-			logger.logDebug(NLS.bind(FedoraPackagerText.LocalHandlerDispatcher_dispatchToHandlerMsg, handler.getClass().getName()));
+			logger.logDebug(NLS
+					.bind(FedoraPackagerText.LocalHandlerDispatcher_dispatchToHandlerMsg,
+							handler.getClass().getName()));
 			// must always return null, so discard return value
 			handler.execute(event);
 			return true;
@@ -61,7 +66,7 @@ public abstract class LocalHandlerDispatcher extends
 		// no-op
 		return false;
 	}
-	
+
 	/**
 	 * 
 	 * @return The Handler to dispatch to if chechDispatch() returned true.

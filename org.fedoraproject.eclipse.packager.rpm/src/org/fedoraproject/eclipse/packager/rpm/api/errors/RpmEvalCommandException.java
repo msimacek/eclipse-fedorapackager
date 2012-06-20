@@ -16,7 +16,7 @@ import org.fedoraproject.eclipse.packager.rpm.api.RpmEvalCommand;
 
 /**
  * Thrown if {@link RpmEvalCommand} failed.
- *
+ * 
  */
 public class RpmEvalCommandException extends FedoraPackagerAPIException {
 
@@ -27,9 +27,10 @@ public class RpmEvalCommandException extends FedoraPackagerAPIException {
 
 	/**
 	 * @param cause
+	 *            The throwable that caused the exception to be thrown.
 	 */
 	public RpmEvalCommandException(Throwable cause) {
 		super(RpmText.RpmEvalCommandException_msg, cause);
 	}
-	
+
 }

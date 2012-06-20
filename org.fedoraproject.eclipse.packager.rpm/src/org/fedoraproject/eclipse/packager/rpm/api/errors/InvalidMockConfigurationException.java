@@ -21,8 +21,8 @@ public class InvalidMockConfigurationException extends FedoraPackagerAPIExceptio
 	private static final long serialVersionUID = -1807148158333426036L;
 	
 	/**
-	 * 
 	 * @param msg
+	 *            The message associated with this exception.
 	 */
 	public InvalidMockConfigurationException(String msg) {
 		super(msg);

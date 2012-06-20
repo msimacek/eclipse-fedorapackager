@@ -19,7 +19,7 @@ import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
 
 /**
  * Job checking for unpushed changes.
- *
+ * 
  */
 public class UnpushedChangesJob implements IRunnableWithProgress {
 
@@ -27,16 +27,18 @@ public class UnpushedChangesJob implements IRunnableWithProgress {
 	private boolean unpushedChanges = false;
 	private IProjectRoot fedoraProjectRoot;
 	private String jobName;
-	
+
 	/**
 	 * @param name
+	 *            The name of the job.
 	 * @param fedoraProjectRoot
+	 *            The root the job is run under.
 	 */
 	public UnpushedChangesJob(String name, IProjectRoot fedoraProjectRoot) {
 		this.jobName = name;
 		this.fedoraProjectRoot = fedoraProjectRoot;
 	}
-				
+
 	@Override
 	public void run(IProgressMonitor monitor) {
 		UnpushedChangesListener unpushedChangesListener = new UnpushedChangesListener(
@@ -51,7 +53,7 @@ public class UnpushedChangesJob implements IRunnableWithProgress {
 		}
 		monitor.done();
 	}
-	
+
 	/**
 	 * @return {@code true} if there were unpushed changes, {@code false}
 	 *         otherwise.
@@ -59,5 +61,5 @@ public class UnpushedChangesJob implements IRunnableWithProgress {
 	public boolean isUnpushedChanges() {
 		return this.unpushedChanges;
 	}
-				
+
 }

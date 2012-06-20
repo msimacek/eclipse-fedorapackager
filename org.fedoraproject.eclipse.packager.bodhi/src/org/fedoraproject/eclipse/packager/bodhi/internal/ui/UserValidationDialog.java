@@ -67,18 +67,19 @@ public class UserValidationDialog extends TrayDialog {
 	 * @param defaultUserName
 	 *            The default user name
 	 * @param defaultPassword
-	 *            The default password. 
+	 *            The default password.
 	 * @param message
 	 *            A message to display to the user.
-	 * @param pathToImage 
-	 * 	          Path to image icon.
-	 * @param errorMessage An error message to be shown to the user.
+	 * @param pathToImage
+	 *            Path to image icon.
+	 * @param errorMessage
+	 *            An error message to be shown to the user.
 	 */
 	public UserValidationDialog(Shell parentShell, URL bodhiInstanceUrl,
 			String defaultUserName, String defaultPassword, String message,
 			String pathToImage, String errorMessage) {
-		this(parentShell, bodhiInstanceUrl, defaultUserName, defaultPassword, message,
-				pathToImage, errorMessage, true);
+		this(parentShell, bodhiInstanceUrl, defaultUserName, defaultPassword,
+				message, pathToImage, errorMessage, true);
 	}
 
 	/**
@@ -91,11 +92,13 @@ public class UserValidationDialog extends TrayDialog {
 	 * @param defaultName
 	 *            the default user name
 	 * @param defaultPassword
+	 *            the default password
 	 * @param message
 	 *            a message to display to the user
 	 * @param pathToImage
 	 *            Path to the image icon.
-	 * @param errorMessage An error message to be shown to the user.
+	 * @param errorMessage
+	 *            An error message to be shown to the user.
 	 * @param cachingCheckbox
 	 *            a flag to show the allowCachingButton
 	 */
@@ -181,8 +184,7 @@ public class UserValidationDialog extends TrayDialog {
 		Label lblErrorMessage = new Label(main, SWT.WRAP);
 		lblErrorMessage.setText(errorMessage);
 		lblErrorMessage.setForeground(getColor(SWT.COLOR_RED));
-		data = new GridData(GridData.FILL_HORIZONTAL
-				| GridData.GRAB_HORIZONTAL);
+		data = new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL);
 		data.horizontalSpan = 3;
 		data.widthHint = 300;
 		lblErrorMessage.setLayoutData(data);
@@ -239,7 +241,8 @@ public class UserValidationDialog extends TrayDialog {
 	 *            the parent of the widgets
 	 */
 	protected void createPasswordFields(Composite parent) {
-		new Label(parent, SWT.NONE).setText(BodhiText.UserValidationDialog_password);
+		new Label(parent, SWT.NONE)
+				.setText(BodhiText.UserValidationDialog_password);
 
 		passwordField = new Text(parent, SWT.BORDER | SWT.PASSWORD);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
@@ -255,7 +258,8 @@ public class UserValidationDialog extends TrayDialog {
 	 *            the parent of the widgets
 	 */
 	protected void createUsernameFields(Composite parent) {
-		new Label(parent, SWT.NONE).setText(BodhiText.UserValidationDialog_username);
+		new Label(parent, SWT.NONE)
+				.setText(BodhiText.UserValidationDialog_username);
 
 		usernameField = new Text(parent, SWT.BORDER);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
@@ -330,7 +334,7 @@ public class UserValidationDialog extends TrayDialog {
 		}
 		return super.close();
 	}
-	
+
 	protected Color getColor(int systemColorID) {
 		Display display = Display.getCurrent();
 		return display.getSystemColor(systemColorID);

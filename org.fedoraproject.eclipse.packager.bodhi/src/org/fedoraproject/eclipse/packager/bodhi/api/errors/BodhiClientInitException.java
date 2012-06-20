@@ -21,8 +21,8 @@ public class BodhiClientInitException extends FedoraPackagerAPIException {
 	private static final long serialVersionUID = -5959602555911802342L;
 	
 	/**
-	 * @param msg
-	 * @param cause
+	 * @param msg The message associated with this exception.
+	 * @param cause The Throwable that caused this exception.
 	 */
 	public BodhiClientInitException(String msg, Throwable cause) {
 		super(msg, cause);

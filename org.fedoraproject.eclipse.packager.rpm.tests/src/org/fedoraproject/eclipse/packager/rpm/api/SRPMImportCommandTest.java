@@ -28,7 +28,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.InitCommand;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
@@ -52,7 +51,7 @@ import org.osgi.framework.FrameworkUtil;
 
 public class SRPMImportCommandTest implements
 		ISRPMImportCommandSLLPolicyCallback {
-	
+
 	private static final String MOCK_DOWNLOAD_FILE = "resources/eclipse-mylyn-tasks-R_3_7_0-fetched-src.tar.bz2"; //$NON-NLS-1$
 
 	// project under test
@@ -66,7 +65,7 @@ public class SRPMImportCommandTest implements
 	private File mockDownloadFile;
 
 	@Before
-	public void setup() throws IOException, GitAPIException, CoreException {
+	public void setup() throws IOException, CoreException {
 		String exampleGitdirPath = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(MOCK_DOWNLOAD_FILE), null)).getFile();
@@ -109,33 +108,35 @@ public class SRPMImportCommandTest implements
 
 	@Test
 	public void canImportSRPM() throws SRPMImportCommandException,
-			InvalidProjectRootException, GitAPIException, IOException,
-			CoreException, FedoraPackagerCommandInitializationException,
+			InvalidProjectRootException, IOException, CoreException,
+			FedoraPackagerCommandInitializationException,
 			SourcesUpToDateException, DownloadFailedException,
 			CommandMisconfiguredException, CommandListenerException {
 
-		SRPMImportCommand srpmImport = new SRPMImportCommand(
-				srpmPath, testProject, testProject, uploadURLForTesting, this){
+		SRPMImportCommand srpmImport = new SRPMImportCommand(srpmPath,
+				testProject, testProject, uploadURLForTesting, this) {
 			@Override
 			protected UploadSourceCommand getUploadSourceCommand() {
 				return new UploadSourceCommand() {
 					@Override
-					public UploadSourceResult call(IProgressMonitor subMonitor) throws CommandListenerException {
+					public UploadSourceResult call(IProgressMonitor subMonitor)
+							throws CommandListenerException {
 						callPreExecListeners();
 						callPostExecListeners();
 						return null;
 					}
-					
+
 					@Override
-					public UploadSourceCommand setUploadURL(String uploadURL){
+					public UploadSourceCommand setUploadURL(String uploadURL) {
 						return this;
 					}
 				};
 			}
 		};
-		
+
 		SRPMImportResult result = srpmImport.call(new NullProgressMonitor());
-		final IProjectRoot fpr = FedoraPackagerUtils.getProjectRoot(testProject);
+		final IProjectRoot fpr = FedoraPackagerUtils
+				.getProjectRoot(testProject);
 
 		assertTrue(fpr.getContainer().getLocation()
 				.append("/redhat-bugzilla-custom-transitions.txt").toFile() //$NON-NLS-1$
@@ -160,12 +161,16 @@ public class SRPMImportCommandTest implements
 		assertTrue(!fpr.getContainer().getLocation()
 				.append("/eclipse-mylyn-tasks-R_3_7_0-fetched-src.tar.bz2") //$NON-NLS-1$
 				.toFile().exists());
-		
-		DownloadSourceCommand download = new DownloadSourceCommand(){
+
+		DownloadSourceCommand download = new DownloadSourceCommand() {
 			@Override
-			protected void download(IProgressMonitor subMonitor, IFile fileToDownload, java.net.URL fileURL) throws IOException, CoreException {
-				TestsUtils.copyFileContents(mockDownloadFile, new File(fileToDownload.getParent().getLocationURI()), false);
-				fpr.getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+			protected void download(IProgressMonitor subMonitor,
+					IFile fileToDownload, java.net.URL fileURL)
+					throws IOException, CoreException {
+				TestsUtils.copyFileContents(mockDownloadFile, new File(
+						fileToDownload.getParent().getLocationURI()), false);
+				fpr.getProject().refreshLocal(IResource.DEPTH_INFINITE,
+						new NullProgressMonitor());
 			};
 		};
 		download.initialize(fpr);

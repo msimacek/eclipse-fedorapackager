@@ -38,13 +38,15 @@ public class FedoraPackagerGitCloneOperation {
 
 	/**
 	 * Set the URI to use for the clone.
-	 *
+	 * 
 	 * @param cloneUri
+	 *            The uri location to clone the git repository from.
 	 * @return This instance.
 	 * @throws URISyntaxException
 	 *             If the provided URL was invalid.
 	 */
-	public FedoraPackagerGitCloneOperation setCloneURI(String cloneUri) throws URISyntaxException {
+	public FedoraPackagerGitCloneOperation setCloneURI(String cloneUri)
+			throws URISyntaxException {
 		uri = new URIish(cloneUri);
 		if (packageName != null) {
 			// ready to run
@@ -53,11 +55,11 @@ public class FedoraPackagerGitCloneOperation {
 		return this;
 	}
 
-
 	/**
 	 * Set the package name to use for cloning.
-	 *
+	 * 
 	 * @param packageName
+	 *            The name of the package the repo contains.
 	 * @return This instance.
 	 */
 	public FedoraPackagerGitCloneOperation setPackageName(String packageName) {
@@ -70,14 +72,20 @@ public class FedoraPackagerGitCloneOperation {
 
 	/**
 	 * Execute the clone including local branch name creation.
-	 *
+	 * 
 	 * @param monitor
+	 *            The monitor to show progress.
 	 * @throws InvocationTargetException
+	 *             If the clone command fails to run.
 	 * @throws InterruptedException
+	 *             If the clone command is interrupted or the operation is
+	 *             canceled.
 	 * @throws IOException
+	 *             If the cloned repository could not be accessed.
 	 * @return A Git API instance.
 	 */
-	public Git run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException, IOException {
+	public Git run(IProgressMonitor monitor) throws InvocationTargetException,
+			InterruptedException, IOException {
 		if (!runnable || hasRun) {
 			throw new IllegalStateException(
 					NLS.bind(
@@ -96,14 +104,15 @@ public class FedoraPackagerGitCloneOperation {
 
 		// Find repo we've just created and set gitRepo
 		RepositoryCache repoCache = org.eclipse.egit.core.Activator
-		.getDefault().getRepositoryCache();
+				.getDefault().getRepositoryCache();
 		Git git = new Git(repoCache.lookupRepository(clone.getGitDir()));
 
 		GitUtils.createLocalBranches(git, monitor);
 
 		// Add cloned repository to the list of Git repositories so that it
 		// shows up in the Git repositories view.
-		final RepositoryUtil config = org.eclipse.egit.core.Activator.getDefault().getRepositoryUtil();
+		final RepositoryUtil config = org.eclipse.egit.core.Activator
+				.getDefault().getRepositoryUtil();
 		config.addConfiguredRepository(clone.getGitDir());
 
 		this.hasRun = true; // disallow two runs of the same instance

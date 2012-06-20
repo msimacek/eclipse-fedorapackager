@@ -30,20 +30,21 @@ import org.fedoraproject.eclipse.packager.koji.KojiText;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
 
 /**
- * Koji hub client which uses certificate based
- * authentication (SSL).
+ * Koji hub client which uses certificate based authentication (SSL).
  */
 public class KojiSSLHubClient extends AbstractKojiHubBaseClient {
-	
+
 	/**
-	 * @param kojiHubUrl The koji hub URL to use.
+	 * @param kojiHubUrl
+	 *            The koji hub URL to use.
 	 * 
 	 * @throws MalformedURLException
+	 *             If the url String does not conform to url specifications.
 	 */
 	public KojiSSLHubClient(String kojiHubUrl) throws MalformedURLException {
 		super(kojiHubUrl);
 	}
-	
+
 	/**
 	 * SSL implementation of XMLRPC based login()
 	 * 
@@ -73,9 +74,8 @@ public class KojiSSLHubClient extends AbstractKojiHubBaseClient {
 		}
 		HashMap<?, ?> loginSessionInfo = doSslLogin();
 		// save session info in xmlrpc config
-		saveSessionInfo(
-				(String) loginSessionInfo.get("session-key"), //$NON-NLS-1$
-				((Integer)loginSessionInfo.get("session-id")).toString()); //$NON-NLS-1$
+		saveSessionInfo((String) loginSessionInfo.get("session-key"), //$NON-NLS-1$
+				((Integer) loginSessionInfo.get("session-id")).toString()); //$NON-NLS-1$
 		return loginSessionInfo;
 	}
 
@@ -116,7 +116,8 @@ public class KojiSSLHubClient extends AbstractKojiHubBaseClient {
 	/**
 	 * Initialize SSL connection
 	 */
-	protected void initSSLConnection() throws FileNotFoundException, GeneralSecurityException, IOException {
+	protected void initSSLConnection() throws FileNotFoundException,
+			GeneralSecurityException, IOException {
 		// Create empty HostnameVerifier
 		HostnameVerifier hv = new HostnameVerifier() {
 			@Override
@@ -126,21 +127,23 @@ public class KojiSSLHubClient extends AbstractKojiHubBaseClient {
 		};
 		SSLContext ctxt = null;
 		// may throw exceptions (dealt with in login())
- 	    ctxt = getInitializedSSLContext();
+		ctxt = getInitializedSSLContext();
 		// set up the proper socket
 		HttpsURLConnection.setDefaultSSLSocketFactory(ctxt.getSocketFactory());
 		HttpsURLConnection.setDefaultHostnameVerifier(hv);
 	}
-	
+
 	/**
 	 * As of 2011-02-08 we need to use a different URL for SSL login. This
 	 * method sets the server URL appropriately.
 	 * 
 	 * @throws KojiHubClientLoginException
+	 *             If config is not found.
 	 */
 	private void setupSSLLoginXMLRPCConfig() throws KojiHubClientLoginException {
 		if (this.xmlRpcConfig == null) {
-			throw new KojiHubClientLoginException(KojiText.xmlRPCconfigNotInitialized);
+			throw new KojiHubClientLoginException(
+					KojiText.xmlRPCconfigNotInitialized);
 		}
 		URL sslLoginUrl = null;
 		try {
@@ -151,5 +154,5 @@ public class KojiSSLHubClient extends AbstractKojiHubBaseClient {
 		}
 		this.xmlRpcConfig.setServerURL(sslLoginUrl);
 	}
-	
+
 }

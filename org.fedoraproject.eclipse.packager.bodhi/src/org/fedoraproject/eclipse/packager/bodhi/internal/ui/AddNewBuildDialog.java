@@ -31,20 +31,23 @@ public class AddNewBuildDialog extends InputDialog {
 	 * Create the dialog.
 	 * 
 	 * @param parent
+	 *            The shell the dialog is to be opened in.
 	 */
 	public AddNewBuildDialog(Shell parent) {
-		super(parent, BodhiText.AddNewBuildDialog_addAnotherBuild, BodhiText.AddNewBuildDialog_packageBuildsLbl, "", new IInputValidator() {
-			
-			@Override
-			public String isValid(String newText) {
-				Pattern pattern = Pattern.compile(BUILDS_REGEX);
-				Matcher matcher = pattern.matcher(newText);
-				if (!matcher.matches()) {
-					return BodhiText.AddNewBuildDialog_buildsFormatErrorMsg;
-				}
-				return null;
-			}
-		});
+		super(parent, BodhiText.AddNewBuildDialog_addAnotherBuild,
+				BodhiText.AddNewBuildDialog_packageBuildsLbl, "",
+				new IInputValidator() {
+
+					@Override
+					public String isValid(String newText) {
+						Pattern pattern = Pattern.compile(BUILDS_REGEX);
+						Matcher matcher = pattern.matcher(newText);
+						if (!matcher.matches()) {
+							return BodhiText.AddNewBuildDialog_buildsFormatErrorMsg;
+						}
+						return null;
+					}
+				});
 	}
 
 	/**

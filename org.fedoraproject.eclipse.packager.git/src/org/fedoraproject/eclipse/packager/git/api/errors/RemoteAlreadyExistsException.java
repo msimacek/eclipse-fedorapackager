@@ -11,15 +11,15 @@ public class RemoteAlreadyExistsException extends FedoraPackagerAPIException {
 	private static final long serialVersionUID = 5372585618816074471L;
 	
 	/**
-	 * @param message
-	 * @param cause
+	 * @param message The message associated with this exception.
+	 * @param cause The Throwable that caused this exception.
 	 */
 	public RemoteAlreadyExistsException(String message,	Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
-	 * @param message
+	 * @param message The message associated with this exception.
 	 */
 	public RemoteAlreadyExistsException(String message) {
 		super(message);

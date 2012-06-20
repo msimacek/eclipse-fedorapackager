@@ -34,7 +34,9 @@ public class MockUtils {
 	 * run a mock build.
 	 * 
 	 * @throws UserNotInMockGroupException
+	 *             If user is not in usergroup 'mock'.
 	 * @throws MockBuildCommandException
+	 *             If command fails for an unexpected reason.
 	 */
 	public static void checkMockGroupMembership()
 			throws UserNotInMockGroupException, MockBuildCommandException {
@@ -71,6 +73,7 @@ public class MockUtils {
 	 * Convenience method to convert the command list into a String.
 	 * 
 	 * @param cmdList
+	 *            The command and arguments as a list of Strings.
 	 * @return The command list in String format.
 	 */
 	public static String convertCLICmd(String[] cmdList) {
@@ -92,13 +95,15 @@ public class MockUtils {
 	 *            The location on the system on which to run the command.
 	 * @return The return code of the process.
 	 * @throws IOException
+	 *             If the command running process cannot be built.
 	 * @throws InterruptedException
+	 *             If the command is interrupted when run.
 	 */
 	public static int runCommand(String[] command, Observer[] observers,
 			File location) throws IOException, InterruptedException {
 		ProcessBuilder pBuilder = new ProcessBuilder(command);
 		pBuilder = pBuilder.redirectErrorStream(true);
-		if (location != null){
+		if (location != null) {
 			pBuilder.directory(location);
 		}
 		Process child;

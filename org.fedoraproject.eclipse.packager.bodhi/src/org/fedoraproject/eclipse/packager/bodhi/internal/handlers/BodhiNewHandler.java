@@ -88,7 +88,7 @@ public class BodhiNewHandler extends AbstractHandler {
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		// Need to have shell variable on heap not on a thread's stack.
 		// Hence, the instance variable "shell".
-		shell =  HandlerUtil.getActiveShellChecked(event);
+		shell = HandlerUtil.getActiveShellChecked(event);
 		// May set the bodhi URL via system property
 		bodhiUrl = getBodhiUrl();
 		try {
@@ -158,7 +158,7 @@ public class BodhiNewHandler extends AbstractHandler {
 			final IFpProjectBits projectBits = FedoraPackagerUtils
 					.getVcsHandler(projectRoot);
 			String nvr = RPMUtils.getNVR(projectRoot,
-						projectBits.getBranchConfig());
+					projectBits.getBranchConfig());
 			final String[] selectedBuild = { nvr };
 
 			// open update dialog
@@ -330,6 +330,7 @@ public class BodhiNewHandler extends AbstractHandler {
 	 * Get user validation dialog.
 	 * 
 	 * @param errorMessage
+	 *            The error message to display.
 	 * 
 	 * @return The user validation dialog.
 	 */
@@ -440,7 +441,7 @@ public class BodhiNewHandler extends AbstractHandler {
 				try {
 					root = FedoraPackagerUtils.getProjectRoot(fedoraProject);
 					String nvr = RPMUtils.getNVR(root, FedoraPackagerUtils
-								.getVcsHandler(root).getBranchConfig());
+							.getVcsHandler(root).getBranchConfig());
 					nvrs.add(nvr);
 				} catch (InvalidProjectRootException e) {
 					// skip

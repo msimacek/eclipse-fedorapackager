@@ -46,8 +46,11 @@ public class SRPMBuildJob extends Job {
 
 	/**
 	 * @param jobName
+	 *            The name of the job.
 	 * @param rpmBuild
+	 *            The build command being used by this job.
 	 * @param fedoraProjectRoot
+	 *            The project root the job is run under.
 	 */
 	public SRPMBuildJob(String jobName, RpmBuildCommand rpmBuild,
 			IProjectRoot fedoraProjectRoot) {

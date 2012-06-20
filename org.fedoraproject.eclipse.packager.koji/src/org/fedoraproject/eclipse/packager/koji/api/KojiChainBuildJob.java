@@ -60,6 +60,9 @@ public class KojiChainBuildJob extends KojiBuildJob {
 	 * @param kojiInfo
 	 *            The information for the server being used.
 	 * @param sourceLocations
+	 *            A list of lists of package source urls such that packages in
+	 *            the same list in parallel and sublists are built in the order
+	 *            they appear in the main list.
 	 */
 	public KojiChainBuildJob(String name, Shell shell, IProjectRoot[] fprs,
 			String[] kojiInfo, List<List<String>> sourceLocations) {

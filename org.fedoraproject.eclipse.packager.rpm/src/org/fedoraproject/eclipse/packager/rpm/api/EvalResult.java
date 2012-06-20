@@ -20,8 +20,8 @@ public class EvalResult extends Result {
 	private String evalResult;
 	
 	/**
-	 * @param cmdList 
-	 * @param result
+	 * @param cmdList The command that was run.
+	 * @param result The result String of the eval.
 	 */
 	public EvalResult(String[] cmdList, String result) {
 		super(cmdList);

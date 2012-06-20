@@ -26,7 +26,6 @@ import org.eclipse.jgit.lib.Ref;
 import org.fedoraproject.eclipse.packager.FedoraSSL;
 import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
 
-
 /**
  * Utility class for Fedora Git related things.
  */
@@ -34,7 +33,9 @@ public class GitUtils {
 
 	/**
 	 * @param gitBaseUrl
+	 *            The url of the git host.
 	 * @param packageName
+	 *            The name of the package that the remote repo contains.
 	 * @return The full clone URL for the given package.
 	 */
 	public static String getFullGitURL(String gitBaseUrl, String packageName) {
@@ -51,6 +52,7 @@ public class GitUtils {
 
 	/**
 	 * @param username
+	 *            The username used for SSH authentication.
 	 * @return The SSH base URL to clone from.
 	 */
 	public static String getAuthenticatedGitBaseUrl(String username) {
@@ -61,7 +63,7 @@ public class GitUtils {
 
 	/**
 	 * Determine the default Git base URL for cloning. Based on ~/.fedora.cert
-	 *
+	 * 
 	 * @return The default Git base URL for cloning.
 	 */
 	public static String getDefaultGitBaseUrl() {
@@ -78,12 +80,15 @@ public class GitUtils {
 
 	/**
 	 * Create local branches based on existing remotes (uses the JGit API).
-	 *
+	 * 
 	 * @param git
+	 *            The JGit api access for the desired repo.
 	 * @param monitor
+	 *            The monitor to show progress.
 	 */
 	public static void createLocalBranches(Git git, IProgressMonitor monitor) {
-		monitor.beginTask(FedoraPackagerGitText.FedoraPackagerGitCloneWizard_createLocalBranchesJob,
+		monitor.beginTask(
+				FedoraPackagerGitText.FedoraPackagerGitCloneWizard_createLocalBranchesJob,
 				IProgressMonitor.UNKNOWN);
 		try {
 			// get a list of remote branches

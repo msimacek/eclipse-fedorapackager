@@ -70,6 +70,7 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 	 * Set the mock config.
 	 * 
 	 * @param mockConfig
+	 *            The name of the configuration for this build.
 	 * @return This instance.
 	 * @throws InvalidMockConfigurationException
 	 *             If the config was invalid.
@@ -240,7 +241,7 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 	/**
 	 * Get a default mock config for the configured build architecture.
 	 * 
-	 * @return
+	 * @return The configuration name.
 	 */
 	private String getDefaultMockcfg() {
 		assert this.mockConfig == null;
@@ -316,6 +317,7 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 	 * /etc/mock
 	 * 
 	 * @param candidate
+	 *            The name of the candidate config.
 	 * @return {@code true} if the mock config exists on the local system for
 	 *         the given string, {@code false} otherwise.
 	 */

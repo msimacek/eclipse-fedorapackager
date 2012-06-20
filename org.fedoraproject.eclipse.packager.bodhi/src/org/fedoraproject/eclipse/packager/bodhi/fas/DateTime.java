@@ -15,16 +15,17 @@ import java.util.TimeZone;
 
 /**
  * Date time class used for JSON deserialization.
- *
+ * 
  */
 public class DateTime {
-	
+
 	private Timestamp time;
 	private String originalString;
 	private TimeZone timezone;
-	
+
 	/**
-	 * @param serializedJSON A the JSON string to parse from.
+	 * @param serializedJSON
+	 *            A the JSON string to parse from.
 	 */
 	public DateTime(String serializedJSON) {
 		this.originalString = serializedJSON;
@@ -36,12 +37,13 @@ public class DateTime {
 	 * Set the values from the String.
 	 * 
 	 * @param serializedJSON
+	 *            A the JSON string to parse from.
 	 */
 	private void parseFromJson(String serializedJSON) {
 		int plusIndex = serializedJSON.indexOf("+");
 		String time = serializedJSON.substring(0, plusIndex);
 		String timeShift = serializedJSON.substring(plusIndex + 1);
-		timezone = TimeZone.getTimeZone("UTC+"  + timeShift);
+		timezone = TimeZone.getTimeZone("UTC+" + timeShift);
 		this.time = Timestamp.valueOf(time);
 	}
 
@@ -58,7 +60,7 @@ public class DateTime {
 	public Timestamp getTime() {
 		return time;
 	}
-	
+
 	/**
 	 * @return the time zone.
 	 */

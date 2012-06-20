@@ -22,12 +22,12 @@ import org.osgi.framework.BundleContext;
  */
 public class Activator extends AbstractUIPlugin {
 
-	/** The symbolic ID of the plugin	 */
+	/** The symbolic ID of the plugin */
 	public static final String PLUGIN_ID = "org.fedoraproject.eclipse.packager.git"; //$NON-NLS-1$
 
 	// The shared instance
 	private static Activator plugin;
-	
+
 	/**
 	 * The constructor
 	 */
@@ -36,7 +36,10 @@ public class Activator extends AbstractUIPlugin {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
+	 * 
+	 * @see
+	 * org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext
+	 * )
 	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -46,7 +49,10 @@ public class Activator extends AbstractUIPlugin {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
+	 * 
+	 * @see
+	 * org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext
+	 * )
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
@@ -56,20 +62,23 @@ public class Activator extends AbstractUIPlugin {
 
 	/**
 	 * Returns the shared instance
-	 *
+	 * 
 	 * @return the shared instance
 	 */
 	public static Activator getDefault() {
 		return plugin;
 	}
-	
+
 	/**
 	 * Handle an error. The error is logged. If <code>show</code> is
 	 * <code>true</code> the error is shown to the user.
-	 *
-	 * @param message 		a localized message
+	 * 
+	 * @param message
+	 *            a localized message
 	 * @param throwable
+	 *            the error or exception being thrown
 	 * @param show
+	 *            true if throwable is shown to user, false otherwise
 	 */
 	public static void handleError(String message, Throwable throwable,
 			boolean show) {
@@ -80,9 +89,10 @@ public class Activator extends AbstractUIPlugin {
 			style |= StatusManager.SHOW;
 		StatusManager.getManager().handle(status, style);
 	}
-	
+
 	/**
 	 * @param prefKey
+	 *            The key for the Eclipse plugin preference being retrieved.
 	 * @return The set preference for the given key or {@code null} if not set.
 	 */
 	public static String getStringPreference(String prefKey) {
@@ -94,13 +104,14 @@ public class Activator extends AbstractUIPlugin {
 		return candidate;
 	}
 
-	/** 
-	 * Initializes a preference store with default preference values 
-	 * for this plug-in.
+	/**
+	 * Initializes a preference store with default preference values for this
+	 * plug-in.
 	 */
 	@Override
 	protected void initializeDefaultPreferences(IPreferenceStore store) {
-		store.setDefault(GitPreferencesConstants.PREF_CLONE_BASE_URL, GitUtils.getDefaultGitBaseUrl());
+		store.setDefault(GitPreferencesConstants.PREF_CLONE_BASE_URL,
+				GitUtils.getDefaultGitBaseUrl());
 	}
 
 }

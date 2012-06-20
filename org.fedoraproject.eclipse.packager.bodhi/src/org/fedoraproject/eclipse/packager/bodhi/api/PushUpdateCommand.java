@@ -21,7 +21,7 @@ import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientLoginExcep
 
 /**
  * Command for pushing an update to Bodhi
- *
+ * 
  */
 public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 
@@ -45,18 +45,17 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 	 * Default suggestion of reboot: {@code false}
 	 */
 	public static final boolean DEFAULT_SUGGEST_REBOOT = false;
-	
+
 	/**
 	 * The unique ID of this command.
 	 */
 	public static final String ID = "PushUpdateCommand"; //$NON-NLS-1$
-	
+
 	private BodhiClient client;
 	private String[] builds; // the list of builds for the update
-	private String release;  // the Fedora release for the update
+	private String release; // the Fedora release for the update
 	/*
-	 * A comma-separated list of bugs which should get closed with
-	 * this update.
+	 * A comma-separated list of bugs which should get closed with this update.
 	 */
 	private String bugs;
 	/*
@@ -84,15 +83,15 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 	private boolean closeBugsWhenStable = DEFAULT_CLOSE_BUGS_WHEN_STABLE;
 	private String username;
 	private String password;
-	
+
 	/**
 	 * Use this if no bugs should get changed with this update.
 	 */
 	public static final String NO_BUGS = ""; //$NON-NLS-1$
-	
+
 	/**
 	 * The type of the update.
-	 *
+	 * 
 	 */
 	public static enum UpdateType {
 		/**
@@ -112,10 +111,10 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 		 */
 		NEWPACKAGE
 	}
-	
+
 	/**
 	 * The request type of the update.
-	 *
+	 * 
 	 */
 	public static enum RequestType {
 		/**
@@ -155,7 +154,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * Into which repo should this update get tagged?
 	 * 
@@ -177,7 +176,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 		}
 		return this;
 	}
-	
+
 	/**
 	 * A list of bugs which this update may address.
 	 * 
@@ -190,7 +189,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 		this.bugs = bugs;
 		return this;
 	}
-	
+
 	/**
 	 * The Fedora release for which the update should get pushed.
 	 * 
@@ -202,7 +201,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 		this.release = release;
 		return this;
 	}
-	
+
 	/**
 	 * The list of builds (NVR's) which should be included in this update.
 	 * Required.
@@ -215,29 +214,31 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 		this.builds = builds;
 		return this;
 	}
-	
+
 	/**
 	 * The client to be used. Required.
 	 * 
-	 * @param client A bodhi client.
+	 * @param client
+	 *            A bodhi client.
 	 * @return this instance.
 	 */
 	public PushUpdateCommand client(BodhiClient client) {
 		this.client = client;
 		return this;
 	}
-	
+
 	/**
 	 * Set the advisory comment for the update. Required and may not be empty.
 	 * 
-	 * @param comment The advisory comment.
+	 * @param comment
+	 *            The advisory comment.
 	 * @return this instance.
 	 */
 	public PushUpdateCommand comment(String comment) {
 		this.comment = comment;
 		return this;
 	}
-	
+
 	/**
 	 * Sets if a reboot will be suggested after a user installs this update.
 	 * Optional.
@@ -251,7 +252,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 		this.suggestReboot = newValue;
 		return this;
 	}
-	
+
 	/**
 	 * Set this to true if you wish that Karma automatism should be used.
 	 * Optional.
@@ -265,31 +266,33 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 		this.suggestReboot = newValue;
 		return this;
 	}
-	
+
 	/**
 	 * Sets the stable Karma threshold for the next call(). This requires
 	 * enableAutoKarma to be set to {@code true}, which is the default.
 	 * 
 	 * @param newThreshold
+	 *            The Karma threshold for pushing the update to stable.
 	 * @return this instance
 	 */
 	public PushUpdateCommand stableKarmaThreshold(int newThreshold) {
 		this.stableKarmaThreshold = newThreshold;
 		return this;
 	}
-	
+
 	/**
-	 * Sets the unstable/unpushing Karma thresold for the next call(). This requires
-	 * enableAutoKarma to be set to {@code true}, which is the default.
+	 * Sets the unstable/unpushing Karma thresold for the next call(). This
+	 * requires enableAutoKarma to be set to {@code true}, which is the default.
 	 * 
 	 * @param newThreshold
+	 *            The Karma threshold for marking the update as unstable.
 	 * @return this instance
 	 */
 	public PushUpdateCommand unstableKarmaThreshold(int newThreshold) {
 		this.unpushKarmaThreshold = newThreshold;
 		return this;
 	}
-	
+
 	/**
 	 * Boolean flag which sets if associated bugs should get closed when the
 	 * update becomes stable.
@@ -302,11 +305,14 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 		this.closeBugsWhenStable = newValue;
 		return this;
 	}
-	
+
 	/**
 	 * Sets the username/password combination for the update push.
-	 * @param username The username
-	 * @param password The password
+	 * 
+	 * @param username
+	 *            The username
+	 * @param password
+	 *            The password
 	 * @return this instance
 	 */
 	public PushUpdateCommand usernamePassword(String username, String password) {
@@ -314,10 +320,12 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 		this.password = password;
 		return this;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#checkConfiguration()
+	 * 
+	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#
+	 * checkConfiguration()
 	 */
 	@Override
 	protected void checkConfiguration() throws CommandMisconfiguredException {
@@ -363,18 +371,21 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 	 * 
 	 * @return the result of the update. You may use it to determine
 	 *         success/failure and/or retrieve other information.
-	 * @throws BodhiClientLoginException If the login to bodhi failed.
-	 * @throws BodhiClientException If pushing the update failed.
+	 * @throws BodhiClientLoginException
+	 *             If the login to bodhi failed.
+	 * @throws BodhiClientException
+	 *             If pushing the update failed.
 	 */
 	@Override
 	public PushUpdateResult call(IProgressMonitor monitor)
-			throws CommandListenerException, CommandMisconfiguredException, BodhiClientLoginException, BodhiClientException {
+			throws CommandListenerException, CommandMisconfiguredException,
+			BodhiClientLoginException, BodhiClientException {
 		try {
 			callPreExecListeners();
 		} catch (CommandListenerException e) {
 			if (e.getCause() instanceof CommandMisconfiguredException) {
 				// explicitly throw the specific exception
-				throw (CommandMisconfiguredException)e.getCause();
+				throw (CommandMisconfiguredException) e.getCause();
 			}
 			throw e;
 		}
@@ -384,10 +395,11 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 		}
 		FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 		logger.logInfo(BodhiText.PushUpdateCommand_pushingBodhiUpdateTaskMsg);
-		
+
 		assert this.client != null;
-		
-		monitor.beginTask(BodhiText.PushUpdateCommand_pushingBodhiUpdateTaskMsg, 4);
+
+		monitor.beginTask(
+				BodhiText.PushUpdateCommand_pushingBodhiUpdateTaskMsg, 4);
 		monitor.subTask(BodhiText.PushUpdateCommand_loggingIn);
 		monitor.worked(1);
 		// login
@@ -399,7 +411,8 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 		if (resp.getCsrfToken() != null) {
 			csrfToken = resp.getCsrfToken();
 		}
-		// It looks like release is extracted from the build NVRs. Not sure, why it's there.
+		// It looks like release is extracted from the build NVRs. Not sure, why
+		// it's there.
 		BodhiUpdateResponse updateResponse = this.client
 				.createNewUpdate(builds, release, updateType, requestType,
 						bugs, comment, csrfToken, suggestReboot,

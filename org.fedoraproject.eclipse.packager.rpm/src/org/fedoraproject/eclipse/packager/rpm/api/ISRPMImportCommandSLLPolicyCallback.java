@@ -20,8 +20,8 @@ public interface ISRPMImportCommandSLLPolicyCallback {
 
 	/**
 	 * Implementors can may set the SSL policy for uploads via this callback. The {@link SRPMImportCommand} is responsible for calling it where it needs to.
-	 * @param uploadCmd
-	 * @param uploadUrl
+	 * @param uploadCmd The command the ssl policy is being set for.
+	 * @param uploadUrl The upload url being connected to.
 	 */
 	public void setSSLPolicy(UploadSourceCommand uploadCmd, String uploadUrl);
 }

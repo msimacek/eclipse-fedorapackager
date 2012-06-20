@@ -38,6 +38,7 @@ public interface IKojiHubClient {
 	 * Logout from hub url and discard session.
 	 * 
 	 * @throws KojiHubClientException
+	 *             If the logout fails for any reason.
 	 */
 	public void logout() throws KojiHubClientException;
 
@@ -48,6 +49,7 @@ public interface IKojiHubClient {
 	 * @param target
 	 *            The dist-tag (see: $ koji list-targets).
 	 * @param scmURLs
+	 *            A list of URLs containing the source of the build.
 	 * @param nvr
 	 *            Name-Version-Release (see: RPM package naming).
 	 * @param scratch
@@ -90,6 +92,7 @@ public interface IKojiHubClient {
 	 *            The Base64 representation of the file.
 	 * @return True if successful, false if not.
 	 * @throws KojiHubClientException
+	 *             If the upload fails for any reason.
 	 */
 	public boolean uploadFile(String path, String name, int size,
 			String md5sum, int offset, String data)
@@ -101,22 +104,26 @@ public interface IKojiHubClient {
 	 * @return An array of hash maps containing the id, name, perm_id, perm,
 	 *         arches and locked for each tag.
 	 * @throws KojiHubClientException
+	 *             If the target listing fails for any reason.
 	 */
 	public HashMap<?, ?>[] listTargets() throws KojiHubClientException;
 
 	/**
 	 * Get repository information from the Koji server.
-	 * @param tag The tag of the repository to inpect.
+	 * 
+	 * @param tag
+	 *            The tag of the repository to inpect.
 	 * @return {@link KojiRepoInfo} repository information.
 	 * @throws KojiHubClientException
+	 *             If the method fails for any reason.
 	 */
 	public KojiRepoInfo getRepo(String tag) throws KojiHubClientException;
-	
-	
+
 	/**
 	 * @return A list of all the unique available build targets for the current
 	 *         list of tags as returned by {@link #listTargets()}
 	 * @throws KojiHubClientException
+	 *             If the tag listing fails for any reason.
 	 */
 	public Set<String> listBuildTags() throws KojiHubClientException;
 }

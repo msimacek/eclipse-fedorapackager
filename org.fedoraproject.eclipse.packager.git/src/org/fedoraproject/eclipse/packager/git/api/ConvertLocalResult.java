@@ -15,7 +15,7 @@ import org.fedoraproject.eclipse.packager.git.FedoraPackagerGitText;
 
 /**
  * Represents the result of a {@code ConvertLocalToRemoteCommand}.
- *
+ * 
  */
 public class ConvertLocalResult implements ICommandResult {
 	private boolean successful = false;
@@ -24,7 +24,8 @@ public class ConvertLocalResult implements ICommandResult {
 	private boolean hadFetched = false;
 
 	/**
-	 * @param successful the successful to set
+	 * @param successful
+	 *            the successful to set
 	 */
 	public void setSuccessful(boolean successful) {
 		this.successful = successful;
@@ -32,8 +33,11 @@ public class ConvertLocalResult implements ICommandResult {
 
 	/**
 	 * @param addBranch
+	 *            True if at least one branch was added, false otherwise.
 	 * @param addRemote
+	 *            True if a remote was added, false otherwise.
 	 * @param hadFetched
+	 *            True if refs had been fetched from remote, false otherwise.
 	 */
 	public ConvertLocalResult(boolean addRemote, boolean addBranch,
 			boolean hadFetched) {
@@ -100,4 +104,3 @@ public class ConvertLocalResult implements ICommandResult {
 		return message;
 	}
 }
-

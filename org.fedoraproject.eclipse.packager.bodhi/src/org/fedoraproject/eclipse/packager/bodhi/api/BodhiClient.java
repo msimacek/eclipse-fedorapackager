@@ -44,12 +44,12 @@ import org.fedoraproject.eclipse.packager.bodhi.fas.DateTime;
  * Bodhi JSON over HTTP client.
  */
 public class BodhiClient {
-	
+
 	// Use 30 sec connection timeout
 	private static final int CONNECTION_TIMEOUT = 30000;
 	// Delimiter for pushing several builds as one update
 	private static final String BUILDS_DELIMITER = ",";
-	
+
 	// Parameter name constants for login
 	private static final String LOGIN_PARAM_NAME = "login"; //$NON-NLS-1$
 	private static final String LOGIN_PARAM_VALUE = "Login"; //$NON-NLS-1$
@@ -67,20 +67,20 @@ public class BodhiClient {
 	private static final String STABLE_KARMA = "stable_karma"; //$NON-NLS-1$
 	private static final String UNSTABLE_KARMA = "unstable_karma"; //$NON-NLS-1$
 	private static final String CLOSE_BUGS_WHEN_STABLE = "close_bugs"; //$NON-NLS-1$
-	
+
 	/**
-	 *  URL of the Bodhi server to which to connect to.
+	 * URL of the Bodhi server to which to connect to.
 	 */
 	public static final String BODHI_URL = "https://admin.fedoraproject.org/updates/"; //$NON-NLS-1$
-	
+
 	// We want JSON responses from the server. Use these constants in order
 	// to set the "Accept: application/json" HTTP header accordingly.
 	private static final String ACCEPT_HTTP_HEADER_NAME = "Accept"; //$NON-NLS-1$
 	private static final String MIME_JSON = "application/json"; //$NON-NLS-1$
-	
+
 	// The http client to use for transport
 	protected HttpClient httpclient;
-	
+
 	// The base URL to use for connections
 	protected URL bodhiServerUrl;
 
@@ -95,8 +95,9 @@ public class BodhiClient {
 		this.httpclient = getClient();
 		this.bodhiServerUrl = bodhiServerURL;
 	}
-	
-	protected BodhiLoginResponse parseResult(HttpEntity resEntity) throws IOException{
+
+	protected BodhiLoginResponse parseResult(HttpEntity resEntity)
+			throws IOException {
 		// Got a 200, response body is the JSON passed on from the
 		// server.
 		String jsonString = ""; //$NON-NLS-1$
@@ -112,11 +113,13 @@ public class BodhiClient {
 		// log JSON string if in debug mode
 		if (PackagerPlugin.inDebugMode()) {
 			FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-			logger.logInfo(NLS.bind(BodhiText.BodhiClient_rawJsonStringMsg, jsonString));
+			logger.logInfo(NLS.bind(BodhiText.BodhiClient_rawJsonStringMsg,
+					jsonString));
 		}
 		// Deserialize from JSON
 		GsonBuilder gsonBuilder = new GsonBuilder();
-		gsonBuilder.registerTypeAdapter(DateTime.class, new DateTimeDeserializer());
+		gsonBuilder.registerTypeAdapter(DateTime.class,
+				new DateTimeDeserializer());
 		Gson gson = gsonBuilder.create();
 		return gson.fromJson(jsonString, BodhiLoginResponse.class);
 	}
@@ -125,9 +128,12 @@ public class BodhiClient {
 	 * Bodhi login with username and password.
 	 * 
 	 * @param username
+	 *            The FAS username used to log in to Bodhi.
 	 * @param password
+	 *            The FAS password used to log in to Bodhi.
 	 * @return The parsed response from the server or {@code null}.
-	 * @throws BodhiClientLoginException If some error occurred.
+	 * @throws BodhiClientLoginException
+	 *             If some error occurred.
 	 */
 	public BodhiLoginResponse login(String username, String password)
 			throws BodhiClientLoginException {
@@ -195,8 +201,11 @@ public class BodhiClient {
 				}
 				// log JSON string if in debug mode
 				if (PackagerPlugin.inDebugMode()) {
-					FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-					logger.logInfo(NLS.bind(BodhiText.BodhiClient_rawJsonStringMsg, responseString));
+					FedoraPackagerLogger logger = FedoraPackagerLogger
+							.getInstance();
+					logger.logInfo(NLS.bind(
+							BodhiText.BodhiClient_rawJsonStringMsg,
+							responseString));
 				}
 			}
 		} catch (IOException e) {
@@ -211,11 +220,11 @@ public class BodhiClient {
 	 */
 	public void shutDownConnection() {
 		// When HttpClient instance is no longer needed,
-        // shut down the connection manager to ensure
-        // immediate deallocation of all system resources
+		// shut down the connection manager to ensure
+		// immediate deallocation of all system resources
 		httpclient.getConnectionManager().shutdown();
 	}
-	
+
 	/**
 	 * Push a new Bodhi update for one or more builds (i.e. N-V-Rs).
 	 * 
@@ -232,6 +241,7 @@ public class BodhiClient {
 	 * @param notes
 	 *            The comment for this update.
 	 * @param csrfToken
+	 *            The CSRF token for communicating with the Bodhi instance.
 	 * @param suggestReboot
 	 *            If a reboot is suggested after this update.
 	 * @param enableKarmaAutomatism
@@ -251,7 +261,8 @@ public class BodhiClient {
 			String type, String request, String bugs, String notes,
 			String csrfToken, boolean suggestReboot,
 			boolean enableKarmaAutomatism, int stableKarmaThreshold,
-			int unstableKarmaThreshold, boolean closeBugsWhenStable) throws BodhiClientException {
+			int unstableKarmaThreshold, boolean closeBugsWhenStable)
+			throws BodhiClientException {
 		try {
 			HttpPost post = new HttpPost(getPushUpdateUrl());
 			post.addHeader(ACCEPT_HTTP_HEADER_NAME, MIME_JSON);
@@ -306,20 +317,24 @@ public class BodhiClient {
 				}
 				// log JSON string if in debug mode
 				if (PackagerPlugin.inDebugMode()) {
-					FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-					logger.logInfo(NLS.bind(BodhiText.BodhiClient_rawJsonStringMsg, rawJsonString));
+					FedoraPackagerLogger logger = FedoraPackagerLogger
+							.getInstance();
+					logger.logInfo(NLS.bind(
+							BodhiText.BodhiClient_rawJsonStringMsg,
+							rawJsonString));
 				}
 				// deserialize the result from the JSON response
 				GsonBuilder gsonBuilder = new GsonBuilder();
 				Gson gson = gsonBuilder.create();
-				BodhiUpdateResponse result = gson.fromJson(rawJsonString, BodhiUpdateResponse.class);
+				BodhiUpdateResponse result = gson.fromJson(rawJsonString,
+						BodhiUpdateResponse.class);
 				return result;
 			}
 		} catch (IOException e) {
 			throw new BodhiClientException(e.getMessage(), e);
 		}
 	}
-	
+
 	/**
 	 * @return A properly configured HTTP client instance
 	 */
@@ -330,16 +345,17 @@ public class BodhiClient {
 				CONNECTION_TIMEOUT);
 		return new DefaultHttpClient(params);
 	}
-	
+
 	/**
 	 * Helper to read response from response entity.
 	 * 
 	 * @param responseEntity
-	 * @return
+	 *            The response from the Bodhi instance.
+	 * @return The parsed response.
 	 * @throws IOException
+	 *             If response could not be read or is read imporperly.
 	 */
-	private String parseResponse(HttpEntity responseEntity)
-			throws IOException {
+	private String parseResponse(HttpEntity responseEntity) throws IOException {
 
 		String responseText = ""; //$NON-NLS-1$
 		BufferedReader br = null;
@@ -364,7 +380,7 @@ public class BodhiClient {
 		}
 		return responseText.trim();
 	}
-	
+
 	/**
 	 * 
 	 * @return The login URL.
@@ -372,7 +388,7 @@ public class BodhiClient {
 	private String getLoginUrl() {
 		return this.bodhiServerUrl.toString() + "login"; //$NON-NLS-1$
 	}
-	
+
 	/**
 	 * 
 	 * @return The URL to be used for pushing updates or {@code null}.
@@ -380,7 +396,7 @@ public class BodhiClient {
 	private String getPushUpdateUrl() {
 		return this.bodhiServerUrl.toString() + "save"; //$NON-NLS-1$		
 	}
-	
+
 	/**
 	 * 
 	 * @return The URL to be used for pushing updates or {@code null}.

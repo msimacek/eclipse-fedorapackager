@@ -49,7 +49,7 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
  * {@link #call(IProgressMonitor)} method to finally execute the command. Each
  * instance of this class should only be used for one invocation of the command
  * (means: one call to {@link #call(IProgressMonitor)})
- *
+ * 
  */
 public class ConvertLocalToRemoteCommand extends
 		FedoraPackagerCommand<ConvertLocalResult> {
@@ -67,8 +67,9 @@ public class ConvertLocalToRemoteCommand extends
 
 	/**
 	 * Implementation of the {@code ConvertLocalToRemoteCommand}.
-	 *
+	 * 
 	 * @param monitor
+	 *            The monitor to show progress.
 	 * @throws CommandMisconfiguredException
 	 *             If the command was not properly configured when it was
 	 *             called.
@@ -76,7 +77,9 @@ public class ConvertLocalToRemoteCommand extends
 	 *             If some listener detected a problem.
 	 * @return The result of this command.
 	 * @throws LocalProjectConversionFailedException
+	 *             If project command fails at conversion time.
 	 * @throws RemoteAlreadyExistsException
+	 *             If there is already a remote origin for the local git repo.
 	 */
 	@Override
 	public ConvertLocalResult call(IProgressMonitor monitor)
@@ -107,8 +110,8 @@ public class ConvertLocalToRemoteCommand extends
 			String uri = projectBits.getScmUrl();
 			Map<String, Ref> ref = git.getRepository().getAllRefs();
 
-			Set<String> existingRemoteList = git.getRepository().getConfig().getSubsections(
-					ConfigConstants.CONFIG_REMOTE_SECTION);
+			Set<String> existingRemoteList = git.getRepository().getConfig()
+					.getSubsections(ConfigConstants.CONFIG_REMOTE_SECTION);
 
 			if (existingRemoteList.size() == 0) {
 				addRemote = true;
@@ -158,13 +161,11 @@ public class ConvertLocalToRemoteCommand extends
 					PackagerPlugin.PROJECT_PROP, "true"); //$NON-NLS-1$
 			projectRoot.getProject().setPersistentProperty(
 					PackagerPlugin.PROJECT_LOCAL_PROP, null);
-				
+
 		} catch (CoreException e) {
-			throw new LocalProjectConversionFailedException
-			(e.getMessage(), e);
+			throw new LocalProjectConversionFailedException(e.getMessage(), e);
 		} catch (IOException e) {
-			throw new LocalProjectConversionFailedException
-			(e.getMessage(), e);
+			throw new LocalProjectConversionFailedException(e.getMessage(), e);
 		}
 
 		ConvertLocalResult result = new ConvertLocalResult(addRemote,
@@ -179,8 +180,9 @@ public class ConvertLocalToRemoteCommand extends
 
 	/**
 	 * Find the added remote uri, if it exists
-	 *
+	 * 
 	 * @param uri
+	 *            The uri of the remote repository to be added.
 	 * @return boolean
 	 */
 	private boolean checkExistingRemoteRepository(String uri) {
@@ -196,10 +198,13 @@ public class ConvertLocalToRemoteCommand extends
 	/**
 	 * Adds the corresponding remote repository as the default name 'origin' to
 	 * the existing local repository (uses the JGit API)
-	 *
+	 * 
 	 * @param uri
+	 *            The uri of the remote repository to be added.
 	 * @param monitor
+	 *            The monitor to show progress.
 	 * @throws LocalProjectConversionFailedException
+	 *             If method fails for any reason.
 	 */
 	private void addRemoteRepository(String uri, IProgressMonitor monitor)
 			throws LocalProjectConversionFailedException {
@@ -246,9 +251,11 @@ public class ConvertLocalToRemoteCommand extends
 
 	/**
 	 * Merges remote HEAD with local HEAD (uses the JGit API)
-	 *
+	 * 
 	 * @param monitor
+	 *            The monitor to show progress.
 	 * @throws LocalProjectConversionFailedException
+	 *             If the method fails for any reason.
 	 */
 	private void mergeLocalRemoteBranches(IProgressMonitor monitor)
 			throws LocalProjectConversionFailedException {
