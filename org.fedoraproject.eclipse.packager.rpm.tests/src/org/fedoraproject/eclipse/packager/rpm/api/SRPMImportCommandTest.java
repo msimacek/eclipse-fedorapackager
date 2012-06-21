@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.InitCommand;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
@@ -65,7 +66,7 @@ public class SRPMImportCommandTest implements
 	private File mockDownloadFile;
 
 	@Before
-	public void setup() throws IOException, CoreException {
+	public void setup() throws IOException, CoreException, GitAPIException {
 		String exampleGitdirPath = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(MOCK_DOWNLOAD_FILE), null)).getFile();
@@ -111,7 +112,8 @@ public class SRPMImportCommandTest implements
 			InvalidProjectRootException, IOException, CoreException,
 			FedoraPackagerCommandInitializationException,
 			SourcesUpToDateException, DownloadFailedException,
-			CommandMisconfiguredException, CommandListenerException {
+			CommandMisconfiguredException, CommandListenerException,
+			GitAPIException {
 
 		SRPMImportCommand srpmImport = new SRPMImportCommand(srpmPath,
 				testProject, testProject, uploadURLForTesting, this) {
