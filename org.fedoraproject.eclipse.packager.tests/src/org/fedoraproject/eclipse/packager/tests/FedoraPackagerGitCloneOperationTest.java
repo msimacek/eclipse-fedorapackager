@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.tests;
 
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -22,6 +23,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.fedoraproject.eclipse.packager.git.FedoraPackagerGitCloneOperation;
@@ -32,7 +34,7 @@ public class FedoraPackagerGitCloneOperationTest {
 
 	private Git git;
 
-	@Test(expected = URISyntaxException.class)
+	@Test(expected=URISyntaxException.class)
 	public void shouldThrowExceptionWhenURIInvalid() throws URISyntaxException {
 		FedoraPackagerGitCloneOperation cloneOp = new FedoraPackagerGitCloneOperation();
 		cloneOp.setCloneURI("+ // + really bad URL");
@@ -40,16 +42,19 @@ public class FedoraPackagerGitCloneOperationTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void shouldThrowExceptionWhenIllConfigured()
-			throws InvocationTargetException, InterruptedException, IOException {
+			throws InvocationTargetException,
+			InterruptedException, IOException {
 		FedoraPackagerGitCloneOperation cloneOp = new FedoraPackagerGitCloneOperation();
 		cloneOp.run(null);
 	}
 
 	/**
 	 * Fedora Git clones create local branches. Test for that.
+	 *
+	 * @throws GitAPIException
 	 */
 	@Test
-	public void canCloneFromFedoraGit() { // exception is thrown from jgit 2.0+
+	public void canCloneFromFedoraGit() throws GitAPIException { //exception is thrown from jgit 2.0+
 		final FedoraPackagerGitCloneOperation cloneOp = new FedoraPackagerGitCloneOperation();
 		final String fedoraPackager = "eclipse-fedorapackager";
 		Job cloneJob = new Job("Clone Me!") {
@@ -57,12 +62,9 @@ public class FedoraPackagerGitCloneOperationTest {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					git = cloneOp
-							.setPackageName(fedoraPackager)
-							.setCloneURI(
-									GitUtils.getFullGitURL(
-											GitUtils.getAnonymousGitBaseUrl(),
-											fedoraPackager)).run(monitor);
+					git = cloneOp.setPackageName(fedoraPackager).setCloneURI(
+							GitUtils.getFullGitURL(GitUtils.getAnonymousGitBaseUrl(),
+									fedoraPackager)).run(monitor);
 				} catch (IllegalStateException e) {
 					e.printStackTrace();
 				} catch (InvocationTargetException e) {
@@ -88,7 +90,7 @@ public class FedoraPackagerGitCloneOperationTest {
 		ListBranchCommand ls = git.branchList();
 		// should have created a local branch called "f14"
 		boolean f14Found = false;
-		for (Ref ref : ls.call()) {
+		for(Ref ref: ls.call()) {
 			if (Repository.shortenRefName(ref.getName()).equals("f14")) {
 				f14Found = true;
 				break;
