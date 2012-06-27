@@ -10,14 +10,17 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.tests.commands;
 
+import static org.junit.Assert.assertTrue;
 
 import java.net.MalformedURLException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.ChecksumValidListener;
 import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
+import org.fedoraproject.eclipse.packager.api.DownloadSourcesJob;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
@@ -44,7 +47,7 @@ public class DownloadSourceCommandTest {
 	private FedoraPackager packager;
 	// Fedora packager root
 	private IProjectRoot fpRoot;
-	
+
 	/**
 	 * Set up a Fedora project and run the command.
 	 * 
@@ -62,7 +65,7 @@ public class DownloadSourceCommandTest {
 	public void tearDown() throws Exception {
 		this.testProject.dispose();
 	}
-	
+
 	@Test(expected = MalformedURLException.class)
 	public void shouldThrowMalformedURLException()
 			throws FedoraPackagerCommandInitializationException,
@@ -75,19 +78,19 @@ public class DownloadSourceCommandTest {
 	/**
 	 * Positive results test. Should work fine. Since this is downloading
 	 * Eclipse sources it might take a while.
-	 * @throws CoreException 
-	 * @throws InterruptedException 
-	 * @throws InvalidProjectRootException 
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
-	 * @throws CommandListenerException 
-	 * @throws CommandMisconfiguredException 
-	 * @throws DownloadFailedException 
-	 * @throws SourcesUpToDateException 
+	 * 
+	 * @throws CoreException
+	 * @throws InterruptedException
+	 * @throws InvalidProjectRootException
+	 * @throws FedoraPackagerCommandNotFoundException
+	 * @throws FedoraPackagerCommandInitializationException
 	 * 
 	 */
 	@Test
-	public void canDownloadSeveralFilesWithoutErrors() throws CoreException, InterruptedException, InvalidProjectRootException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, SourcesUpToDateException, DownloadFailedException, CommandMisconfiguredException, CommandListenerException {
+	public void canDownloadSeveralFilesWithoutErrors() throws CoreException,
+			InterruptedException, InvalidProjectRootException,
+			FedoraPackagerCommandInitializationException,
+			FedoraPackagerCommandNotFoundException {
 		// not using eclipse-fedorapackager for this test
 		this.testProject.dispose();
 		// The jpackage-utils package usually has 2 source files. That's why we
@@ -98,19 +101,22 @@ public class DownloadSourceCommandTest {
 		this.packager = new FedoraPackager(fpRoot);
 		DownloadSourceCommand downloadCmd = (DownloadSourceCommand) packager
 				.getCommandInstance(DownloadSourceCommand.ID);
-		ChecksumValidListener md5sumListener = new ChecksumValidListener(fpRoot);
-		downloadCmd.addCommandListener(md5sumListener); // want md5sum checking
-		downloadCmd.call(new NullProgressMonitor());
+		DownloadSourcesJob dsj = new DownloadSourcesJob("Download Job", downloadCmd, fpRoot,
+				"http://pkgs.fedoraproject.org/repo/pkgs");
+		dsj.schedule();
+		dsj.join();
+		assertTrue(dsj.getResult().equals(Status.OK_STATUS));
 	}
-	
+
 	/**
 	 * Test checksums of source files.
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
-	 * @throws CommandListenerException 
-	 * @throws CommandMisconfiguredException 
-	 * @throws DownloadFailedException 
-	 * @throws SourcesUpToDateException 
+	 * 
+	 * @throws FedoraPackagerCommandNotFoundException
+	 * @throws FedoraPackagerCommandInitializationException
+	 * @throws CommandListenerException
+	 * @throws CommandMisconfiguredException
+	 * @throws DownloadFailedException
+	 * @throws SourcesUpToDateException
 	 * 
 	 */
 	@Test(expected = CommandListenerException.class)
