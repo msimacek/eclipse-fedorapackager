@@ -21,14 +21,11 @@ import java.util.Vector;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jsch.ui.UserInfoPrompter;
 import org.eclipse.ui.PlatformUI;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
-import org.fedoraproject.eclipse.packager.FedoraSSL;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.ScpFailedException;
@@ -37,14 +34,10 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
-import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.UserInfo;
-import org.eclipse.jsch.internal.core.IConstants;
-import org.eclipse.jsch.internal.core.JSchCorePlugin;
-import org.eclipse.jsch.internal.core.PreferenceInitializer;
 import org.eclipse.osgi.util.NLS;
 
 /**
@@ -54,21 +47,18 @@ import org.eclipse.osgi.util.NLS;
  * instance of this class should only be used for one invocation of the command
  * (means: one call to {@link #call(IProgressMonitor)})
  */
-@SuppressWarnings("restriction")
 public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 	/**
 	 * The unique ID of this command.
 	 */
 	public static final String ID = "ScpCommand"; //$NON-NLS-1$
-	private static final String FEDORAHOST = "fedorapeople.org"; //$NON-NLS-1$
 	private static final String PUBLIC_HTML = "public_html"; //$NON-NLS-1$
 	private static final String REMOTE_DIR = "fpe-rpm-review"; //$NON-NLS-1$
 
-	private String fasAccount;
 	private String specFile;
 	private String srpmFile;
-
+	private Session session = null;
 	private boolean scpconfirmed = true;
 	private String fileScpConfirm;
 	private ScpResult result = null;
@@ -104,27 +94,7 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 			throw e;
 		}
 
-		JSch jsch = new JSch();
-
-		IPreferencesService service = Platform.getPreferencesService();
-		String ssh_home = service.getString(JSchCorePlugin.ID,
-				IConstants.KEY_SSH2HOME,
-				PreferenceInitializer.SSH_HOME_DEFAULT, null);
-		String ssh_keys = service.getString(JSchCorePlugin.ID,
-				IConstants.KEY_PRIVATEKEY, "id_rsa", null); //$NON-NLS-1$
-
-		String[] ssh_key = ssh_keys.split(","); //$NON-NLS-1$
-
-		String privateKeyFile = ssh_home.concat("/").concat(ssh_key[1]); //$NON-NLS-1$
-
 		try {
-			if (privateKeyFile != null) {
-				jsch.addIdentity(privateKeyFile);
-			}
-
-			Session session;
-			session = jsch.getSession(fasAccount, FEDORAHOST, 22);
-
 			UserInfo userInfo = session.getUserInfo();
 			if (userInfo == null || userInfo.getPassword() == null) {
 				@SuppressWarnings("unused")
@@ -146,7 +116,7 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 			// Creates the remote 'fpe-rpm-review' directory in public_html
 			createRemoteDir(session);
 
-			// if files done't exist in the remote directory or
+			// if files don't exist in the remote directory or
 			// if the user is willing to replace them, copy those files remotely
 			if (scpconfirmed) {
 				copyFileToRemote(specFile, session);
@@ -343,31 +313,15 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 	@Override
 	protected void checkConfiguration() throws CommandMisconfiguredException {
-		if (this.fasAccount == null) {
+		if (this.session == null) {
 			throw new CommandMisconfiguredException(
-					FedoraPackagerText.ScpHandler_fasAccountMissing);
+					FedoraPackagerText.ScpCommand_NoSession);
 		}
 
 		if ((this.specFile == null) || (this.srpmFile == null)) {
 			throw new CommandMisconfiguredException(
 					FedoraPackagerText.ScpCommand_filesToScpMissing);
 		}
-	}
-
-	/**
-	 * @param fasAccount
-	 *            sets the FAS account
-	 * @return this instance
-	 * @throws ScpFailedException
-	 *             If account info could not be found.
-	 */
-	public ScpCommand fasAccount(String fasAccount) throws ScpFailedException {
-		this.fasAccount = fasAccount;
-		if (fasAccount == FedoraSSL.UNKNOWN_USER) {
-			throw new ScpFailedException(
-					FedoraPackagerText.ScpHandler_fasAccountMissing);
-		}
-		return this;
 	}
 
 	/**
@@ -384,6 +338,14 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 	 */
 	public void srpmFile(String srpmFile) {
 		this.srpmFile = srpmFile;
+	}
+
+	/**
+	 * @param session
+	 *            The JSch session to be used.
+	 */
+	public void session(Session session) {
+		this.session = session;
 	}
 
 	/*
