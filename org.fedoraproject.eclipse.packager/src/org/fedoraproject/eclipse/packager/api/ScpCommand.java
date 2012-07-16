@@ -22,22 +22,20 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jsch.ui.UserInfoPrompter;
 import org.eclipse.ui.PlatformUI;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.ScpFailedException;
+import org.fedoraproject.eclipse.packager.utils.ISession;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
-import com.jcraft.jsch.UserInfo;
 import org.eclipse.osgi.util.NLS;
 
 /**
@@ -58,7 +56,7 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 	private String specFile;
 	private String srpmFile;
-	private Session session = null;
+	private ISession session = null;
 	private boolean scpconfirmed = true;
 	private String fileScpConfirm;
 	private ScpResult result = null;
@@ -95,12 +93,6 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 		}
 
 		try {
-			UserInfo userInfo = session.getUserInfo();
-			if (userInfo == null || userInfo.getPassword() == null) {
-				@SuppressWarnings("unused")
-				UserInfoPrompter userInfoPrompt = new UserInfoPrompter(session);
-			}
-
 			session.setConfig("StrictHostKeyChecking", "no"); //$NON-NLS-1$ //$NON-NLS-2$
 			session.connect();
 
@@ -159,7 +151,7 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 	 *             If transfer of directory to remote is unsuccessful.
 	 * 
 	 */
-	private void createRemoteDir(Session session) throws ScpFailedException {
+	private void createRemoteDir(ISession session) throws ScpFailedException {
 		boolean dirFound = false;
 		boolean fileFound = false;
 
@@ -235,7 +227,7 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 	 *             If transfer of file to remote is unsuccessful.
 	 * 
 	 */
-	private void copyFileToRemote(String fileToScp, Session session)
+	private void copyFileToRemote(String fileToScp, ISession session)
 			throws ScpFailedException {
 		FileInputStream fis = null;
 
@@ -344,7 +336,7 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 	 * @param session
 	 *            The JSch session to be used.
 	 */
-	public void session(Session session) {
+	public void session(ISession session) {
 		this.session = session;
 	}
 

@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2010-2012 Red Hat Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Red Hat Inc. - initial API and implementation
+ *******************************************************************************/
 package org.fedoraproject.eclipse.packager.api;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -9,6 +19,7 @@ import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.jsch.internal.core.IConstants;
 import org.eclipse.jsch.internal.core.JSchCorePlugin;
 import org.eclipse.jsch.internal.core.PreferenceInitializer;
+import org.eclipse.jsch.ui.UserInfoPrompter;
 import org.eclipse.osgi.util.NLS;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
@@ -18,9 +29,12 @@ import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.ScpFailedException;
+import org.fedoraproject.eclipse.packager.utils.FedoraSession;
+
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.UserInfo;
 
 /**
  * Job to perform Scp Command.
@@ -86,7 +100,12 @@ public class ScpJob extends Job {
 
 			Session session;
 			session = jsch.getSession(fasAccount, FEDORAHOST, 22);
-			scpCmd.session(session);
+			UserInfo userInfo = session.getUserInfo();
+			if (userInfo == null || userInfo.getPassword() == null) {
+				@SuppressWarnings("unused")
+				UserInfoPrompter userInfoPrompt = new UserInfoPrompter(session);
+			}
+			scpCmd.session(new FedoraSession(session));
 			result = scpCmd.call(monitor);
 			if (result.isSuccessful()) {
 				String message = null;

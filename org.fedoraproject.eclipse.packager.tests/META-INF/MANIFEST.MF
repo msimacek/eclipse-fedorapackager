@@ -14,7 +14,8 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.fedoraproject.eclipse.packager.tests,
  org.fedoraproject.eclipse.packager.tests.utils,
  org.fedoraproject.eclipse.packager.tests.utils.git
-Import-Package: org.apache.commons.ssl,
+Import-Package: com.jcraft.jsch;version="0.1.41",
+ org.apache.commons.ssl,
  org.apache.http,
  org.apache.http.client,
  org.apache.http.client.methods,
