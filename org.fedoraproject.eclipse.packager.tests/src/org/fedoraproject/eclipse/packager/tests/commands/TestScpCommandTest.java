@@ -12,6 +12,9 @@ package org.fedoraproject.eclipse.packager.tests.commands;
 
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
+
+import java.util.Vector;
+
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
@@ -21,12 +24,14 @@ import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredExcepti
 import org.fedoraproject.eclipse.packager.api.errors.ScpFailedException;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
+import org.fedoraproject.eclipse.packager.utils.IChannelSftp;
 import org.fedoraproject.eclipse.packager.utils.ISession;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 
 public class TestScpCommandTest {
 
@@ -53,11 +58,15 @@ public class TestScpCommandTest {
 	}
 	
 	@Test
-	public void testScpCommand() throws JSchException{
+	public void testScpCommandFileExists() throws JSchException, SftpException{
 		ISession session = createMock(ISession.class);
+		IChannelSftp channel = createMock(IChannelSftp.class);
 		session.setConfig("StrictHostKeyChecking", "no");
 		session.connect();
-		
+		expect(session.openChannelSftp()).andReturn(channel);
+		Vector<String> folderVector = new Vector<String>();
+		folderVector.add("fpe-rpm-review");
+		expect(channel.stringLs("public_html")).andReturn(folderVector);
 	}
 
 	@After

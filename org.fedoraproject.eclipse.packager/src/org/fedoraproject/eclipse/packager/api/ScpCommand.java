@@ -15,7 +15,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Iterator;
 import java.util.Vector;
 
 import org.eclipse.core.runtime.IPath;
@@ -28,12 +27,9 @@ import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.ScpFailedException;
+import org.fedoraproject.eclipse.packager.utils.IChannelExec;
+import org.fedoraproject.eclipse.packager.utils.IChannelSftp;
 import org.fedoraproject.eclipse.packager.utils.ISession;
-
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
 import org.eclipse.osgi.util.NLS;
@@ -155,37 +151,32 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 		boolean dirFound = false;
 		boolean fileFound = false;
 
-		Channel channel;
+		IChannelSftp channelSftp;
 
 		try {
-			channel = session.openChannel("sftp"); //$NON-NLS-1$
-
-			channel.connect();
-			ChannelSftp channelSftp = (ChannelSftp) channel;
+			channelSftp = session.openChannelSftp();
 
 			// check if the remote directory exists
 			// if not, create the proper directory in public_html
-			Vector<?> existDir = channelSftp.ls(PUBLIC_HTML);
-			Iterator<?> it = existDir.iterator();
-			while (it.hasNext() && !dirFound) {
-				LsEntry entry = (LsEntry) it.next();
-				String dirName = entry.getFilename();
-				if (dirName.equals(REMOTE_DIR))
+			Vector<String> existDir = channelSftp.stringLs(PUBLIC_HTML);
+			for (String dirName : existDir){
+				if (dirName.contentEquals(REMOTE_DIR)){
 					dirFound = true;
+					break;
+				}
 			}
 			if (!dirFound)
 				channelSftp.mkdir(PUBLIC_HTML + IPath.SEPARATOR + REMOTE_DIR);
 
 			// check if the files to scp already exist in the remote directory
 			// if yes, ask for confirmation
-			Vector<?> existFile = channelSftp.ls(PUBLIC_HTML + IPath.SEPARATOR
+			Vector<String> existFile = channelSftp.stringLs(PUBLIC_HTML + IPath.SEPARATOR
 					+ REMOTE_DIR);
-			it = existFile.iterator();
-			while (it.hasNext() && !fileFound) {
-				LsEntry entry = (LsEntry) it.next();
-				String fileName = entry.getFilename();
-				if (fileName.equals(srpmFile))
+			for (String dirName : existFile){
+				if (dirName.contentEquals(srpmFile)){
 					fileFound = true;
+					break;
+				}
 			}
 			if (fileFound) {
 				fileScpConfirm = NLS
@@ -206,7 +197,7 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 				scpconfirmed = true;
 			}
 
-			channel.disconnect();
+			channelSftp.disconnect();
 
 		} catch (JSchException e) {
 			throw new ScpFailedException(e.getMessage(), e);
@@ -236,10 +227,10 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 				+ IPath.SEPARATOR + fileToScp;
 		String command = "scp -p -t " + remoteFile; //$NON-NLS-1$
 
-		Channel channel;
+		IChannelExec channel;
 		try {
-			channel = session.openChannel("exec"); //$NON-NLS-1$
-			((ChannelExec) channel).setCommand(command);
+			channel = session.openChannelExec();
+			channel.setCommand(command);
 
 			// get I/O streams for remote scp
 			OutputStream out = channel.getOutputStream();

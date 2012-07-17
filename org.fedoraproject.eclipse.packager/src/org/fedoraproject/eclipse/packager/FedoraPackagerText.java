@@ -145,8 +145,7 @@ public class FedoraPackagerText extends NLS {
 	/****/ public static String ScpCommand_notificationTitle;
 	/****/ public static String ScpCommand_filesToScpExist;
 	/****/ public static String ScpCommand_filesToScpNonReadable;
-
-	public static String ScpCommand_NoSession;
+	/****/ public static String ScpCommand_NoSession;
 	// ScpHandler
 	/****/ public static String ScpHandler_taskName;
 	/****/ public static String ScpHandler_notificationTitle;

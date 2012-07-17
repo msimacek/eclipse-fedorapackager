@@ -29,7 +29,7 @@ import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.ScpFailedException;
-import org.fedoraproject.eclipse.packager.utils.FedoraSession;
+import org.fedoraproject.eclipse.packager.utils.WrappedSession;
 
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -105,7 +105,7 @@ public class ScpJob extends Job {
 				@SuppressWarnings("unused")
 				UserInfoPrompter userInfoPrompt = new UserInfoPrompter(session);
 			}
-			scpCmd.session(new FedoraSession(session));
+			scpCmd.session(new WrappedSession(session));
 			result = scpCmd.call(monitor);
 			if (result.isSuccessful()) {
 				String message = null;
