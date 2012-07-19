@@ -34,20 +34,20 @@ import org.osgi.framework.FrameworkUtil;
 
 public class FedoraPackagerTest {
 
-	private static final String EXAMPLE_FEDORA_PROJECT_ROOT = 
-		"resources/example-fedora-project"; // $NON-NLS-1$
+	private static final String EXAMPLE_FEDORA_PROJECT_ROOT = "resources/example-fedora-project"; // $NON-NLS-1$
 	private FedoraPackager packager;
 	private IProject packagerProject;
 	private FedoraProjectRoot fpRoot;
-	
+
 	@Before
 	public void setUp() throws IOException, CoreException {
 		String dirName = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_FEDORA_PROJECT_ROOT), null)).getFile();
 		File origSourceDir = new File(dirName);
-				
-		packagerProject = TestsUtils.createProjectFromTemplate(origSourceDir);
+
+		packagerProject = TestsUtils.createProjectFromTemplate(origSourceDir,
+				TestsUtils.getRandomUniqueName());
 		fpRoot = new FedoraProjectRoot();
 		fpRoot.initialize(packagerProject);
 		assertNotNull(fpRoot);
@@ -70,49 +70,55 @@ public class FedoraPackagerTest {
 	public void canGetRegisteredCommandIDs() {
 		String[] regCommands = packager.getRegisteredCommandIDs();
 		int downloadUploadThereCounter = 2;
-		for (String commandId: regCommands) {
+		for (String commandId : regCommands) {
 			if (commandId.equals(DownloadSourceCommand.ID)
 					|| commandId.equals(UploadSourceCommand.ID)) {
 				downloadUploadThereCounter--;
 			}
 		}
-		assertEquals(downloadUploadThereCounter ,0);
+		assertEquals(downloadUploadThereCounter, 0);
 	}
 
 	/**
 	 * Should be able to successfully instantiate a
 	 * {@link DownloadSourceCommand} object.
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
+	 * 
+	 * @throws FedoraPackagerCommandNotFoundException
+	 * @throws FedoraPackagerCommandInitializationException
 	 */
 	@Test
-	public void canGetCommandInstance() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException {
+	public void canGetCommandInstance()
+			throws FedoraPackagerCommandInitializationException,
+			FedoraPackagerCommandNotFoundException {
 		DownloadSourceCommand download = (DownloadSourceCommand) packager
-					.getCommandInstance(DownloadSourceCommand.ID);
+				.getCommandInstance(DownloadSourceCommand.ID);
 		assertNotNull(download);
 	}
-	
+
 	/**
 	 * Should throw {@link FedoraPackagerCommandNotFoundException} for an
 	 * unknown command.
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
+	 * 
+	 * @throws FedoraPackagerCommandNotFoundException
+	 * @throws FedoraPackagerCommandInitializationException
 	 */
-	@Test(expected=FedoraPackagerCommandNotFoundException.class) 
+	@Test(expected = FedoraPackagerCommandNotFoundException.class)
 	public void shouldThrowFedoraPackagerCommandNotFoundException()
-			throws FedoraPackagerCommandNotFoundException, FedoraPackagerCommandInitializationException {
-			packager
-					.getCommandInstance("SomeCommandWhichShouldNotBeThere");
+			throws FedoraPackagerCommandNotFoundException,
+			FedoraPackagerCommandInitializationException {
+		packager.getCommandInstance("SomeCommandWhichShouldNotBeThere");
 	}
-	
+
 	/**
-	 * @throws FedoraPackagerCommandNotFoundException 
+	 * @throws FedoraPackagerCommandNotFoundException
 	 * 
 	 */
-	@Test(expected=FedoraPackagerCommandInitializationException.class)
-	public void shouldThrowInitializationException() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException {
+	@Test(expected = FedoraPackagerCommandInitializationException.class)
+	public void shouldThrowInitializationException()
+			throws FedoraPackagerCommandInitializationException,
+			FedoraPackagerCommandNotFoundException {
 		DownloadSourceCommand download = (DownloadSourceCommand) packager
-					.getCommandInstance(DownloadSourceCommand.ID);
+				.getCommandInstance(DownloadSourceCommand.ID);
 		// this should throw initialization exception
 		download.initialize(fpRoot);
 	}

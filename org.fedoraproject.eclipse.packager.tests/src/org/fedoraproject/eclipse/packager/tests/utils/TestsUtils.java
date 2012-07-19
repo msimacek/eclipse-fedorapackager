@@ -129,10 +129,11 @@ public class TestsUtils {
 	 * @return A handle to the external project.
 	 * @throws CoreException
 	 */
-	public static IProject createProjectFromTemplate(File folder) throws CoreException, IOException {
+	public static IProject createProjectFromTemplate(File folder, String name) throws CoreException, IOException {
 		// Create external project
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IProject newProject = root.getProject(getRandomUniqueName());
+		IProject newProject = root.getProject(name);
+		newProject.delete(true, true, null);
 		newProject.create(null);
 		newProject.open(null);
 		

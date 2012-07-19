@@ -50,12 +50,12 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 	private static final String PUBLIC_HTML = "public_html"; //$NON-NLS-1$
 	private static final String REMOTE_DIR = "fpe-rpm-review"; //$NON-NLS-1$
 
-	private String specFile;
-	private String srpmFile;
+	protected String specFile;
+	protected String srpmFile;
 	private ISession session = null;
 	private boolean scpconfirmed = true;
 	private String fileScpConfirm;
-	private ScpResult result = null;
+	protected ScpResult result = null;
 
 	final static FedoraPackagerLogger logger = FedoraPackagerLogger
 			.getInstance();
@@ -155,7 +155,7 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 		try {
 			channelSftp = session.openChannelSftp();
-
+			channelSftp.connect();
 			// check if the remote directory exists
 			// if not, create the proper directory in public_html
 			Vector<String> existDir = channelSftp.stringLs(PUBLIC_HTML);

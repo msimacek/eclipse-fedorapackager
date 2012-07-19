@@ -58,7 +58,8 @@ public class FedoraProjectRootTest {
 						new Path(EXAMPLE_FEDORA_PROJECT_ROOT), null)).getFile();
 		File copySource = new File(dirName);
 
-		projectResource = TestsUtils.createProjectFromTemplate(copySource);
+		projectResource = TestsUtils.createProjectFromTemplate(copySource,
+				TestsUtils.getRandomUniqueName());
 		// Users should really use FedoraPackagerUtils.getProjectRoot(), but
 		// this
 		// doesn't work for this case.
@@ -161,10 +162,12 @@ public class FedoraProjectRootTest {
 		ILookasideCache lookasideCache = fpRoot.getLookAsideCache();
 		assertNotNull(lookasideCache);
 		// should be initialized with default values
-		assertEquals(FedoraPackagerPreferencesConstants.DEFAULT_LOOKASIDE_DOWNLOAD_URL, lookasideCache
-				.getDownloadUrl().toString());
-		assertEquals(FedoraPackagerPreferencesConstants.DEFAULT_LOOKASIDE_UPLOAD_URL, lookasideCache
-				.getUploadUrl().toString());
+		assertEquals(
+				FedoraPackagerPreferencesConstants.DEFAULT_LOOKASIDE_DOWNLOAD_URL,
+				lookasideCache.getDownloadUrl().toString());
+		assertEquals(
+				FedoraPackagerPreferencesConstants.DEFAULT_LOOKASIDE_UPLOAD_URL,
+				lookasideCache.getUploadUrl().toString());
 	}
 
 	@Test

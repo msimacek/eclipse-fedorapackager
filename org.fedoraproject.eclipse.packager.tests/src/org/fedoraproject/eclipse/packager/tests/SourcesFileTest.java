@@ -55,7 +55,7 @@ public class SourcesFileTest {
 		File copySource = new File(dirName);
 		
 		// convert it to an external eclipse project
-		tempProject = TestsUtils.createProjectFromTemplate(copySource);
+		tempProject = TestsUtils.createProjectFromTemplate(copySource, TestsUtils.getRandomUniqueName());
 		IFile s = (IFile) tempProject.findMember(new Path(
 				SourcesFile.SOURCES_FILENAME));
 		assertNotNull(s);

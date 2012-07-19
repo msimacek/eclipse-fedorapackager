@@ -42,20 +42,20 @@ import org.osgi.framework.FrameworkUtil;
 
 public class FedoraPackagerUtilsTest {
 
-	private static final String EXAMPLE_FEDORA_PROJECT_ROOT = 
-		"resources/example-fedora-project"; // $NON-NLS-1$
+	private static final String EXAMPLE_FEDORA_PROJECT_ROOT = "resources/example-fedora-project"; // $NON-NLS-1$
 	private IProject packagerProject;
 	private File origSourceDir;
 	private GitTestProject gitProject;
-	
+
 	@Before
-	public void setUp() throws IOException, CoreException  {
+	public void setUp() throws IOException, CoreException {
 		String dirName = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_FEDORA_PROJECT_ROOT), null)).getFile();
 		origSourceDir = new File(dirName);
-				
-		packagerProject = TestsUtils.createProjectFromTemplate(origSourceDir);
+
+		packagerProject = TestsUtils.createProjectFromTemplate(origSourceDir,
+				TestsUtils.getRandomUniqueName());
 		// we need the property set otherwise instantiation of the project root
 		// fails.
 		packagerProject.setPersistentProperty(PackagerPlugin.PROJECT_PROP,
@@ -71,18 +71,20 @@ public class FedoraPackagerUtilsTest {
 	}
 
 	@Test
-	public void canGetProjectRootFromResource() throws CoreException, FileNotFoundException {
+	public void canGetProjectRootFromResource() throws CoreException,
+			FileNotFoundException {
 		try {
-			IProjectRoot fpRoot = FedoraPackagerUtils.getProjectRoot(packagerProject);
+			IProjectRoot fpRoot = FedoraPackagerUtils
+					.getProjectRoot(packagerProject);
 			assertNotNull(fpRoot);
 		} catch (InvalidProjectRootException e) {
 			fail("Should have been a valid project root");
 		}
 		// delete spec file so that project root becomes invalid
 		String specFileName = null;
-		for (IResource file: packagerProject.members()) {
+		for (IResource file : packagerProject.members()) {
 			if (file.getName().endsWith(".spec")) {
-				specFileName = file.getName(); 
+				specFileName = file.getName();
 				file.delete(true, null);
 			}
 		}
@@ -95,8 +97,10 @@ public class FedoraPackagerUtilsTest {
 			// pass
 		}
 		// Re-add spec file
-		File specFile = new File(origSourceDir.getAbsolutePath() + File.separatorChar + origSourceDir.getName() + ".spec");
-		IFile newSpecFile = packagerProject.getFile(packagerProject.getName() + ".spec");
+		File specFile = new File(origSourceDir.getAbsolutePath()
+				+ File.separatorChar + origSourceDir.getName() + ".spec");
+		IFile newSpecFile = packagerProject.getFile(packagerProject.getName()
+				+ ".spec");
 		FileInputStream in = new FileInputStream(specFile);
 		newSpecFile.create(in, false, null);
 		try {
@@ -106,12 +110,13 @@ public class FedoraPackagerUtilsTest {
 		}
 		assertNotNull(packagerProject.findMember(new Path(specFileName)));
 		// delete "sources" file so that project root becomes invalid
-		for (IResource file: packagerProject.members()) {
+		for (IResource file : packagerProject.members()) {
 			if (file.getName().equals(SourcesFile.SOURCES_FILENAME)) {
 				file.delete(true, null);
 			}
 		}
-		assertNull(packagerProject.findMember(new Path(SourcesFile.SOURCES_FILENAME)));
+		assertNull(packagerProject.findMember(new Path(
+				SourcesFile.SOURCES_FILENAME)));
 		try {
 			FedoraPackagerUtils.getProjectRoot(packagerProject);
 			fail("Not valid due to missing sources file.");
@@ -121,16 +126,20 @@ public class FedoraPackagerUtilsTest {
 	}
 
 	@Test
-	public void testGetProjectType() throws InterruptedException, InvalidProjectRootException {
+	public void testGetProjectType() throws InterruptedException,
+			InvalidProjectRootException {
 		gitProject = new GitTestProject("jsch");
-		IProjectRoot fproot = FedoraPackagerUtils.getProjectRoot(gitProject.getProject());
+		IProjectRoot fproot = FedoraPackagerUtils.getProjectRoot(gitProject
+				.getProject());
 		assertNotNull(fproot);
 	}
 
 	@Test
-	public void testGetVcsHandler() throws InterruptedException, InvalidProjectRootException  {
+	public void testGetVcsHandler() throws InterruptedException,
+			InvalidProjectRootException {
 		gitProject = new GitTestProject("jzlib");
-		IProjectRoot fproot = FedoraPackagerUtils.getProjectRoot(gitProject.getProject());
+		IProjectRoot fproot = FedoraPackagerUtils.getProjectRoot(gitProject
+				.getProject());
 		assertNotNull(fproot);
 		IFpProjectBits projectBits = FedoraPackagerUtils.getVcsHandler(fproot);
 		assertTrue(projectBits instanceof FpGitProjectBits);
