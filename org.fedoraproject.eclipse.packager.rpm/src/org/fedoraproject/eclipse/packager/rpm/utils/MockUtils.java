@@ -8,6 +8,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Observer;
 
+import org.eclipse.core.filesystem.EFS;
+import org.eclipse.core.filesystem.IFileStore;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.linuxtools.rpm.core.utils.Utils;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.console.ConsolePlugin;
@@ -15,11 +18,13 @@ import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
+import org.eclipse.ui.internal.ide.dialogs.IFileStoreFilter;
 import org.fedoraproject.eclipse.packager.rpm.RpmText;
 import org.fedoraproject.eclipse.packager.rpm.api.FedoraPackagerConsole;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.MockBuildCommandException;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.UserNotInMockGroupException;
 import org.fedoraproject.eclipse.packager.rpm.internal.core.ConsoleWriter;
+import org.eclipse.linuxtools.tools.launch.core.factory.RuntimeProcessFactory;
 
 /**
  * Utility class for Mock-related things.
@@ -98,16 +103,19 @@ public class MockUtils {
 	 *             If the command running process cannot be built.
 	 * @throws InterruptedException
 	 *             If the command is interrupted when run.
+	 * @throws CoreException
+	 * 	           If the given file does not have a valid URI.
 	 */
 	public static int runCommand(String[] command, Observer[] observers,
-			File location) throws IOException, InterruptedException {
-		ProcessBuilder pBuilder = new ProcessBuilder(command);
-		pBuilder = pBuilder.redirectErrorStream(true);
-		if (location != null) {
-			pBuilder.directory(location);
-		}
-		Process child;
-		child = pBuilder.start();
+			File location) throws IOException, InterruptedException, CoreException {
+		
+		IFileStore fileStore = null;
+		
+		if (location != null)
+			fileStore = EFS.getStore(location.toURI());
+
+		Process child = RuntimeProcessFactory.getFactory().exec(command, null, fileStore, null);
+
 		try {
 			BufferedInputStream is = new BufferedInputStream(
 					child.getInputStream());

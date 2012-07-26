@@ -8,7 +8,8 @@ Bundle-Vendor: %Bundle-Vendor.0
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.linuxtools.rpm.core,
- org.eclipse.ui.ide
+ org.eclipse.ui.ide,
+ org.eclipse.linuxtools.profiling.launch;bundle-version="1.1.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
@@ -16,9 +17,11 @@ Export-Package: org.fedoraproject.eclipse.packager.rpm,
  org.fedoraproject.eclipse.packager.rpm.api,
  org.fedoraproject.eclipse.packager.rpm.api.errors,
  org.fedoraproject.eclipse.packager.rpm.internal.handlers;x-friends:=com.redhat.eclipse.packager.rpm
-Import-Package: org.eclipse.core.resources,
+Import-Package: org.eclipse.core.filesystem,
+ org.eclipse.core.resources,
  org.eclipse.linuxtools.rpm.ui,
  org.eclipse.linuxtools.rpm.ui.editor.parser,
+ org.eclipse.linuxtools.tools.launch.core.factory,
  org.eclipse.ui.console,
  org.fedoraproject.eclipse.packager,
  org.fedoraproject.eclipse.packager.api,

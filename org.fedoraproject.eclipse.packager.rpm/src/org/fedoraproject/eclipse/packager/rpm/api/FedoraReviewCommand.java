@@ -88,6 +88,8 @@ public class FedoraReviewCommand extends
 					RpmText.FedoraReviewCommand_IOErrorText);
 		} catch (InterruptedException e) {
 			result.setSuccessful(false);
+		} catch (CoreException e) {
+			result.setSuccessful(false);
 		}
 		return result;
 	}

@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Observer;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -385,7 +386,10 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 				FedoraHandlerUtils.showErrorDialog(new Shell(),
 						RpmText.RpmBuildCommand_BuildFailure,
 						RpmText.RpmBuildCommand_BuildDidNotStart);
+			} catch (CoreException e) {
+				result.setSuccessful(false);
 			}
+			
 		}
 
 		public MockBuildResult getResult() {
