@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.linuxtools.tools.launch.core.factory.RuntimeProcessFactory;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.console.ConsolePlugin;
@@ -309,9 +310,8 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 				logger.logDebug(NLS.bind(
 						RpmText.RpmBuildCommand_commandStringMsg,
 						convertCmdList(cmdList)));
-				ProcessBuilder pBuilder = new ProcessBuilder(cmdList);
-				pBuilder = pBuilder.redirectErrorStream(true);
-				child = pBuilder.start();
+				child = RuntimeProcessFactory.getFactory().exec(cmdList, null);
+
 				is = new BufferedInputStream(child.getInputStream());
 
 			} catch (IOException e) {
