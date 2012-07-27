@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.linuxtools.rpm.core.RPMProjectLayout;
 import org.eclipse.linuxtools.rpm.ui.SRPMImportOperation;
+import org.eclipse.linuxtools.tools.launch.core.factory.RuntimeProcessFactory;
 import org.eclipse.osgi.util.NLS;
 import org.fedoraproject.eclipse.packager.IFpProjectBits;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
@@ -152,10 +153,10 @@ public class SRPMImportCommand {
 		try {
 			// get files in the srpm
 			cmdList = new String[] { "rpm", "-qpl", srpm }; //$NON-NLS-1$ //$NON-NLS-2$
-			ProcessBuilder pBuilder = new ProcessBuilder(cmdList);
-			Process child = pBuilder.start();
+			Process child = RuntimeProcessFactory.getFactory().exec(cmdList, null);
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					new BufferedInputStream(child.getInputStream())));
+
 			try {
 				if (child.waitFor() != 0) {
 					throw new SRPMImportCommandException(NLS.bind(
@@ -166,8 +167,10 @@ public class SRPMImportCommand {
 				throw new OperationCanceledException();
 			}
 
-			while (br.ready()) {
-				uploadList.add(br.readLine());
+			String line = br.readLine();
+			while (line != null) {
+				uploadList.add(line);
+				line = br.readLine();
 			}
 			// SRPM needs to be moved but not uploaded, use existing list to
 			// build array of files that need to be moved
