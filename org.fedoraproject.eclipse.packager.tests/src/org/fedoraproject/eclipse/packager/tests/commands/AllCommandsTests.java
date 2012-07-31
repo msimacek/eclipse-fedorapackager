@@ -20,7 +20,9 @@ import org.junit.runners.Suite.SuiteClasses;
 	DownloadSourceCommandTest.class,
 	FedoraPackagerCommandTest.class,
 	UploadSourceCommandTest.class,
-	UploadSourceCommandTest.class
+	UploadSourceCommandTest.class,
+	ScpCommandTest.class,
+	ScpJobTest.class
 })
 
 public class AllCommandsTests {

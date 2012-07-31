@@ -46,7 +46,7 @@ import org.osgi.framework.FrameworkUtil;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
 
-public class TestScpCommandTest {
+public class ScpCommandTest {
 
 	private static final String EXAMPLE_FEDORA_PROJECT_ROOT = "resources/example-fedora-project"; // $NON-NLS-1$
 	// project under test
