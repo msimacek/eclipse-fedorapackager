@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.api;
 
+import java.io.File;
+
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -94,7 +96,7 @@ public class ScpJob extends Job {
 		String[] ssh_key = ssh_keys.split(","); //$NON-NLS-1$
 		try {
 			String privateKeyFile = ssh_home.concat("/").concat(ssh_key[1]); //$NON-NLS-1$
-			if (privateKeyFile != null) {
+			if (privateKeyFile != null && new File(privateKeyFile).exists()) {
 				jsch.addIdentity(privateKeyFile);
 			}
 
