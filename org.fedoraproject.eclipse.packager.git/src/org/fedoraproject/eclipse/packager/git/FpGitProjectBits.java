@@ -562,7 +562,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 		} else if (branchName.equals("devel")) { //$NON-NLS-1$
 			distro = "fedora"; //$NON-NLS-1$
 			distroSuffix = ".fc" + version; //$NON-NLS-1$
-			buildTarget = "dist-rawhide"; //$NON-NLS-1$
+			buildTarget = "rawhide"; //$NON-NLS-1$
 		} else if (branchName.startsWith("EL-")) { //$NON-NLS-1$
 			distro = "rhel"; //$NON-NLS-1$
 			distroSuffix = ".el" + version; //$NON-NLS-1$
