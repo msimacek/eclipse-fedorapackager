@@ -12,6 +12,9 @@
         see https://fedorahosted.org/eclipse-fedorapackager/wiki/PreparingReleases
     -->
    <!--
+   <feature url="features/org.fedoraproject.eclipse.packager_0.4.0.qualifier.jar" id="org.fedoraproject.eclipse.packager" version="0.3.1.qualifier">
+      <category name="fedora-packager"/>
+   </feature>
    <feature url="features/org.fedoraproject.eclipse.packager_0.3.1.qualifier.jar" id="org.fedoraproject.eclipse.packager" version="0.3.1.qualifier">
       <category name="fedora-packager"/>
    </feature>
