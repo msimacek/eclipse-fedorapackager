@@ -5,4 +5,4 @@ Bundle-SymbolicName: org.fedoraproject.eclipse.packager.bodhi.tests
 Fragment-Host: org.fedoraproject.eclipse.packager.bodhi
 Bundle-Version: 0.4.1.qualifier
 Require-Bundle: org.fedoraproject.eclipse.packager.tests, org.easymock, org.junit
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

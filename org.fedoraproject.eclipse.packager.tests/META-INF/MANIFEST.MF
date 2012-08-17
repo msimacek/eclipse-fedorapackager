@@ -9,7 +9,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime, 
  org.fedoraproject.eclipse.packager;bundle-version="[0.4.1,1.0.0)"
 Eclipse-RegisterBuddy: org.apache.log4j
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: org.fedoraproject.eclipse.packager.tests,
  org.fedoraproject.eclipse.packager.tests.utils,

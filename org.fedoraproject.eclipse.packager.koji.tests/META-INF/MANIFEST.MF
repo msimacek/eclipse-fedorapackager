@@ -4,7 +4,7 @@ Bundle-Name: Tests
 Bundle-SymbolicName: org.fedoraproject.eclipse.packager.koji.tests
 Fragment-Host: org.fedoraproject.eclipse.packager.koji
 Bundle-Version: 0.4.1.qualifier
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Require-Bundle: org.easymock,
  org.junit,
  org.fedoraproject.eclipse.packager.tests,
