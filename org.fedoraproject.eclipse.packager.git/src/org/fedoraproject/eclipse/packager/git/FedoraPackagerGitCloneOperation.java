@@ -92,7 +92,6 @@ public class FedoraPackagerGitCloneOperation {
 							FedoraPackagerGitText.FedoraPackagerGitCloneOperation_operationMisconfiguredError,
 							this.getClass().getName()));
 		}
-
 		final CloneOperation clone = new CloneOperation(uri, true, null,
 				ResourcesPlugin.getWorkspace().getRoot().getLocation()
 						.append(packageName).toFile(), Constants.R_HEADS

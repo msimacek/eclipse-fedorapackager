@@ -1,7 +1,6 @@
-F-14,Fedora 14
-F-15,Fedora 15
 F-16,Fedora 16
 F-17,Fedora 17
+F-18,Fedora 18
 devel,Fedora Rawhide
 EL-4,RHEL 4
 EL-5,RHEL 5

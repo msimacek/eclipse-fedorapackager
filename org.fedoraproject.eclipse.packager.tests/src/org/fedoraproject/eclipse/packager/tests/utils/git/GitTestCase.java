@@ -29,7 +29,7 @@ public class GitTestCase {
 	@Before
 	public void setUp() throws InterruptedException,
 			InvalidProjectRootException {
-		project = new GitTestProject("eclipse-rpm-editor");
+		project = new GitTestProject("itext");
 		iProject = project.getProject();
 		// create a fedoraprojectRoot for this project
 		fedoraprojectRoot = FedoraPackagerUtils.getProjectRoot((iProject));

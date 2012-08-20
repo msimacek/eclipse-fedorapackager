@@ -48,7 +48,7 @@ public class KojiChainBuildJob extends KojiBuildJob {
 	private List<List<String>> sourceLocations;
 	private IProjectRoot[] projectRoots;
 	private final BranchConfigInstance RAWHIDECONFIG = new BranchConfigInstance(
-			".fc18", "18", "fedora", "dist-rawhide", "devel"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			".fc18", "18", "fedora", "rawhide", "devel"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
 	/**
 	 * @param name
@@ -128,15 +128,14 @@ public class KojiChainBuildJob extends KojiBuildJob {
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
-			if (!kojiInfo[2].contentEquals("true")) { //$NON-NLS-1$
+			final Set<String> targetSet = new HashSet<String>();
+			for (HashMap<?, ?> targetInfo : kojiClient.listTargets()) {
+				targetSet.add(targetInfo.get("name").toString()); //$NON-NLS-1$
+			}
+			if (!kojiInfo[2].contentEquals("true") || !targetSet.contains(bci.getBuildTarget())) { //$NON-NLS-1$
 				kojiBuildCmd.buildTarget(bci.getBuildTarget());
 			} else {
-				final Set<String> targetSet = new HashSet<String>();
-				for (HashMap<?, ?> targetInfo : kojiClient.listTargets()) {
-					targetSet.add(targetInfo.get("name").toString()); //$NON-NLS-1$
-				}
-
-				FutureTask<String> tagTask = new FutureTask<String>(
+				FutureTask<String> targetTask = new FutureTask<String>(
 						new Callable<String>() {
 
 							@Override
@@ -146,9 +145,9 @@ public class KojiChainBuildJob extends KojiBuildJob {
 							}
 
 						});
-				Display.getDefault().syncExec(tagTask);
+				Display.getDefault().syncExec(targetTask);
 				String buildTarget = null;
-				buildTarget = tagTask.get();
+				buildTarget = targetTask.get();
 				if (buildTarget == null) {
 					throw new OperationCanceledException();
 				}

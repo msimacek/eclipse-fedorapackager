@@ -132,15 +132,14 @@ public class KojiBuildJob extends KojiJob {
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
-			if (!kojiInfo[2].contentEquals("true")) { //$NON-NLS-1$
+			final Set<String> targetSet = new HashSet<String>();
+			for (HashMap<?, ?> targetInfo : kojiClient.listTargets()) {
+				targetSet.add(targetInfo.get("name").toString()); //$NON-NLS-1$
+			}
+			if (!kojiInfo[2].contentEquals("true") || !targetSet.contains(bci.getBuildTarget())) { //$NON-NLS-1$
 				kojiBuildCmd.buildTarget(bci.getBuildTarget());
-			} else {
-				final Set<String> targetSet = new HashSet<String>();
-				for (HashMap<?, ?> targetInfo : kojiClient.listTargets()) {
-					targetSet.add(targetInfo.get("name").toString()); //$NON-NLS-1$
-				}
-
-				FutureTask<String> tagTask = new FutureTask<String>(
+			} else {	
+				FutureTask<String> targetTask = new FutureTask<String>(
 						new Callable<String>() {
 
 							@Override
@@ -150,9 +149,9 @@ public class KojiBuildJob extends KojiJob {
 							}
 
 						});
-				Display.getDefault().syncExec(tagTask);
+				Display.getDefault().syncExec(targetTask);
 				String buildTarget = null;
-				buildTarget = tagTask.get();
+				buildTarget = targetTask.get();
 				if (buildTarget == null) {
 					throw new OperationCanceledException();
 				}

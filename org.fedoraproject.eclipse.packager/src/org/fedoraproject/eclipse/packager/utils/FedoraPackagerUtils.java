@@ -223,13 +223,13 @@ public class FedoraPackagerUtils {
 			if (Integer.parseInt(target.substring(2)) < 16) {
 				return "f" + target.substring(2) + "-candidate"; //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
-				return "dist-rawhide"; //$NON-NLS-1$
+				return "rawhide"; //$NON-NLS-1$
 			}
 		} else if (target.startsWith("el")) { //$NON-NLS-1$
 			if (Integer.parseInt(target.substring(2)) < 6) {
 				return "dist-" + target.substring(2) + "E-epel-testing-candidate"; //$NON-NLS-1$ //$NON-NLS-2$
 			} else {
-				return "dist-rawhide"; //$NON-NLS-1$
+				return "rawhide"; //$NON-NLS-1$
 			}
 		} else {
 			return null;

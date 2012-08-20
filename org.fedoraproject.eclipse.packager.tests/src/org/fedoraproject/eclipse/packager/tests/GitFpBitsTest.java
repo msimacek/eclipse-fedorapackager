@@ -60,7 +60,7 @@ public class GitFpBitsTest extends GitTestCase {
 		assertEquals("devel", projectBits.getCurrentBranchName());
 		// ATM this will change with the next Fedora release, so expect this to
 		// fail
-		assertEquals(projectBits.getBranchConfig().getDistVal(), "18");
+		assertEquals(projectBits.getBranchConfig().getDistVal(), "19");
 		GitTestProject testProject = getProject();
 		// switch to remote branch f13
 		testProject.checkoutBranch("f13");

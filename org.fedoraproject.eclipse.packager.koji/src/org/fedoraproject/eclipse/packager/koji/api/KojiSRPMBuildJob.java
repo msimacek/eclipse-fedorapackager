@@ -106,9 +106,55 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 		IKojiHubClient kojiClient;
 		try {
 			kojiClient = getHubClient();
+			kojiClient.login();
+			final Set<String> targetSet = new HashSet<String>();
+			for (HashMap<?, ?> targetInfo : kojiClient.listTargets()) {
+				targetSet.add(targetInfo.get("name").toString()); //$NON-NLS-1$
+			}
+			if (!kojiInfo[2].contentEquals("true") || !targetSet.contains(bci.getBuildTarget())) { //$NON-NLS-1$
+				kojiBuildCmd.buildTarget(bci.getBuildTarget());
+				logger.logDebug(NLS.bind(KojiText.KojiSRPMBuildJob_logTarget,
+						bci.getBuildTarget()));
+			} else {
+				FutureTask<String> targetTask = new FutureTask<String>(
+						new Callable<String>() {
+
+							@Override
+							public String call() {
+								return new KojiTargetDialog(shell, targetSet)
+										.openForTarget();
+							}
+
+						});
+				Display.getDefault().syncExec(targetTask);
+				String buildTarget = null;
+				buildTarget = targetTask.get();
+				if (buildTarget == null) {
+					throw new OperationCanceledException();
+				}
+				kojiBuildCmd.buildTarget(buildTarget);
+				logger.logDebug(NLS.bind(KojiText.KojiSRPMBuildJob_logTarget,
+						buildTarget));
+			}
 		} catch (KojiHubClientException e) {
 			return e.getStatus();
+		} catch (ExecutionException e) {
+			// This shouldn't happen, but report error anyway
+			logger.logError(e.getMessage(), e);
+			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
+					e.getMessage(), e);
+		} catch (InterruptedException e) {
+			// This shouldn't happen, but report error anyway
+			logger.logError(e.getMessage(), e);
+			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
+					e.getMessage(), e);
+		} catch (KojiHubClientLoginException e) {
+			// This shouldn't happen, but report error anyway
+			logger.logError(e.getMessage(), e);
+			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
+					e.getMessage(), e);
 		}
+
 		subMonitor.worked(5);
 		subMonitor.setTaskName(KojiText.KojiSRPMBuildJob_UploadingSRPM);
 		final String uploadPath = "cli-build/" + FedoraPackagerUtils.getUniqueIdentifier(); //$NON-NLS-1$
@@ -174,36 +220,7 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 		logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
 				KojiBuildCommand.class.getName()));
 		try {
-			if (!kojiInfo[2].contentEquals("true")) { //$NON-NLS-1$
-				kojiBuildCmd.buildTarget(bci.getBuildTarget());
-				logger.logDebug(NLS.bind(KojiText.KojiSRPMBuildJob_logTarget,
-						bci.getBuildTarget()));
-			} else {
-				final Set<String> tagSet = new HashSet<String>();
-				for (HashMap<?, ?> tagInfo : kojiClient.listTargets()) {
-					tagSet.add(tagInfo.get("name").toString()); //$NON-NLS-1$
-				}
 
-				FutureTask<String> tagTask = new FutureTask<String>(
-						new Callable<String>() {
-
-							@Override
-							public String call() {
-								return new KojiTargetDialog(shell, tagSet)
-										.openForTarget();
-							}
-
-						});
-				Display.getDefault().syncExec(tagTask);
-				String buildTarget = null;
-				buildTarget = tagTask.get();
-				if (buildTarget == null) {
-					throw new OperationCanceledException();
-				}
-				kojiBuildCmd.buildTarget(buildTarget);
-				logger.logDebug(NLS.bind(KojiText.KojiSRPMBuildJob_logTarget,
-						buildTarget));
-			}
 			logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
 					KojiBuildCommand.class.getName()));
 
@@ -240,16 +257,6 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 					e.getMessage());
 			logger.logError(msg, e);
 			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID, msg, e);
-		} catch (ExecutionException e) {
-			// This shouldn't happen, but report error anyway
-			logger.logError(e.getMessage(), e);
-			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
-					e.getMessage(), e);
-		} catch (InterruptedException e) {
-			// This shouldn't happen, but report error anyway
-			logger.logError(e.getMessage(), e);
-			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
-					e.getMessage(), e);
 		}
 		// success
 		return Status.OK_STATUS;
