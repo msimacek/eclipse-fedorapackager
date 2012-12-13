@@ -90,7 +90,7 @@ public class ScpCommandTest {
 		session.connect();
 		expect(session.openChannelSftp()).andReturn(channelSftp);
 		channelSftp.connect();
-		Vector<String> folderVector = new Vector<String>();
+		Vector<String> folderVector = new Vector<>();
 		expect(channelSftp.stringLs("public_html")).andReturn(folderVector);
 		channelSftp.mkdir("public_html/fpe-rpm-review");
 		expect(channelSftp.stringLs("public_html/fpe-rpm-review")).andReturn(

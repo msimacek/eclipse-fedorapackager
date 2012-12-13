@@ -69,7 +69,7 @@ public class RpmBuildCommandTest extends FedoraPackagerTest {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
 		RpmBuildResult result;
-		List<String> distDefines = new ArrayList<String>();
+		List<String> distDefines = new ArrayList<>();
 		distDefines.add("--define"); //$NON-NLS-1$
 		distDefines.add("dist .fc17"); //$NON-NLS-1$
 		distDefines.add("--define"); //$NON-NLS-1$
@@ -100,7 +100,7 @@ public class RpmBuildCommandTest extends FedoraPackagerTest {
 	public void canPrepareSources() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException, IllegalArgumentException  {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
-		List<String> nodeps = new ArrayList<String>(1);
+		List<String> nodeps = new ArrayList<>(1);
 		nodeps.add(RpmBuildCommand.NO_DEPS);
 		RpmBuildResult result;
 			result = build.buildType(BuildType.PREP).flags(nodeps)
@@ -197,7 +197,7 @@ public class RpmBuildCommandTest extends FedoraPackagerTest {
 	public void canCreateSRPM() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException, IllegalArgumentException {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
-		List<String> nodeps = new ArrayList<String>(1);
+		List<String> nodeps = new ArrayList<>(1);
 		nodeps.add(RpmBuildCommand.NO_DEPS);
 		RpmBuildResult result;
 			result = build.buildType(BuildType.SOURCE).flags(nodeps)

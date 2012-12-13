@@ -31,7 +31,7 @@ public class WrappedChannelSftp extends WrappedChannel implements IChannelSftp {
 
 	@Override
 	public Vector<String> stringLs(String path) throws SftpException {
-		Vector<String> nameVector = new Vector<String>();
+		Vector<String> nameVector = new Vector<>();
 		Vector<?> existDir = channel.ls(path);
 		Iterator<?> it = existDir.iterator();
 		while (it.hasNext()) {

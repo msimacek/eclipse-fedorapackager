@@ -56,7 +56,7 @@ public class AddNewBuildDialog extends InputDialog {
 	public String[] getBuilds() {
 		Pattern pattern = Pattern.compile(BUILDS_REGEX);
 		Matcher matcher = pattern.matcher(getValue());
-		ArrayList<String> builds = new ArrayList<String>();
+		ArrayList<String> builds = new ArrayList<>();
 		if (matcher.matches()) {
 			for (int i = 0; i < matcher.groupCount(); i++) {
 				for (String item : matcher.group(i).split("[, ]")) { //$NON-NLS-1$

@@ -119,7 +119,7 @@ public class KojiBuildJob extends KojiJob {
 			return e.getStatus();
 		}
 		kojiBuildCmd.setKojiClient(kojiClient);
-		List<String> sourceLocation = new ArrayList<String>();
+		List<String> sourceLocation = new ArrayList<>();
 		sourceLocation.add(projectBits.getScmUrlForKoji(bci));
 		kojiBuildCmd.sourceLocation(sourceLocation);
 		String nvr = RPMUtils.getNVR(fedoraProjectRoot, bci);
@@ -132,14 +132,14 @@ public class KojiBuildJob extends KojiJob {
 			if (monitor.isCanceled()) {
 				throw new OperationCanceledException();
 			}
-			final Set<String> targetSet = new HashSet<String>();
+			final Set<String> targetSet = new HashSet<>();
 			for (HashMap<?, ?> targetInfo : kojiClient.listTargets()) {
 				targetSet.add(targetInfo.get("name").toString()); //$NON-NLS-1$
 			}
 			if (!kojiInfo[2].contentEquals("true") || !targetSet.contains(bci.getBuildTarget())) { //$NON-NLS-1$
 				kojiBuildCmd.buildTarget(bci.getBuildTarget());
 			} else {	
-				FutureTask<String> targetTask = new FutureTask<String>(
+				FutureTask<String> targetTask = new FutureTask<>(
 						new Callable<String>() {
 
 							@Override

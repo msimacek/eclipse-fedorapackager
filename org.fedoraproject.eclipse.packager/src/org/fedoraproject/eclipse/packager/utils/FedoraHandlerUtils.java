@@ -135,7 +135,7 @@ public class FedoraHandlerUtils {
 			IProjectRoot fedoraProjectRoot, String extension, 
 			final String message) 
 	throws CoreException, OperationCanceledException{
-		HashSet<IResource> options = new HashSet<IResource>();
+		HashSet<IResource> options = new HashSet<>();
 		for (IResource resource : fedoraProjectRoot.getContainer()
 				.members(IContainer.INCLUDE_PHANTOMS)){
 			if (resource.getName().endsWith(extension)){

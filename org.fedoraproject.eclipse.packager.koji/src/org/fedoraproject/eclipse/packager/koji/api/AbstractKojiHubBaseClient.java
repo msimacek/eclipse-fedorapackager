@@ -95,7 +95,7 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 	 */
 	@Override
 	public void logout() throws KojiHubClientException {
-		ArrayList<String> params = new ArrayList<String>();
+		ArrayList<String> params = new ArrayList<>();
 		try {
 			xmlRpcClient.execute("logout", params); //$NON-NLS-1$
 		} catch (XmlRpcException e) {
@@ -115,7 +115,7 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 	public int[] build(String target, List<?> scmURLs, String[] nvrs,
 			boolean scratch) throws KojiHubClientException {
 		ArrayList<Object> params;
-		Map<String, Boolean> scratchParam = new HashMap<String, Boolean>();
+		Map<String, Boolean> scratchParam = new HashMap<>();
 		scratchParam.put("scratch", true); //$NON-NLS-1$
 
 		if (nvrs != null && !scratch) {
@@ -132,7 +132,7 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 			if (scmURLs.get(0) instanceof String) {
 				taskIds = new int[scmURLs.size()];
 				for (int i = 0; i < scmURLs.size(); i++) {
-					params = new ArrayList<Object>();
+					params = new ArrayList<>();
 					params.add(scmURLs.get(i));
 					params.add(target);
 					if (scratch) {
@@ -142,7 +142,7 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 					taskIds[i] = Integer.parseInt(result.toString());
 				}
 			} else {
-				params = new ArrayList<Object>();
+				params = new ArrayList<>();
 				params.add(scmURLs);
 				params.add(target);
 				result = xmlRpcClient.execute("chainBuild", params); //$NON-NLS-1$
@@ -157,7 +157,7 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 	@SuppressWarnings("unchecked")
 	@Override
 	public KojiRepoInfo getRepo(String tag) throws KojiHubClientException {
-		ArrayList<Object> params = new ArrayList<Object>();
+		ArrayList<Object> params = new ArrayList<>();
 		params.add(tag);
 
 		HashMap<String, Object> result;
@@ -181,7 +181,7 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 	@Override
 	@SuppressWarnings("unchecked")
 	public KojiBuildInfo getBuild(String nvr) throws KojiHubClientException {
-		ArrayList<Object> params = new ArrayList<Object>();
+		ArrayList<Object> params = new ArrayList<>();
 		params.add(nvr);
 		Map<String, Object> rawBuildInfo;
 		try {
@@ -232,7 +232,7 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 	public boolean uploadFile(String path, String name, int size,
 			String md5sum, int offset, String data)
 			throws KojiHubClientException {
-		ArrayList<Object> params = new ArrayList<Object>();
+		ArrayList<Object> params = new ArrayList<>();
 		params.add(path);
 		params.add(name);
 		params.add(size);
@@ -274,7 +274,7 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 	@Override
 	public Set<String> listBuildTags() throws KojiHubClientException {
 		HashMap<?, ?> targets[] = this.listTargets();
-		TreeSet<String> tags = new TreeSet<String>();
+		TreeSet<String> tags = new TreeSet<>();
 		for (int i = 0; i < targets.length; i++) {
 			HashMap<?, ?> target = targets[i];
 			tags.add((String) target.get("build_tag_name")); //$NON-NLS-1$

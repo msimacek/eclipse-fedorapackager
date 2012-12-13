@@ -121,7 +121,7 @@ public class RpmEvalCommand extends FedoraPackagerCommand<EvalResult> {
 	public void initialize(IProjectRoot fp)
 			throws FedoraPackagerCommandInitializationException {
 		super.initialize(fp);
-		this.command = new ArrayList<String>();
+		this.command = new ArrayList<>();
 		this.command.add(RPM_CMD);
 		this.command.add(EVAL_OPTION);
 	}

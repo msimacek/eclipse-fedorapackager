@@ -59,7 +59,7 @@ public abstract class FedoraPackagerCommand<T> {
 	/**
 	 * A list of command listeners to call
 	 */
-	private final ArrayList<ICommandListener> cmdListeners = new ArrayList<ICommandListener>();
+	private final ArrayList<ICommandListener> cmdListeners = new ArrayList<>();
 
 	/**
 	 * a state which tells whether it is allowed to call

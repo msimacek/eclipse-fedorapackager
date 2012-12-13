@@ -290,7 +290,7 @@ public class FedoraPackagerUtils {
 	public static IProject[] getAllFedoraGitProjects() {
 		IProject[] wsProjects = ResourcesPlugin.getWorkspace().getRoot()
 				.getProjects();
-		List<IProject> projectsSet = new ArrayList<IProject>();
+		List<IProject> projectsSet = new ArrayList<>();
 		for (IProject project : wsProjects) {
 			String property = null;
 			try {
@@ -322,7 +322,7 @@ public class FedoraPackagerUtils {
 				.getExtensionPoint(PackagerPlugin.PLUGIN_ID,
 						PROJECT_ROOT_EXTENSIONPOINT_NAME);
 		if (projectRootExtension != null) {
-			List<IProjectRoot> projectRootList = new ArrayList<IProjectRoot>();
+			List<IProjectRoot> projectRootList = new ArrayList<>();
 			for (IConfigurationElement projectRoot : projectRootExtension
 					.getConfigurationElements()) {
 				if (projectRoot.getName().equals(PROJECT_ROOT_ELEMENT_NAME)) {

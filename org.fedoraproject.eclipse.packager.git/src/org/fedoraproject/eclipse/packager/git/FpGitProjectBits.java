@@ -182,7 +182,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 	 * @return The branch map.
 	 */
 	private HashMap<String, String> getBranches() {
-		HashMap<String, String> branches = new HashMap<String, String>();
+		HashMap<String, String> branches = new HashMap<>();
 		try {
 			Map<String, Ref> remotes = git.getRepository().getRefDatabase()
 					.getRefs(Constants.R_REMOTES);
@@ -498,7 +498,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 	public BranchConfigInstance getBranchConfig() {
 		String branchName = getCurrentBranchName();
 		if (branchName == null) {
-			HashMap<String, String> branchMap = new HashMap<String, String>();
+			HashMap<String, String> branchMap = new HashMap<>();
 			BufferedReader br;
 			try {
 				br = new BufferedReader(new InputStreamReader(FileLocator.find(Platform
@@ -517,7 +517,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 			}
 			final String[] entries = branchMap.keySet().toArray(new String[0]);
 			Arrays.sort(entries);
-			FutureTask<String> promptTask = new FutureTask<String>(
+			FutureTask<String> promptTask = new FutureTask<>(
 					new Callable<String>() {
 						@Override
 						public String call() {

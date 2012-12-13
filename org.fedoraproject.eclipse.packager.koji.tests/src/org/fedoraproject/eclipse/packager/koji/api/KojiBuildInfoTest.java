@@ -50,7 +50,7 @@ public class KojiBuildInfoTest extends KojiClientTest {
 	@Before
 	public void setUp() throws MalformedURLException  {
 		super.setUp();
-		rawBuildinfoMap = new HashMap<String, Object>();
+		rawBuildinfoMap = new HashMap<>();
 		rawBuildinfoMap.put("state", new Integer(2));
 		rawBuildinfoMap.put("task_id", new Integer(3333));
 		rawBuildinfoMap.put("package_id", new Integer(9999));

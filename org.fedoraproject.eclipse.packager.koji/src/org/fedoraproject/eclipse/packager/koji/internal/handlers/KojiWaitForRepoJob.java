@@ -68,7 +68,7 @@ public class KojiWaitForRepoJob extends KojiJob {
 			monitor.beginTask(KojiText.KojiWaitForRepoJob_collectingRepoTags,
 					IProgressMonitor.UNKNOWN);
 			final Set<String> targetSet = kojiClient.listBuildTags();
-			FutureTask<String> tagTask = new FutureTask<String>(
+			FutureTask<String> tagTask = new FutureTask<>(
 					new Callable<String>() {
 
 						@Override

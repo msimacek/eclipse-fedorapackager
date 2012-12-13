@@ -113,7 +113,7 @@ public class MockBuildCommandTest extends FedoraPackagerTest {
 	 * @throws CommandMisconfiguredException 
 	 */
 	private RpmBuildResult createSRPM() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException  {
-		List<String> nodeps = new ArrayList<String>(1);
+		List<String> nodeps = new ArrayList<>(1);
 		nodeps.add(RpmBuildCommand.NO_DEPS);
 		// get RPM build command in order to produce an SRPM
 		RpmBuildCommand srpmBuild = (RpmBuildCommand) packager

@@ -56,7 +56,7 @@ public class ScpHandler extends AbstractHandler {
 			IResource eventResource = FedoraHandlerUtils.getResource(event);
 			final IProjectRoot projectRoot = FedoraPackagerUtils
 					.getProjectRoot(eventResource);
-			HashSet<IResource> options = new HashSet<IResource>();
+			HashSet<IResource> options = new HashSet<>();
 			for (IResource resource : projectRoot.getProject().members()) {
 				if (resource.getName().endsWith(".src.rpm")) { //$NON-NLS-1$
 					options.add(resource);

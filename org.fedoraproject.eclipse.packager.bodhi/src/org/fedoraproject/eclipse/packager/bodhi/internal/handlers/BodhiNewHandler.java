@@ -432,7 +432,7 @@ public class BodhiNewHandler extends AbstractHandler {
 	 * @return The list of corresponding N-V-R's as a String array.
 	 */
 	protected String[] getNVRsOfFedoraProjectsInWorkspace() {
-		List<String> nvrs = new ArrayList<String>();
+		List<String> nvrs = new ArrayList<>();
 		for (IProject fedoraProject : FedoraPackagerUtils
 				.getAllFedoraGitProjects()) {
 			if (fedoraProject.isOpen()) {

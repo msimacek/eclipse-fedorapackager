@@ -19,11 +19,11 @@ public class TestAbstractKojiHubBaseClientTest {
 			MalformedURLException {
 		final String tag = "f18-build";
 
-		final HashMap<String, Object> testMap = new HashMap<String, Object>();
+		final HashMap<String, Object> testMap = new HashMap<>();
 		testMap.put("id", 55);
 		testMap.put("creation_time", "yesterday");
 
-		ArrayList<Object> params = new ArrayList<Object>();
+		ArrayList<Object> params = new ArrayList<>();
 		params.add(tag);
 
 		// Mock xmlRpcClient
@@ -61,9 +61,9 @@ public class TestAbstractKojiHubBaseClientTest {
 	public void testListBuildTags() throws MalformedURLException, KojiHubClientException{
 
 		// Create a list of build targets
-		HashMap<String, String> tag1 = new HashMap<String, String>();
+		HashMap<String, String> tag1 = new HashMap<>();
 		tag1.put("build_tag_name", "tag1-build");
-		HashMap<String, String> tag2 = new HashMap<String, String>();
+		HashMap<String, String> tag2 = new HashMap<>();
 		tag2.put("build_tag_name", "tag2-build");
 		final HashMap<?,?>[] testMapArray = {tag1,tag2};
 

@@ -124,9 +124,9 @@ public class SRPMImportCommand {
 	 */
 	public SRPMImportResult call(IProgressMonitor monitor)
 			throws SRPMImportCommandException {
-		Set<String> stageSet = new HashSet<String>();
-		Set<String> uploadedFiles = new HashSet<String>();
-		Set<String> skippedUploads = new HashSet<String>();
+		Set<String> stageSet = new HashSet<>();
+		Set<String> uploadedFiles = new HashSet<>();
+		Set<String> skippedUploads = new HashSet<>();
 		// install rpm to the project folder
 		SRPMImportOperation sio;
 		try {
@@ -147,7 +147,7 @@ public class SRPMImportCommand {
 			}
 		}
 		String[] cmdList = null;
-		List<String> uploadList = new ArrayList<String>();
+		List<String> uploadList = new ArrayList<>();
 		String[] moveFiles;
 		String[] uploadFiles;
 		try {

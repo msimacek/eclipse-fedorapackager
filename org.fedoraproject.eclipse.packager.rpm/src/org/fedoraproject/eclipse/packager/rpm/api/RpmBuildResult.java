@@ -28,7 +28,7 @@ public class RpmBuildResult extends Result {
 	 */
 	public RpmBuildResult(String[] cmdList) {
 		super(cmdList);
-		this.srpms = new HashSet<String>();
+		this.srpms = new HashSet<>();
 	}
 
 	/**

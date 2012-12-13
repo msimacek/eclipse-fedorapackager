@@ -137,7 +137,7 @@ public class KojiBuildCommandTest {
 		replay(kojiClient);
 		buildCommand.setKojiClient(kojiClient);
 		buildCommand.buildTarget("dist-rawhide").nvr(new String[] {"eclipse-fedorapackager-0.1.12-1.fc15"});
-		List<String> sourceLocation = new ArrayList<String>();
+		List<String> sourceLocation = new ArrayList<>();
 		sourceLocation.add("git://pkgs.stg.fedoraproject.org/eclipse-fedorapackager.git?#7526fb6c2c150dcc3480a9838540426a501d0553");
 		buildCommand.sourceLocation(sourceLocation);
 		buildCommand.isScratchBuild(true).call(new NullProgressMonitor());

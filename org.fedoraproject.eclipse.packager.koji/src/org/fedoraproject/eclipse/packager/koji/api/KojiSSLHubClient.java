@@ -92,7 +92,7 @@ public class KojiSSLHubClient extends AbstractKojiHubBaseClient {
 		setupSSLLoginXMLRPCConfig();
 		setupXmlRpcClient();
 		// do the login
-		ArrayList<String> params = new ArrayList<String>();
+		ArrayList<String> params = new ArrayList<>();
 		Object result = null;
 		HashMap<?, ?> hashMap = null;
 		try {

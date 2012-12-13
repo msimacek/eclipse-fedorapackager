@@ -16,8 +16,7 @@ public class KojiClientFactory {
 	 * A hash map to keep the koji clients created indexed by the URL they are
 	 * connected to. In most cases there will only be one client created.
 	 */
-	private static HashMap<String, IKojiHubClient> clients = new HashMap<String, IKojiHubClient>(
-			1);
+	private static HashMap<String, IKojiHubClient> clients = new HashMap<>(1);
 
 	/**
 	 * Create a hub client connected to the given URL.

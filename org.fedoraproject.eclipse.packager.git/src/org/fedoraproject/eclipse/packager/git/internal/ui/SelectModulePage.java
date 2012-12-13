@@ -237,7 +237,7 @@ public class SelectModulePage extends WizardPage {
 			return EMPTY_WORKING_SET_ARRAY;
 		}
 
-		ArrayList<IWorkingSet> result = new ArrayList<IWorkingSet>();
+		ArrayList<IWorkingSet> result = new ArrayList<>();
 		for (Iterator<Object> iterator = elements.iterator(); iterator.hasNext();) {
 			Object element = iterator.next();
 			if (element instanceof IWorkingSet && !((IWorkingSet) element).isAggregateWorkingSet()) {

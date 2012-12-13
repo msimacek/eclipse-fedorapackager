@@ -50,7 +50,7 @@ public class SourcesFile {
 	public static final String SOURCES_FILENAME = "sources"; //$NON-NLS-1$
 
 	private IFile sourcesFile;
-	Map<String, String> sources = new LinkedHashMap<String, String>();
+	Map<String, String> sources = new LinkedHashMap<>();
 
 	/**
 	 * Creates the sources file model from the given file.
@@ -132,7 +132,7 @@ public class SourcesFile {
 	 * @return Files that are missing locally or has different md5.
 	 */
 	public Set<String> getMissingSources() {
-		HashSet<String> missingSources = new HashSet<String>();
+		HashSet<String> missingSources = new HashSet<>();
 		for (String source : sources.keySet()) {
 			IResource r = sourcesFile.getParent().findMember(source);
 			// matched source name
@@ -151,7 +151,7 @@ public class SourcesFile {
 	 * @return A {@link Set} of all file names listed in the sources file.
 	 */
 	public Set<String> getAllSources() {
-		HashSet<String> allSources = new HashSet<String>();
+		HashSet<String> allSources = new HashSet<>();
 		for (String source : sources.keySet()) {
 			allSources.add(source);
 		}

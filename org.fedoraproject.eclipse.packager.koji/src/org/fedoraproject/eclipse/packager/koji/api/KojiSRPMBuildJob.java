@@ -107,7 +107,7 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 		try {
 			kojiClient = getHubClient();
 			kojiClient.login();
-			final Set<String> targetSet = new HashSet<String>();
+			final Set<String> targetSet = new HashSet<>();
 			for (HashMap<?, ?> targetInfo : kojiClient.listTargets()) {
 				targetSet.add(targetInfo.get("name").toString()); //$NON-NLS-1$
 			}
@@ -116,7 +116,7 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 				logger.logDebug(NLS.bind(KojiText.KojiSRPMBuildJob_logTarget,
 						bci.getBuildTarget()));
 			} else {
-				FutureTask<String> targetTask = new FutureTask<String>(
+				FutureTask<String> targetTask = new FutureTask<>(
 						new Callable<String>() {
 
 							@Override
@@ -212,7 +212,7 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 		}
 		subMonitor.worked(5);
 		kojiBuildCmd.setKojiClient(kojiClient);
-		List<String> sourceLocation = new ArrayList<String>();
+		List<String> sourceLocation = new ArrayList<>();
 		sourceLocation.add(uploadPath + "/" + srpmPath.lastSegment()); //$NON-NLS-1$
 		kojiBuildCmd.sourceLocation(sourceLocation);
 		String nvr = RPMUtils.getNVR(fedoraProjectRoot, bci);

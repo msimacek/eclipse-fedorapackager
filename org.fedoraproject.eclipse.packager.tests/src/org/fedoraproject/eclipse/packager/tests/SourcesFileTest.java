@@ -36,7 +36,7 @@ import org.osgi.framework.FrameworkUtil;
 public class SourcesFileTest {
 
 	private SourcesFile sourcesFile;
-	private Stack<File> tempDirsAndFiles = new Stack<File>();
+	private Stack<File> tempDirsAndFiles = new Stack<>();
 	private IProject tempProject;
 	private static final String NEW_SOURCE_ARCHIVE =
 		"resources/callgraph-factorial.zip"; //$NON-NLS-1$
@@ -99,7 +99,7 @@ public class SourcesFileTest {
 			assertEquals(ORIG_SOURCE, filename);
 			assertEquals(ORIG_CHECKSUM, sourcesMap.get(filename));
 		}
-		Map<String, String> newSourcesMap = new HashMap<String, String>();
+		Map<String, String> newSourcesMap = new HashMap<>();
 		newSourcesMap.put("newSource.tar", "52e7ac2eb10d1494ceb96d0cd73d33e0");
 		newSourcesMap.put("newSource2.tar", "52e6ac2eb10d1494ceb96d0cd73d33e0");
 		sourcesFile.setSources(newSourcesMap);

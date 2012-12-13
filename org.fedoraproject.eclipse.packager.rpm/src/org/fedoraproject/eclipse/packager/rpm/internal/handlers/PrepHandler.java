@@ -118,7 +118,7 @@ public class PrepHandler extends AbstractHandler implements
 								monitor.beginTask(
 										RpmText.PrepHandler_prepareSourcesForBuildMsg,
 										IProgressMonitor.UNKNOWN);
-								List<String> nodeps = new ArrayList<String>(1);
+								List<String> nodeps = new ArrayList<>(1);
 								nodeps.add(RpmBuildCommand.NO_DEPS);
 								try {
 									prepCommand

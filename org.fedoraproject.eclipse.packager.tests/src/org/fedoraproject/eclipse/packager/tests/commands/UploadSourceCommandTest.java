@@ -89,7 +89,7 @@ public class UploadSourceCommandTest {
 	private String uploadURLForTesting;
 
 	// List of temporary resources which should get deleted after test runs
-	private Stack<File> tempFilesAndDirectories = new Stack<File>();
+	private Stack<File> tempFilesAndDirectories = new Stack<>();
 
 	/**
 	 * Set up a Fedora project and run the command.

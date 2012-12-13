@@ -62,7 +62,7 @@ public class ChainBuildDialog extends Dialog {
 	private Shell shell;
 	private int result = Window.CANCEL;
 	private List<List<String>> buildInfo = null;
-	private List<IProjectRoot> rootList = new ArrayList<IProjectRoot>();
+	private List<IProjectRoot> rootList = new ArrayList<>();
 
 	/**
 	 * Open dialog for user interaction.
@@ -389,9 +389,9 @@ public class ChainBuildDialog extends Dialog {
 		startButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				buildInfo = new ArrayList<List<String>>();
+				buildInfo = new ArrayList<>();
 				for (TreeItem root : buildTree.getItems()) {
-					List<String> buildList = new ArrayList<String>();
+					List<String> buildList = new ArrayList<>();
 					for (TreeItem item : root.getItems()) {
 						try {
 							setResult(Window.OK);

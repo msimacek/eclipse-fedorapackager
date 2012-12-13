@@ -161,7 +161,7 @@ public class FedoraSSL {
 				kmat = new KeyMaterial(fedoraCert, fedoraCert, new char[0]);
 				List<?> chains = kmat.getAssociatedCertificateChains();
 				Iterator<?> it = chains.iterator();
-				ArrayList<String> cns = new ArrayList<String>();
+				ArrayList<String> cns = new ArrayList<>();
 				while (it.hasNext()) {
 					X509Certificate[] certs = (X509Certificate[]) it.next();
 					if (certs != null) {

@@ -35,7 +35,7 @@ public class RPMUtils {
 	 * @return Defines to instruct rpmbuild to use given directory.
 	 */
 	public static List<String> getRPMDefines(String dir) {
-		ArrayList<String> rpmDefines = new ArrayList<String>();
+		ArrayList<String> rpmDefines = new ArrayList<>();
 		rpmDefines.add("--define"); //$NON-NLS-1$
 		rpmDefines.add("_sourcedir " + dir); //$NON-NLS-1$
 		rpmDefines.add("--define"); //$NON-NLS-1$
@@ -118,7 +118,7 @@ public class RPMUtils {
 	 */
 	public static List<String> getDistDefines(BranchConfigInstance bci) {
 		// substitution for rhel
-		ArrayList<String> distDefines = new ArrayList<String>();
+		ArrayList<String> distDefines = new ArrayList<>();
 		String distvar = bci.getDistVariable().equals("epel") ? "rhel" //$NON-NLS-1$//$NON-NLS-2$ 
 				: bci.getDistVariable();
 		distDefines.add("--define"); //$NON-NLS-1$

@@ -105,7 +105,7 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 	 */
 	public RpmBuildCommand buildType(BuildType type) {
 		this.buildType = type;
-		buildTypeFlags = new ArrayList<String>(1);
+		buildTypeFlags = new ArrayList<>(1);
 		switch (type) {
 		case BINARY:
 			buildTypeFlags.add(BINARYBUILD_OPTION);
@@ -236,7 +236,7 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 	public void initialize(IProjectRoot fp)
 			throws FedoraPackagerCommandInitializationException {
 		super.initialize(fp);
-		fullRpmBuildCommand = new ArrayList<String>();
+		fullRpmBuildCommand = new ArrayList<>();
 		fullRpmBuildCommand.add(RPMBUILD_CMD);
 		List<String> defaultDefines = RPMUtils.getRPMDefines(fp.getContainer()
 				.getLocation().toOSString());
@@ -268,7 +268,7 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 			} catch (IOException e) {
 				throw new RpmBuildCommandException(e.getMessage(), e);
 			}
-			List<String> targetFlag = new ArrayList<String>();
+			List<String> targetFlag = new ArrayList<>();
 			targetFlag.add("--target"); //$NON-NLS-1$
 			targetFlag.add(arch);
 			fullRpmBuildCommand.addAll(targetFlag);

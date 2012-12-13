@@ -152,7 +152,7 @@ public class KojiScratchWithSRPMTest {
 		KojiBuildCommand kojiBuildCmd = (KojiBuildCommand) packager
 				.getCommandInstance(KojiBuildCommand.ID);
 		kojiBuildCmd.setKojiClient(kojiClient);
-		List<String> sourceLocation = new ArrayList<String>();
+		List<String> sourceLocation = new ArrayList<>();
 		sourceLocation
 				.add(uploadPath
 						+ "/"

@@ -54,7 +54,7 @@ public class FedoraPackager {
 	 * @return A list of registered command ids.
 	 */
 	public String[] getRegisteredCommandIDs() {
-		ArrayList<String> cmdIdList = new ArrayList<String>();
+		ArrayList<String> cmdIdList = new ArrayList<>();
 		IExtensionPoint packagerCommandExtension = Platform
 				.getExtensionRegistry().getExtensionPoint(
 						PackagerPlugin.PLUGIN_ID, CMD_EXTENSIONPOINT_NAME);

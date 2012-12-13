@@ -69,7 +69,7 @@ public class SRPMBuildJob extends Job {
 				fedoraProjectRoot.getPackageName()), IProgressMonitor.UNKNOWN);
 		try {
 			// build fresh SRPM
-			List<String> nodeps = new ArrayList<String>(1);
+			List<String> nodeps = new ArrayList<>(1);
 			nodeps.add(RpmBuildCommand.NO_DEPS);
 			// want SRPM build
 			srpmBuild.buildType(BuildType.SOURCE).flags(nodeps);

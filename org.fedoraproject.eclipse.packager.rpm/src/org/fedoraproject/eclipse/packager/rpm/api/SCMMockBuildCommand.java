@@ -48,7 +48,7 @@ public class SCMMockBuildCommand extends MockBuildCommand {
 	private static final String SPEC = "spec"; //$NON-NLS-1$
 	private static final String EXT_SRC_DIR = "ext_src_dir"; //$NON-NLS-1$
 	private static final String WRITE_TAR = "write_tar"; //$NON-NLS-1$
-	protected HashMap<String, String> variableHash = new HashMap<String, String>();
+	protected HashMap<String, String> variableHash = new HashMap<>();
 	protected String repoLocation = null;
 	protected RepoType repo = null;
 	
@@ -172,7 +172,7 @@ public class SCMMockBuildCommand extends MockBuildCommand {
 		if (repoLocation != null){ 
 			setGetter();
 		}
-		ArrayList<String> flags = new ArrayList<String>();
+		ArrayList<String> flags = new ArrayList<>();
 		String resDirOpt = MOCK_RESULT_DIR_OPTION;
 		resDirOpt += "="; //$NON-NLS-1$
 		resDirOpt += this.resultDir;
@@ -191,7 +191,7 @@ public class SCMMockBuildCommand extends MockBuildCommand {
 			flags.add(SCM_VARIABLE_OPTION);
 			flags.add(key + "=" + variableHash.get(key)); //$NON-NLS-1$ 
 		}
-		variableHash = new HashMap<String, String>();
+		variableHash = new HashMap<>();
 		return flags.toArray(new String[]{});
 	}
 	

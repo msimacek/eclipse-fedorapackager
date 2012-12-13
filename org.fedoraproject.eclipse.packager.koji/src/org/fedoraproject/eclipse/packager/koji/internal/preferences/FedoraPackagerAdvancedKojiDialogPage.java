@@ -31,7 +31,7 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 	private Button addButton;
 	private Button removeButton;
 	private Button editButton;
-	private Map<String, String[]> pendingServers = new HashMap<String, String[]>();
+	private Map<String, String[]> pendingServers = new HashMap<>();
 	private Composite contents;
 	// buffer for unpushed server changes done in style of preference String
 	private String listPreferenceBuffer;

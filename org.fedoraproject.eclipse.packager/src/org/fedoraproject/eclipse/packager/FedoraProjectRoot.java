@@ -192,7 +192,7 @@ public class FedoraProjectRoot implements IProjectRoot {
 		Specfile specfile = getSpecfileModel();
 		String version = specfile.getVersion(); 
 		String release = specfile.getRelease().replace("%{?dist}", bci.getDist());  //$NON-NLS-1$
-		List<String> rawNvrs = new ArrayList<String>();
+		List<String> rawNvrs = new ArrayList<>();
 		for (SpecfilePackage p: specfile.getPackages().getPackages()) {
 			rawNvrs.add(p.getFullPackageName() + "-" + version + "-" + release); //$NON-NLS-1$ //$NON-NLS-2$
 		}

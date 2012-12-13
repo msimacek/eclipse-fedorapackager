@@ -47,7 +47,7 @@ public class KojiSSLHubClientTest extends KojiClientTest {
 	@Test
 	public void canLoginUsingSSLCertificate() throws KojiHubClientLoginException  {
 		// Mock session data
-		final HashMap<String, Object> mockSessionData = new HashMap<String, Object>();
+		final HashMap<String, Object> mockSessionData = new HashMap<>();
 		mockSessionData.put("session-id", new Integer(99));
 		mockSessionData.put("session-key", "sessionKey");
 		
@@ -80,7 +80,7 @@ public class KojiSSLHubClientTest extends KojiClientTest {
 	@Test
 	public void canGetBuildInfo() throws KojiHubClientException  {
 		
-		final HashMap<String, Object> mockBuildInfo = new HashMap<String, Object>();
+		final HashMap<String, Object> mockBuildInfo = new HashMap<>();
 		mockBuildInfo.put(KojiBuildInfo.KEY_TASK_ID, new Integer(99));
 		mockBuildInfo.put(KojiBuildInfo.KEY_RELEASE, "1.fc15");
 		mockBuildInfo.put(KojiBuildInfo.KEY_PACKAGE_NAME, "eclipse-fedorapackager");
@@ -131,7 +131,7 @@ public class KojiSSLHubClientTest extends KojiClientTest {
 
 		// get build info for eclipse-fedorapackager-0.1.13-fc15
 		boolean isScratchBuild = true;
-		List<String> sourceLocation = new ArrayList<String>();
+		List<String> sourceLocation = new ArrayList<>();
 		sourceLocation.add(EFP_SCM_URL);
 		int taskId = kojiClient.build("dist-rawhide", sourceLocation, new String[] {EFP_NVR}, isScratchBuild)[0];
 		assertNotNull(taskId);
