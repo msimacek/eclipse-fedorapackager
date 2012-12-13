@@ -362,8 +362,7 @@ public class UploadSourceCommandTest {
 	 * @param newFile
 	 */
 	private void writeRandomContentToFile(File newFile) {
-		FileOutputStream out = null;
-		try {
+		try (FileOutputStream out = new FileOutputStream(newFile)){
 			StringBuilder randomContent = new StringBuilder();
 			randomContent.append(Math.random());
 			randomContent.append("GARBAGE");
@@ -372,7 +371,7 @@ public class UploadSourceCommandTest {
 			randomContent.append(System.nanoTime());
 			ByteArrayInputStream in = new ByteArrayInputStream(randomContent
 					.toString().getBytes());
-			out = new FileOutputStream(newFile);
+			
 			byte[] buf = new byte[1024];
 			int bytesRead;
 			while ((bytesRead = in.read(buf)) != -1) {
@@ -380,14 +379,6 @@ public class UploadSourceCommandTest {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
-		}
+		} 
 	}
 }

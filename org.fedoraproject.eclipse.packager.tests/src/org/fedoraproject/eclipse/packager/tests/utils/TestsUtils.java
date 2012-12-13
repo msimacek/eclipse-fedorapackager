@@ -146,12 +146,8 @@ public class TestsUtils {
 				newFile = newProject.getFile(file.getName());
 			}
 			if (!newFile.exists()) {
-				FileInputStream in = new FileInputStream(file);
-				newFile.create(in, false, null);
-				try {
-					in.close();
-				} catch (IOException e) {
-					// ignore
+				try (FileInputStream in = new FileInputStream(file)) {
+					newFile.create(in, false, null);
 				}
 			}
 		}
@@ -170,9 +166,8 @@ public class TestsUtils {
 	 */
 	public static String readContents(File source) throws IOException {
 		StringBuffer result = new StringBuffer();
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new FileReader(source));
+		try (BufferedReader br = new BufferedReader(new FileReader(source))){
+			
 			String line;
 			do {
 				line = br.readLine();
@@ -180,10 +175,6 @@ public class TestsUtils {
 					result.append(line + "\n");
 				}
 			} while (line != null);
-		} finally {
-			if (br != null) {
-				br.close();
-			}
 		}
 		return result.toString().trim();
 	}
@@ -201,8 +192,6 @@ public class TestsUtils {
 	 */
 	public static File copyFileContents(File fromFile, File destination,
 			boolean useTempFilenames) throws IOException {
-		FileInputStream from = null;
-		FileOutputStream to = null;
 		File toFile = null;
 		if (useTempFilenames) {
 			toFile = File.createTempFile(TMP_DIRECTORY_PREFIX, "", destination);
@@ -210,28 +199,11 @@ public class TestsUtils {
 			toFile = new File(destination.getAbsolutePath()
 					+ File.separatorChar + fromFile.getName());
 		}
-		try {
-			from = new FileInputStream(fromFile);
-			to = new FileOutputStream(toFile);
+		try (FileInputStream from = new FileInputStream(fromFile);FileOutputStream to = new FileOutputStream(toFile);){
 			byte[] buffer = new byte[4096];
 			int bytesRead;
 			while ((bytesRead = from.read(buffer)) != -1) {
 				to.write(buffer, 0, bytesRead); // write
-			}
-		} finally {
-			if (from != null) {
-				try {
-					from.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
-			if (to != null) {
-				try {
-					to.close();
-				} catch (IOException e) {
-					// ignore
-				}
 			}
 		}
 		return toFile;

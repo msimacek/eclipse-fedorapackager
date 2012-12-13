@@ -45,10 +45,10 @@ public class MockUtils {
 	public static void checkMockGroupMembership()
 			throws UserNotInMockGroupException, MockBuildCommandException {
 		String grpCheckCmd[] = { "groups" }; //$NON-NLS-1$
-		InputStream is = null;
-		try {
-			is = Utils.runCommandToInputStream(grpCheckCmd);
-			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		try (InputStream is = Utils.runCommandToInputStream(grpCheckCmd);
+				BufferedReader br = new BufferedReader(
+						new InputStreamReader(is))) {
+
 			String line;
 			StringBuffer groupsOutput = new StringBuffer();
 			while ((line = br.readLine()) != null) {
@@ -64,12 +64,6 @@ public class MockUtils {
 			}
 		} catch (IOException e) {
 			throw new MockBuildCommandException(e.getMessage(), e);
-		} finally {
-			try {
-				is.close();
-			} catch (IOException e) {
-				// ignore
-			}
 		}
 	}
 

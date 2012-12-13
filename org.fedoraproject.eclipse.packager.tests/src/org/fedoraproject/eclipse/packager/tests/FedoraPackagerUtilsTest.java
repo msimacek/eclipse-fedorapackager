@@ -17,7 +17,6 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
@@ -71,8 +70,7 @@ public class FedoraPackagerUtilsTest {
 	}
 
 	@Test
-	public void canGetProjectRootFromResource() throws CoreException,
-			FileNotFoundException {
+	public void canGetProjectRootFromResource() throws CoreException {
 		try {
 			IProjectRoot fpRoot = FedoraPackagerUtils
 					.getProjectRoot(packagerProject);
@@ -101,10 +99,8 @@ public class FedoraPackagerUtilsTest {
 				+ File.separatorChar + origSourceDir.getName() + ".spec");
 		IFile newSpecFile = packagerProject.getFile(packagerProject.getName()
 				+ ".spec");
-		FileInputStream in = new FileInputStream(specFile);
-		newSpecFile.create(in, false, null);
-		try {
-			in.close();
+		try (FileInputStream in = new FileInputStream(specFile)) {
+			newSpecFile.create(in, false, null);
 		} catch (IOException e) {
 			// ignore
 		}

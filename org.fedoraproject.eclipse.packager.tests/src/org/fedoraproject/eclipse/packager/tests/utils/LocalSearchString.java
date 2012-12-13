@@ -20,14 +20,14 @@ public class LocalSearchString {
 		if (file.exists()) {
 			InputStream is = file.getContents();
 			String line = null;
-			Scanner scan = new Scanner(is);
-			while(scan.hasNext() && !foundMatch) {
-				line = scan.nextLine();
-				if (line.contains(match)) {
-					foundMatch = true;
+			try (Scanner scan = new Scanner(is)) {
+				while (scan.hasNext() && !foundMatch) {
+					line = scan.nextLine();
+					if (line.contains(match)) {
+						foundMatch = true;
+					}
 				}
 			}
-			scan.close();
 		}
 		return foundMatch;
 	}

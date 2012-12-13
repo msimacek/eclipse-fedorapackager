@@ -358,26 +358,15 @@ public class BodhiClient {
 	private String parseResponse(HttpEntity responseEntity) throws IOException {
 
 		String responseText = ""; //$NON-NLS-1$
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new InputStreamReader(
-					responseEntity.getContent()));
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(
+				responseEntity.getContent()))){
 			String line;
 			line = br.readLine();
 			while (line != null) {
 				responseText += line + "\n"; //$NON-NLS-1$
 				line = br.readLine();
 			}
-		} finally {
-			// cleanup
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					// ignore
-				}
-			}
-		}
+		} 
 		return responseText.trim();
 	}
 

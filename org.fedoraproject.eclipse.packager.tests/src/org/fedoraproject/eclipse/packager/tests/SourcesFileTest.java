@@ -155,17 +155,11 @@ public class SourcesFileTest {
 		// schedule tempfile for deletion after test
 		tempDirsAndFiles.push(tempFile);
 		ByteArrayInputStream in = new ByteArrayInputStream("Test Checksum\n".getBytes());
-		FileOutputStream out = null;
-		try {
-			out = new FileOutputStream(tempFile);
+		try (FileOutputStream out = new FileOutputStream(tempFile);){
 			int bytesRead;
 			byte[] buf = new byte[1024];
 			while ((bytesRead = in.read(buf)) != -1 ) {
 				out.write(buf, 0, bytesRead);
-			}
-		} finally {
-			if (out != null) {
-				out.close();
 			}
 		}
 		// MD5sum of "Test Checksum\n" == c4f94c2fe892ee0fa41f91352b64adf5

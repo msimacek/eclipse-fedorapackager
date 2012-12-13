@@ -83,19 +83,20 @@ public class LocalFedoraPackagerProjectCreator {
 		final String projectName = project.getName();
 		final String fileName = projectName + ".spec"; //$NON-NLS-1$
 
-		final InputStream contentInputStream = new ByteArrayInputStream(
-				content.getBytes());
-		final IFile specfile = project.getFile(new Path(fileName));
-		try {
-			InputStream stream = contentInputStream;
-			if (specfile.exists()) {
-				specfile.setContents(stream, true, true, monitor);
-			} else {
-				specfile.create(stream, true, monitor);
+		try (InputStream contentInputStream = new ByteArrayInputStream(
+				content.getBytes())) {
+			final IFile specfile = project.getFile(new Path(fileName));
+			try {
+				InputStream stream = contentInputStream;
+				if (specfile.exists()) {
+					specfile.setContents(stream, true, true, monitor);
+				} else {
+					specfile.create(stream, true, monitor);
+				}
+				stream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			stream.close();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 
 		createProjectStructure();

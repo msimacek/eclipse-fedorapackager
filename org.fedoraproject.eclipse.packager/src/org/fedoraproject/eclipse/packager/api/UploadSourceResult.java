@@ -57,10 +57,8 @@ public class UploadSourceResult implements ICommandResult {
 			if (responseEntity == null) {
 				return error.toString();
 			}
-			BufferedReader br = null;
-			try {
-				br = new BufferedReader(new InputStreamReader(
-						responseEntity.getContent()));
+			try (BufferedReader br = new BufferedReader(new InputStreamReader(
+					responseEntity.getContent()))){
 				String line;
 				line = br.readLine();
 				while (line != null) {
@@ -69,14 +67,6 @@ public class UploadSourceResult implements ICommandResult {
 				}
 			} catch (IOException e) {
 				// ignore
-			} finally {
-				if (br != null) {
-					try {
-						br.close();
-					} catch (IOException e) {
-						// ignore
-					}
-				}
 			}
 			return error.toString();
 		}

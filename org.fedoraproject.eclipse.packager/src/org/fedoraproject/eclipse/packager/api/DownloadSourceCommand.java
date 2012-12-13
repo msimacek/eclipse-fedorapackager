@@ -216,29 +216,30 @@ public class DownloadSourceCommand extends
 				NLS.bind(FedoraPackagerText.DownloadSourceCommand_downloadFile,
 						fileToDownload.getName()), fileConnection.getContentLength());
 		File tempFile = File.createTempFile(fileToDownload.getName(), ""); //$NON-NLS-1$
-		FileOutputStream fos = new FileOutputStream(tempFile);
-		InputStream is = new BufferedInputStream(fileConnection.getInputStream());
-		int bytesRead;
 		boolean canceled = false;
-		byte buf[] = new byte[5 * 1024]; // 5k buffer
-		while ((bytesRead = is.read(buf)) != -1) {
-			if (subMonitor.isCanceled()) {
-				canceled = true;
-				break;
+		try (FileOutputStream fos = new FileOutputStream(tempFile);
+				InputStream is = new BufferedInputStream(
+						fileConnection.getInputStream())) {
+			int bytesRead;
+			byte buf[] = new byte[5 * 1024]; // 5k buffer
+			while ((bytesRead = is.read(buf)) != -1) {
+				if (subMonitor.isCanceled()) {
+					canceled = true;
+					break;
+				}
+				fos.write(buf, 0, bytesRead);
+				subMonitor.worked(bytesRead);
 			}
-			fos.write(buf, 0, bytesRead);
-			subMonitor.worked(bytesRead);
 		}
-		is.close();
-		fos.close();
 		if (!canceled) {
 			if (fileToDownload.exists()) {
 				// replace file
-				fileToDownload.setContents(new FileInputStream(tempFile), true,
-						false, subMonitor);
+				fileToDownload.setContents(new FileInputStream(tempFile),
+						true, false, subMonitor);
 			} else {
 				// create new file
-				fileToDownload.create(new FileInputStream(tempFile), true, subMonitor);
+				fileToDownload.create(new FileInputStream(tempFile), true,
+						subMonitor);
 			}
 		}
 		tempFile.delete();

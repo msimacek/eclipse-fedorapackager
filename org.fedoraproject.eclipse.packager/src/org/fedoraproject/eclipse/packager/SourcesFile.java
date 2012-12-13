@@ -77,10 +77,9 @@ public class SourcesFile {
 	 * filenames/checksums in a Map.
 	 */
 	private void parseSources() {
-		BufferedReader br = null;
-		try {
-			br = new BufferedReader(new InputStreamReader(
-					sourcesFile.getContents()));
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(
+				sourcesFile.getContents()));){
+			
 			String line = br.readLine();
 			while (line != null && !line.contentEquals("")) { //$NON-NLS-1$
 				String[] source = line.split("\\s+"); //$NON-NLS-1$
@@ -94,14 +93,6 @@ public class SourcesFile {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 
@@ -211,9 +202,7 @@ public class SourcesFile {
 	 */
 	public static String calculateChecksum(File file) {
 		String result = null;
-		FileInputStream fis = null;
-		try {
-			fis = new FileInputStream(file);
+		try (FileInputStream fis = new FileInputStream(file);){
 			byte buf[] = new byte[(int) file.length()];
 			fis.read(buf); // read entire file into buf array
 			result = DigestUtils.md5Hex(buf);
@@ -221,14 +210,6 @@ public class SourcesFile {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			if (fis != null) {
-				try {
-					fis.close();
-				} catch (IOException e) {
-					// Do nothing
-				}
-			}
 		}
 
 		return result;
@@ -244,10 +225,9 @@ public class SourcesFile {
 
 		final PipedInputStream in = new PipedInputStream();
 		// create an OutputStream with the InputStream from above as input
-		PipedOutputStream out = null;
-		try {
-			out = new PipedOutputStream(in);
-			PrintWriter pw = new PrintWriter(out);
+		try (PipedOutputStream out = new PipedOutputStream(in);
+				PrintWriter pw = new PrintWriter(out)) {
+	
 			for (Map.Entry<String, String> entry : sources.entrySet()) {
 				pw.println(entry.getValue() + "  " + entry.getKey()); //$NON-NLS-1$
 			}
@@ -282,14 +262,6 @@ public class SourcesFile {
 					PackagerPlugin.PLUGIN_ID, MessageFormat.format(
 							FedoraPackagerText.SourcesFile_saveFailedMsg,
 							sourcesFile.getName())));
-		} finally {
-			if (out != null) {
-				try {
-					out.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 
