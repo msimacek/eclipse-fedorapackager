@@ -215,7 +215,7 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}
-		RpmBuildThread rbt = new RpmBuildThread(buildType, cmdList);
+		RpmBuildThread rbt = new RpmBuildThread(buildType, cmdList, projectRoot.getPackageName());
 		rbt.start();
 		while (rbt.getState() != Thread.State.TERMINATED) {
 			if (monitor.isCanceled()) {
@@ -291,11 +291,13 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 		private BuildType buildType;
 		private String[] cmdList;
 		private RpmBuildResult result;
+		private String packageName;
 
-		public RpmBuildThread(BuildType buildType, String[] cmdList) {
+		public RpmBuildThread(BuildType buildType, String[] cmdList, String packageName) {
 			super();
 			this.buildType = buildType;
 			this.cmdList = cmdList;
+			this.packageName = packageName;
 		}
 
 		@Override
@@ -320,7 +322,7 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 						RpmText.RpmBuildCommand_BuildDidNotStart);
 			}
 			// Do the console writing
-			final MessageConsole console = FedoraPackagerConsole.getConsole();
+			final MessageConsole console = FedoraPackagerConsole.getConsole(packageName);
 			IConsoleManager manager = ConsolePlugin.getDefault()
 					.getConsoleManager();
 			manager.addConsoles(new IConsole[] { console });

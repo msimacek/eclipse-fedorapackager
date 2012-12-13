@@ -20,23 +20,25 @@ import org.fedoraproject.eclipse.packager.rpm.RPMPlugin;
  *
  */
 public class FedoraPackagerConsole {
-	
-	private static final String CONSOLE_NAME = "Packager Console"; //$NON-NLS-1$
+	private static final String PROJECT_HOLDER = "%projectName"; //$NON-NLS-1$
+	private static final String CONSOLE_NAME = "Packager Console (%projectName)"; //$NON-NLS-1$
 	
 	/**
+	 * @param packageName The name of the package(RPM) this console will be for.
 	 * @return A console instance.
 	 */
-	public static MessageConsole getConsole() {
+	public static MessageConsole getConsole(String packageName) {
+		String projectConsoleName = CONSOLE_NAME.replace(PROJECT_HOLDER, packageName);
 		MessageConsole ret = null;
 		for (IConsole cons : ConsolePlugin.getDefault().getConsoleManager()
 				.getConsoles()) {
-			if (cons.getName().equals(CONSOLE_NAME)) {
+			if (cons.getName().equals(projectConsoleName)) {
 				ret = (MessageConsole) cons;
 			}
 		}
 		// no existing console, create new one
 		if (ret == null) {
-			ret = new MessageConsole(CONSOLE_NAME,
+			ret = new MessageConsole(projectConsoleName,
 					RPMPlugin.getImageDescriptor("icons/rpm.gif")); //$NON-NLS-1$
 		}
 		ret.clearConsole();

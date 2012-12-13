@@ -93,6 +93,7 @@ public class MockUtils {
 	 * 
 	 * @param command
 	 *            The command to be run.
+	 * @param packageName The name of the package(SRPM).
 	 * @param observers
 	 *            Command observers.
 	 * @param location
@@ -105,7 +106,7 @@ public class MockUtils {
 	 * @throws CoreException
 	 * 	           If the given file does not have a valid URI.
 	 */
-	public static int runCommand(String[] command, Observer[] observers,
+	public static int runCommand(String[] command, String packageName, Observer[] observers,
 			File location) throws IOException, InterruptedException, CoreException {
 		
 		IFileStore fileStore = null;
@@ -118,7 +119,7 @@ public class MockUtils {
 		try {
 			BufferedInputStream is = new BufferedInputStream(
 					child.getInputStream());
-			final MessageConsole console = FedoraPackagerConsole.getConsole();
+			final MessageConsole console = FedoraPackagerConsole.getConsole(packageName);
 			IConsoleManager manager = ConsolePlugin.getDefault()
 					.getConsoleManager();
 			manager.addConsoles(new IConsole[] { console });

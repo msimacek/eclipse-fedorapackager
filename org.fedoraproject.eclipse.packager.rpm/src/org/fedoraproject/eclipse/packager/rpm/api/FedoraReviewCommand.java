@@ -78,7 +78,7 @@ public class FedoraReviewCommand extends
 		FedoraReviewResult result = new FedoraReviewResult(reviewCommand);
 		MockUtils.checkMockGroupMembership();
 		try {
-			MockUtils.runCommand(reviewCommand,
+			MockUtils.runCommand(reviewCommand, projectRoot.getPackageName(), 
 					new Observer[] { new MockBuildStatusObserver(monitor) },
 					projectRoot.getProject().getLocation().toFile());
 			result.setReview(review);

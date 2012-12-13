@@ -205,7 +205,7 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}
-		MockBuildThread mbt = new MockBuildThread(cmdList, resultDir, monitor);
+		MockBuildThread mbt = new MockBuildThread(cmdList, resultDir, projectRoot.getPackageName(), monitor);
 		mbt.start();
 		while (mbt.getState() != Thread.State.TERMINATED) {
 			if (monitor.isCanceled()) {
@@ -356,12 +356,14 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 		private MockBuildResult result;
 		private String resultDir;
 		private IProgressMonitor monitor;
+		private String packageName;
 
 		public MockBuildThread(String[] cmdList, String resultDir,
-				IProgressMonitor monitor) {
+				String packageName, IProgressMonitor monitor) {
 			super();
 			this.cmdList = cmdList;
 			this.resultDir = resultDir;
+			this.packageName = packageName;
 			this.monitor = monitor;
 		}
 
@@ -373,7 +375,7 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 			logger.logDebug(NLS.bind(RpmText.MockBuildCommand_mockCommandLog,
 					MockUtils.convertCLICmd(cmdList)));
 			try {
-				if (MockUtils.runCommand(cmdList, new Observer[] {
+				if (MockUtils.runCommand(cmdList, packageName, new Observer[] {
 						new MockBuildStatusObserver(monitor),
 						new MockBuildCommandSuccessObserver(result) }, null) == 0) {
 					result.setSuccessful(true);
