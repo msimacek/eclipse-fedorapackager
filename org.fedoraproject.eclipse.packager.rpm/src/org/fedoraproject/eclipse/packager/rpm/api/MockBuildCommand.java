@@ -260,11 +260,11 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 				mockcfg += "-core"; //$NON-NLS-1$
 			}
 
-			if (bci.getEquivalentBranch().equals("devel")) { //$NON-NLS-1$
+			if (bci.getEquivalentBranch().equals("master")) { //$NON-NLS-1$
 				mockcfg = "fedora-devel-" + this.localArchitecture; //$NON-NLS-1$
 			}
 
-			if (bci.getEquivalentBranch().equals("devel")) { //$NON-NLS-1$
+			if (bci.getEquivalentBranch().equals("master")) { //$NON-NLS-1$
 				if (!isSupportedMockConfig(mockcfg)) {
 					// If the mockcfg as determined from above does not exist,
 					// do something reasonable.

@@ -251,7 +251,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 			if (version == null && prefix != null
 					&& prefix.equals(Constants.MASTER)) {
 				// matched master
-				return "devel"; //$NON-NLS-1$
+				return "master"; //$NON-NLS-1$
 			} else if (version != null && prefix != null) {
 				// F, EPEL, OLPC matches
 				return prefix.toUpperCase() + "-" + version; //$NON-NLS-1$
@@ -543,7 +543,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 			}
 		}
 		String version;
-		if (branchName.equals("devel")) { //$NON-NLS-1$
+		if (branchName.equals("master")) { //$NON-NLS-1$
 			version = determineNextReleaseNumber();
 		} else {
 			version = branchName.split("-")[1]; //$NON-NLS-1$
@@ -559,7 +559,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 			distro = "olpc"; //$NON-NLS-1$
 			distroSuffix = ".olpc" + version; //$NON-NLS-1$
 			buildTarget = "dist-olpc" + version; //$NON-NLS-1$
-		} else if (branchName.equals("devel")) { //$NON-NLS-1$
+		} else if (branchName.equals("master")) { //$NON-NLS-1$
 			distro = "fedora"; //$NON-NLS-1$
 			distroSuffix = ".fc" + version; //$NON-NLS-1$
 			buildTarget = "rawhide"; //$NON-NLS-1$

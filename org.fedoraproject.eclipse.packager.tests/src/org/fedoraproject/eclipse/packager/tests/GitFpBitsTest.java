@@ -30,7 +30,7 @@ public class GitFpBitsTest extends GitTestCase {
 				.getVcsHandler(getFedoraprojectRoot());
 		assertNotNull(projectBits);
 		// make sure we meet pre-condition (we should be on master)
-		assertEquals("devel", projectBits.getCurrentBranchName());
+		assertEquals("master", projectBits.getCurrentBranchName());
 		GitTestProject testProject = getProject();
 		// switch to branch f13
 		testProject.checkoutBranch("f13");
@@ -47,7 +47,7 @@ public class GitFpBitsTest extends GitTestCase {
 				.getVcsHandler(getFedoraprojectRoot());
 		assertNotNull(projectBits);
 		assertNotNull(projectBits.getBranchName("F-7")); // should be there
-		assertNotNull(projectBits.getBranchName("devel")); // master mapped to
+		assertNotNull(projectBits.getBranchName("master")); // master mapped to
 															// devel
 	}
 
@@ -57,7 +57,7 @@ public class GitFpBitsTest extends GitTestCase {
 				.getVcsHandler(getFedoraprojectRoot());
 		assertNotNull(projectBits);
 		// make sure we meet pre-condition (we should be on master)
-		assertEquals("devel", projectBits.getCurrentBranchName());
+		assertEquals("master", projectBits.getCurrentBranchName());
 		// ATM this will change with the next Fedora release, so expect this to
 		// fail
 		assertEquals(projectBits.getBranchConfig().getDistVal(), "19");

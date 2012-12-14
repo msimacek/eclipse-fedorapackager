@@ -48,7 +48,7 @@ public class KojiChainBuildJob extends KojiBuildJob {
 	private List<List<String>> sourceLocations;
 	private IProjectRoot[] projectRoots;
 	private final BranchConfigInstance RAWHIDECONFIG = new BranchConfigInstance(
-			".fc18", "18", "fedora", "rawhide", "devel"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+			".fc18", "18", "fedora", "rawhide", "master"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
 	/**
 	 * @param name
