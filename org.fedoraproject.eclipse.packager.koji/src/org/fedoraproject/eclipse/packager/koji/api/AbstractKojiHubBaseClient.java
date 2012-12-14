@@ -149,7 +149,7 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 				taskIds = new int[] { Integer.parseInt(result.toString()) };
 			}
 		} catch (XmlRpcException e) {
-			throw new KojiHubClientException(e);
+			throw new KojiHubClientException(e.getMessage(), e);
 		}
 		return taskIds;
 	}
