@@ -120,7 +120,6 @@ public class KojiUtils {
 						FedoraPackagerPreferencesConstants.DEFAULT_KOJI_WEB_URL);
 			} catch (MalformedURLException ignored) {
 			}
-			;
 		}
 		final URL staticWebUrl = kojiWebUrl;
 		IJobChangeListener listener = new JobChangeAdapter() {
