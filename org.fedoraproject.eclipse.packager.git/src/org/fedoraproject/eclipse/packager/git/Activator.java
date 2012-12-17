@@ -12,7 +12,6 @@ package org.fedoraproject.eclipse.packager.git;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.osgi.framework.BundleContext;
@@ -27,12 +26,6 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
-
-	/**
-	 * The constructor
-	 */
-	public Activator() {
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -88,30 +81,6 @@ public class Activator extends AbstractUIPlugin {
 		if (show)
 			style |= StatusManager.SHOW;
 		StatusManager.getManager().handle(status, style);
-	}
-
-	/**
-	 * @param prefKey
-	 *            The key for the Eclipse plugin preference being retrieved.
-	 * @return The set preference for the given key or {@code null} if not set.
-	 */
-	public static String getStringPreference(String prefKey) {
-		IPreferenceStore store = getDefault().getPreferenceStore();
-		String candidate = store.getString(prefKey);
-		if (candidate.equals(IPreferenceStore.STRING_DEFAULT_DEFAULT)) {
-			return null;
-		}
-		return candidate;
-	}
-
-	/**
-	 * Initializes a preference store with default preference values for this
-	 * plug-in.
-	 */
-	@Override
-	protected void initializeDefaultPreferences(IPreferenceStore store) {
-		store.setDefault(GitPreferencesConstants.PREF_CLONE_BASE_URL,
-				GitUtils.getDefaultGitBaseUrl());
 	}
 
 }
