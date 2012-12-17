@@ -181,12 +181,9 @@ public class KojiUtils {
 									| IWorkbenchBrowserSupport.STATUS,
 							"koji_task", null, null); //$NON-NLS-1$
 			browser.openURL(new URL(url));
-		} catch (PartInitException e) {
+		} catch (PartInitException|MalformedURLException e) {
 			FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 			logger.logError(e.getMessage(), e);
-		} catch (MalformedURLException e) {
-			FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-			logger.logError(e.getMessage(), e);
-		}
+		} 
 	}
 }

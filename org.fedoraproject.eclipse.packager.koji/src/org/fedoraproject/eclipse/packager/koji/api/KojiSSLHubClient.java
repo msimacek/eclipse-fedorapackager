@@ -98,10 +98,8 @@ public class KojiSSLHubClient extends AbstractKojiHubBaseClient {
 		try {
 			result = xmlRpcClient.execute("sslLogin", params); //$NON-NLS-1$
 			hashMap = (HashMap<?, ?>) result;
-		} catch (ClassCastException e) {
-			// Something is fishy, should have returned a map
-			throw new KojiHubClientLoginException(e);
-		} catch (XmlRpcException e) {
+		} catch (ClassCastException|XmlRpcException e) {
+			// Something is fishy, should have returned a map if login succeeded
 			throw new KojiHubClientLoginException(e);
 		}
 		return hashMap;

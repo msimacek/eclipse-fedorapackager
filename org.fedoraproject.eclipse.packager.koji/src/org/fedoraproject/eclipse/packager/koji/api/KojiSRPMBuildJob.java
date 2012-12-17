@@ -92,17 +92,12 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 					.getCommandInstance(KojiUploadSRPMCommand.ID);
 			kojiBuildCmd = (KojiBuildCommand) fp
 					.getCommandInstance(KojiBuildCommand.ID);
-		} catch (FedoraPackagerCommandNotFoundException e) {
+		} catch (FedoraPackagerCommandNotFoundException|FedoraPackagerCommandInitializationException e) {
 			logger.logError(e.getMessage(), e);
 			FedoraHandlerUtils.showErrorDialog(shell, fedoraProjectRoot
 					.getProductStrings().getProductName(), e.getMessage());
 			return null;
-		} catch (FedoraPackagerCommandInitializationException e) {
-			logger.logError(e.getMessage(), e);
-			FedoraHandlerUtils.showErrorDialog(shell, fedoraProjectRoot
-					.getProductStrings().getProductName(), e.getMessage());
-			return null;
-		}
+		} 
 		IKojiHubClient kojiClient;
 		try {
 			kojiClient = getHubClient();
@@ -138,17 +133,7 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 			}
 		} catch (KojiHubClientException e) {
 			return e.getStatus();
-		} catch (ExecutionException e) {
-			// This shouldn't happen, but report error anyway
-			logger.logError(e.getMessage(), e);
-			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
-					e.getMessage(), e);
-		} catch (InterruptedException e) {
-			// This shouldn't happen, but report error anyway
-			logger.logError(e.getMessage(), e);
-			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
-					e.getMessage(), e);
-		} catch (KojiHubClientLoginException e) {
+		} catch (ExecutionException|InterruptedException|KojiHubClientLoginException e) {
 			// This shouldn't happen, but report error anyway
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
@@ -162,7 +147,7 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 			uploadSRPMCommand.setKojiClient(kojiClient)
 					.setRemotePath(uploadPath).setSRPM(srpmPath.toOSString())
 					.call(subMonitor.newChild(80));
-		} catch (CommandMisconfiguredException e) {
+		} catch (CommandMisconfiguredException|CommandListenerException e) {
 			// This shouldn't happen, but report error anyway
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
@@ -204,11 +189,6 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
 					e.getMessage(), e);
-		} catch (CommandListenerException e) {
-			// This shouldn't happen, but report error anyway
-			logger.logError(e.getMessage(), e);
-			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
-					e.getMessage(), e);
 		}
 		subMonitor.worked(5);
 		kojiBuildCmd.setKojiClient(kojiClient);
@@ -226,7 +206,7 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 
 			// Call build command
 			buildResult = kojiBuildCmd.call(subMonitor.newChild(10));
-		} catch (CommandMisconfiguredException e) {
+		} catch (CommandMisconfiguredException|CommandListenerException e) {
 			// This shouldn't happen, but report error anyway
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
@@ -243,11 +223,6 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 			return Status.OK_STATUS;
 		} catch (TagSourcesException e) {
 			// something failed while tagging sources
-			logger.logError(e.getMessage(), e);
-			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
-					e.getMessage(), e);
-		} catch (CommandListenerException e) {
-			// This shouldn't happen, but report error anyway
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
 					e.getMessage(), e);

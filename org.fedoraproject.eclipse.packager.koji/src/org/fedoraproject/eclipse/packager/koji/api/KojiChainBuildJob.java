@@ -160,11 +160,6 @@ public class KojiChainBuildJob extends KojiBuildJob {
 			// Make sure to set the buildResult variable, since it is used
 			// by getBuildResult() which is in turn called from the handler
 			buildResult = kojiBuildCmd.call(monitor);
-		} catch (CommandMisconfiguredException e) {
-			// This shouldn't happen, but report error anyway
-			logger.logError(e.getMessage(), e);
-			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
-					e.getMessage(), e);
 		} catch (BuildAlreadyExistsException e) {
 			// log in any case
 			logger.logInfo(e.getMessage());
@@ -181,23 +176,12 @@ public class KojiChainBuildJob extends KojiBuildJob {
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
 					e.getMessage(), e);
-		} catch (CommandListenerException e) {
-			// This shouldn't happen, but report error anyway
-			logger.logError(e.getMessage(), e);
-			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
-					e.getMessage(), e);
-		} catch (ExecutionException e) {
-			// This shouldn't happen, but report error anyway
-			logger.logError(e.getMessage(), e);
-			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
-					e.getMessage(), e);
-		} catch (InterruptedException e) {
+		} catch (CommandMisconfiguredException|CommandListenerException|ExecutionException|InterruptedException e) {
 			// This shouldn't happen, but report error anyway
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
 					e.getMessage(), e);
 		} catch (KojiHubClientLoginException e) {
-			e.printStackTrace();
 			// Check if certs were missing
 			if (e.isCertificateMissing()) {
 				String msg = NLS.bind(
