@@ -13,6 +13,7 @@ package org.fedoraproject.eclipse.packager.rpm.api;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.MessageConsole;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.fedoraproject.eclipse.packager.rpm.RPMPlugin;
 
 /**
@@ -39,7 +40,7 @@ public class FedoraPackagerConsole {
 		// no existing console, create new one
 		if (ret == null) {
 			ret = new MessageConsole(projectConsoleName,
-					RPMPlugin.getImageDescriptor("icons/rpm.gif")); //$NON-NLS-1$
+					AbstractUIPlugin.imageDescriptorFromPlugin(RPMPlugin.PLUGIN_ID, "icons/rpm.gif")); //$NON-NLS-1$
 		}
 		ret.clearConsole();
 		return ret;
