@@ -3,6 +3,7 @@ package org.fedoraproject.eclipse.packager.koji.internal.preferences;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -15,6 +16,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiPreferencesConstants;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
@@ -35,14 +37,16 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 	private Composite contents;
 	// buffer for unpushed server changes done in style of preference String
 	private String listPreferenceBuffer;
+	private ScopedPreferenceStore prefStore;
 
 	/**
 	 * Default constructor.
 	 */
 	public FedoraPackagerAdvancedKojiDialogPage() {
 		super();
-		listPreferenceBuffer = KojiPlugin.getDefault().getPreferenceStore()
-				.getString(KojiPreferencesConstants.PREF_SERVER_LIST);
+		prefStore = new ScopedPreferenceStore(
+				InstanceScope.INSTANCE, KojiPlugin.PLUGIN_ID);
+		listPreferenceBuffer = prefStore.getString(KojiPreferencesConstants.PREF_SERVER_LIST);
 
 	}
 
@@ -122,10 +126,8 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 		@SuppressWarnings("unused")
 		TableColumn column = new TableColumn(instanceTable, SWT.NONE);
 		boolean warningShown = false;
-		for (String serverInfoSet : KojiPlugin.getDefault()
-				.getPreferenceStore()
-				.getString(KojiPreferencesConstants.PREF_SERVER_LIST)
-				.split(";")) { //$NON-NLS-1$
+		for (String serverInfoSet : prefStore.getString(
+				KojiPreferencesConstants.PREF_SERVER_LIST).split(";")) { //$NON-NLS-1$
 			String[] serverInfo = serverInfoSet.split(","); //$NON-NLS-1$
 			if (!addServerItem(serverInfo) && !warningShown) {
 				FedoraHandlerUtils
@@ -239,10 +241,7 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 	 * Apply changes made to server info.
 	 */
 	public void applyChanges() {
-		KojiPlugin
-				.getDefault()
-				.getPreferenceStore()
-				.setValue(KojiPreferencesConstants.PREF_SERVER_LIST,
-						listPreferenceBuffer);
+		prefStore.setValue(KojiPreferencesConstants.PREF_SERVER_LIST,
+				listPreferenceBuffer);
 	}
 }

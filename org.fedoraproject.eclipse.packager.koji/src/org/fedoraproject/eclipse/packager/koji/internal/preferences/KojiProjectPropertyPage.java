@@ -3,6 +3,7 @@ package org.fedoraproject.eclipse.packager.koji.internal.preferences;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ProjectScope;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -39,7 +40,7 @@ public class KojiProjectPropertyPage extends PropertyPage {
 			}
 		}
 		setPreferenceStore(new ScopedPreferenceStore(new ProjectScope(project),
-				KojiPlugin.getDefault().getBundle().getSymbolicName()));
+				KojiPlugin.PLUGIN_ID));
 		noDefaultAndApplyButton();
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
@@ -48,8 +49,8 @@ public class KojiProjectPropertyPage extends PropertyPage {
 		description.setText(KojiText.KojiProjectPropertyPage_ProjectKojiSelect);
 		description.pack();
 
-		serverMapping = KojiUtils.loadServerInfo(KojiPlugin.getDefault()
-				.getPreferenceStore());
+		serverMapping = KojiUtils.loadServerInfo(new ScopedPreferenceStore(
+				InstanceScope.INSTANCE, KojiPlugin.PLUGIN_ID));
 		// project settings drop-down window
 		serverCombo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		serverCombo.setItems(serverMapping[0]);

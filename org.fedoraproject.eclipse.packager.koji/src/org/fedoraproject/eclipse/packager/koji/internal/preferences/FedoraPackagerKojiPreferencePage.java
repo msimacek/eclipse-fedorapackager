@@ -1,5 +1,6 @@
 package org.fedoraproject.eclipse.packager.koji.internal.preferences;
 
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -13,6 +14,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiPreferencesConstants;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
@@ -33,7 +35,8 @@ public class FedoraPackagerKojiPreferencePage extends PreferencePage implements
 	 */
 	public FedoraPackagerKojiPreferencePage() {
 		super();
-		setPreferenceStore(KojiPlugin.getDefault().getPreferenceStore());
+		setPreferenceStore(new ScopedPreferenceStore(
+				InstanceScope.INSTANCE, KojiPlugin.PLUGIN_ID));
 	}
 
 	@Override

@@ -6,8 +6,10 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
@@ -29,23 +31,21 @@ public abstract class KojiHandler extends AbstractHandler {
 
 	protected String[] setKojiInfo(ExecutionEvent event)
 			throws ExecutionException {
-		this.shell =  HandlerUtil.getActiveShellChecked(event);
+		this.shell = HandlerUtil.getActiveShellChecked(event);
 		IResource eventResource = FedoraHandlerUtils.getResource(event);
 
 		IEclipsePreferences projectPreferences = new ProjectScope(
-				eventResource.getProject()).getNode(KojiPlugin.getDefault()
-				.getBundle().getSymbolicName());
+				eventResource.getProject()).getNode(KojiPlugin.PLUGIN_ID);
+		ScopedPreferenceStore prefStore = new ScopedPreferenceStore(
+				InstanceScope.INSTANCE, KojiPlugin.PLUGIN_ID);
 		String kojiInfoString = projectPreferences
 				.get(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO,
-						KojiPlugin
-								.getDefault()
-								.getPreferenceStore()
-								.getString(
-										KojiPreferencesConstants.PREF_KOJI_SERVER_INFO));
-		if (kojiInfoString.contentEquals(KojiText.FedoraPackagerKojiPreferencePage_DefaultPlaceholder)) {
-			kojiInfo = KojiPlugin.getDefault().getPreferenceStore()
-					.getString(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO)
-					.split(","); //$NON-NLS-1$
+						prefStore
+								.getString(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO));
+		if (kojiInfoString
+				.contentEquals(KojiText.FedoraPackagerKojiPreferencePage_DefaultPlaceholder)) {
+			kojiInfo = prefStore.getString(
+					KojiPreferencesConstants.PREF_KOJI_SERVER_INFO).split(","); //$NON-NLS-1$
 		} else {
 			kojiInfo = kojiInfoString.split(","); //$NON-NLS-1$
 		}
