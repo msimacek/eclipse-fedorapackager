@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -176,8 +177,7 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 						|| e.getTargetException().getCause() instanceof TransportException) {
 					final String errorMessage = NLS
 							.bind(FedoraPackagerGitText.FedoraPackagerGitCloneWizard_badURIError,
-									Activator
-											.getStringPreference(GitPreferencesConstants.PREF_CLONE_BASE_URL));
+									DefaultScope.INSTANCE.getNode(Activator.PLUGIN_ID).get(GitPreferencesConstants.PREF_CLONE_BASE_URL, "")); //$NON-NLS-1$
 					cloneFailChecked(errorMessage);
 					return false; // let user correct
 				}
@@ -213,25 +213,13 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 							FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail,
 							FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneCancel);
 			return false;
-		} catch (CoreException e) {
+		} catch (CoreException|InvocationTargetException|URISyntaxException e) {
 			org.fedoraproject.eclipse.packager.git.Activator
 					.handleError(
 							FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail,
 							e, true);
 			return false;
-		} catch (InvocationTargetException e) {
-			org.fedoraproject.eclipse.packager.git.Activator
-					.handleError(
-							FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail,
-							e, true);
-			return false;
-		} catch (URISyntaxException e) {
-			org.fedoraproject.eclipse.packager.git.Activator
-					.handleError(
-							FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail,
-							e, true);
-			return false;
-		}
+		} 
 	}
 
 	/**
@@ -283,8 +271,7 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 	 * @return The full clone URL based on the package name.
 	 */
 	private String getGitCloneURL() {
-		String gitBaseURL = Activator
-				.getStringPreference(GitPreferencesConstants.PREF_CLONE_BASE_URL);
+		String gitBaseURL = DefaultScope.INSTANCE.getNode(Activator.PLUGIN_ID).get(GitPreferencesConstants.PREF_CLONE_BASE_URL, ""); //$NON-NLS-1$
 		if (gitBaseURL != null && !page.getCloneAnonymousButtonChecked()) {
 			return GitUtils.getFullGitURL(gitBaseURL, page.getPackageName());
 		} else if (!fasUserName.equals(FedoraSSL.UNKNOWN_USER)
