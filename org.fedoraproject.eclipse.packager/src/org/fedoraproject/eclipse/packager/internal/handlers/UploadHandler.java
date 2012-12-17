@@ -82,12 +82,7 @@ public class UploadHandler extends AbstractHandler implements
 				// Get DownloadSourceCommand from Fedora packager registry
 				uploadCmd = (UploadSourceCommand) packager
 						.getCommandInstance(UploadSourceCommand.ID);
-			} catch (FedoraPackagerCommandNotFoundException e) {
-				logger.logError(e.getMessage(), e);
-				FedoraHandlerUtils.showErrorDialog(shell, projectRoot
-						.getProductStrings().getProductName(), e.getMessage());
-				return null;
-			} catch (FedoraPackagerCommandInitializationException e) {
+			} catch (FedoraPackagerCommandNotFoundException|FedoraPackagerCommandInitializationException e) {
 				logger.logError(e.getMessage(), e);
 				FedoraHandlerUtils.showErrorDialog(shell, projectRoot
 						.getProductStrings().getProductName(), e.getMessage());

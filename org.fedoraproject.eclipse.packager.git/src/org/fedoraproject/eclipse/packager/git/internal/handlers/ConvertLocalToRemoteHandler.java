@@ -71,13 +71,7 @@ public class ConvertLocalToRemoteHandler extends AbstractHandler {
 						// registry
 						convertCmd = (ConvertLocalToRemoteCommand) packager
 								.getCommandInstance(ConvertLocalToRemoteCommand.ID);
-					} catch (FedoraPackagerCommandNotFoundException e) {
-						logger.logError(e.getMessage(), e);
-						FedoraHandlerUtils.showErrorDialog(shell, projectRoot
-								.getProductStrings().getProductName(), e
-								.getMessage());
-						return null;
-					} catch (FedoraPackagerCommandInitializationException e) {
+					} catch (FedoraPackagerCommandNotFoundException|FedoraPackagerCommandInitializationException e) {
 						logger.logError(e.getMessage(), e);
 						FedoraHandlerUtils.showErrorDialog(shell, projectRoot
 								.getProductStrings().getProductName(), e
@@ -99,15 +93,11 @@ public class ConvertLocalToRemoteHandler extends AbstractHandler {
 										finalMessage);
 						return Status.OK_STATUS;
 
-					} catch (CommandMisconfiguredException e) {
+					} catch (CommandMisconfiguredException|CommandListenerException e) {
 						logger.logError(e.getMessage(), e);
 						return new Status(IStatus.ERROR,
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
-					} catch (CommandListenerException e) {
-						logger.logError(e.getMessage(), e);
-						return new Status(IStatus.ERROR,
-								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
-					} catch (RemoteAlreadyExistsException e) {
+					} catch (RemoteAlreadyExistsException|LocalProjectConversionFailedException e) {
 						logger.logError(e.getMessage(), e);
 						return new Status(
 								IStatus.ERROR,
@@ -116,15 +106,6 @@ public class ConvertLocalToRemoteHandler extends AbstractHandler {
 										FedoraPackagerGitText.ConvertLocalToRemoteHandler_failToConvert,
 										projectRoot.getPackageName(),
 										e.getMessage()));
-					} catch (LocalProjectConversionFailedException e) {
-						logger.logError(e.getCause().getMessage(), e);
-						return new Status(
-								IStatus.ERROR,
-								PackagerPlugin.PLUGIN_ID,
-								NLS.bind(
-										FedoraPackagerGitText.ConvertLocalToRemoteHandler_failToConvert,
-										projectRoot.getPackageName(), e
-												.getCause().getMessage()));
 					}
 
 				}

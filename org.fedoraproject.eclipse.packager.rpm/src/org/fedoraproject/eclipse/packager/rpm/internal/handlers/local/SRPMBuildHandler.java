@@ -63,12 +63,7 @@ public class SRPMBuildHandler extends LocalHandlerDispatcher {
 				// get RPM build command in order to produce an SRPM
 				srpmBuild = (RpmBuildCommand) fp
 						.getCommandInstance(RpmBuildCommand.ID);
-			} catch (FedoraPackagerCommandNotFoundException e) {
-				logger.logError(e.getMessage(), e);
-				FedoraHandlerUtils.showErrorDialog(shell, projectRoot
-						.getProductStrings().getProductName(), e.getMessage());
-				return null;
-			} catch (FedoraPackagerCommandInitializationException e) {
+			} catch (FedoraPackagerCommandNotFoundException|FedoraPackagerCommandInitializationException e) {
 				logger.logError(e.getMessage(), e);
 				FedoraHandlerUtils.showErrorDialog(shell, projectRoot
 						.getProductStrings().getProductName(), e.getMessage());

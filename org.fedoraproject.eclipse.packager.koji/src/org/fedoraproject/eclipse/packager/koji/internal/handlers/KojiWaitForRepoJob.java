@@ -88,17 +88,7 @@ public class KojiWaitForRepoJob extends KojiJob {
 				return Status.CANCEL_STATUS;
 			}
 
-		} catch (KojiHubClientException e) {
-			FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-			logger.logError(e.getMessage(), e);
-			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
-					e.getMessage(), e);
-		} catch (InterruptedException e) {
-			FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-			logger.logError(e.getMessage(), e);
-			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
-					e.getMessage(), e);
-		} catch (ExecutionException e) {
+		} catch (KojiHubClientException|InterruptedException|ExecutionException e) {
 			FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,

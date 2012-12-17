@@ -86,12 +86,7 @@ public class ScpHandler extends AbstractHandler {
 				// Get ScpCommand from Fedora packager registry
 				scpCmd = (ScpCommand) packager
 						.getCommandInstance(ScpCommand.ID);
-			} catch (FedoraPackagerCommandNotFoundException e) {
-				logger.logError(e.getMessage(), e);
-				FedoraHandlerUtils.showErrorDialog(shell, projectRoot
-						.getProductStrings().getProductName(), e.getMessage());
-				return null;
-			} catch (FedoraPackagerCommandInitializationException e) {
+			} catch (FedoraPackagerCommandNotFoundException|FedoraPackagerCommandInitializationException e) {
 				logger.logError(e.getMessage(), e);
 				FedoraHandlerUtils.showErrorDialog(shell, projectRoot
 						.getProductStrings().getProductName(), e.getMessage());

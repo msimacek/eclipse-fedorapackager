@@ -57,12 +57,7 @@ public class DownloadHandler extends AbstractHandler implements IPreferenceHandl
 			// Get DownloadSourceCommand from Fedora packager registry
 			download = (DownloadSourceCommand) fp
 					.getCommandInstance(DownloadSourceCommand.ID);
-		} catch (FedoraPackagerCommandNotFoundException e) {
-			logger.logError(e.getMessage(), e);
-			FedoraHandlerUtils.showErrorDialog(shell,
-					projectRoot.getProductStrings().getProductName(), e.getMessage());
-			return null;
-		} catch (FedoraPackagerCommandInitializationException e) {
+		} catch (FedoraPackagerCommandNotFoundException|FedoraPackagerCommandInitializationException e) {
 			logger.logError(e.getMessage(), e);
 			FedoraHandlerUtils.showErrorDialog(shell,
 					projectRoot.getProductStrings().getProductName(), e.getMessage());

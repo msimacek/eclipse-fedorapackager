@@ -106,16 +106,9 @@ public class PrepHandler extends LocalHandlerDispatcher {
 										.flags(nodeps).call(monitor);
 								projectRoot.getProject().refreshLocal(
 										IResource.DEPTH_INFINITE, monitor);
-							} catch (CommandMisconfiguredException e) {
+							} catch (CommandMisconfiguredException|CommandListenerException e) {
 								// This shouldn't happen, but report error
 								// anyway
-								logger.logError(e.getMessage(), e);
-								return new Status(IStatus.ERROR,
-										RPMPlugin.PLUGIN_ID, e.getMessage(), e);
-							} catch (CommandListenerException e) {
-								// There are no command listeners registered, so
-								// shouldn't
-								// happen. Do something reasonable anyway.
 								logger.logError(e.getMessage(), e);
 								return new Status(IStatus.ERROR,
 										RPMPlugin.PLUGIN_ID, e.getMessage(), e);
