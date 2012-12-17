@@ -254,7 +254,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 				return "master"; //$NON-NLS-1$
 			} else if (version != null && prefix != null) {
 				// F, EPEL, OLPC matches
-				return prefix.toUpperCase() + "-" + version; //$NON-NLS-1$
+				return prefix + version;
 			}
 		}
 		// not caught and no exception, something's fishy
@@ -313,18 +313,22 @@ public class FpGitProjectBits implements IFpProjectBits {
 		int maxRelease = -1;
 		for (String key : keySet) {
 			branchName = this.branches.get(key);
-			if (branchName.startsWith("F-") || branchName.startsWith("FC-")) { //$NON-NLS-1$ //$NON-NLS-2$
+			if (branchName.startsWith("fc")) { //$NON-NLS-1$
 				// fedora
 				maxRelease = Math.max(maxRelease,
-						Integer.parseInt(branchName.substring("F-".length()))); //$NON-NLS-1$
-			} else if (branchName.startsWith("EL-")) { //$NON-NLS-1$
+						Integer.parseInt(branchName.substring("fc".length()))); //$NON-NLS-1$
+			} else if (branchName.startsWith("f")) { //$NON-NLS-1$
+				// fedora
+				maxRelease = Math.max(maxRelease,
+						Integer.parseInt(branchName.substring("f".length()))); //$NON-NLS-1$
+			} else if (branchName.startsWith("el")) { //$NON-NLS-1$
 				// EPEL
 				maxRelease = Math.max(maxRelease,
-						Integer.parseInt(branchName.substring("EL-".length()))); //$NON-NLS-1$
-			} else if (branchName.startsWith("OLPC-")) { //$NON-NLS-1$
+						Integer.parseInt(branchName.substring("el".length()))); //$NON-NLS-1$
+			} else if (branchName.startsWith("olpc")) { //$NON-NLS-1$
 				// OLPC
 				maxRelease = Math.max(maxRelease, Integer.parseInt(branchName
-						.substring("OLPC-".length()))); //$NON-NLS-1$
+						.substring("olpc".length()))); //$NON-NLS-1$
 			}
 			// ignore
 		}
@@ -546,16 +550,16 @@ public class FpGitProjectBits implements IFpProjectBits {
 		if (branchName.equals("master")) { //$NON-NLS-1$
 			version = determineNextReleaseNumber();
 		} else {
-			version = branchName.split("-")[1]; //$NON-NLS-1$
+			version = branchName.replaceAll("[a-zA-Z]", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		String distro = null;
 		String distroSuffix = null;
 		String buildTarget = null;
-		if (branchName.startsWith("F-") || branchName.startsWith("FC-")) { //$NON-NLS-1$ //$NON-NLS-2$
+		if (branchName.startsWith("f")||branchName.startsWith("fc")) { //$NON-NLS-1$ //$NON-NLS-2$
 			distro = "fedora"; //$NON-NLS-1$"
 			distroSuffix = ".fc" + version; //$NON-NLS-1$
 			buildTarget = "f" + version + "-candidate"; //$NON-NLS-1$" //$NON-NLS-2$
-		} else if (branchName.startsWith("OLPC-")) { //$NON-NLS-1$
+		} else if (branchName.startsWith("olpc")) { //$NON-NLS-1$
 			distro = "olpc"; //$NON-NLS-1$
 			distroSuffix = ".olpc" + version; //$NON-NLS-1$
 			buildTarget = "dist-olpc" + version; //$NON-NLS-1$
@@ -563,16 +567,11 @@ public class FpGitProjectBits implements IFpProjectBits {
 			distro = "fedora"; //$NON-NLS-1$
 			distroSuffix = ".fc" + version; //$NON-NLS-1$
 			buildTarget = "rawhide"; //$NON-NLS-1$
-		} else if (branchName.startsWith("EL-")) { //$NON-NLS-1$
+		} else if (branchName.startsWith("el")) { //$NON-NLS-1$
 			distro = "rhel"; //$NON-NLS-1$
 			distroSuffix = ".el" + version; //$NON-NLS-1$
 			buildTarget = "dist-" + version + "E-epel-testing-candidate"; //$NON-NLS-1$ //$NON-NLS-2$
-		} else if (branchName.startsWith("RHEL-")) { //$NON-NLS-1$
-			// RHEL *NOT* EL specific things
-			distro = "rhel"; //$NON-NLS-1$
-			distroSuffix = ".el" + version.replace(".", "_"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			buildTarget = "rhel-" + version + "-candidate"; //$NON-NLS-1$ //$NON-NLS-2$
-		}
+		} 
 		return new BranchConfigInstance(distroSuffix, version, distro,
 				buildTarget, branchName);
 	}

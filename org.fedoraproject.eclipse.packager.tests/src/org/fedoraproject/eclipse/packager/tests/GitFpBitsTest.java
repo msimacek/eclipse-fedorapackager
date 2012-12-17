@@ -34,10 +34,10 @@ public class GitFpBitsTest extends GitTestCase {
 		GitTestProject testProject = getProject();
 		// switch to branch f13
 		testProject.checkoutBranch("f13");
-		assertEquals("F-13", projectBits.getCurrentBranchName());
+		assertEquals("f13", projectBits.getCurrentBranchName());
 		// switch to branch fc6
 		testProject.checkoutBranch("fc6");
-		assertEquals("FC-6", projectBits.getCurrentBranchName());
+		assertEquals("fc6", projectBits.getCurrentBranchName());
 	}
 
 	@Test
@@ -46,7 +46,7 @@ public class GitFpBitsTest extends GitTestCase {
 		FpGitProjectBits projectBits = (FpGitProjectBits) FedoraPackagerUtils
 				.getVcsHandler(getFedoraprojectRoot());
 		assertNotNull(projectBits);
-		assertNotNull(projectBits.getBranchName("F-7")); // should be there
+		assertNotNull(projectBits.getBranchName("f7")); // should be there
 		assertNotNull(projectBits.getBranchName("master")); // master mapped to
 															// devel
 	}
@@ -79,36 +79,6 @@ public class GitFpBitsTest extends GitTestCase {
 				.setName("fedora_betaf16_testbranch").call();
 		// check out created branch
 		testProject.checkoutBranch("fedora_betaf16_testbranch");
-		assertEquals(projectBits.getBranchConfig().getEquivalentBranch(), "F-16");
-	}
-	
-	@Test
-	public void testElRhelNonExactBranches() throws JGitInternalException,
-			GitAPIException, CoreException {
-		FpGitProjectBits projectBits = (FpGitProjectBits) FedoraPackagerUtils
-				.getVcsHandler(getFedoraprojectRoot());
-		assertNotNull(projectBits);
-		GitTestProject testProject = getProject();
-		// create branch name containing el6
-		testProject.getGitRepo().branchCreate()
-				.setName("something_test_el6_testbranch").call();
-		// check out created branch
-		testProject.checkoutBranch("something_test_el6_testbranch");
-		assertEquals(projectBits.getBranchConfig().getEquivalentBranch(),
-				"EL-6");
-		// create branch name containing rhel-6.2
-		testProject.getGitRepo().branchCreate()
-				.setName("my_cool_feature-hell-rhel-6.2_testbranch").call();
-		// check out created branch
-		testProject.checkoutBranch("my_cool_feature-hell-rhel-6.2_testbranch");
-		assertEquals(projectBits.getBranchConfig().getEquivalentBranch(),
-				"RHEL-6.2");
-		// create branch name containing rhel-6
-		testProject.getGitRepo().branchCreate()
-				.setName("my_cool_feature-hell-rhel-6_testbranch").call();
-		// check out created branch
-		testProject.checkoutBranch("my_cool_feature-hell-rhel-6_testbranch");
-		assertEquals(projectBits.getBranchConfig().getEquivalentBranch(),
-				"RHEL-6");
+		assertEquals(projectBits.getBranchConfig().getEquivalentBranch(), "f16");
 	}
 }
