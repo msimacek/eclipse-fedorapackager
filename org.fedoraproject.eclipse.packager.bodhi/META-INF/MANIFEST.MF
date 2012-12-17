@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name.0
 Bundle-SymbolicName: org.fedoraproject.eclipse.packager.bodhi;singleton:=true
 Bundle-Version: 0.4.1.qualifier
-Bundle-Activator: org.fedoraproject.eclipse.packager.bodhi.BodhiPlugin
 Bundle-Vendor: %Bundle-Vendor.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy

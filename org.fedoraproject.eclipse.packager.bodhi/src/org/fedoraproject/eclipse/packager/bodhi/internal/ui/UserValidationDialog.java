@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.fedoraproject.eclipse.packager.bodhi.BodhiPlugin;
 import org.fedoraproject.eclipse.packager.bodhi.BodhiText;
 
@@ -172,7 +173,7 @@ public class UserValidationDialog extends TrayDialog {
 		Label imageLabel = new Label(imageComposite, SWT.NONE);
 
 		if (pathToImage != null) {
-			keyLockImage = BodhiPlugin.getImageDescriptor(pathToImage)
+			keyLockImage = AbstractUIPlugin.imageDescriptorFromPlugin(BodhiPlugin.PLUGIN_ID, pathToImage)
 					.createImage();
 			imageLabel.setImage(keyLockImage);
 		}
