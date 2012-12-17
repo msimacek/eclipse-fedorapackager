@@ -29,35 +29,44 @@ public class UploadFileValidityTest {
 	private File emptyFileInvalid;
 	private File regularFileNonEmpty;
 	private File regularFileNonEmptyInvalid;
-	
+
 	@Before
 	public void setUp() {
 		try {
 			// Create files
-			emptyFileRegular = File.createTempFile("eclipse-fed-packager-test", ".rpm");
-			emptyFileInvalid = File.createTempFile("eclipse-fed-packager-test", ".exe");
-			regularFileNonEmpty = File.createTempFile("eclipse-fed-packager-test", ".cpio");
-			regularFileNonEmptyInvalid = File.createTempFile("eclipse-fed-packager-test", ".invalid");
-			
+			emptyFileRegular = File.createTempFile("eclipse-fed-packager-test",
+					".rpm");
+			emptyFileInvalid = File.createTempFile("eclipse-fed-packager-test",
+					".exe");
+			regularFileNonEmpty = File.createTempFile(
+					"eclipse-fed-packager-test", ".cpio");
+			regularFileNonEmptyInvalid = File.createTempFile(
+					"eclipse-fed-packager-test", ".invalid");
+
 			// Make it empty
-			BufferedWriter out = new BufferedWriter(new FileWriter(emptyFileRegular));
-			out.write("");
-			out.close();
+			try (BufferedWriter out = new BufferedWriter(new FileWriter(
+					emptyFileRegular))) {
+				out.write("");
+			}
 			// Make it empty, again
-			out = new BufferedWriter(new FileWriter(emptyFileInvalid));
-			out.write("");
-			out.close();
+			try (BufferedWriter out = new BufferedWriter(new FileWriter(
+					emptyFileInvalid))) {
+				out.write("");
+			}
 			// Put text into file
-			out = new BufferedWriter(new FileWriter(regularFileNonEmpty));
-			out.write("I'm not empty!");
-			out.close();
+			try (BufferedWriter out = new BufferedWriter(new FileWriter(
+					regularFileNonEmpty))) {
+				out.write("I'm not empty!");
+			}
 			// write something into file
-			out = new BufferedWriter(new FileWriter(regularFileNonEmptyInvalid));
-			out.write("I'm not empty!");
-			out.close();
-		} catch (IOException e) { }
+			try (BufferedWriter out = new BufferedWriter(new FileWriter(
+					regularFileNonEmptyInvalid))) {
+				out.write("I'm not empty!");
+			}
+		} catch (IOException e) {
+		}
 	}
-	
+
 	@After
 	public void tearDown() {
 		// tear down the house
@@ -74,7 +83,7 @@ public class UploadFileValidityTest {
 			regularFileNonEmptyInvalid.delete();
 		}
 	}
-	
+
 	/**
 	 * Test FedoraHandlerUtils.isValidUploadFile().
 	 */
@@ -83,7 +92,8 @@ public class UploadFileValidityTest {
 		assertFalse(FedoraPackagerUtils.isValidUploadFile(emptyFileRegular));
 		assertFalse(FedoraPackagerUtils.isValidUploadFile(emptyFileInvalid));
 		assertTrue(FedoraPackagerUtils.isValidUploadFile(regularFileNonEmpty));
-		assertFalse(FedoraPackagerUtils.isValidUploadFile(regularFileNonEmptyInvalid));
+		assertFalse(FedoraPackagerUtils
+				.isValidUploadFile(regularFileNonEmptyInvalid));
 	}
 
 }
