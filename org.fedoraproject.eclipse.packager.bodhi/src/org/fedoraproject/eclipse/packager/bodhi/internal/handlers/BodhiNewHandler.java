@@ -49,8 +49,7 @@ import org.fedoraproject.eclipse.packager.IFpProjectBits;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.QuestionMessageDialog;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
-import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
@@ -59,8 +58,6 @@ import org.fedoraproject.eclipse.packager.bodhi.BodhiText;
 import org.fedoraproject.eclipse.packager.bodhi.api.BodhiClient;
 import org.fedoraproject.eclipse.packager.bodhi.api.PushUpdateCommand;
 import org.fedoraproject.eclipse.packager.bodhi.api.PushUpdateResult;
-import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientException;
-import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientLoginException;
 import org.fedoraproject.eclipse.packager.bodhi.internal.ui.BodhiNewUpdateDialog;
 import org.fedoraproject.eclipse.packager.bodhi.internal.ui.UnpushedChangesJob;
 import org.fedoraproject.eclipse.packager.bodhi.internal.ui.UserValidationDialog;
@@ -219,24 +216,12 @@ public class BodhiNewHandler extends AbstractHandler {
 								PushUpdateCommand.class.getName()));
 						updateResult = update.call(monitor);
 						return Status.OK_STATUS;
-					} catch (CommandListenerException e) {
+					} catch (FedoraPackagerAPIException e) {
 						// no listeners registered, so should not happen
 						logger.logError(e.getMessage(), e);
 						return new Status(IStatus.ERROR, BodhiPlugin.PLUGIN_ID,
 								e.getMessage(), e);
-					} catch (CommandMisconfiguredException e) {
-						logger.logError(e.getMessage(), e);
-						return new Status(IStatus.ERROR, BodhiPlugin.PLUGIN_ID,
-								e.getMessage(), e);
-					} catch (BodhiClientLoginException e) {
-						logger.logError(e.getMessage(), e);
-						return new Status(IStatus.ERROR, BodhiPlugin.PLUGIN_ID,
-								e.getMessage(), e);
-					} catch (BodhiClientException e) {
-						logger.logError(e.getMessage(), e);
-						return new Status(IStatus.ERROR, BodhiPlugin.PLUGIN_ID,
-								e.getMessage(), e);
-					}
+					} 
 				}
 
 			};
@@ -466,10 +451,7 @@ public class BodhiNewHandler extends AbstractHandler {
 									| IWorkbenchBrowserSupport.STATUS,
 							"koji_task", null, null); //$NON-NLS-1$
 			browser.openURL(new URL(bodhiWebUrl));
-		} catch (PartInitException e) {
-			FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-			logger.logError(e.getMessage(), e);
-		} catch (MalformedURLException e) {
+		} catch (PartInitException|MalformedURLException e) {
 			FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 			logger.logError(e.getMessage(), e);
 		}
