@@ -284,29 +284,29 @@ public class UploadSourceCommand extends
 			if (returnCode != HttpURLConnection.HTTP_OK) {
 				throw new UploadFailedException(response.getStatusLine()
 						.getReasonPhrase(), response);
-			} else {
-				String resString = ""; //$NON-NLS-1$
-				if (resEntity != null) {
-					try {
-						resString = parseResponse(resEntity);
-					} catch (IOException e) {
-						// ignore
-					}
-					EntityUtils.consume(resEntity); // clean up resources
-				}
-				// If this file has already been uploaded bail out
-				if (resString.toLowerCase().equals(RESOURCE_AVAILABLE)) {
-					throw new FileAvailableInLookasideCacheException(
-							fileToUpload.getName());
-				} else if (resString.toLowerCase().equals(RESOURCE_MISSING)) {
-					// check passed
-					return;
-				} else {
-					// something is fishy
-					throw new UploadFailedException(
-							FedoraPackagerText.somethingUnexpectedHappenedError);
-				}
 			}
+			String resString = ""; //$NON-NLS-1$
+			if (resEntity != null) {
+				try {
+					resString = parseResponse(resEntity);
+				} catch (IOException e) {
+					// ignore
+				}
+				EntityUtils.consume(resEntity); // clean up resources
+			}
+			// If this file has already been uploaded bail out
+			if (resString.toLowerCase().equals(RESOURCE_AVAILABLE)) {
+				throw new FileAvailableInLookasideCacheException(
+						fileToUpload.getName());
+			} else if (resString.toLowerCase().equals(RESOURCE_MISSING)) {
+				// check passed
+				return;
+			} else {
+				// something is fishy
+				throw new UploadFailedException(
+						FedoraPackagerText.somethingUnexpectedHappenedError);
+			}
+
 		} catch (IOException e) {
 			throw new UploadFailedException(e.getMessage(), e);
 		} finally {

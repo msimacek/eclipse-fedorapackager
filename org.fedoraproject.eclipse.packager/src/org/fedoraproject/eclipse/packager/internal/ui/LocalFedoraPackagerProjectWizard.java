@@ -171,9 +171,8 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 						this.pageOne.getProjectName());
 				addPage(pageFour);
 				return pageFour;
-			} else {
-				return null;
 			}
+			return null;
 		}
 		return super.getNextPage(page);
 	}

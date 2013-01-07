@@ -86,9 +86,8 @@ public class UploadFailedException extends FedoraPackagerAPIException {
 				&& this.getCause().getMessage()
 						.contains("peer not authenticated")) { //$NON-NLS-1$
 			return true;
-		} else {
-			return false;
-		}
+		} 
+		return false;
 	}
 	
 	/**

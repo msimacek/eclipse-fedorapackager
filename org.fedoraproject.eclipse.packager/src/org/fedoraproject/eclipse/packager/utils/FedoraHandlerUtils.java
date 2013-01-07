@@ -56,9 +56,8 @@ public class FedoraHandlerUtils {
 			IEditorInput input = ((EditorPart) part).getEditorInput();
 			if (input instanceof IFileEditorInput) {
 				return ((IFileEditorInput) input).getFile();
-			} else {
-				return null;
-			}
+			} 
+			return null;
 		}
 		IWorkbenchSite site = part.getSite();
 		if (site == null) {
@@ -81,9 +80,8 @@ public class FedoraHandlerUtils {
 			} else {
 				return null;
 			}
-		} else {
-			return null;
-		}
+		} 
+		return null;
 	}
 	
 	/**

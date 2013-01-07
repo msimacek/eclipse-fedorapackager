@@ -94,20 +94,18 @@ public class FedoraPackagerUtils {
 					// Do initialization
 					root.initialize(candidate);
 					return root; // All good
-				} else {
-					throw new InvalidProjectRootException(
+				} 
+				throw new InvalidProjectRootException(
 							FedoraPackagerText.FedoraPackagerUtils_invalidProjectRootError);
-				}
 			} catch (FedoraPackagerExtensionPointException e) {
 				FedoraPackagerLogger logger = FedoraPackagerLogger
 						.getInstance();
 				logger.logError(e.getMessage(), e);
 				throw new InvalidProjectRootException(e.getMessage());
 			}
-		} else {
-			throw new InvalidProjectRootException(
-					FedoraPackagerText.FedoraPackagerUtils_invalidContainerOrProjectType);
-		}
+		} 
+		throw new InvalidProjectRootException(
+				FedoraPackagerText.FedoraPackagerUtils_invalidContainerOrProjectType);
 	}
 
 	/**
@@ -222,18 +220,15 @@ public class FedoraPackagerUtils {
 		if (target.startsWith("fc")) { //$NON-NLS-1$
 			if (Integer.parseInt(target.substring(2)) < 16) {
 				return "f" + target.substring(2) + "-candidate"; //$NON-NLS-1$ //$NON-NLS-2$
-			} else {
-				return "rawhide"; //$NON-NLS-1$
-			}
+			} 
+			return "rawhide"; //$NON-NLS-1$
 		} else if (target.startsWith("el")) { //$NON-NLS-1$
 			if (Integer.parseInt(target.substring(2)) < 6) {
 				return "dist-" + target.substring(2) + "E-epel-testing-candidate"; //$NON-NLS-1$ //$NON-NLS-2$
-			} else {
-				return "rawhide"; //$NON-NLS-1$
-			}
-		} else {
-			return null;
-		}
+			} 
+			return "rawhide"; //$NON-NLS-1$
+		} 
+		return null;
 	}
 
 	/**
