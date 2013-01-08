@@ -25,8 +25,8 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -124,7 +124,7 @@ public class SelectModulePage extends WizardPage {
 		anonymousCloneBtn.setSelection(isUnknownUser);
 		// disable checkbox if there is no choice of cloning non-anonymously
 		anonymousCloneBtn.setEnabled(!isUnknownUser);
-		anonymousCloneBtn.addSelectionListener(new SelectionListener() {
+		anonymousCloneBtn.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -144,10 +144,6 @@ public class SelectModulePage extends WizardPage {
 				}
 			}
 
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// do nothing
-			}
 		});
 		GridDataFactory.fillDefaults().grab(true, false).span(GROUP_SPAN, 1)
 		.applyTo(optionsGroup);

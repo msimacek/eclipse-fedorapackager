@@ -7,8 +7,8 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -67,40 +67,28 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 		addButton = new Button(buttons, SWT.NONE);
 		addButton.setText(KojiText.FedoraPackagerAdvancedKojiDialogPage_AddButton);
 		addButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		addButton.addSelectionListener(new SelectionListener() {
+		addButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				addInstance();
 			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// no op
-			}
-
 		});
 		editButton = new Button(buttons, SWT.NONE);
 		editButton.setText(KojiText.FedoraPackagerAdvancedKojiDialogPage_EditButton);
 		editButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		editButton.addSelectionListener(new SelectionListener() {
+		editButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				editInstance(instanceTable.getSelection()[0]);
 			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// no op
-			}
-
 		});
 		removeButton = new Button(buttons, SWT.NONE);
 		removeButton.setText(KojiText.FedoraPackagerAdvancedKojiDialogPage_RemoveButton);
 		removeButton
 				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		removeButton.addSelectionListener(new SelectionListener() {
+		removeButton.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -116,12 +104,6 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 						removeButton.setEnabled(false);
 					}
 			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// no op
-			}
-
 		});
 		@SuppressWarnings("unused")
 		TableColumn column = new TableColumn(instanceTable, SWT.NONE);

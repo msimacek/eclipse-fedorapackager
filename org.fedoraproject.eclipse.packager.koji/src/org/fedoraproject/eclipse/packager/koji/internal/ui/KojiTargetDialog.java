@@ -8,8 +8,8 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -87,7 +87,7 @@ public class KojiTargetDialog extends TitleAreaDialog {
 				returnTarget = targetText.getText();
 			}
 		});
-		targetList.addSelectionListener(new SelectionListener() {
+		targetList.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -96,12 +96,6 @@ public class KojiTargetDialog extends TitleAreaDialog {
 					returnTarget = targetText.getText();
 				}
 			}
-
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// no op
-			}
-
 		});
 		String[] listItems = targets.toArray(new String[0]);
 
