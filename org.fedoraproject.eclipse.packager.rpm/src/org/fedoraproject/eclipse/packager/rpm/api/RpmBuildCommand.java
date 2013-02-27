@@ -13,6 +13,7 @@ package org.fedoraproject.eclipse.packager.rpm.api;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.SequenceInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +43,7 @@ import org.fedoraproject.eclipse.packager.utils.RPMUtils;
 
 /**
  * Command for executing prep, binary builds and source RPM builds.
- * 
+ *
  */
 public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 
@@ -71,7 +72,7 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 
 	/**
 	 * The build type.
-	 * 
+	 *
 	 */
 	public enum BuildType {
 		/**
@@ -98,7 +99,7 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 
 	/**
 	 * Sets the build type which is triggered.
-	 * 
+	 *
 	 * @param type
 	 *            The type of rpm command being run.
 	 * @return This instance.
@@ -128,7 +129,7 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 
 	/**
 	 * Set the current branch configuration.
-	 * 
+	 *
 	 * @param bci
 	 *            The branch configuration to be used for this build.
 	 * @return This instance.
@@ -145,7 +146,7 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 
 	/**
 	 * Set some additional flags.
-	 * 
+	 *
 	 * @param flags
 	 *            The list of flags to be used for this build.
 	 * @return This instance
@@ -164,7 +165,7 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#
 	 * checkConfiguration()
 	 */
@@ -183,7 +184,7 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 
 	/**
 	 * Implementation of rpm build command. Triggers a build as configured.
-	 * 
+	 *
 	 * @throws CommandMisconfiguredException
 	 *             If the command isn't properly configured.
 	 * @throws CommandListenerException
@@ -244,7 +245,7 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return An array of the configured command lists.
 	 * @throws RpmBuildCommandException
 	 *             If the RPM query failed.
@@ -314,7 +315,7 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 						convertCmdList(cmdList)));
 				child = RuntimeProcessFactory.getFactory().exec(cmdList, null);
 
-				is = new BufferedInputStream(child.getInputStream());
+				is = new BufferedInputStream(new SequenceInputStream(child.getInputStream(), child.getErrorStream()));
 
 			} catch (IOException e) {
 				FedoraHandlerUtils.showErrorDialog(new Shell(),
