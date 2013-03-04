@@ -29,8 +29,7 @@ import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.rpm.RPMPlugin;
 import org.fedoraproject.eclipse.packager.rpm.RpmText;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.MockBuildCommandException;
@@ -40,7 +39,7 @@ import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 
 /**
  * Job for doing a standard Mock build.
- * 
+ *
  */
 public class MockBuildJob extends AbstractMockJob {
 
@@ -67,7 +66,7 @@ public class MockBuildJob extends AbstractMockJob {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.
 	 * IProgressMonitor)
 	 */
@@ -77,13 +76,7 @@ public class MockBuildJob extends AbstractMockJob {
 		try {
 			mockBuild = (MockBuildCommand) fp
 					.getCommandInstance(MockBuildCommand.ID);
-		} catch (FedoraPackagerCommandNotFoundException e) {
-			logger.logError(e.getMessage(), e);
-			FedoraHandlerUtils.showErrorDialog(shell, fpr.getProductStrings()
-					.getProductName(), e.getMessage());
-			return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
-					e.getMessage(), e);
-		} catch (FedoraPackagerCommandInitializationException e) {
+		} catch (FedoraPackagerAPIException e) {
 			logger.logError(e.getMessage(), e);
 			FedoraHandlerUtils.showErrorDialog(shell, fpr.getProductStrings()
 					.getProductName(), e.getMessage());
@@ -118,46 +111,20 @@ public class MockBuildJob extends AbstractMockJob {
 						result = mockBuild.call(monitor);
 						fpr.getProject().refreshLocal(IResource.DEPTH_INFINITE,
 								monitor);
-					} catch (CommandMisconfiguredException e) {
+					} catch (CommandMisconfiguredException|CoreException|CommandListenerException|MockBuildCommandException e) {
 						// This shouldn't happen, but report error
 						// anyway
 						logger.logError(e.getMessage(), e);
 						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
 								e.getMessage(), e);
-					} catch (UserNotInMockGroupException e) {
+					} catch (UserNotInMockGroupException|MockNotInstalledException e) {
 						// nothing critical, advise the user what to do.
 						logger.logDebug(e.getMessage());
 						FedoraHandlerUtils.showInformationDialog(shell, fpr
 								.getProductStrings().getProductName(), e
 								.getMessage());
-						IStatus status = new Status(IStatus.INFO,
+						return new Status(IStatus.INFO,
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
-						return status;
-					} catch (CommandListenerException e) {
-						// There are no command listeners registered, so
-						// shouldn't
-						// happen. Do something reasonable anyway.
-						logger.logError(e.getMessage(), e);
-						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
-								e.getMessage(), e);
-					} catch (MockBuildCommandException e) {
-						// Some unknown error occurred
-						logger.logError(e.getMessage(), e.getCause());
-						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
-								e.getMessage(), e.getCause());
-					} catch (MockNotInstalledException e) {
-						// nothing critical, advise the user what to do.
-						logger.logDebug(e.getMessage());
-						FedoraHandlerUtils.showInformationDialog(shell, fpr
-								.getProductStrings().getProductName(), e
-								.getMessage());
-						IStatus status = new Status(IStatus.INFO,
-								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
-						return status;
-					} catch (CoreException e) {
-						logger.logError(e.getMessage(), e);
-						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
-								e.getMessage(), e);
 					} catch (OperationCanceledException e) {
 						// mock was cancelled
 						return Status.CANCEL_STATUS;

@@ -25,7 +25,7 @@ import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 
 /**
  * Wrapper command for Fedora Review tool.
- * 
+ *
  */
 public class FedoraReviewCommand extends
 		FedoraPackagerCommand<FedoraReviewResult> {
@@ -78,7 +78,7 @@ public class FedoraReviewCommand extends
 		FedoraReviewResult result = new FedoraReviewResult(reviewCommand);
 		MockUtils.checkMockGroupMembership();
 		try {
-			MockUtils.runCommand(reviewCommand, projectRoot.getPackageName(), 
+			MockUtils.runCommand(reviewCommand, projectRoot.getPackageName(),
 					new Observer[] { new MockBuildStatusObserver(monitor) },
 					projectRoot.getProject().getLocation().toFile());
 			result.setReview(review);
@@ -86,9 +86,7 @@ public class FedoraReviewCommand extends
 			FedoraHandlerUtils.showErrorDialog(new Shell(),
 					RpmText.FedoraReviewCommand_IOErrorTitle,
 					RpmText.FedoraReviewCommand_IOErrorText);
-		} catch (InterruptedException e) {
-			result.setSuccessful(false);
-		} catch (CoreException e) {
+		} catch (InterruptedException|CoreException e) {
 			result.setSuccessful(false);
 		}
 		return result;
@@ -96,7 +94,7 @@ public class FedoraReviewCommand extends
 
 	/**
 	 * Determine if fedora-review program is available
-	 * 
+	 *
 	 * @return {@code true} if mock is available, {@code false} otherwise.
 	 */
 	private boolean isFedoraReviewInstalled() {
