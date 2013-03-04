@@ -36,8 +36,7 @@ import org.fedoraproject.eclipse.packager.api.TagSourcesListener;
 import org.fedoraproject.eclipse.packager.api.UnpushedChangesListener;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.api.errors.TagSourcesException;
 import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
@@ -52,7 +51,7 @@ import org.fedoraproject.eclipse.packager.utils.RPMUtils;
 
 /**
  * Job to make a Koji Build.
- * 
+ *
  */
 public class KojiBuildJob extends KojiJob {
 
@@ -88,13 +87,7 @@ public class KojiBuildJob extends KojiJob {
 		try {
 			kojiBuildCmd = (KojiBuildCommand) fp
 					.getCommandInstance(KojiBuildCommand.ID);
-		} catch (FedoraPackagerCommandNotFoundException e) {
-			logger.logError(e.getMessage(), e);
-			FedoraHandlerUtils.showErrorDialog(shell, fedoraProjectRoot
-					.getProductStrings().getProductName(), e.getMessage());
-			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
-					e.getMessage());
-		} catch (FedoraPackagerCommandInitializationException e) {
+		} catch (FedoraPackagerAPIException e) {
 			logger.logError(e.getMessage(), e);
 			FedoraHandlerUtils.showErrorDialog(shell, fedoraProjectRoot
 					.getProductStrings().getProductName(), e.getMessage());
@@ -138,7 +131,7 @@ public class KojiBuildJob extends KojiJob {
 			}
 			if (!kojiInfo[2].contentEquals("true") || !targetSet.contains(bci.getBuildTarget())) { //$NON-NLS-1$
 				kojiBuildCmd.buildTarget(bci.getBuildTarget());
-			} else {	
+			} else {
 				FutureTask<String> targetTask = new FutureTask<>(
 						new Callable<String>() {
 
@@ -164,14 +157,9 @@ public class KojiBuildJob extends KojiJob {
 			// Make sure to set the buildResult variable, since it is used
 			// by getBuildResult() which is in turn called from the handler
 			buildResult = kojiBuildCmd.call(monitor);
-		} catch (BuildAlreadyExistsException e) {
+		} catch (BuildAlreadyExistsException|UnpushedChangesException e) {
 			// log in any case
 			logger.logInfo(e.getMessage());
-			FedoraHandlerUtils.showInformationDialog(shell, fedoraProjectRoot
-					.getProductStrings().getProductName(), e.getMessage());
-			return Status.OK_STATUS;
-		} catch (UnpushedChangesException e) {
-			logger.logDebug(e.getMessage(), e);
 			FedoraHandlerUtils.showInformationDialog(shell, fedoraProjectRoot
 					.getProductStrings().getProductName(), e.getMessage());
 			return Status.OK_STATUS;
@@ -229,7 +217,7 @@ public class KojiBuildJob extends KojiJob {
 	/**
 	 * Get the underlying result of the call to {@link KojiBuildCommand}. This
 	 * method should only be called after the job has been executed.
-	 * 
+	 *
 	 * @return The result of the build.
 	 */
 	public BuildResult getBuildResult() {

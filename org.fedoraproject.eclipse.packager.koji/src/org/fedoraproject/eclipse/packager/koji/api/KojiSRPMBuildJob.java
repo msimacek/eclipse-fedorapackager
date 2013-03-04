@@ -52,7 +52,7 @@ import org.fedoraproject.eclipse.packager.utils.RPMUtils;
 
 /**
  * Job that uploads an SRPM to Koji and has Koji build an RPM from the SRPM.
- * 
+ *
  */
 public class KojiSRPMBuildJob extends KojiBuildJob {
 
@@ -97,7 +97,7 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 			FedoraHandlerUtils.showErrorDialog(shell, fedoraProjectRoot
 					.getProductStrings().getProductName(), e.getMessage());
 			return null;
-		} 
+		}
 		IKojiHubClient kojiClient;
 		try {
 			kojiClient = getHubClient();
@@ -211,12 +211,7 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
 					e.getMessage(), e);
-		} catch (BuildAlreadyExistsException e) {
-			logger.logDebug(e.getMessage(), e);
-			FedoraHandlerUtils.showInformationDialog(shell, fedoraProjectRoot
-					.getProductStrings().getProductName(), e.getMessage());
-			return Status.OK_STATUS;
-		} catch (UnpushedChangesException e) {
+		} catch (BuildAlreadyExistsException|UnpushedChangesException e) {
 			logger.logDebug(e.getMessage(), e);
 			FedoraHandlerUtils.showInformationDialog(shell, fedoraProjectRoot
 					.getProductStrings().getProductName(), e.getMessage());

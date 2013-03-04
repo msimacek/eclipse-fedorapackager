@@ -42,8 +42,7 @@ import org.fedoraproject.eclipse.packager.api.UploadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.UploadSourceResult;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.api.errors.FileAvailableInLookasideCacheException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidUploadFileException;
@@ -54,7 +53,7 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 
 /**
  * Class responsible for uploading source files.
- * 
+ *
  * @see UploadSourceCommand
  * @see SourcesFileUpdater
  */
@@ -65,7 +64,7 @@ public class UploadHandler extends AbstractHandler implements
 	 * Performs upload of sources (independent of VCS used), updates "sources"
 	 * file and performs necessary CVS operations to bring branch in sync.
 	 * Checks if sources have changed.
-	 * 
+	 *
 	 */
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
@@ -82,7 +81,7 @@ public class UploadHandler extends AbstractHandler implements
 				// Get DownloadSourceCommand from Fedora packager registry
 				uploadCmd = (UploadSourceCommand) packager
 						.getCommandInstance(UploadSourceCommand.ID);
-			} catch (FedoraPackagerCommandNotFoundException|FedoraPackagerCommandInitializationException e) {
+			} catch (FedoraPackagerAPIException e) {
 				logger.logError(e.getMessage(), e);
 				FedoraHandlerUtils.showErrorDialog(shell, projectRoot
 						.getProductStrings().getProductName(), e.getMessage());
@@ -277,7 +276,7 @@ public class UploadHandler extends AbstractHandler implements
 
 	/**
 	 * Determines if {@code sources} file should be replaced or not.
-	 * 
+	 *
 	 * @return {@code true} if and only if {@code sources} file should be
 	 *         replaced with new content.
 	 * @see NewSourcesHandler

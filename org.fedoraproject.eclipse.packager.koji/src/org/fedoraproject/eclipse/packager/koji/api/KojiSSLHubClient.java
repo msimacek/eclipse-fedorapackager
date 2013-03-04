@@ -37,7 +37,7 @@ public class KojiSSLHubClient extends AbstractKojiHubBaseClient {
 	/**
 	 * @param kojiHubUrl
 	 *            The koji hub URL to use.
-	 * 
+	 *
 	 * @throws MalformedURLException
 	 *             If the url String does not conform to url specifications.
 	 */
@@ -47,12 +47,12 @@ public class KojiSSLHubClient extends AbstractKojiHubBaseClient {
 
 	/**
 	 * SSL implementation of XMLRPC based login()
-	 * 
+	 *
 	 * Login to remote URL specified by constructor or setter using the SSL
 	 * client certificate.
-	 * 
+	 *
 	 * @see IKojiHubClient#login()
-	 * 
+	 *
 	 * @return session key and session id as a Map.
 	 * @throws IllegalStateException
 	 *             if hub URL has not been configured.
@@ -67,9 +67,7 @@ public class KojiSSLHubClient extends AbstractKojiHubBaseClient {
 		} catch (FileNotFoundException e) {
 			// certs are missing
 			throw new KojiHubClientLoginException(e, true);
-		} catch (GeneralSecurityException e) {
-			throw new KojiHubClientLoginException(e);
-		} catch (IOException e) {
+		} catch (GeneralSecurityException|IOException e) {
 			throw new KojiHubClientLoginException(e);
 		}
 		HashMap<?, ?> loginSessionInfo = doSslLogin();
@@ -81,7 +79,7 @@ public class KojiSSLHubClient extends AbstractKojiHubBaseClient {
 
 	/**
 	 * Log on to URL using SSL.
-	 * 
+	 *
 	 * @throws KojiHubClientLoginException
 	 *             if login returns something unexpected.
 	 */
@@ -134,7 +132,7 @@ public class KojiSSLHubClient extends AbstractKojiHubBaseClient {
 	/**
 	 * As of 2011-02-08 we need to use a different URL for SSL login. This
 	 * method sets the server URL appropriately.
-	 * 
+	 *
 	 * @throws KojiHubClientLoginException
 	 *             If config is not found.
 	 */
