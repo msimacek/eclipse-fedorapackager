@@ -6,14 +6,10 @@ Bundle-Version: 0.4.1.qualifier
 Bundle-Vendor: %Bundle-Vendor.0
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.eclipse.ui.workbench
-Import-Package: org.apache.commons.codec.binary;version="1.4.0",
- org.apache.ws.commons.util,
- org.apache.xmlrpc,
- org.apache.xmlrpc.client,
- org.apache.xmlrpc.common,
- org.apache.xmlrpc.parser,
- org.apache.xmlrpc.serializer,
+ org.eclipse.ui.workbench,
+ org.apache.commons.codec,
+ org.apache.xmlrpc
+Import-Package: org.apache.ws.commons.util,
  org.eclipse.core.commands,
  org.eclipse.core.resources,
  org.eclipse.core.runtime,
