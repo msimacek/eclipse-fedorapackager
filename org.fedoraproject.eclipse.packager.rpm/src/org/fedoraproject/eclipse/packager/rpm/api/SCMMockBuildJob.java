@@ -28,8 +28,7 @@ import org.fedoraproject.eclipse.packager.api.DownloadSourcesJob;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.rpm.RPMPlugin;
 import org.fedoraproject.eclipse.packager.rpm.RpmText;
 import org.fedoraproject.eclipse.packager.rpm.api.SCMMockBuildCommand.RepoType;
@@ -41,7 +40,7 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 
 /**
  * Job that configures and calls SCMMockBuildCommand.
- * 
+ *
  */
 public class SCMMockBuildJob extends AbstractMockJob {
 
@@ -55,7 +54,7 @@ public class SCMMockBuildJob extends AbstractMockJob {
 
 	/**
 	 * Constructor for a job that defaults to using source downloaded separately
-	 * 
+	 *
 	 * @param name
 	 *            The name of the Job
 	 * @param shell
@@ -77,7 +76,7 @@ public class SCMMockBuildJob extends AbstractMockJob {
 	/**
 	 * Constructor for forcing Mock to try to build from source in the repo,
 	 * ignoring any specfiles.
-	 * 
+	 *
 	 * @param name
 	 *            The name of the Job
 	 * @param shell
@@ -107,13 +106,7 @@ public class SCMMockBuildJob extends AbstractMockJob {
 					.getCommandInstance(DownloadSourceCommand.ID);
 			mockBuild = (SCMMockBuildCommand) fp
 					.getCommandInstance(SCMMockBuildCommand.ID);
-		} catch (FedoraPackagerCommandNotFoundException e) {
-			logger.logError(e.getMessage(), e);
-			FedoraHandlerUtils.showErrorDialog(shell, fpr.getProductStrings()
-					.getProductName(), e.getMessage());
-			return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
-					e.getMessage(), e);
-		} catch (FedoraPackagerCommandInitializationException e) {
+		} catch (FedoraPackagerAPIException e) {
 			logger.logError(e.getMessage(), e);
 			FedoraHandlerUtils.showErrorDialog(shell, fpr.getProductStrings()
 					.getProductName(), e.getMessage());
@@ -171,12 +164,6 @@ public class SCMMockBuildJob extends AbstractMockJob {
 						result = mockBuild.call(monitor);
 						fpr.getProject().refreshLocal(IResource.DEPTH_INFINITE,
 								monitor);
-					} catch (CommandMisconfiguredException e) {
-						// This shouldn't happen, but report error
-						// anyway
-						logger.logError(e.getMessage(), e);
-						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
-								e.getMessage(), e);
 					} catch (UserNotInMockGroupException e) {
 						// nothing critical, advise the user what to do.
 						logger.logDebug(e.getMessage());
@@ -186,15 +173,9 @@ public class SCMMockBuildJob extends AbstractMockJob {
 						IStatus status = new Status(IStatus.INFO,
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
 						return status;
-					} catch (CommandListenerException e) {
-						// There are no command listeners registered, so
-						// shouldn't
-						// happen. Do something reasonable anyway.
-						logger.logError(e.getMessage(), e);
-						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
-								e.getMessage(), e);
-					} catch (MockBuildCommandException e) {
-						// Some unknown error occurred
+					} catch (MockBuildCommandException | CoreException
+							| CommandListenerException|CommandMisconfiguredException e) {
+						// Some unknown or unexpected error occurred
 						logger.logError(e.getMessage(), e.getCause());
 						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
 								e.getMessage(), e.getCause());
@@ -207,10 +188,6 @@ public class SCMMockBuildJob extends AbstractMockJob {
 						IStatus status = new Status(IStatus.INFO,
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
 						return status;
-					} catch (CoreException e) {
-						logger.logError(e.getMessage(), e.getCause());
-						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
-								e.getMessage(), e.getCause());
 					}
 				} finally {
 					monitor.done();
