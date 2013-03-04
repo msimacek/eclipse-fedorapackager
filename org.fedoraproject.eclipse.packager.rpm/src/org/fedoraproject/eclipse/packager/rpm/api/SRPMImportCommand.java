@@ -15,7 +15,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -53,7 +52,7 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 
 /**
  * Command for importing SRPM to a project.
- * 
+ *
  */
 public class SRPMImportCommand {
 
@@ -62,7 +61,7 @@ public class SRPMImportCommand {
 	private IContainer fprContainer;
 	private String uploadUrl;
 	private ISRPMImportCommandSLLPolicyCallback sslPolicyCallback;
-	
+
 	/**
 	 * @param srpm
 	 *            The srpm being imported.
@@ -116,7 +115,7 @@ public class SRPMImportCommand {
 
 	/**
 	 * Calling method for this command.
-	 * 
+	 *
 	 * @param monitor
 	 *            Monitor for this command's runtime.
 	 * @return The result of calling this command.
@@ -128,14 +127,9 @@ public class SRPMImportCommand {
 		Set<String> uploadedFiles = new HashSet<>();
 		Set<String> skippedUploads = new HashSet<>();
 		// install rpm to the project folder
-		SRPMImportOperation sio;
-		try {
-			sio = new SRPMImportOperation(project, new File(srpm),
+		SRPMImportOperation sio = new SRPMImportOperation(project, new File(srpm),
 					RPMProjectLayout.FLAT);
-			sio.run(new NullProgressMonitor());
-		} catch (InvocationTargetException e) {
-			throw new SRPMImportCommandException(e.getMessage(), e);
-		}
+		sio.run(new NullProgressMonitor());
 		if (!sio.getStatus().isOK()) {
 			Throwable e = sio.getStatus().getException();
 			if (e != null) {
@@ -286,7 +280,7 @@ public class SRPMImportCommand {
 						// identical files in an update, but these files don't
 						// really need to be uploaded
 						skippedUploads.add(file);
-					} 
+					}
 
 				} else {
 					stageSet.add(file);
