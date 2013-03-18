@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -127,7 +128,11 @@ public class SRPMImportCommand {
 		// install rpm to the project folder
 		SRPMImportOperation sio = new SRPMImportOperation(project, new File(srpm),
 					RPMProjectLayout.FLAT);
-		sio.run(new NullProgressMonitor());
+		try {
+			sio.run(new NullProgressMonitor());
+		} catch (InvocationTargetException e1) {
+			throw new SRPMImportCommandException(e1.getMessage(), e1);
+		}
 		if (!sio.getStatus().isOK()) {
 			Throwable e = sio.getStatus().getException();
 			if (e != null) {
