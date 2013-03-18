@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010-2011 Red Hat Inc. and others.
+ * Copyright (c) 2010-2013 Red Hat Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,7 +16,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * Translation bundle for FedoraPackager core.
  */
-public class FedoraPackagerText extends NLS {
+@SuppressWarnings("javadoc") public class FedoraPackagerText extends NLS {
 
 	/**
 	 * Do not in-line this into the static initializer as the
@@ -74,6 +74,10 @@ public class FedoraPackagerText extends NLS {
 	/****/ public static String VCSIgnoreFileUpdater_errorWritingFile;
 	// SourcesFileUpdater
 	/****/ public static String SourcesFileUpdater_errorSavingFile;
+	public static String FedoraPackagerPreferencePage_Always;
+
+	public static String FedoraPackagerPreferencePage_Ask;
+
 	// FedoraPackagerPreferencesPage
 	/****/ public static String FedoraPackagerPreferencePage_lookasideUploadURLLabel;
 	/****/ public static String FedoraPackagerPreferencePage_lookasideDownloadURLLabel;
@@ -88,6 +92,12 @@ public class FedoraPackagerText extends NLS {
 	/****/ public static String FedoraPackagerPreferencePage_lookasideGroupName;
 	/****/ public static String FedoraPackagerPreferencePage_generalGroupName;
 	/****/ public static String FedoraPackagerPreferencePage_debugSwitchLabel;
+
+	public static String FedoraPackagerPreferencePage_Never;
+
+	public static String FedoraPackagerPreferencePage_switchPerspectiveAfterLocalProjectCreation;
+
+	public static String FedoraPackagerPreferencePage_switchPerspectiveAfterProjectCheckout;
 	// FedoraPackagerCommand
 	/****/ public static String FedoraPackagerCommand_projectRootSetTwiceError;
 	/****/ public static String FedoraPackager_Cant_Create;
@@ -134,6 +144,8 @@ public class FedoraPackagerText extends NLS {
 	/****/ public static String LocalFedoraPackagerProjectCreator_FirstCommit;
 	//Local Fedora Packager Project-api-errors
 	/****/ public static String invalidLocalFedoraProjectRootError;
+	public static String UiUtils_RememberChoice;
+
 	//Fedora Packager Project-perspective message
 	/****/ public static String UiUtils_switchPerspectiveQuestionTitle;
 	/****/ public static String UiUtils_switchPerspectiveQuestionMsg;

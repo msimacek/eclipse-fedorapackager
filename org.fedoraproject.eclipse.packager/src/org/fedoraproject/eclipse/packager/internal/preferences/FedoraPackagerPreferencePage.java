@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010-2011 Red Hat Inc. and others.
+ * Copyright (c) 2010-2013 Red Hat Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,8 +12,10 @@
 package org.fedoraproject.eclipse.packager.internal.preferences;
 
 
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -28,6 +30,7 @@ import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerPreferencesConstants;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
+import org.fedoraproject.eclipse.packager.utils.UiUtils;
 
 /**
  * Eclipse Fedora Packager main preference page.
@@ -97,10 +100,42 @@ public class FedoraPackagerPreferencePage extends FieldEditorPreferencePage impl
 		// General prefs
 		Group generalGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
 		generalGroup.setText(FedoraPackagerText.FedoraPackagerPreferencePage_generalGroupName);
+		addField(new ComboFieldEditor(
+				UiUtils.afterProjectClonePerspectiveSwitch,
+				FedoraPackagerText.FedoraPackagerPreferencePage_switchPerspectiveAfterProjectCheckout,
+				new String[][] {
+						// note - the first one will be also displayed if the preference is missing
+						new String[] {
+								FedoraPackagerText.FedoraPackagerPreferencePage_Ask,
+								"Ask" },//$NON-NLS-1$
+						new String[] {
+								FedoraPackagerText.FedoraPackagerPreferencePage_Always,
+								MessageDialogWithToggle.ALWAYS },
+						new String[] {
+								FedoraPackagerText.FedoraPackagerPreferencePage_Never,
+								MessageDialogWithToggle.NEVER } }, generalGroup));
+
+		addField(new ComboFieldEditor(
+				UiUtils.afterLocalProjectCreationPerspectiveSwitch,
+				FedoraPackagerText.FedoraPackagerPreferencePage_switchPerspectiveAfterLocalProjectCreation,
+				new String[][] {
+						// note - the first one will be also displayed if the preference is missing
+						new String[] {
+								FedoraPackagerText.FedoraPackagerPreferencePage_Ask,
+								"Ask" },//$NON-NLS-1$
+						new String[] {
+								FedoraPackagerText.FedoraPackagerPreferencePage_Always,
+								MessageDialogWithToggle.ALWAYS },
+						new String[] {
+								FedoraPackagerText.FedoraPackagerPreferencePage_Never,
+								MessageDialogWithToggle.NEVER }, },
+				generalGroup));
+		
 		addField(new BooleanFieldEditor(
 				FedoraPackagerPreferencesConstants.PREF_DEBUG_MODE,
 				FedoraPackagerText.FedoraPackagerPreferencePage_debugSwitchLabel,
 				generalGroup));
+		
 		updateMargins(generalGroup);
 		
 		Group lookasideGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);

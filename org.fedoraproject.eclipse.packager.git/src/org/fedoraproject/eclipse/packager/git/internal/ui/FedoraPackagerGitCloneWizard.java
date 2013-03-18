@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010-2011 Red Hat Inc. and others.
+ * Copyright (c) 2010-2013 Red Hat Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -204,7 +204,7 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 
 			// Finally ask if the Fedora Packaging perspective should be opened
 			// if not already open.
-			UiUtils.openPerspective(getShell());
+			UiUtils.openPerspective(getShell(), UiUtils.afterProjectClonePerspectiveSwitch);
 			return true;
 		} catch (InterruptedException e) {
 			MessageDialog
