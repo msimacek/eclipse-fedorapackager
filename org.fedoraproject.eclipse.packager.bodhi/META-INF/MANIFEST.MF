@@ -29,9 +29,5 @@ Import-Package: org.eclipse.core.commands,
  org.fedoraproject.eclipse.packager.utils
 Bundle-Localization: plugin
 Export-Package: org.fedoraproject.eclipse.packager.bodhi,
- org.fedoraproject.eclipse.packager.bodhi.api,
- org.fedoraproject.eclipse.packager.bodhi.api.errors,
- org.fedoraproject.eclipse.packager.bodhi.api.deserialization,
- org.fedoraproject.eclipse.packager.bodhi.fas,
- org.fedoraproject.eclipse.packager.bodhi.deserializers;x-friends:=org.fedoraproject.eclipse.packager.tests
+ org.fedoraproject.eclipse.packager.bodhi.deserializers
 Eclipse-ExtensibleAPI: true
