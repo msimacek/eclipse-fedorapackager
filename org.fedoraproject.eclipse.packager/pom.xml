@@ -18,7 +18,7 @@
   </parent>
   <groupId>org.fedoraproject.eclipse.packager</groupId>
   <artifactId>org.fedoraproject.eclipse.packager</artifactId>
-  <version>0.4.1-SNAPSHOT</version>
+  <version>0.4.2-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 
   <name>Fedora Packager for Eclipse Core Plug-in</name>
