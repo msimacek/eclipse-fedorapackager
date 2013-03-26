@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Tests
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.fedoraproject.eclipse.packager.rpm.tests
 Fragment-Host: org.fedoraproject.eclipse.packager.rpm
 Bundle-Version: 0.4.1.qualifier
