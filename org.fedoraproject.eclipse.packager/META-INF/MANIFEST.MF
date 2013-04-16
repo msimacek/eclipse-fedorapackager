@@ -50,8 +50,7 @@ Import-Package: org.apache.http,
  org.eclipse.ui.handlers,
  org.eclipse.ui.model,
  org.eclipse.ui.part,
- org.eclipse.ui.plugin,
- org.fedoraproject.eclipse.packager.api.errors
+ org.eclipse.ui.plugin
 Bundle-Localization: OSGI-INF/l10n/plugin
 Export-Package: org.fedoraproject.eclipse.packager,
  org.fedoraproject.eclipse.packager.api,
