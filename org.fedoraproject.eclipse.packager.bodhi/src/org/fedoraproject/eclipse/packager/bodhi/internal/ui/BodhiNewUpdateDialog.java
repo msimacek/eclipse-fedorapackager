@@ -357,14 +357,7 @@ public class BodhiNewUpdateDialog extends Dialog {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.fedoraproject.eclipse.packager.bodhi.internal.ui.AbstractBodhiDialog
-	 * #validateForm()
-	 */
-	protected boolean validateForm() {
+	private boolean validateForm() {
 		String bugs = txtBugs.getText();
 		// need to have at least one build selected
 		if (listBuilds.getSelection().isEmpty()) {
@@ -436,13 +429,13 @@ public class BodhiNewUpdateDialog extends Dialog {
 	/**
 	 * Provide an inline error message feedback if some field is invalid.
 	 */
-	protected void setValidationError(String error) {
+	private void setValidationError(String error) {
 		this.lblError.setText(error);
 		this.lblError.setForeground(getColor(SWT.COLOR_RED));
 		this.lblError.redraw();
 	}
 
-	protected Color getColor(int systemColorID) {
+	private Color getColor(int systemColorID) {
 		Display display = Display.getCurrent();
 		return display.getSystemColor(systemColorID);
 	}
