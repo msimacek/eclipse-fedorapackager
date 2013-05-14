@@ -70,7 +70,7 @@ public class BodhiNewUpdateDialog extends Dialog {
 
 	/**
 	 * Create the dialog and pre-fill it with some data
-	 * 
+	 *
 	 * @param parent
 	 *            The parent shell
 	 * @param builds
@@ -107,7 +107,7 @@ public class BodhiNewUpdateDialog extends Dialog {
 		}
 		super.buttonPressed(buttonId);
 	}
-	
+
 	/**
 	 * @return The list of builds, which were selected.
 	 */
@@ -115,10 +115,6 @@ public class BodhiNewUpdateDialog extends Dialog {
 		// since we require at least one build to be selected,
 		// this should always return a non-empty list
 		return this.buildsData;
-	}
-
-	private void setBuilds() {
-		this.buildsData = listBuilds.getList().getSelection();
 	}
 
 	/**
@@ -130,115 +126,68 @@ public class BodhiNewUpdateDialog extends Dialog {
 		return this.bugsData;
 	}
 
-	private void setBugs() {
-		this.bugsData = txtBugs.getText();
-	}
-
 	/**
-	 * 
+	 *
 	 * @return The update comment/note.
 	 */
 	public String getComment() {
 		return this.commentData;
 	}
 
-	private void setComment() {
-		this.commentData = txtComment.getText();
-	}
-
 	/**
-	 * 
+	 *
 	 * @return The suggest reboot selection.
 	 */
 	public boolean isSuggestReboot() {
 		return this.suggestRebootData;
 	}
 
-	private void setSuggestReboot() {
-		this.suggestRebootData = btnSuggestReboot.getSelection();
-	}
-
 	/**
-	 * 
+	 *
 	 * @return The close bugs selection.
 	 */
 	public boolean isCloseBugs() {
 		return this.closeBugsData;
 	}
 
-	private void setCloseBugs() {
-		this.closeBugsData = btnCloseBugs.getSelection();
-	}
-
 	/**
-	 * 
+	 *
 	 * @return The karma automatism selection.
 	 */
 	public boolean isKarmaAutomatismEnabled() {
 		return this.enableKarmaAutomatismData;
 	}
 
-	private void setKarmaAutomatismEnabled() {
-		this.enableKarmaAutomatismData = btnEnableKarmaAutomatism
-				.getSelection();
-	}
-
 	/**
-	 * 
+	 *
 	 * @return The selected request type.
 	 */
 	public RequestType getRequestType() {
 		return this.requestTypeData;
 	}
 
-	private void setRequestType() {
-		this.requestTypeData = RequestType.valueOf(comboRequest.getCombo().getItem(
-				comboRequest.getCombo().getSelectionIndex()));
-	}
-
 	/**
-	 * 
+	 *
 	 * @return The selected update type.
 	 */
 	public UpdateType getUpdateType() {
 		return this.updateTypeData;
 	}
 
-	private void setUpdateType() {
-		this.updateTypeData = UpdateType.valueOf(comboType.getCombo().getItem(
-				comboType.getCombo().getSelectionIndex()));
-	}
-
 	/**
-	 * 
+	 *
 	 * @return The entered stable karma threshold.
 	 */
 	public int getStableKarmaThreshold() {
 		return this.stableKarmaThresholdData;
 	}
 
-	private void setStableKarmaThreshold() {
-		// since we attempted to parse an integer from
-		// the string while validating it, this should
-		// not throw a NumberFormatException
-		this.stableKarmaThresholdData = Integer
-				.parseInt(txtStableKarmaThreshold.getText());
-	}
-
 	/**
-	 * 
+	 *
 	 * @return The entered unstable karma threshold.
 	 */
 	public int getUnstableKarmaThreshold() {
 		return this.unstableKarmaThresholdData;
-	}
-
-	private void setUnstableKarmaThreshold() {
-		// since we attempted to parse an integer from
-		// the string while validating it, this should
-		// not throw a NumberFormatException
-		this.unstableKarmaThresholdData = Integer
-				.parseInt(txtUnstableKarmaThreshold.getText());
 	}
 
 	/**
@@ -410,7 +359,7 @@ public class BodhiNewUpdateDialog extends Dialog {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.fedoraproject.eclipse.packager.bodhi.internal.ui.AbstractBodhiDialog
 	 * #validateForm()
@@ -457,20 +406,31 @@ public class BodhiNewUpdateDialog extends Dialog {
 
 	/**
 	 * Set all data fields from UI widgets.
-	 * 
+	 *
 	 * pre: validation passed post: public getters are functional
 	 */
 	private void setDataFields() {
-		setBugs();
-		setBuilds();
-		setCloseBugs();
-		setComment();
-		setKarmaAutomatismEnabled();
-		setStableKarmaThreshold();
-		setSuggestReboot();
-		setUnstableKarmaThreshold();
-		setRequestType();
-		setUpdateType();
+		this.bugsData = txtBugs.getText();
+		this.buildsData = listBuilds.getList().getSelection();
+		this.closeBugsData = btnCloseBugs.getSelection();
+		this.commentData = txtComment.getText();
+		this.enableKarmaAutomatismData = btnEnableKarmaAutomatism
+				.getSelection();
+		// since we attempted to parse an integer from
+		// the string while validating it, this should
+		// not throw a NumberFormatException
+		this.stableKarmaThresholdData = Integer
+				.parseInt(txtStableKarmaThreshold.getText());
+		this.suggestRebootData = btnSuggestReboot.getSelection();
+		// since we attempted to parse an integer from
+		// the string while validating it, this should
+		// not throw a NumberFormatException
+		this.unstableKarmaThresholdData = Integer
+				.parseInt(txtUnstableKarmaThreshold.getText());
+		this.requestTypeData = RequestType.valueOf(comboRequest.getCombo()
+				.getItem(comboRequest.getCombo().getSelectionIndex()));
+		this.updateTypeData = UpdateType.valueOf(comboType.getCombo().getItem(
+				comboType.getCombo().getSelectionIndex()));
 	}
 
 	/**
