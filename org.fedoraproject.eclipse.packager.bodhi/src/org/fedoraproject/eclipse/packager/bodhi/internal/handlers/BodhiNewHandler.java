@@ -118,8 +118,7 @@ public class BodhiNewHandler extends AbstractHandler {
 			UserValidationDialog userDialog = null;
 			do {
 				userDialog = getAuthDialog(validationErrorMsg);
-				int response = userDialog.open();
-				if (response != Window.OK) {
+				if (userDialog.open() != Window.OK) {
 					return null; // cancel
 				}
 				// validate log-in credentials this may take time so do it as a
@@ -216,7 +215,7 @@ public class BodhiNewHandler extends AbstractHandler {
 						logger.logError(e.getMessage(), e);
 						return new Status(IStatus.ERROR, BodhiPlugin.PLUGIN_ID,
 								e.getMessage(), e);
-					} 
+					}
 				}
 
 			};
@@ -261,7 +260,7 @@ public class BodhiNewHandler extends AbstractHandler {
 
 	/**
 	 * Create a job listener for the event {@code done}.
-	 * 
+	 *
 	 * @return The job change listener.
 	 */
 	protected IJobChangeListener getJobChangeListener(
@@ -308,10 +307,10 @@ public class BodhiNewHandler extends AbstractHandler {
 
 	/**
 	 * Get user validation dialog.
-	 * 
+	 *
 	 * @param errorMessage
 	 *            The error message to display.
-	 * 
+	 *
 	 * @return The user validation dialog.
 	 */
 	private UserValidationDialog getAuthDialog(String errorMessage) {
@@ -365,9 +364,9 @@ public class BodhiNewHandler extends AbstractHandler {
 
 	/*
 	 * Parse bugs listed in a changelog string
-	 * 
+	 *
 	 * @param clog
-	 * 
+	 *
 	 * @return A comma separated list of bugs, or the empty string.
 	 */
 	private String findBug(String clog) {
@@ -394,7 +393,7 @@ public class BodhiNewHandler extends AbstractHandler {
 
 	/**
 	 * Ask for confirmation if update pushing should continue.
-	 * 
+	 *
 	 * @return {@code true} if the user desires to continue, {@code false}
 	 *         otherwise.
 	 */
@@ -408,7 +407,7 @@ public class BodhiNewHandler extends AbstractHandler {
 
 	/**
 	 * Get all N-V-R's of Fedora Git projects in the current workspace.
-	 * 
+	 *
 	 * @return The list of corresponding N-V-R's as a String array.
 	 */
 	protected String[] getNVRsOfFedoraProjectsInWorkspace() {
