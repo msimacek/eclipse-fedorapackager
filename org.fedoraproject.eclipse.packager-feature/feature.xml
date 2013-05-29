@@ -58,8 +58,6 @@ such as Koji, Bodhi and Fedora Git.
       <import plugin="javax.servlet"/>
       <import plugin="org.apache.commons.logging"/>
       <import plugin="org.apache.xmlrpc"/>
-      <import plugin="javax.xml.bind"/>
-      <import plugin="javax.xml"/>
       <import plugin="org.eclipse.core.databinding"/>
       <import plugin="org.eclipse.core.databinding.beans"/>
       <import plugin="org.eclipse.core.databinding.observable"/>
