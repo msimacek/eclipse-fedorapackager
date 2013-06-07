@@ -112,6 +112,25 @@ public class BodhiNewHandler extends AbstractHandler {
 				}
 			}
 
+			// FIXME: Parsing changelog from spec-file seems to be broken
+			// This always returns "". See #49
+			final String clog = ""; //$NON-NLS-1$
+			final String bugIDs = findBug(clog);
+			final IFpProjectBits projectBits = FedoraPackagerUtils
+					.getVcsHandler(projectRoot);
+			String nvr = RPMUtils.getNVR(projectRoot,
+					projectBits.getBranchConfig());
+			final String[] selectedBuild = { nvr };
+
+			// open update dialog
+			final BodhiNewUpdateDialog updateDialog = new BodhiNewUpdateDialog(
+					shell, getNVRsOfFedoraProjectsInWorkspace(), selectedBuild,
+					bugIDs, clog);
+			int response = updateDialog.open();
+			if (response != Window.OK) {
+				return null; // cancel
+			}
+
 			// require valid credentials
 			UserValidationResponse validationResponse = null;
 			String validationErrorMsg = ""; //$NON-NLS-1$
@@ -145,25 +164,6 @@ public class BodhiNewHandler extends AbstractHandler {
 			// username password valid, store credentials if so desired
 			if (userDialog.getAllowCaching()) {
 				storeCredentials(username, password);
-			}
-
-			// FIXME: Parsing changelog from spec-file seems to be broken
-			// This always returns "". See #49
-			final String clog = ""; //$NON-NLS-1$
-			final String bugIDs = findBug(clog);
-			final IFpProjectBits projectBits = FedoraPackagerUtils
-					.getVcsHandler(projectRoot);
-			String nvr = RPMUtils.getNVR(projectRoot,
-					projectBits.getBranchConfig());
-			final String[] selectedBuild = { nvr };
-
-			// open update dialog
-			final BodhiNewUpdateDialog updateDialog = new BodhiNewUpdateDialog(
-					shell, getNVRsOfFedoraProjectsInWorkspace(), selectedBuild,
-					bugIDs, clog);
-			int response = updateDialog.open();
-			if (response != Window.OK) {
-				return null; // cancel
 			}
 
 			FedoraPackager fp = new FedoraPackager(projectRoot);
