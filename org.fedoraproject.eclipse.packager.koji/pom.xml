@@ -5,11 +5,10 @@
   <parent>
     <artifactId>eclipse-fedorapackager-parent</artifactId>
     <groupId>org.fedoraproject.eclipse.packager</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.4.2-SNAPSHOT</version>
   </parent>
   <groupId>org.fedoraproject.eclipse.packager</groupId>
   <artifactId>org.fedoraproject.eclipse.packager.koji</artifactId>
-  <version>0.4.2-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 
   <name>Fedora Packager for Eclipse Koji Plug-in</name>
