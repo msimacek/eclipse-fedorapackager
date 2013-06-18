@@ -35,8 +35,10 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.linuxtools.rpm.core.utils.RPMQuery;
 import org.eclipse.osgi.util.NLS;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
@@ -60,7 +62,7 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
  * {@link #call(IProgressMonitor)} method to finally execute the command. Each
  * instance of this class should only be used for one invocation of the command
  * (meaning: one call to {@link #call(IProgressMonitor)})
- * 
+ *
  */
 public class UploadSourceCommand extends
 		FedoraPackagerCommand<UploadSourceResult> {
@@ -98,7 +100,7 @@ public class UploadSourceCommand extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#initialize
 	 * (org.fedoraproject.eclipse.packager.FedoraProjectRoot)
@@ -124,7 +126,7 @@ public class UploadSourceCommand extends
 
 	/**
 	 * Set to true if upload host requires Fedora SSL authentication.
-	 * 
+	 *
 	 * @param newValue
 	 *            True if SSL is required, false otherwise.
 	 * @return this instance.
@@ -138,7 +140,7 @@ public class UploadSourceCommand extends
 	 * Set to true if a basic accept-all hostname verifier should be used.
 	 * Useful for {@code https} based connections, which do not require
 	 * authentication via SSL.
-	 * 
+	 *
 	 * @param newValue
 	 *            True if a basic accept-all hostname verifier should be used,
 	 *            false otherwise.
@@ -151,7 +153,7 @@ public class UploadSourceCommand extends
 
 	/**
 	 * Setter for the file to be uploaded.
-	 * 
+	 *
 	 * @param fileToUpload
 	 *            The file to be uploaded.
 	 * @return this instance.
@@ -171,7 +173,7 @@ public class UploadSourceCommand extends
 
 	/**
 	 * Implementation of the {@code UploadSources} command.
-	 * 
+	 *
 	 * @throws FileAvailableInLookasideCacheException
 	 *             If the to-be-uploaded file is already available in the
 	 *             lookaside cache.
@@ -206,7 +208,7 @@ public class UploadSourceCommand extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#
 	 * checkConfiguration()
 	 */
@@ -221,7 +223,7 @@ public class UploadSourceCommand extends
 	/**
 	 * Check if upload file has already been uploaded. Do nothing, if file is
 	 * missing.
-	 * 
+	 *
 	 * @throws UploadFailedException
 	 *             If something went wrong sending/receiving the request to/from
 	 *             the lookaside cache.
@@ -268,7 +270,7 @@ public class UploadSourceCommand extends
 			reqEntity.addPart(FILENAME_PARAM_NAME,
 					new StringBody(fileToUpload.getName()));
 			reqEntity.addPart(PACKAGENAME_PARAM_NAME, new StringBody(
-					projectRoot.getSpecfileModel().getName()));
+					RPMQuery.eval(projectRoot.getSpecfileModel().getName()).trim()));
 			reqEntity
 					.addPart(
 							CHECKSUM_PARAM_NAME,
@@ -307,7 +309,7 @@ public class UploadSourceCommand extends
 						FedoraPackagerText.somethingUnexpectedHappenedError);
 			}
 
-		} catch (IOException e) {
+		} catch (IOException|CoreException e) {
 			throw new UploadFailedException(e.getMessage(), e);
 		} finally {
 			// When HttpClient instance is no longer needed,
@@ -319,10 +321,10 @@ public class UploadSourceCommand extends
 
 	/**
 	 * Upload a missing file to the lookaside cache.
-	 * 
+	 *
 	 * Pre: upload file is missing as determined by
 	 * {@link UploadSourceCommand#checkSourceAvailable()}.
-	 * 
+	 *
 	 * @param subMonitor
 	 *            Monitor to show progress.
 	 * @return The result of the upload.
@@ -436,7 +438,7 @@ public class UploadSourceCommand extends
 	/**
 	 * Wrap a basic HttpClient object in a Fedora SSL enabled HttpClient (which
 	 * includes Fedora SSL authentication cert) object.
-	 * 
+	 *
 	 * @param base
 	 *            The HttpClient to wrap.
 	 * @return The SSL wrapped HttpClient.
@@ -462,7 +464,7 @@ public class UploadSourceCommand extends
 
 	/**
 	 * Helper to read response from response entity.
-	 * 
+	 *
 	 * @param responseEntity
 	 *            The response being parsed.
 	 * @return The parsed response.
@@ -474,14 +476,14 @@ public class UploadSourceCommand extends
 		String responseText = ""; //$NON-NLS-1$
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(
 				responseEntity.getContent()))){
-			
+
 			String line;
 			line = br.readLine();
 			while (line != null) {
 				responseText += line + "\n"; //$NON-NLS-1$
 				line = br.readLine();
 			}
-		} 
+		}
 		return responseText.trim();
 	}
 
