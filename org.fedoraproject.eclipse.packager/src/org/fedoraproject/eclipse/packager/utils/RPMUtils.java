@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010-2011 Red Hat Inc. and others.
+ * Copyright (c) 2010-2013 Red Hat Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -106,7 +106,7 @@ public class RPMUtils {
 	public static String getNVR(IProjectRoot projectRoot,
 			BranchConfigInstance bci) {
 		Specfile specfile = projectRoot.getSpecfileModel();
-		return (specfile.getName() + "-" + specfile.getVersion() + "-" + specfile.getRelease().replace("%{?dist}", bci.getDist())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return (specfile.getEvaldName() + "-" + specfile.getVersion() + "-" + specfile.getRelease().replace("%{?dist}", bci.getDist())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	}
 
 	/**

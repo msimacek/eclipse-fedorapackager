@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010-2011 Red Hat Inc. and others.
+ * Copyright (c) 2010-2013 Red Hat Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -24,6 +24,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.linuxtools.rpm.core.utils.RPMQuery;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.Specfile;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.SpecfilePackage;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.SpecfileParser;
@@ -35,6 +36,7 @@ import org.eclipse.linuxtools.rpm.ui.editor.parser.SpecfileParser;
  */
 public class FedoraProjectRoot implements IProjectRoot {
 	
+	private static final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 	protected IContainer rootContainer;
 	private SourcesFile sourcesFile;
 	private ILookasideCache lookAsideCache; // The lookaside cache abstraction
@@ -105,7 +107,7 @@ public class FedoraProjectRoot implements IProjectRoot {
 	 */
 	@Override
 	public String getPackageName() {
-		return this.getSpecfileModel().getName();
+		return this.getSpecfileModel().getEvaldName();
 	}
 
 	/*

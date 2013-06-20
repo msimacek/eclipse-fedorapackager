@@ -104,6 +104,7 @@ import org.eclipse.osgi.util.NLS;
 
 	// FedoraPackager
 	/****/ public static String FedoraPackager_commandNotFoundError;
+	/****/ public static String FedoraPackager_cannotEvalPackageName;
 	// Generic strings
 	/****/ public static String somethingUnexpectedHappenedError;
 	/****/ public static String commandWasCalledInTheWrongState;
