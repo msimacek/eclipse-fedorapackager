@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010-2011 Red Hat Inc. and others.
+ * Copyright (c) 2010-2013 Red Hat Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.bodhi.api.deserialization;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
@@ -26,7 +27,7 @@ public class BodhiUpdate {
 	private int unstable_karma;
 	private String submitter;
 	private boolean critpath;
-	private JsonObject approved;
+	private JsonElement approved;
 	private int stable_karma;
 	private String date_pushed;
 	private Build[] builds;
@@ -35,14 +36,14 @@ public class BodhiUpdate {
 	// update comment
 	private String notes;
 	private String date_modified;
-	private JsonObject nagged;
+	private JsonElement nagged;
 	private int[] bugs;
-	private JsonObject[] comments;
+	private JsonElement[] comments;
 	private boolean critpath_approved;
 	private int updateid;
 	private int karma;
 	// TODO: Model release appropriately
-	private JsonObject release;
+	private JsonElement release;
 	private String type;
 	
 	/**
@@ -97,7 +98,7 @@ public class BodhiUpdate {
 	/**
 	 * @return the approved
 	 */
-	public JsonObject getApproved() {
+	public JsonElement getApproved() {
 		return approved;
 	}
 	/**
@@ -139,7 +140,7 @@ public class BodhiUpdate {
 	/**
 	 * @return the nagged
 	 */
-	public JsonObject getNagged() {
+	public JsonElement getNagged() {
 		return nagged;
 	}
 	/**
@@ -151,7 +152,7 @@ public class BodhiUpdate {
 	/**
 	 * @return the comments
 	 */
-	public JsonObject[] getComments() {
+	public JsonElement[] getComments() {
 		return comments;
 	}
 	/**
@@ -175,7 +176,7 @@ public class BodhiUpdate {
 	/**
 	 * @return the release
 	 */
-	public JsonObject getRelease() {
+	public JsonElement getRelease() {
 		return release;
 	}
 	/**
