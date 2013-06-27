@@ -106,6 +106,10 @@ import org.eclipse.osgi.util.NLS;
 	// FedoraPackager
 	/****/ public static String FedoraPackager_commandNotFoundError;
 	/****/ public static String FedoraPackager_cannotEvalPackageName;
+	// FedoraPackagerRoot
+	/****/ public static String FedoraProjectRoot_failedToRefreshResource;
+	/****/ public static String FedoraProjectRoot_invalidResource;
+	/****/ public static String FedoraProjectRoot_failureReadingFromFile;
 	// Generic strings
 	/****/ public static String somethingUnexpectedHappenedError;
 	/****/ public static String commandWasCalledInTheWrongState;
@@ -167,6 +171,8 @@ import org.eclipse.osgi.util.NLS;
 	/****/ public static String ScpHandler_failToScp;
 	/****/ public static String ScpHandler_fasAccountMissing;
 	/****/ public static String ScpHandler_FilesDialogTitle;
+	// LinkedMessageDialog
+	/****/ public static String LinkedMessageDialog_unableToInitView;
 
 	static {
 		initializeMessages(BUNDLE_NAME,	FedoraPackagerText.class);

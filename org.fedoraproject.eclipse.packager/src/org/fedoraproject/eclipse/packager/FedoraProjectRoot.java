@@ -62,8 +62,7 @@ public class FedoraProjectRoot implements IProjectRoot {
 			try {
 				rootContainer.refreshLocal(IResource.DEPTH_INFINITE, null);
 			} catch (CoreException e) {
-				// Failed to refresh resource
-				e.printStackTrace();
+				logger.logError(FedoraPackagerText.FedoraProjectRoot_failedToRefreshResource, e);
 			}
 		}
 
@@ -131,8 +130,7 @@ public class FedoraProjectRoot implements IProjectRoot {
 				}
 			}
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.logError(FedoraPackagerText.FedoraProjectRoot_invalidResource, e);
 		}
 		return null;
 	}
@@ -153,11 +151,9 @@ public class FedoraProjectRoot implements IProjectRoot {
 				sb.append(line + "\n"); //$NON-NLS-1$
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.logError(FedoraPackagerText.FedoraProjectRoot_failureReadingFromFile, e);
 		} catch (CoreException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.logError(FedoraPackagerText.FedoraProjectRoot_invalidResource, e);
 		}
 		Specfile specfile = parser.parse(sb.toString());
 		return specfile;

@@ -27,6 +27,8 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.part.ISetSelectionTarget;
+import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
+import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 /**
  * 
  * A simple dialog capable of rendering a link to a resource in the Project Explorer.
@@ -34,6 +36,7 @@ import org.eclipse.ui.part.ISetSelectionTarget;
  */
 public class LinkedMessageDialog extends MessageDialog {
 
+	private static final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 	private IResource resource;
 	private String pseudoHTML;
 	
@@ -81,7 +84,7 @@ public class LinkedMessageDialog extends MessageDialog {
 						((ISetSelectionTarget) view).selectReveal(selection);
 					}
 				} catch (PartInitException e) {
-					e.printStackTrace();
+					logger.logError(FedoraPackagerText.LinkedMessageDialog_unableToInitView, e);
 				}
 				self.close();
 			}

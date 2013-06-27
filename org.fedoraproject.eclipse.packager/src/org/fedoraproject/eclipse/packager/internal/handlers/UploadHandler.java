@@ -256,7 +256,7 @@ public class UploadHandler extends AbstractHandler implements
 							project.refreshLocal(IResource.DEPTH_INFINITE,
 									monitor);
 						} catch (CoreException e) {
-							e.printStackTrace();
+							logger.logDebug(FedoraPackagerText.FedoraProjectRoot_failedToRefreshResource, e);
 						}
 					}
 
