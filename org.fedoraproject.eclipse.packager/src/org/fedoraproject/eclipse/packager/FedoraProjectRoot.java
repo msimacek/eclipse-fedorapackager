@@ -107,7 +107,13 @@ public class FedoraProjectRoot implements IProjectRoot {
 	 */
 	@Override
 	public String getPackageName() {
-		return this.getSpecfileModel().getEvaldName();
+		String str = ""; //$NON-NLS-1$
+		try {
+			str = RPMQuery.eval(this.getSpecfileModel().getName()).trim();
+		} catch (CoreException e) {
+			logger.logError(FedoraPackagerText.FedoraPackager_cannotEvalPackageName, e);
+		}
+		return str;
 	}
 
 	/*

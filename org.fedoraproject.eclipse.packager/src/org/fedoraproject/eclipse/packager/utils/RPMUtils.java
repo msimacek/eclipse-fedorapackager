@@ -15,9 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.linuxtools.rpm.core.utils.RPMQuery;
 import org.eclipse.linuxtools.rpm.core.utils.Utils;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.Specfile;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
+import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
+import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 
 /**
@@ -25,6 +29,8 @@ import org.fedoraproject.eclipse.packager.IProjectRoot;
  * 
  */
 public class RPMUtils {
+
+	private static final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 
 	/**
 	 * Creates a list of rpm defines to use the given directory as a base
@@ -106,7 +112,13 @@ public class RPMUtils {
 	public static String getNVR(IProjectRoot projectRoot,
 			BranchConfigInstance bci) {
 		Specfile specfile = projectRoot.getSpecfileModel();
-		return (specfile.getEvaldName() + "-" + specfile.getVersion() + "-" + specfile.getRelease().replace("%{?dist}", bci.getDist())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		String str = ""; //$NON-NLS-1$
+		try {
+			str = (RPMQuery.eval(specfile.getName()).trim() + "-" + specfile.getVersion() + "-" + specfile.getRelease().replace("%{?dist}", bci.getDist())); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		} catch (CoreException e) {
+			logger.logError(FedoraPackagerText.FedoraPackagerUtils_cannotEvalPackageName, e);
+		}
+		return str;
 	}
 
 	/**

@@ -61,6 +61,7 @@ import org.eclipse.osgi.util.NLS;
 	/****/ public static String FedoraPackagerUtils_invalidProjectRootError;
 	/****/ public static String FedoraPackagerUtils_invalidContainerOrProjectType;
 	/****/ public static String FedoraPackagerUtils_projectRootClassNameMsg;
+	/****/ public static String FedoraPackagerUtils_cannotEvalPackageName;
 	// UnpushedChangesListener
 	/****/ public static String UnpushedChangesListener_checkUnpushedChangesMsg;
 	/****/ public static String UnpushedChangesListener_unpushedChangesError;
