@@ -272,16 +272,12 @@ public class BodhiNewHandler extends AbstractHandler {
 			public void done(IJobChangeEvent event) {
 				IStatus jobStatus = event.getResult();
 				if (jobStatus.isOK() && updateResult.isSuccessful()) {
-					final String updateName = updateResult.getUpdateName();
-					logger.logInfo(NLS.bind(
-							BodhiText.BodhiNewHandler_updateCreatedLogMsg,
-							bodhiUrl.toString() + updateName));
 					PlatformUI.getWorkbench().getDisplay()
 							.asyncExec(new Runnable() {
 								@Override
 								public void run() {
 									openBrowser(bodhiUrl.toString()
-											+ updateName);
+											+ updateResult.getUpdateName());
 								}
 							});
 				} else {

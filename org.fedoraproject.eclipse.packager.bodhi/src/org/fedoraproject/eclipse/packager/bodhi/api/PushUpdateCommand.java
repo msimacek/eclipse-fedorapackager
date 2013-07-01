@@ -11,7 +11,6 @@
 package org.fedoraproject.eclipse.packager.bodhi.api;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
@@ -21,7 +20,7 @@ import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientLoginExcep
 
 /**
  * Command for pushing an update to Bodhi
- * 
+ *
  */
 public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 
@@ -91,7 +90,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 
 	/**
 	 * The type of the update.
-	 * 
+	 *
 	 */
 	public static enum UpdateType {
 		/**
@@ -114,7 +113,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 
 	/**
 	 * The request type of the update.
-	 * 
+	 *
 	 */
 	public static enum RequestType {
 		/**
@@ -133,7 +132,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 
 	/**
 	 * Setter for the update type.
-	 * 
+	 *
 	 * @param type
 	 *            The type of the update
 	 * @return this instance
@@ -157,7 +156,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 
 	/**
 	 * Into which repo should this update get tagged?
-	 * 
+	 *
 	 * @param type
 	 *            The type.
 	 * @return this instance
@@ -179,7 +178,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 
 	/**
 	 * A list of bugs which this update may address.
-	 * 
+	 *
 	 * @param bugs
 	 *            A comma or space separated list of bugs or aliases. For
 	 *            example: {@code #1234, 789 CVE-2008-0001}
@@ -192,7 +191,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 
 	/**
 	 * The Fedora release for which the update should get pushed.
-	 * 
+	 *
 	 * @param release
 	 *            For example: {@code F15}
 	 * @return This instance
@@ -205,7 +204,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 	/**
 	 * The list of builds (NVR's) which should be included in this update.
 	 * Required.
-	 * 
+	 *
 	 * @param builds
 	 *            The NVRs of the builds.
 	 * @return this instance.
@@ -217,7 +216,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 
 	/**
 	 * The client to be used. Required.
-	 * 
+	 *
 	 * @param client
 	 *            A bodhi client.
 	 * @return this instance.
@@ -229,7 +228,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 
 	/**
 	 * Set the advisory comment for the update. Required and may not be empty.
-	 * 
+	 *
 	 * @param comment
 	 *            The advisory comment.
 	 * @return this instance.
@@ -242,7 +241,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 	/**
 	 * Sets if a reboot will be suggested after a user installs this update.
 	 * Optional.
-	 * 
+	 *
 	 * @param newValue
 	 *            {@code true} if a reboot should get suggested, {@code false}
 	 *            otherwise.
@@ -256,7 +255,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 	/**
 	 * Set this to true if you wish that Karma automatism should be used.
 	 * Optional.
-	 * 
+	 *
 	 * @param newValue
 	 *            {@code true} if karma automatism should be used, {@code false}
 	 *            otherwise.
@@ -270,7 +269,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 	/**
 	 * Sets the stable Karma threshold for the next call(). This requires
 	 * enableAutoKarma to be set to {@code true}, which is the default.
-	 * 
+	 *
 	 * @param newThreshold
 	 *            The Karma threshold for pushing the update to stable.
 	 * @return this instance
@@ -283,7 +282,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 	/**
 	 * Sets the unstable/unpushing Karma thresold for the next call(). This
 	 * requires enableAutoKarma to be set to {@code true}, which is the default.
-	 * 
+	 *
 	 * @param newThreshold
 	 *            The Karma threshold for marking the update as unstable.
 	 * @return this instance
@@ -296,7 +295,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 	/**
 	 * Boolean flag which sets if associated bugs should get closed when the
 	 * update becomes stable.
-	 * 
+	 *
 	 * @param newValue
 	 *            The new value.
 	 * @return this instance
@@ -308,7 +307,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 
 	/**
 	 * Sets the username/password combination for the update push.
-	 * 
+	 *
 	 * @param username
 	 *            The username
 	 * @param password
@@ -323,7 +322,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#
 	 * checkConfiguration()
 	 */
@@ -363,12 +362,12 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 
 	/**
 	 * Perform the update.
-	 * 
+	 *
 	 * @throws CommandMisconfiguredException
 	 *             If the command was configured wrongly.
 	 * @throws CommandListenerException
 	 *             If a command listener threw an exception.
-	 * 
+	 *
 	 * @return the result of the update. You may use it to determine
 	 *         success/failure and/or retrieve other information.
 	 * @throws BodhiClientLoginException
@@ -393,9 +392,6 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 		if (this.bugs == null) {
 			this.bugs = NO_BUGS;
 		}
-		FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-		logger.logInfo(BodhiText.PushUpdateCommand_pushingBodhiUpdateTaskMsg);
-
 		assert this.client != null;
 
 		monitor.beginTask(
