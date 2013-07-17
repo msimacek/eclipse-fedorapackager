@@ -21,7 +21,7 @@
   </parent>
   
   <prerequisites>
-    <maven>3.0</maven>
+    <maven>3.0.5</maven>
   </prerequisites>
   
   <groupId>org.fedoraproject.eclipse.packager</groupId>
@@ -143,30 +143,6 @@
         <version>${tycho-version}</version>
         <configuration>
           <resolver>p2</resolver>
-          <!--
-          <environments>
-            <environment>
-              <os>linux</os>
-              <ws>gtk</ws>
-              <arch>x86</arch>
-            </environment>
-            <environment>
-              <os>linux</os>
-              <ws>gtk</ws>
-              <arch>x86_64</arch>
-            </environment>
-            <environment>
-              <os>linux</os>
-              <ws>gtk</ws>
-              <arch>ppc</arch>
-            </environment>
-            <environment>
-              <os>linux</os>
-              <ws>gtk</ws>
-              <arch>ppc64</arch>
-            </environment>
-          </environments>
-          -->
         </configuration>
       </plugin>
       <plugin>
@@ -253,7 +229,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.2</version>
+          <version>3.3</version>
         </plugin>
       </plugins>
     </pluginManagement>
