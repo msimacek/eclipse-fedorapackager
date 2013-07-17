@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.RepositoryCache;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
@@ -77,8 +78,7 @@ public class ConvertLocalToRemoteCommandTest {
 	@After
 	public void tearDown() throws Exception  {
 		this.testProject.dispose();
-		org.eclipse.egit.core.Activator
-		.getDefault().getRepositoryCache().clear();
+		Activator.getDefault().getRepositoryCache().clear();
 	}
 
 	/**
@@ -135,17 +135,17 @@ public class ConvertLocalToRemoteCommandTest {
 	/**
 	 * Test if no exception is thrown when a remote origin
 	 * with expected url has been added to the project location
-	 * @throws IOException 
-	 * @throws CoreException 
-	 * @throws URISyntaxException 
-	 * @throws JGitInternalException 
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
-	 * @throws RemoteAlreadyExistsException 
-	 * @throws LocalProjectConversionFailedException 
-	 * @throws CommandListenerException 
-	 * @throws CommandMisconfiguredException 
-	 * @throws GitAPIException 
+	 * @throws IOException
+	 * @throws CoreException
+	 * @throws URISyntaxException
+	 * @throws JGitInternalException
+	 * @throws FedoraPackagerCommandNotFoundException
+	 * @throws FedoraPackagerCommandInitializationException
+	 * @throws RemoteAlreadyExistsException
+	 * @throws LocalProjectConversionFailedException
+	 * @throws CommandListenerException
+	 * @throws CommandMisconfiguredException
+	 * @throws GitAPIException
 	 *
 	 * @throws Exception
 	 */
@@ -170,17 +170,17 @@ public class ConvertLocalToRemoteCommandTest {
 	/**
 	 * Test if exception is thrown when a remote origin
 	 * with a non expected url has been added to the project location
-	 * @throws IOException 
-	 * @throws CoreException 
-	 * @throws URISyntaxException 
-	 * @throws JGitInternalException 
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
-	 * @throws RemoteAlreadyExistsException 
-	 * @throws LocalProjectConversionFailedException 
-	 * @throws CommandListenerException 
-	 * @throws CommandMisconfiguredException 
-	 * @throws GitAPIException 
+	 * @throws IOException
+	 * @throws CoreException
+	 * @throws URISyntaxException
+	 * @throws JGitInternalException
+	 * @throws FedoraPackagerCommandNotFoundException
+	 * @throws FedoraPackagerCommandInitializationException
+	 * @throws RemoteAlreadyExistsException
+	 * @throws LocalProjectConversionFailedException
+	 * @throws CommandListenerException
+	 * @throws CommandMisconfiguredException
+	 * @throws GitAPIException
 	 *
 	 * @throws Exception
 	 */
