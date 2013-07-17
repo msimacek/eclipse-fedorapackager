@@ -87,16 +87,6 @@ public interface IFpProjectBits {
 	public void initialize(IProjectRoot fedoraProjectRoot);
 
 	/**
-	 * Tag a revision of the VCS.
-	 *
-	 * @param monitor The monitor to show progress.
-	 * @param bci The branch configuration.
-	 * @return The status of the tagging operation.
-	 */
-	public IStatus tagVcs(IProgressMonitor monitor,
-			BranchConfigInstance bci);
-
-	/**
 	 * Utility method to check whether the given VCS needs to tag.
 	 *
 	 * @return True if tag needs to be created, false otherwise.

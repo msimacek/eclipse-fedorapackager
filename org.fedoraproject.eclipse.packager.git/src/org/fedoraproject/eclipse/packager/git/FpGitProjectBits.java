@@ -356,23 +356,6 @@ public class FpGitProjectBits implements IFpProjectBits {
 	}
 
 	/**
-	 * Create new Git tag.
-	 *
-	 * See
-	 * {@link IFpProjectBits#tagVcs(IProgressMonitor, BranchConfigInstance)}
-	 */
-	@Override
-	public IStatus tagVcs(IProgressMonitor monitor,
-			BranchConfigInstance bci) {
-		if (!isInitialized()) {
-			return new Status(IStatus.ERROR, Activator.PLUGIN_ID,
-					"Git tag error. Not initialized!"); //$NON-NLS-1$
-		}
-		// FIXME: no-op ATM. use git.tag().
-		return new Status(IStatus.OK, Activator.PLUGIN_ID, "Tag succeeded!"); //$NON-NLS-1$
-	}
-
-	/**
 	 * Fedora git doesn't need to tag because commit hashes are used.
 	 *
 	 * @see org.fedoraproject.eclipse.packager.IFpProjectBits#needsTag()

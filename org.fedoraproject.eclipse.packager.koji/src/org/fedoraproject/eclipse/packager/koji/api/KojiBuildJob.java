@@ -32,7 +32,6 @@ import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IFpProjectBits;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
-import org.fedoraproject.eclipse.packager.api.TagSourcesListener;
 import org.fedoraproject.eclipse.packager.api.UnpushedChangesListener;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
@@ -101,10 +100,6 @@ public class KojiBuildJob extends KojiJob {
 				fedoraProjectRoot, monitor);
 		// check for unpushed changes prior calling command
 		kojiBuildCmd.addCommandListener(unpushedChangesListener);
-		// tag sources if user wishes; TagSourcesListener takes care of this
-		TagSourcesListener tagSources = new TagSourcesListener(
-				fedoraProjectRoot, monitor, shell, bci);
-		kojiBuildCmd.addCommandListener(tagSources);
 		IKojiHubClient kojiClient;
 		try {
 			kojiClient = getHubClient();

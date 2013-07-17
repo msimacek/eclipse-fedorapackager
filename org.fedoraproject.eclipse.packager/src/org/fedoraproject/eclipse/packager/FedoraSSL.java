@@ -71,7 +71,7 @@ public class FedoraSSL {
 	 * Create a Fedora SSL object from given cert files. The use of this
 	 * constructor is discouraged. Use {@link FedoraSSLFactory#getInstance()}
 	 * instead.
-	 * 
+	 *
 	 * @param fedoraCert
 	 *            The certificate file.
 	 * @param fedoraUploadCert
@@ -91,7 +91,7 @@ public class FedoraSSL {
 
 	/**
 	 * Set up an SSLContext, and initialize it properly.
-	 * 
+	 *
 	 * @throws GeneralSecurityException
 	 *             If there is an issue in the security aspect of the SSL
 	 *             connection.
@@ -125,7 +125,7 @@ public class FedoraSSL {
 
 	/**
 	 * Retrieve key material from fedoraCert as specified by constructor.
-	 * 
+	 *
 	 * @return The key material.
 	 * @throws GeneralSecurityException
 	 *             If there is some problem with the key.
@@ -150,7 +150,7 @@ public class FedoraSSL {
 
 	/**
 	 * Determine FAS username from fedora cert file.
-	 * 
+	 *
 	 * @return Username if retrieval is successful.
 	 *         {@link FedoraSSL#UNKNOWN_USER} otherwise.
 	 */
@@ -171,9 +171,7 @@ public class FedoraSSL {
 					}
 				}
 				return cns.get(0);
-			} catch (GeneralSecurityException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
+			} catch (GeneralSecurityException|IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -181,7 +179,7 @@ public class FedoraSSL {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return The trust chain for the SSL.
 	 * @throws GeneralSecurityException
 	 *             If there is some problem with the key.
@@ -198,7 +196,7 @@ public class FedoraSSL {
 
 	/**
 	 * Determine if FAS certificate (~/.fedora.cert) is valid.
-	 * 
+	 *
 	 * @return {@code true} if certificate exist and is valid. {@code false}
 	 *         otherwise.
 	 */
@@ -216,17 +214,13 @@ public class FedoraSSL {
 							try {
 								certs[0].checkValidity();
 								return true;
-							} catch (CertificateExpiredException e) {
-								return false;
-							} catch (CertificateNotYetValidException e) {
+							} catch (CertificateExpiredException|CertificateNotYetValidException e) {
 								return false;
 							}
 						}
 					}
 				}
-			} catch (GeneralSecurityException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
+			} catch (GeneralSecurityException|IOException e) {
 				e.printStackTrace();
 			}
 		}

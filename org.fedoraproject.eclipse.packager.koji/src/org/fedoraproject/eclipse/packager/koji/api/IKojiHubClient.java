@@ -11,8 +11,8 @@
 package org.fedoraproject.eclipse.packager.koji.api;
 
 import java.util.HashMap;
-import java.util.Set;
 import java.util.List;
+import java.util.Set;
 
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
