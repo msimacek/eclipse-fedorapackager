@@ -11,7 +11,6 @@
 package org.fedoraproject.eclipse.packager.bodhi.api.deserialization;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 /**
  * Class which represents a pushed Bodhi update. Deserialized from
@@ -45,14 +44,14 @@ public class BodhiUpdate {
 	// TODO: Model release appropriately
 	private JsonElement release;
 	private String type;
-	
+
 	/**
 	 * Google GSON wants this
 	 */
 	public BodhiUpdate() {
 		// nothing
 	}
-	
+
 	/**
 	 * @return the status
 	 */
