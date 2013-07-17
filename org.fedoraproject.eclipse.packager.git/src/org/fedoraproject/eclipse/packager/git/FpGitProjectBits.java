@@ -60,9 +60,9 @@ import org.fedoraproject.eclipse.packager.IProjectRoot;
 /**
  * Git specific project bits (branches management and such). Implementation of
  * org.fedoraproject.eclipse.packager.vcsContribution extension point.
- * 
+ *
  * @author Red Hat Inc.
- * 
+ *
  */
 public class FpGitProjectBits implements IFpProjectBits {
 
@@ -84,8 +84,8 @@ public class FpGitProjectBits implements IFpProjectBits {
 					".*(master).*|.*(rhel)-(\\d(?:\\.\\d)?).*|.*(el)(\\d).*|" + //$NON-NLS-1$
 					".*(olpc)(\\d).*" //$NON-NLS-1$
 			);
-	
-	
+
+
 	/**
 	 * See {@link IFpProjectBits#getBranchName(String)}
 	 */
@@ -99,7 +99,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 
 	/**
 	 * Parse current branch from active local branch.
-	 * 
+	 *
 	 * See {@link IFpProjectBits#getCurrentBranchName()}
 	 */
 	@Override
@@ -147,7 +147,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 
 	/**
 	 * Git should always return anonymous checkout with git protocol for koji.
-	 * 
+	 *
 	 * @see org.fedoraproject.eclipse.packager.IFpProjectBits#getScmUrlForKoji(BranchConfigInstance)
 	 */
 	@Override
@@ -161,7 +161,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 
 	/**
 	 * Get the SHA1 representing the current branch.
-	 * 
+	 *
 	 * @return The SHA1 as hex in String form.
 	 */
 	protected String getCommitHash() {
@@ -178,7 +178,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 
 	/**
 	 * Parse available branch names from Git remote branches.
-	 * 
+	 *
 	 * @return The branch map.
 	 */
 	private HashMap<String, String> getBranches() {
@@ -207,7 +207,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 
 	/**
 	 * Do instance specific initialization.
-	 * 
+	 *
 	 * See {@link IFpProjectBits#initialize(IProjectRoot)}
 	 */
 	@Override
@@ -232,7 +232,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 	 * implementations. For example <code>mapBranchName("f8")</code> would
 	 * return <code>"F-8"</code> and <code>mapBranchName("master")</code> would
 	 * return <code>"devel"</code>.
-	 * 
+	 *
 	 * @param from
 	 *            The original raw branch name with "refs/something" prefixes
 	 *            omitted.
@@ -265,7 +265,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 	 * Returns true if given branch name is NOT an ObjectId in string format.
 	 * I.e. if branchName has been created by doing repo.getBranch(), it would
 	 * return SHA1 Strings for remote branches. We don't want that.
-	 * 
+	 *
 	 * @param branchName The branch name being examined.
 	 * @return true if given branch name is NOT an ObjectId in string format, false otherwise.
 	 */
@@ -300,7 +300,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 	/**
 	 * Determine what the next release number (in terms of the distribution)
 	 * will be.
-	 * 
+	 *
 	 * @return The next release number in String representation
 	 */
 	private String determineNextReleaseNumber() {
@@ -349,44 +349,15 @@ public class FpGitProjectBits implements IFpProjectBits {
 		}
 		return Status.OK_STATUS;
 	}
-	
+
 	@Override
 	public String getIgnoreFileName(){
 		return Constants.GITIGNORE_FILENAME;
 	}
 
 	/**
-	 * Determine if Git tag exists.
-	 * 
-	 * See
-	 * {@link IFpProjectBits#isVcsTagged(String, BranchConfigInstance)}
-	 */
-	@Override
-	public boolean isVcsTagged(String tag,
-			BranchConfigInstance bci) {
-		if (!isInitialized()) {
-			return false; // If we are not initialized we can't go any further!
-		}
-		// Look at tags and see if we can find the tag in question.
-		Map<String, Ref> remotes = this.git.getRepository().getTags();
-		if (remotes != null) {
-			Set<String> keyset = remotes.keySet();
-			String currentTag;
-			for (String key : keyset) {
-				// use shortenRefName() to get rid of refs/*/ prefix
-				currentTag = Repository.shortenRefName(remotes.get(key)
-						.getName());
-				if (tag.equals(currentTag)) {
-					return true; // tag found
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * Create new Git tag.
-	 * 
+	 *
 	 * See
 	 * {@link IFpProjectBits#tagVcs(IProgressMonitor, BranchConfigInstance)}
 	 */
@@ -403,7 +374,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 
 	/**
 	 * Fedora git doesn't need to tag because commit hashes are used.
-	 * 
+	 *
 	 * @see org.fedoraproject.eclipse.packager.IFpProjectBits#needsTag()
 	 */
 	@Override
@@ -413,7 +384,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 
 	/**
 	 * Determine if there are unpushed changes on the current branch.
-	 * 
+	 *
 	 * @return If there are unpushed changes.
 	 */
 	@Override
@@ -432,28 +403,28 @@ public class FpGitProjectBits implements IFpProjectBits {
 							branchName, ConfigConstants.CONFIG_KEY_MERGE);
 			// Make sure that remotes/origin/<branchname> is up to date with what's in the
 			// repo remotely, so that we have the correct revision to compare.
-			FetchCommand fetch = git.fetch(); 
-			fetch.setRemote("origin"); //$NON-NLS-1$ 
-			fetch.setTimeout(0); 
-			// Fetch refs for current branch; account for f14 + f14/master like 
+			FetchCommand fetch = git.fetch();
+			fetch.setRemote("origin"); //$NON-NLS-1$
+			fetch.setTimeout(0);
+			// Fetch refs for current branch; account for f14 + f14/master like
 			// branch names.
-			String fetchBranchSpec = Constants.R_HEADS + branchName + ":" + //$NON-NLS-1$ 
-			                Constants.R_REMOTES + "origin/" + branchName; //$NON-NLS-1$ 
-			if (trackingRemoteBranch != null) { 
-			        // have f14/master like branch 
-			        trackingRemoteBranch = trackingRemoteBranch 
-			                        .substring(Constants.R_HEADS.length()); 
-			        fetchBranchSpec = Constants.R_HEADS + trackingRemoteBranch 
-			                        + ":" + //$NON-NLS-1$ 
-			                        Constants.R_REMOTES + "origin/" + trackingRemoteBranch; //$NON-NLS-1$ 
-			} 
-			RefSpec spec = new RefSpec(fetchBranchSpec); 
-			fetch.setRefSpecs(spec); 
-			try { 
-			        fetch.call(); 
-			} catch (JGitInternalException e) { 
-			        e.printStackTrace(); 
-			} 
+			String fetchBranchSpec = Constants.R_HEADS + branchName + ":" + //$NON-NLS-1$
+			                Constants.R_REMOTES + "origin/" + branchName; //$NON-NLS-1$
+			if (trackingRemoteBranch != null) {
+			        // have f14/master like branch
+			        trackingRemoteBranch = trackingRemoteBranch
+			                        .substring(Constants.R_HEADS.length());
+			        fetchBranchSpec = Constants.R_HEADS + trackingRemoteBranch
+			                        + ":" + //$NON-NLS-1$
+			                        Constants.R_REMOTES + "origin/" + trackingRemoteBranch; //$NON-NLS-1$
+			}
+			RefSpec spec = new RefSpec(fetchBranchSpec);
+			fetch.setRefSpecs(spec);
+			try {
+			        fetch.call();
+			} catch (JGitInternalException e) {
+			        e.printStackTrace();
+			}
 			RevWalk rw = new RevWalk(git.getRepository());
 			ObjectId objHead = git.getRepository().resolve(branchName);
 			if (trackingRemoteBranch == null) {
@@ -482,7 +453,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.fedoraproject.eclipse.packager.IFpProjectBits#stageChanges(java.lang
 	 * .String[])
@@ -571,7 +542,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 			distro = "rhel"; //$NON-NLS-1$
 			distroSuffix = ".el" + version; //$NON-NLS-1$
 			buildTarget = "dist-" + version + "E-epel-testing-candidate"; //$NON-NLS-1$ //$NON-NLS-2$
-		} 
+		}
 		return new BranchConfigInstance(distroSuffix, version, distro,
 				buildTarget, branchName);
 	}

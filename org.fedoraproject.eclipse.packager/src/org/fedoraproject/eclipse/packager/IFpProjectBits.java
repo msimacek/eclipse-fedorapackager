@@ -17,29 +17,29 @@ import org.eclipse.core.runtime.IStatus;
 /**
  * Interface for VCS specific bits of an FpProject. Implementations should
  * handle branch related things and other VCS specific parts.
- * 
+ *
  * @author Red Hat Inc.
- * 
+ *
  */
 public interface IFpProjectBits {
 
 	/**
 	 * Get the current branch name.
-	 * 
+	 *
 	 * @return The current branch name.
 	 */
 	public String getCurrentBranchName();
 
 	/**
 	 * Get the version of the current branch name used for repository management
-	 * 
+	 *
 	 * @return The raw version of the current branch name.
 	 */
 	public String getRawCurrentBranchName();
 
 	/**
 	 * Returns the branch name specified by branchName.
-	 * 
+	 *
 	 * @param branchName
 	 *            Branch name for which to get the actual name for.
 	 * @return The actual branch name.
@@ -48,21 +48,21 @@ public interface IFpProjectBits {
 
 	/**
 	 * Get the VCS specific URL for the given resource.
-	 * 
+	 *
 	 * @return String representation of URL.
 	 */
 	public String getScmUrl();
 
 	/**
 	 * Get the BranchConfigurationInstance for the current branch.
-	 * 
+	 *
 	 * @return BranchConfigurationInstance for the current branch.
 	 */
 	public BranchConfigInstance getBranchConfig();
 
 	/**
 	 * Updates the given project from the remote
-	 * 
+	 *
 	 * @param monitor
 	 *            The monitor to show progress.
 	 * @return The status of the operation.
@@ -71,7 +71,7 @@ public interface IFpProjectBits {
 
 	/**
 	 * Ignores the given resource.
-	 * 
+	 *
 	 * @param resourceToIgnore
 	 *            The resource to ignore.
 	 * @return The status of the operation.
@@ -80,7 +80,7 @@ public interface IFpProjectBits {
 
 	/**
 	 * Initialize IFpProjectBits instance
-	 * 
+	 *
 	 * @param fedoraProjectRoot
 	 *            The underlying fedoraprojectRoot object.
 	 */
@@ -88,7 +88,7 @@ public interface IFpProjectBits {
 
 	/**
 	 * Tag a revision of the VCS.
-	 * 
+	 *
 	 * @param monitor The monitor to show progress.
 	 * @param bci The branch configuration.
 	 * @return The status of the tagging operation.
@@ -97,25 +97,15 @@ public interface IFpProjectBits {
 			BranchConfigInstance bci);
 
 	/**
-	 * Determine if tag exists in VCS.
-	 * 
-	 * @param tag The tag being looked for.
-	 * @param bci The branch configuration.
-	 * @return True if tag exists, false otherwise.
-	 */
-	public boolean isVcsTagged(String tag,
-			BranchConfigInstance bci);
-
-	/**
 	 * Utility method to check whether the given VCS needs to tag.
-	 * 
+	 *
 	 * @return True if tag needs to be created, false otherwise.
 	 */
 	public boolean needsTag();
 
 	/**
 	 * Returns the scm url in format suitable for koji.
-	 * 
+	 *
 	 * @param bci
 	 *            The current branch configuration.
 	 * @return The scm url as expected by koji.
@@ -124,14 +114,14 @@ public interface IFpProjectBits {
 
 	/**
 	 * Checks whether there are local changes.
-	 * 
+	 *
 	 * @return Whether there are local changes or not.
 	 */
 	public boolean hasLocalChanges();
 
 	/**
 	 * Stage changes to an array of files.
-	 * 
+	 *
 	 * @param files
 	 *            The files to add the changes to the repository.
 	 */
@@ -139,7 +129,7 @@ public interface IFpProjectBits {
 
 	/**
 	 * Returns the name of the ignore file for the given VCS.
-	 * 
+	 *
 	 * @return The name of the file storing ignores.
 	 */
 	public String getIgnoreFileName();
