@@ -89,11 +89,6 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 	}
 
 	@Override
-	public void dispose() {
-		super.dispose();
-	}
-
-	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		this.selection = selection;
 	}
@@ -149,9 +144,7 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 							InterruptedException {
 						try {
 							cloneOp.run(monitor);
-						} catch (IOException e) {
-							throw new InvocationTargetException(e);
-						} catch (IllegalStateException e) {
+						} catch (IOException|IllegalStateException e) {
 							throw new InvocationTargetException(e);
 						}
 						if (monitor.isCanceled())
@@ -219,8 +212,7 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 							FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneCancel);
 			return false;
 		} catch (CoreException|InvocationTargetException|URISyntaxException e) {
-			org.fedoraproject.eclipse.packager.git.Activator
-					.handleError(
+			Activator.handleError(
 							FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail,
 							e, true);
 			return false;
