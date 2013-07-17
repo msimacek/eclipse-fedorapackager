@@ -39,7 +39,7 @@
             category="org.fedoraproject.eclipse.packager.preferences"
             class="org.fedoraproject.eclipse.packager.git.internal.preferences.FedoraPackagerGitPreferencePage"
             id="org.fedoraproject.eclipse.packager.preferences.git"
-            name="Git">
+            name="%gitpage.name">
       </page>
    </extension>
     <extension
@@ -68,7 +68,7 @@
        <command
             defaultHandler="org.fedoraproject.eclipse.packager.git.internal.handlers.ConvertLocalToRemoteHandler"
             id="org.fedoraproject.eclipse.packager.ConvertLocalToRemoteCommand"
-            name="ConvertLocalToRemote">
+            name="%convertLocalCommand.name">
       </command>
     </extension>
     <!-- Core plug-in contributes convert local to remote command  -->

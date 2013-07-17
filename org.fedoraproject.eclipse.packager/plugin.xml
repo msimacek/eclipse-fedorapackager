@@ -12,9 +12,9 @@
  -->
 
 <plugin>
-   <extension-point id="vcsContribution" name="VCS interaction" schema="schema/vcsContribution.exsd"/>
-   <extension-point id="packagerCommandContribution" name="Eclipse Fedora Packager Command Contribution" schema="schema/packagerCommandContribution.exsd"/>
-   <extension-point id="projectRootProvider" name="Project Root Provider" schema="schema/projectRootProvider.exsd"/>
+   <extension-point id="vcsContribution" name="%vcs.extension.name" schema="schema/vcsContribution.exsd"/>
+   <extension-point id="packagerCommandContribution" name="%fedpkg.command.extension.name" schema="schema/packagerCommandContribution.exsd"/>
+   <extension-point id="projectRootProvider" name="%projectroot.extension.name" schema="schema/projectRootProvider.exsd"/>
    
    <extension point="org.eclipse.core.expressions.definitions">
       <definition
@@ -209,22 +209,22 @@
       <command
             defaultHandler="org.fedoraproject.eclipse.packager.internal.handlers.DownloadHandler"
             id="org.fedoraproject.eclipse.packager.DownloadCommand"
-            name="Download">
+            name="%download.command.name">
       </command>
       <command
             defaultHandler="org.fedoraproject.eclipse.packager.internal.handlers.UploadHandler"
             id="org.fedoraproject.eclipse.packager.UploadCommand"
-            name="Upload">
+            name="%upload.command.name">
       </command>
       <command
             defaultHandler="org.fedoraproject.eclipse.packager.internal.handlers.NewSourcesHandler"
             id="org.fedoraproject.eclipse.packager.NewSourcesCommand"
-            name="Replace">
+            name="%replace.command.name">
       </command>
       <command
             defaultHandler="org.fedoraproject.eclipse.packager.internal.handlers.ScpHandler"
             id="org.fedoraproject.eclipse.packager.ScpCommand"
-            name="Scp">
+            name="%scp.command.name">
       </command>      
     </extension>
     

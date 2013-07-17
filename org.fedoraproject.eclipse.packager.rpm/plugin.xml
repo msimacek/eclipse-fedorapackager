@@ -204,7 +204,7 @@
             </command>
             <command
                   commandId="org.fedoraproject.eclipse.packager.FedoraReviewCommand"
-                  label="Run Fedora Review"
+                  label="%run.fedora.review.label"
                   style="push">
                <visibleWhen
                      checkEnabled="false">
@@ -232,8 +232,7 @@
          <menuContribution
                locationURI="popup:org.eclipse.fedoraproject.packager.main?after=org.fedoraproject.eclipse.packager.rpm.advancedsep">
              <menu
-                  label="%command.label.advancedRPMmenu"
-                  mnemonic="">
+                  label="%command.label.advancedRPMmenu">
                <visibleWhen
                      checkEnabled="false">
                   <or>
@@ -327,26 +326,26 @@
       <command
             defaultHandler="org.fedoraproject.eclipse.packager.rpm.internal.handlers.SRPMImportHandler"
             id="org.fedoraproject.eclipse.packager.ImportCommand"
-            name="SRPM Import">
+            name="%srpm.import.name">
       </command>
       <command
             defaultHandler="org.fedoraproject.eclipse.packager.rpm.internal.handlers.local.InstallHandler"
             id="org.fedoraproject.eclipse.packager.rpm.RPMInstallCommandLocal"
-            name="RPM Install">
+            name="%rpm.install.name">
       </command>
       <command
             defaultHandler="org.fedoraproject.eclipse.packager.rpm.internal.handlers.local.CompileHandler"
             id="org.fedoraproject.eclipse.packager.rpm.RPMCompileCommandLocal"
-            name="RPM Compile">
+            name="%rpm.compile.command.name">
       </command>
       <command
             defaultHandler="org.fedoraproject.eclipse.packager.rpm.internal.handlers.local.FedoraReviewHandler"
             id="org.fedoraproject.eclipse.packager.FedoraReviewCommand"
-            name="Fedora Review">
+            name="%fedora.review.name">
       </command>
    </extension>
    <extension
-         name="SCMMockBuildCommand"
+         name="%scmmock.command.name"
          point="org.fedoraproject.eclipse.packager.packagerCommandContribution">
        <command id="RpmEvalCommand"
        	        class="org.fedoraproject.eclipse.packager.rpm.api.RpmEvalCommand">
