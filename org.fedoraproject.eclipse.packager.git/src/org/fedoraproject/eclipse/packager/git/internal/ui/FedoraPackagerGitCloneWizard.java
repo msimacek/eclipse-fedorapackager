@@ -16,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -23,6 +24,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.DefaultScope;
@@ -36,6 +38,7 @@ import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.errors.NoRemoteRepositoryException;
 import org.eclipse.jgit.errors.NotSupportedException;
 import org.eclipse.jgit.errors.TransportException;
+import org.eclipse.linuxtools.rpm.core.RPMProjectNature;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IImportWizard;
@@ -55,7 +58,7 @@ import org.fedoraproject.eclipse.packager.utils.UiUtils;
 
 /**
  * Wizard to checkout package content from Fedora Git.
- * 
+ *
  */
 public class FedoraPackagerGitCloneWizard extends Wizard implements
 		IImportWizard {
@@ -187,6 +190,7 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 					.getProject(page.getPackageName());
 			newProject.create(null);
 			newProject.open(null);
+			RPMProjectNature.addRPMNature(newProject, new NullProgressMonitor());
 			// Set persistent property so that we know when to show the context
 			// menu item.
 			newProject.setPersistentProperty(PackagerPlugin.PROJECT_PROP,
@@ -194,6 +198,7 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 			ConnectProviderOperation connect = new ConnectProviderOperation(
 					newProject);
 			connect.execute(null);
+			configureRpmlintBuilder(newProject);
 
 			// Add new project to working sets, if requested
 			IWorkingSet[] workingSets = page.getWorkingSets();
@@ -219,14 +224,14 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 							FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail,
 							e, true);
 			return false;
-		} 
+		}
 	}
 
 	/**
 	 * Prompt for confirmation if a resource exists, either the project already
 	 * exists, or a folder exists in the workspace and would conflict with the
 	 * newly created project.
-	 * 
+	 *
 	 * @param errorMessage
 	 *            The error message to be displayed.
 	 * @return {@code true} if the user confirmed, {@code false} otherwise.
@@ -241,7 +246,7 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 
 	/**
 	 * Opens error dialog with provided reason in error message.
-	 * 
+	 *
 	 * @param errorMsg
 	 *            The error message to use.
 	 */
@@ -267,7 +272,7 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 	 * <li>If all else fails, or anonymous checkout is specified, construct an
 	 * anonymous clone URL</li>
 	 * </ol>
-	 * 
+	 *
 	 * @return The full clone URL based on the package name.
 	 */
 	private String getGitCloneURL() {
@@ -284,5 +289,16 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 			return GitUtils.getFullGitURL(GitUtils.getAnonymousGitBaseUrl(),
 					page.getPackageName());
 		}
+	}
+
+	private void configureRpmlintBuilder(IProject project) throws CoreException {
+		IProjectDescription desc = project.getDescription();
+		String[] natures = desc.getNatureIds();
+
+		String[] newNatures = new String[natures.length + 1];
+		System.arraycopy(natures, 0, newNatures, 0, natures.length);
+		newNatures[natures.length] = "org.eclipse.linuxtools.rpm.rpmlint.rpmlintNature"; //$NON-NLS-1$
+		desc.setNatureIds(newNatures);
+		project.setDescription(desc, null);
 	}
 }
