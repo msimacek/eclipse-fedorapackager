@@ -53,7 +53,7 @@
     <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/</orbit-site>
     <!-- We need this for our dependencies and old versions -->
     <packager-site>https://fedorahosted.org/released/eclipse-fedorapackager/p2-repo/</packager-site>
-    <linuxtools-nightly-site>http://download.eclipse.org/linuxtools/updates-nightly</linuxtools-nightly-site>
+    <linuxtools-nightly-site>http://download.eclipse.org/linuxtools/update-2.0</linuxtools-nightly-site>
   </properties>
 
   <profiles>
