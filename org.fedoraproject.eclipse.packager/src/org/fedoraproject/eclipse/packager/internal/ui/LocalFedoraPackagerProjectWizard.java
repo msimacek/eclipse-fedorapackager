@@ -26,13 +26,8 @@ import org.eclipse.egit.core.op.ConnectProviderOperation;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
-import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.eclipse.jgit.api.errors.NoFilepatternException;
-import org.eclipse.jgit.api.errors.NoHeadException;
-import org.eclipse.jgit.api.errors.NoMessageException;
-import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
@@ -44,7 +39,7 @@ import org.fedoraproject.eclipse.packager.utils.UiUtils;
 
 /**
  * wizard to ease the process of creating fedora packages
- * 
+ *
  */
 public class LocalFedoraPackagerProjectWizard extends Wizard implements
 		INewWizard {
@@ -71,7 +66,7 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.Wizard#addPages()
 	 */
 	@Override
@@ -90,7 +85,7 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
 	 */
 	@Override
@@ -120,31 +115,13 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 						// if not already open.
 						UiUtils.openPerspective(getShell(), UiUtils.afterLocalProjectCreationPerspectiveSwitch);
 
-					} catch (NoHeadException e) {
-						e.printStackTrace();
-					} catch (NoMessageException e) {
-						e.printStackTrace();
-					} catch (ConcurrentRefUpdateException e) {
-						e.printStackTrace();
-					} catch (JGitInternalException e) {
-						e.printStackTrace();
-					} catch (WrongRepositoryStateException e) {
-						e.printStackTrace();
-					} catch (NoFilepatternException e) {
-						e.printStackTrace();
-					} catch (GitAPIException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					} catch (CoreException e) {
+					} catch (GitAPIException|IOException|CoreException e) {
 						e.printStackTrace();
 					}
 				}
 			};
 			getContainer().run(false, true, op);
-		} catch (InvocationTargetException x) {
-			return false;
-		} catch (InterruptedException x) {
+		} catch (InvocationTargetException|InterruptedException x) {
 			return false;
 		}
 		return true;
@@ -152,7 +129,7 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.eclipse.jface.wizard.wizard#canFinish()
 	 */
 	@Override
@@ -179,7 +156,7 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 
 	/**
 	 * Creates the base of the project.
-	 * 
+	 *
 	 * @param monitor
 	 *            Progress monitor to report back status
 	 */
@@ -201,7 +178,7 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 
 	/**
 	 * Creates a new instance of the FedoraRPM project.
-	 * 
+	 *
 	 * @param monitor
 	 *            Progress monitor to report back status
 	 * @throws CoreException
