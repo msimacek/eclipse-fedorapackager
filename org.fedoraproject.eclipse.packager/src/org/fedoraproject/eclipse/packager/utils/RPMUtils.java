@@ -26,7 +26,7 @@ import org.fedoraproject.eclipse.packager.IProjectRoot;
 
 /**
  * Utility class for RPM related things.
- * 
+ *
  */
 public class RPMUtils {
 
@@ -35,7 +35,7 @@ public class RPMUtils {
 	/**
 	 * Creates a list of rpm defines to use the given directory as a base
 	 * directory.
-	 * 
+	 *
 	 * @param dir
 	 *            The base directory.
 	 * @return Defines to instruct rpmbuild to use given directory.
@@ -56,7 +56,7 @@ public class RPMUtils {
 
 	/**
 	 * Submit a query to RPM. Uses org.eclipse.linuxtools.rpm.Utils.
-	 * 
+	 *
 	 * @param projectRoot The root under which the query is occuring.
 	 * @param format The format of the query result String.
 	 * @param bci The configuration for the current branch.
@@ -86,23 +86,8 @@ public class RPMUtils {
 	}
 
 	/**
-	 * Creates a tag name as expected from Fedora infrastructure based on the
-	 * N-V-R and return its string representation.
-	 * 
-	 * @param projectRoot
-	 *            Container used for retrieving needed data.
-	 * @param bci
-	 *            Current branch configuration.
-	 * @return The tag name.
-	 */
-	public static String makeTagName(IProjectRoot projectRoot,
-			BranchConfigInstance bci) {
-		return getNVR(projectRoot, bci).replaceAll("\\.", "_"); //$NON-NLS-1$ //$NON-NLS-2$
-	}
-
-	/**
 	 * Returns the N-V-R retrieved from the .spec file in the project root.
-	 * 
+	 *
 	 * @param projectRoot
 	 *            Container used to retrieve the needed data.
 	 * @param bci
@@ -123,7 +108,7 @@ public class RPMUtils {
 
 	/**
 	 * Get distribution definitions required for RPM build.
-	 * 
+	 *
 	 * @param bci
 	 *            The BranchConfigInstance on which to base the definitions.
 	 * @return A list of required dist-defines.
@@ -131,7 +116,7 @@ public class RPMUtils {
 	public static List<String> getDistDefines(BranchConfigInstance bci) {
 		// substitution for rhel
 		ArrayList<String> distDefines = new ArrayList<>();
-		String distvar = bci.getDistVariable().equals("epel") ? "rhel" //$NON-NLS-1$//$NON-NLS-2$ 
+		String distvar = bci.getDistVariable().equals("epel") ? "rhel" //$NON-NLS-1$//$NON-NLS-2$
 				: bci.getDistVariable();
 		distDefines.add("--define"); //$NON-NLS-1$
 		distDefines.add("dist " + bci.getDist()); //$NON-NLS-1$
