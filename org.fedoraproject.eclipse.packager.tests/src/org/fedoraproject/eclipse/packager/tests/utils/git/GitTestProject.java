@@ -41,14 +41,14 @@ import org.fedoraproject.eclipse.packager.git.GitUtils;
 public class GitTestProject {
 	protected IProject project;
 	protected Git git;
-	
+
 	public GitTestProject(String packageName) throws InterruptedException {
 		this(packageName, getGitCloneUrl(packageName));
 	}
 
 	/**
 	 * Use this constructor if you are cloning a local repo
-	 * 
+	 *
 	 * @param packageName
 	 *            name of the package.
 	 * @param URI
@@ -69,13 +69,8 @@ public class GitTestProject {
 				}
 				try {
 					git = cloneOp.run(monitor);
-				} catch (InvocationTargetException e) {
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (IllegalStateException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
+				} catch (InvocationTargetException | InterruptedException
+						| IllegalStateException | IOException e) {
 					e.printStackTrace();
 				}
 				return Status.OK_STATUS;
@@ -89,10 +84,6 @@ public class GitTestProject {
 		.getProject(packageName);
 		try {
 			project.create(null);
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-		try {
 			project.open(null);
 		} catch (CoreException e) {
 			e.printStackTrace();
@@ -102,10 +93,6 @@ public class GitTestProject {
 				project);
 		try {
 			connect.execute(null);
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-		try {
 			project.refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (CoreException e) {
 			e.printStackTrace();
@@ -161,12 +148,12 @@ public class GitTestProject {
 		// refresh after checkout
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
 	}
-	
+
 	private static String getGitCloneUrl(String packageName) {
 		return GitUtils.getFullGitURL(GitUtils.getAnonymousGitBaseUrl(),
 				packageName);
 	}
-	
+
 	protected void setPersistentProperty() {
 		try {
 			project.setPersistentProperty(PackagerPlugin.PROJECT_PROP,

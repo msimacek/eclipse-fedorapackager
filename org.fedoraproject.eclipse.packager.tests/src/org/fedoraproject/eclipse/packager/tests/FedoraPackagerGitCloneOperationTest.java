@@ -62,18 +62,15 @@ public class FedoraPackagerGitCloneOperationTest {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					git = cloneOp.setPackageName(fedoraPackager).setCloneURI(
-							GitUtils.getFullGitURL(GitUtils.getAnonymousGitBaseUrl(),
-									fedoraPackager)).run(monitor);
-				} catch (IllegalStateException e) {
-					e.printStackTrace();
-				} catch (InvocationTargetException e) {
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (URISyntaxException e) {
+					git = cloneOp
+							.setPackageName(fedoraPackager)
+							.setCloneURI(
+									GitUtils.getFullGitURL(
+											GitUtils.getAnonymousGitBaseUrl(),
+											fedoraPackager)).run(monitor);
+				} catch (IllegalStateException | InvocationTargetException
+						| InterruptedException | IOException
+						| URISyntaxException e) {
 					e.printStackTrace();
 				}
 				return null;

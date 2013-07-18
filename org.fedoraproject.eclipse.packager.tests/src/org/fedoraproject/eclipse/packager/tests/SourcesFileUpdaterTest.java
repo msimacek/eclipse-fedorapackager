@@ -34,7 +34,7 @@ import org.osgi.framework.FrameworkUtil;
 
 /**
  * Test for {@code sources} file updater, {@link SourcesFileUpdater}.
- * 
+ *
  */
 public class SourcesFileUpdaterTest {
 
@@ -58,10 +58,7 @@ public class SourcesFileUpdaterTest {
 		// we need the property set otherwise instantiation of the project root
 		// fails.
 		testProject
-				.setPersistentProperty(PackagerPlugin.PROJECT_PROP, "true" /*
-																			 * unused
-																			 * value
-																			 */);
+				.setPersistentProperty(PackagerPlugin.PROJECT_PROP, "true" );// unused value
 		fpRoot = FedoraPackagerUtils.getProjectRoot(testProject);
 		assertNotNull(fpRoot);
 
