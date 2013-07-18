@@ -17,16 +17,16 @@ import org.eclipse.osgi.util.NLS;
  *
  */
 public class KojiText extends NLS {
-	
+
 	/**
 	 * Do not in-line this into the static initializer as the
 	 * "Find Broken Externalized Strings" tool will not be
 	 * able to find the corresponding bundle file.
-	 * 
+	 *
 	 * This is the path to the file containing externalized strings.
 	 */
 	private static final String BUNDLE_NAME = "org.fedoraproject.eclipse.packager.koji.kojitext"; //$NON-NLS-1$
-	
+
 	// KojiBuildHandler Strings
 	/****/ public static String KojiBuildHandler_pushBuildToKoji;
 	/****/ public static String KojiBuildHandler_kojiBuild;
@@ -40,7 +40,6 @@ public class KojiText extends NLS {
 	/****/ public static String KojiBuildHandler_certificateRevokedMsg;
 	// KojiMessageDialog Strings
 	/****/ public static String KojiMessageDialog_buildNumberMsg;
-	/****/ public static String KojiMessageDialog_buildResponseMsg;
 	// KojiBuildCommand
 	/****/ public static String KojiBuildCommand_sendBuildCmd;
 	/****/ public static String KojiBuildCommand_kojiLogoutTask;
@@ -123,7 +122,7 @@ public class KojiText extends NLS {
 
 	// Generic Koji Strings
 	/****/ public static String KojiWaitForRepoHandler_errorGettingRepoInfo;
-	
+
 	static {
 		initializeMessages(BUNDLE_NAME,	KojiText.class);
 	}

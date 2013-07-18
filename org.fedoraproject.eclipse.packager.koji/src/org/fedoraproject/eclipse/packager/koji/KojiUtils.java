@@ -31,13 +31,13 @@ import org.fedoraproject.eclipse.packager.koji.api.KojiBuildJob;
 
 /**
  * Helper dealing with task URLs.
- * 
+ *
  */
 public class KojiUtils {
 
 	/**
 	 * Construct the correct URL to a task on koji.
-	 * 
+	 *
 	 * @param taskId The id of the koji task
 	 * @param kojiWebUrl The URL to koji.
 	 * @return The URL as a string.
@@ -48,7 +48,7 @@ public class KojiUtils {
 
 	/**
 	 * Load Koji server info from a preference store.
-	 * 
+	 *
 	 * @param preferenceStore
 	 *            The preference store in which to look for server info.
 	 * @return Two-dimensional array with each the ith entry of entry 0 being a
@@ -72,7 +72,7 @@ public class KojiUtils {
 	/**
 	 * Find the address of the currently selected server in the given server
 	 * mapping
-	 * 
+	 *
 	 * @param serverMapping
 	 *            Server mapping of the form returned by loadServerInfo
 	 * @param currentInfo
@@ -94,12 +94,12 @@ public class KojiUtils {
 
 	/**
 	 * Create a job listener for the event {@code done}.
-	 * 
+	 *
 	 * @param kojiInfo
 	 *            Comma-delineated string listing server info.
 	 * @param projectRoot
 	 *            Root to run listened job in.
-	 * 
+	 *
 	 * @return The job change listener.
 	 */
 	public static IJobChangeListener getJobChangeListener(String[] kojiInfo,
@@ -138,20 +138,6 @@ public class KojiUtils {
 								// Only show response message dialog on success
 								if (jobStatus.isOK() && buildResult != null
 										&& buildResult.isSuccessful()) {
-									FedoraPackagerLogger logger = FedoraPackagerLogger
-											.getInstance();
-									// unconditionally log so that users get a
-									// second chance to see the
-									// koji-web URL
-									logger.logInfo(NLS
-											.bind(KojiText.KojiMessageDialog_buildResponseMsg,
-													projectRoot
-															.getProductStrings()
-															.getBuildToolName())
-											+ " " //$NON-NLS-1$
-											+ KojiUtils.constructTaskUrl(
-													buildResult.getTaskId(),
-													staticWebUrl));
 									// opens browser with URL to task ID
 									openBrowser(buildResult.getTaskId(),
 											staticWebUrl);
@@ -184,6 +170,6 @@ public class KojiUtils {
 		} catch (PartInitException|MalformedURLException e) {
 			FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 			logger.logError(e.getMessage(), e);
-		} 
+		}
 	}
 }
