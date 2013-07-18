@@ -58,6 +58,10 @@
                               </with>
                            </or>
                         </visibleWhen>
+                        <parameter
+                              name="kojiScratch"
+                              value="true">
+                        </parameter>
                      </command>
                      <command
                            commandId="org.fedoraproject.eclipse.packager.koji.SRPMScratchBuildCommand"
@@ -218,9 +222,14 @@
             name="%command.name.0">
       </command>
       <command
-            defaultHandler="org.fedoraproject.eclipse.packager.koji.internal.handlers.KojiScratchBuildHandler"
+            defaultHandler="org.fedoraproject.eclipse.packager.koji.internal.handlers.KojiBuildHandler"
             id="org.fedoraproject.eclipse.packager.koji.ScratchBuildCommand"
             name="%command.name.1">
+         <commandParameter
+               id="kojiScratch"
+               name="scratch"
+               optional="false">
+         </commandParameter>
       </command>
       <command
             defaultHandler="org.fedoraproject.eclipse.packager.koji.internal.handlers.KojiSRPMScratchBuildHandler"

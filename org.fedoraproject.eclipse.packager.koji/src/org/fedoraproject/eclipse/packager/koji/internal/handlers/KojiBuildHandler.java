@@ -20,19 +20,20 @@ import org.fedoraproject.eclipse.packager.koji.api.KojiBuildJob;
 
 /**
  * Handler to kick off a remote Koji build.
- * 
+ *
  */
 public class KojiBuildHandler extends KojiHandler {
 
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
-
+		boolean  isScratch = Boolean.valueOf(event
+		        .getParameter("kojiScratch")); //$NON-NLS-1$
 		setKojiInfo(event);
 		final IProjectRoot projectRoot = getProjectRoot(event);
 		if (projectRoot != null) {
 			Job job = new KojiBuildJob(projectRoot.getProductStrings()
 					.getProductName(),  HandlerUtil.getActiveShellChecked(event), projectRoot, kojiInfo,
-					isScratchBuild());
+					isScratch);
 			job.addJobChangeListener(KojiUtils.getJobChangeListener(kojiInfo,
 					projectRoot));
 			job.setUser(true);
@@ -41,7 +42,4 @@ public class KojiBuildHandler extends KojiHandler {
 		return null; // must be null
 	}
 
-	protected boolean isScratchBuild() {
-		return false;
-	}
 }

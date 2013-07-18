@@ -38,7 +38,7 @@ public class FedoraPackagerGitCloneOperation {
 
 	/**
 	 * Set the URI to use for the clone.
-	 * 
+	 *
 	 * @param cloneUri
 	 *            The uri location to clone the git repository from.
 	 * @return This instance.
@@ -57,7 +57,7 @@ public class FedoraPackagerGitCloneOperation {
 
 	/**
 	 * Set the package name to use for cloning.
-	 * 
+	 *
 	 * @param packageName
 	 *            The name of the package the repo contains.
 	 * @return This instance.
@@ -72,7 +72,7 @@ public class FedoraPackagerGitCloneOperation {
 
 	/**
 	 * Execute the clone including local branch name creation.
-	 * 
+	 *
 	 * @param monitor
 	 *            The monitor to show progress.
 	 * @throws InvocationTargetException
