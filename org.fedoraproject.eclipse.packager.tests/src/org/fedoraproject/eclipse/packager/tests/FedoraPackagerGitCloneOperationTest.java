@@ -37,7 +37,7 @@ public class FedoraPackagerGitCloneOperationTest {
 	@Test(expected=URISyntaxException.class)
 	public void shouldThrowExceptionWhenURIInvalid() throws URISyntaxException {
 		FedoraPackagerGitCloneOperation cloneOp = new FedoraPackagerGitCloneOperation();
-		cloneOp.setCloneURI("+ // + really bad URL");
+		cloneOp.setCloneURI("");
 	}
 
 	@Test(expected = IllegalStateException.class)
