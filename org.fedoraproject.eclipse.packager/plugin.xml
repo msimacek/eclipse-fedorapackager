@@ -151,6 +151,10 @@
                      label="%LabelReplaceSources"
                      mnemonic="%MnemonicReplaceSources"
                      style="push">
+                  <parameter
+                        name="shouldReplaceSources"
+                        value="true">
+                  </parameter>
                </command>
             </menu>
          <command
@@ -217,9 +221,14 @@
             name="%upload.command.name">
       </command>
       <command
-            defaultHandler="org.fedoraproject.eclipse.packager.internal.handlers.NewSourcesHandler"
+            defaultHandler="org.fedoraproject.eclipse.packager.internal.handlers.UploadHandler"
             id="org.fedoraproject.eclipse.packager.NewSourcesCommand"
             name="%replace.command.name">
+         <commandParameter
+               id="shouldReplaceSources"
+               name="shouldReplaceSources"
+               optional="true">
+         </commandParameter>
       </command>
       <command
             defaultHandler="org.fedoraproject.eclipse.packager.internal.handlers.ScpHandler"

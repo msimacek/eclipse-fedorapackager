@@ -68,6 +68,8 @@ public class UploadHandler extends AbstractHandler implements
 	 */
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
+		final boolean  shouldReplaceSources = Boolean.valueOf(event
+		        .getParameter("shouldReplaceSources")); //$NON-NLS-1$
 		final Shell shell =  HandlerUtil.getActiveShellChecked(event);
 		final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 		final IResource resource = FedoraHandlerUtils.getResource(event);
@@ -123,7 +125,7 @@ public class UploadHandler extends AbstractHandler implements
 
 					SourcesFileUpdater sourcesUpdater = new SourcesFileUpdater(
 							projectRoot, newUploadFile);
-					sourcesUpdater.setShouldReplace(shouldReplaceSources());
+					sourcesUpdater.setShouldReplace(shouldReplaceSources);
 					// Note that ignore file may not exist, yet
 					projectBits.ignoreResource(resource);
 
@@ -272,17 +274,6 @@ public class UploadHandler extends AbstractHandler implements
 					FedoraPackagerText.invalidFedoraProjectRootError);
 		}
 		return null; // must be null
-	}
-
-	/**
-	 * Determines if {@code sources} file should be replaced or not.
-	 *
-	 * @return {@code true} if and only if {@code sources} file should be
-	 *         replaced with new content.
-	 * @see NewSourcesHandler
-	 */
-	protected boolean shouldReplaceSources() {
-		return false;
 	}
 
 	/**
