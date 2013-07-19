@@ -22,6 +22,8 @@ public final class GitPreferencesConstants {
 	 */
 	/***/ public static final String PREF_CLONE_BASE_URL =
 			"gitCloneBaseURL"; //$NON-NLS-1$
+	/***/ public static final String PREF_CLONE_DIR =
+			"gitCloneDir"; //$NON-NLS-1$
 	
 	/*
 	 * -------------------------------------------------

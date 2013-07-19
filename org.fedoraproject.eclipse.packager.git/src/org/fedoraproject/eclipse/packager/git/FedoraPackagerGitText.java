@@ -46,6 +46,7 @@ public class FedoraPackagerGitText extends NLS {
 	// FedoraPackagerGitCloneOperation
 	/****/ public static String FedoraPackagerGitCloneOperation_operationMisconfiguredError;
 	// FedoraPackagerGitPreferencesPage
+	/****/ public static String FedoraPackagerGitPreferencePage_destination;
 	/****/ public static String FedoraPackagerGitPreferencePage_description;
 	/****/ public static String FedoraPackagerGitPreferencePage_cloneBaseURLLabel;
 	/****/ public static String FedoraPackagerGitPreferencePage_gitGroupName;

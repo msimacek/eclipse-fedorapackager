@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 
-import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.egit.core.RepositoryCache;
 import org.eclipse.egit.core.RepositoryUtil;
@@ -33,6 +33,7 @@ public class FedoraPackagerGitCloneOperation {
 
 	private URIish uri;
 	private String packageName;
+	private IPath cloneDir;
 	private boolean runnable = false;
 	private boolean hasRun = false;
 
@@ -71,6 +72,18 @@ public class FedoraPackagerGitCloneOperation {
 	}
 
 	/**
+	 * Set the directory on which this clone operation will be performed.
+	 *
+	 * @param path
+	 *            the directory for the clone operation.
+	 * @return This instance.
+	 */
+	public FedoraPackagerGitCloneOperation setCloneDir (IPath path) {
+		this.cloneDir = path;
+		return this;
+	}
+
+	/**
 	 * Execute the clone including local branch name creation.
 	 *
 	 * @param monitor
@@ -92,9 +105,9 @@ public class FedoraPackagerGitCloneOperation {
 							FedoraPackagerGitText.FedoraPackagerGitCloneOperation_operationMisconfiguredError,
 							this.getClass().getName()));
 		}
+
 		final CloneOperation clone = new CloneOperation(uri, true, null,
-				ResourcesPlugin.getWorkspace().getRoot().getLocation()
-						.append(packageName).toFile(), Constants.R_HEADS
+				cloneDir.append(packageName).toFile(), Constants.R_HEADS
 						+ Constants.MASTER, "origin", 0); //$NON-NLS-1$
 		clone.run(monitor);
 		if (monitor.isCanceled()) {

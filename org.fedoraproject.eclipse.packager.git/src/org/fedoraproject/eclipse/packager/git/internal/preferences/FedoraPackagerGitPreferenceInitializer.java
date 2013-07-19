@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.git.internal.preferences;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -32,6 +33,8 @@ public class FedoraPackagerGitPreferenceInitializer extends AbstractPreferenceIn
 		IEclipsePreferences node = DefaultScope.INSTANCE.getNode(Activator.PLUGIN_ID);
 		node.put(GitPreferencesConstants.PREF_CLONE_BASE_URL,
 				GitUtils.getDefaultGitBaseUrl());
+		node.put(GitPreferencesConstants.PREF_CLONE_DIR,
+				ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString());
 	}
 
 }

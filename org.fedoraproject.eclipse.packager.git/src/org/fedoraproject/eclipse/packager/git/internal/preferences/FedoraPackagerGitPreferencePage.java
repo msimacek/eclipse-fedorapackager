@@ -14,11 +14,13 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.StringButtonFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -36,6 +38,7 @@ public class FedoraPackagerGitPreferencePage extends
 	
 	protected static final int GROUP_SPAN = 2;
 	private StringFieldEditor gitCloneURLEditor;
+	private StringFieldEditor gitCloneDir;
 	
 	/**
 	 * default constructor
@@ -83,6 +86,18 @@ public class FedoraPackagerGitPreferencePage extends
 				FedoraPackagerGitText.FedoraPackagerGitPreferencePage_cloneBaseURLLabel,
 				gitGroup);
 		addField(gitCloneURLEditor);
+
+		gitCloneDir = new StringButtonFieldEditor(GitPreferencesConstants.PREF_CLONE_DIR,
+				FedoraPackagerGitText.FedoraPackagerGitPreferencePage_destination,
+				gitGroup) {
+			@Override
+			protected String changePressed() {
+				DirectoryDialog dialog = new DirectoryDialog(getShell());
+				dialog.setText(getLabelText());
+				return dialog.open();
+			}
+		};
+		addField(gitCloneDir);
 		updateMargins(gitGroup);
 	}
 	
