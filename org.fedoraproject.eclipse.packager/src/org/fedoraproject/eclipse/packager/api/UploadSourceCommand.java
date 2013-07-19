@@ -412,9 +412,7 @@ public class UploadSourceCommand extends
 
 			subMonitor.done();
 			return new UploadSourceResult(response);
-		} catch (IOException e) {
-			throw new UploadFailedException(e.getMessage(), e);
-		} catch (GeneralSecurityException e) {
+		} catch (IOException|GeneralSecurityException e) {
 			throw new UploadFailedException(e.getMessage(), e);
 		} finally {
 			// When HttpClient instance is no longer needed,

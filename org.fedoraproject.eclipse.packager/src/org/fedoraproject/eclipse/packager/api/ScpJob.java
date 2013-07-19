@@ -40,7 +40,7 @@ import com.jcraft.jsch.UserInfo;
 
 /**
  * Job to perform Scp Command.
- * 
+ *
  */
 @SuppressWarnings("restriction")
 public class ScpJob extends Job {
@@ -53,7 +53,7 @@ public class ScpJob extends Job {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param name
 	 *            Name of the job.
 	 * @param root
@@ -115,24 +115,15 @@ public class ScpJob extends Job {
 						FedoraPackagerText.ScpHandler_scpFilesNotifier,
 						fasAccount);
 				finalMessage = result.getHumanReadableMessage(message);
-				
+
 			}
 			return Status.OK_STATUS;
 
-		} catch (CommandMisconfiguredException e) {
+		} catch (CommandMisconfiguredException|CommandListenerException e) {
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, PackagerPlugin.PLUGIN_ID,
 					e.getMessage(), e);
-		} catch (CommandListenerException e) {
-			logger.logError(e.getMessage(), e);
-			return new Status(IStatus.ERROR, PackagerPlugin.PLUGIN_ID,
-					e.getMessage(), e);
-		} catch (ScpFailedException e) {
-			logger.logError(e.getCause().getMessage(), e);
-			return new Status(IStatus.ERROR, PackagerPlugin.PLUGIN_ID,
-					NLS.bind(FedoraPackagerText.ScpHandler_failToScp, e
-							.getCause().getMessage()));
-		} catch (JSchException e) {
+		} catch (ScpFailedException|JSchException e) {
 			logger.logError(e.getCause().getMessage(), e);
 			return new Status(IStatus.ERROR, PackagerPlugin.PLUGIN_ID,
 					NLS.bind(FedoraPackagerText.ScpHandler_failToScp, e
@@ -142,7 +133,7 @@ public class ScpJob extends Job {
 
 	/**
 	 * Get a message from the completed job.
-	 * 
+	 *
 	 * @return The message.
 	 */
 	public String getMessage() {

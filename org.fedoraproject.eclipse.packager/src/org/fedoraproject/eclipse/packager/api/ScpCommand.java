@@ -62,16 +62,16 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 	/*
 	 * Implementation of the {@code ScpCommand}.
-	 * 
+	 *
 	 * @param monitor
-	 * 
+	 *
 	 * @throws CommandMisconfiguredException If the command was not properly
 	 * configured when it was called.
-	 * 
+	 *
 	 * @throws CommandListenerException If some listener detected a problem.
-	 * 
+	 *
 	 * @throws ScpFailedException if .src.rpm file does not exist to be copied
-	 * 
+	 *
 	 * @return The result of this command.
 	 */
 	@Override
@@ -140,12 +140,12 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 	 * check the public_html and create the remote directory if it doesn't exist
 	 * If it exists, make sure the files to copy don't already exist If they do,
 	 * check with the user to replace or cancel the operation
-	 * 
+	 *
 	 * @param session
 	 *            of the current operation
 	 * @throws ScpFailedException
 	 *             If transfer of directory to remote is unsuccessful.
-	 * 
+	 *
 	 */
 	private void createRemoteDir(ISession session) throws ScpFailedException {
 		boolean dirFound = false;
@@ -199,9 +199,7 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 			channelSftp.disconnect();
 
-		} catch (JSchException e) {
-			throw new ScpFailedException(e.getMessage(), e);
-		} catch (SftpException e) {
+		} catch (JSchException|SftpException e) {
 			throw new ScpFailedException(e.getMessage(), e);
 		}
 
@@ -209,14 +207,14 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 	/**
 	 * Copies the localFile to remote location at remoteFile
-	 * 
+	 *
 	 * @param fileToScp
 	 *            to be copied remotely
 	 * @param session
 	 *            of the current operation
 	 * @throws ScpFailedException
 	 *             If transfer of file to remote is unsuccessful.
-	 * 
+	 *
 	 */
 	private void copyFileToRemote(String fileToScp, ISession session)
 			throws ScpFailedException {
@@ -287,9 +285,7 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 			channel.disconnect();
 
-		} catch (JSchException e) {
-			throw new ScpFailedException(e.getMessage(), e);
-		} catch (IOException e) {
+		} catch (JSchException|IOException e) {
 			throw new ScpFailedException(e.getMessage(), e);
 		}
 	}
@@ -333,9 +329,9 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 	/*
 	 * @param in
-	 * 
+	 *
 	 * @throws IOException
-	 * 
+	 *
 	 * @return 0 if successful
 	 */
 	static int checkAck(InputStream in) throws IOException {

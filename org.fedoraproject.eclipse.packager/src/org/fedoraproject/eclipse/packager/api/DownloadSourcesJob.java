@@ -109,12 +109,7 @@ public class DownloadSourcesJob extends Job {
 						e.getMessage());
 			}
 			return Status.OK_STATUS;
-		} catch (DownloadFailedException e) {
-			logger.logError(e.getMessage(), e);
-			return new Status(IStatus.ERROR, PackagerPlugin.PLUGIN_ID,
-					e.getMessage(), e);
-		} catch (CommandMisconfiguredException e) {
-			// This shouldn't happen, but report error anyway
+		} catch (DownloadFailedException|CommandMisconfiguredException|MalformedURLException e) {
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, PackagerPlugin.PLUGIN_ID,
 					e.getMessage(), e);
@@ -125,11 +120,6 @@ public class DownloadSourcesJob extends Job {
 				return new Status(IStatus.ERROR, PackagerPlugin.PLUGIN_ID,
 						message, e.getCause());
 			}
-			logger.logError(e.getMessage(), e);
-			return new Status(IStatus.ERROR, PackagerPlugin.PLUGIN_ID,
-					e.getMessage(), e);
-		} catch (MalformedURLException e) {
-			// setDownloadUrl failed
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, PackagerPlugin.PLUGIN_ID,
 					e.getMessage(), e);
