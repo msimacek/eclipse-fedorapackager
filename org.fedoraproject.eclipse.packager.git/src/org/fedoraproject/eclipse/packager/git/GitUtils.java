@@ -12,8 +12,12 @@ package org.fedoraproject.eclipse.packager.git;
 
 import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.preferences.DefaultScope;
+import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.Git;
@@ -127,5 +131,20 @@ public class GitUtils {
 		} catch (GitAPIException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Get the folder in which the clone operation will be performed.
+	 *
+	 * Use the Git directory as set by the preferences, or simply use
+	 * the default workspace location.
+	 *
+	 * @return The folder (path absolute) in which to perform the clone.
+	 */
+	public static IPath getGitCloneDir() {
+		String cloneDirStr = InstanceScope.INSTANCE.getNode(Activator.PLUGIN_ID).get(GitPreferencesConstants.PREF_CLONE_DIR,
+				DefaultScope.INSTANCE.getNode(Activator.PLUGIN_ID).get(
+						GitPreferencesConstants.PREF_CLONE_DIR, "")); //$NON-NLS-1$
+		return new Path(cloneDirStr);
 	}
 }

@@ -133,7 +133,7 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 
 			// prepare the clone op
 			final FedoraPackagerGitCloneOperation cloneOp = new FedoraPackagerGitCloneOperation();
-			cloneOp.setCloneURI(getGitCloneURL()).setCloneDir(getGitCloneDir()).setPackageName(
+			cloneOp.setCloneURI(getGitCloneURL()).setCloneDir(GitUtils.getGitCloneDir()).setPackageName(
 					page.getPackageName());
 			// Make sure we report a nice error if repo not found
 			try {
@@ -186,7 +186,7 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 			IWorkspaceRoot root = workspace.getRoot();
 			IProject newProject = root.getProject(page.getPackageName());
 
-			IPath gitCloneDir = getGitCloneDir();
+			IPath gitCloneDir = GitUtils.getGitCloneDir();
 			if (! gitCloneDir.toOSString().equals(
 					DefaultScope.INSTANCE.getNode(Activator.PLUGIN_ID).get(
 							GitPreferencesConstants.PREF_CLONE_DIR, ""))) { //$NON-NLS-1$
@@ -307,20 +307,5 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 		newNatures[natures.length] = "org.eclipse.linuxtools.rpm.rpmlint.rpmlintNature"; //$NON-NLS-1$
 		desc.setNatureIds(newNatures);
 		project.setDescription(desc, null);
-	}
-
-	/**
-	 * Get the folder in which the clone operation will be performed.
-	 *
-	 * Use the Git directory as set by the preferences, or simply use
-	 * the default workspace location.
-	 *
-	 * @return The folder (path absolute) in which to perform the clone.
-	 */
-	private IPath getGitCloneDir() {
-		String cloneDirStr = InstanceScope.INSTANCE.getNode(Activator.PLUGIN_ID).get(GitPreferencesConstants.PREF_CLONE_DIR,
-				DefaultScope.INSTANCE.getNode(Activator.PLUGIN_ID).get(
-						GitPreferencesConstants.PREF_CLONE_DIR, "")); //$NON-NLS-1$
-		return new Path(cloneDirStr);
 	}
 }

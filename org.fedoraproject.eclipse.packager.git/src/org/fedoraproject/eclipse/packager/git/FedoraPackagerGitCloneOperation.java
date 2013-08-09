@@ -106,6 +106,10 @@ public class FedoraPackagerGitCloneOperation {
 							this.getClass().getName()));
 		}
 
+		if (cloneDir == null) {
+			cloneDir = GitUtils.getGitCloneDir();
+		}
+
 		final CloneOperation clone = new CloneOperation(uri, true, null,
 				cloneDir.append(packageName).toFile(), Constants.R_HEADS
 						+ Constants.MASTER, "origin", 0); //$NON-NLS-1$
