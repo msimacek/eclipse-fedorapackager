@@ -72,9 +72,17 @@ public class KojiText extends NLS {
 	/****/ public static String FedoraPackagerKojiPreferencePage_DefaultPlaceholder;
 	/****/ public static String FedoraPackagerKojiPreferencePage_InstanceColumnTitle;
 	/****/ public static String FedoraPackagerKojiPreferencePage_InstancePromptMsg;
-	/****/ public static String FedoraPackagerKojiPreferencePage_KojiSelect;
+	/****/ public static String FedoraPackagerKojiPreferencePage_KojiPreferenceInformation;
+	/****/ public static String FedoraPackagerKojiPreferencePage_KojiServers;
 	/****/ public static String FedoraPackagerKojiPreferencePage_ProjectColumnTitle;
 	/****/ public static String FedoraPackagerKojiPreferencePage_TableDescription;
+	/****/ public static String FedoraPackagerKojiPreferencePage_ButtonAdd;
+	/****/ public static String FedoraPackagerKojiPreferencePage_ButtonEdit;
+	/****/ public static String FedoraPackagerKojiPreferencePage_ButtonRemove;
+	/****/ public static String FedoraPackagerKojiPreferencePage_ColumnName;
+	/****/ public static String FedoraPackagerKojiPreferencePage_ColumnWebURL;
+	/****/ public static String FedoraPackagerKojiPreferencePage_ColumnXMLRPCURL;
+	/****/ public static String FedoraPackagerKojiPreferencePage_ColumnCustomBuildTargets;
 	// FedoraPackagerAdvancedKojiDialogPage
 	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_AddButton;
 	/****/ public static String FedoraPackagerAdvancedKojiDialogPage_EditButton;

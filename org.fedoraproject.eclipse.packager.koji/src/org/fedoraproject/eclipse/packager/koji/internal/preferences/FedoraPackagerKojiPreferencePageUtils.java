@@ -1,23 +1,23 @@
+/*******************************************************************************
+ * Copyright (c) 2010-2011 Red Hat Inc. and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Red Hat Inc. - initial API and implementation
+ *******************************************************************************/
 package org.fedoraproject.eclipse.packager.koji.internal.preferences;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
-import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiPreferencesConstants;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
 import org.fedoraproject.eclipse.packager.koji.internal.ui.KojiServerDialog;
@@ -25,108 +25,63 @@ import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 
 /**
  * Koji preference page for advanced settings.
- * 
+ *
  */
-public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
+public class FedoraPackagerKojiPreferencePageUtils {
 
-	private Table instanceTable;
-	private Button addButton;
-	private Button removeButton;
-	private Button editButton;
 	private Map<String, String[]> pendingServers = new HashMap<>();
 	private Composite contents;
 	// buffer for unpushed server changes done in style of preference String
 	private String listPreferenceBuffer;
-	private ScopedPreferenceStore prefStore;
 
 	/**
-	 * Default constructor.
+	 * Constructor.
+	 *
+	 * @param parent The composite.
+	 * @param prefStore The preference store.
 	 */
-	public FedoraPackagerAdvancedKojiDialogPage() {
-		super();
-		prefStore = new ScopedPreferenceStore(
-				InstanceScope.INSTANCE, KojiPlugin.PLUGIN_ID);
+	public FedoraPackagerKojiPreferencePageUtils(Composite parent, ScopedPreferenceStore prefStore) {
+		contents = parent;
 		listPreferenceBuffer = prefStore.getString(KojiPreferencesConstants.PREF_SERVER_LIST);
 
-	}
-
-	@Override
-	public void createControl(Composite parent) {
-		parent.setLayout(new GridLayout(1, false));
-		contents = new Composite(parent, SWT.NONE);
-		contents.setLayout(new GridLayout(2, false));
-		contents.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
-		instanceTable = new Table(contents, SWT.SINGLE | SWT.BORDER);
-		GridData gd = new GridData(SWT.FILL, SWT.FILL, false, true);
-		gd.heightHint = 200;
-		gd.widthHint = 300;
-		instanceTable.setLayoutData(gd);
-		Composite buttons = new Composite(contents, SWT.NONE);
-		buttons.setLayout(new GridLayout());
-		buttons.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		addButton = new Button(buttons, SWT.NONE);
-		addButton.setText(KojiText.FedoraPackagerAdvancedKojiDialogPage_AddButton);
-		addButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		addButton.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				addInstance();
-			}
-		});
-		editButton = new Button(buttons, SWT.NONE);
-		editButton.setText(KojiText.FedoraPackagerAdvancedKojiDialogPage_EditButton);
-		editButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		editButton.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				editInstance(instanceTable.getSelection()[0]);
-			}
-		});
-		removeButton = new Button(buttons, SWT.NONE);
-		removeButton.setText(KojiText.FedoraPackagerAdvancedKojiDialogPage_RemoveButton);
-		removeButton
-				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-		removeButton.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-					TableItem toRemove = instanceTable.getSelection()[0];
-					String name = toRemove.getText();
-					String[] info = pendingServers.get(name);
-					listPreferenceBuffer = listPreferenceBuffer.replace(NLS
-							.bind(KojiText.ServerEntryTemplate, new String[] {
-									name, info[0], info[1] }), ""); //$NON-NLS-1$
-					pendingServers.remove(toRemove.getText(0));
-					toRemove.dispose();
-					if (instanceTable.getItems().length <= 1) {
-						removeButton.setEnabled(false);
-					}
-			}
-		});
-		@SuppressWarnings("unused")
-		TableColumn column = new TableColumn(instanceTable, SWT.NONE);
-		boolean warningShown = false;
 		for (String serverInfoSet : prefStore.getString(
 				KojiPreferencesConstants.PREF_SERVER_LIST).split(";")) { //$NON-NLS-1$
 			String[] serverInfo = serverInfoSet.split(","); //$NON-NLS-1$
-			if (!addServerItem(serverInfo) && !warningShown) {
+			if (!addServerItem(serverInfo)) {
 				FedoraHandlerUtils
 						.showErrorDialog(
-								parent.getShell(),
+								contents.getShell(),
 								KojiText.FedoraPackagerAdvancedKojiDialogPage_namespaceWarningTitle,
 								KojiText.FedoraPackagerAdvancedKojiDialogPage_namespaceWarningMsg);
 			}
 		}
-		instanceTable.getColumn(0).pack();
-		if (instanceTable.getItems().length <= 1) {
-			removeButton.setEnabled(false);
-		}
-		buttons.pack();
 	}
 
-	private void addInstance() {
+	/**
+	 * Remove the selected instance.
+	 *
+	 * @param table The table to remove the instance from.
+	 * @return The new preferences.
+	 */
+	public String removeInstance(Table table) {
+		TableItem toRemove = table.getSelection()[0];
+		String name = toRemove.getText();
+		String[] info = pendingServers.get(name);
+		listPreferenceBuffer = listPreferenceBuffer.replace(NLS
+				.bind(KojiText.ServerEntryTemplate, new String[] {
+						name, info[0], info[1], info[2] }), ""); //$NON-NLS-1$
+		pendingServers.remove(toRemove.getText(0));
+		toRemove.dispose();
+		return listPreferenceBuffer;
+	}
+
+	/**
+	 * Add a new instance.
+	 *
+	 * @return The new preferences.
+	 */
+	public String addInstance() {
+		String rc = ""; //$NON-NLS-1$
 		contents.getShell().setEnabled(false);
 		String[] newInstance = new KojiServerDialog(contents.getShell(), null,
 				KojiText.FedoraPackagerAdvancedKojiDialogPage_serverDialogTitle)
@@ -149,12 +104,22 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 				// add new server to unpushed preference
 				listPreferenceBuffer = listPreferenceBuffer.concat(NLS.bind(
 						KojiText.ServerEntryTemplate, newInstance));
+				rc = listPreferenceBuffer;
 			}
 		}
+		return rc;
 	}
 
-	private void editInstance(TableItem i) {
-		String name = i.getText();
+	/**
+	 * Edit the selected instance.
+	 *
+	 * @param table The table to edit the instance from.
+	 * @return The new preferences.
+	 */
+	public String editInstance(Table table) {
+		TableItem tableItem = table.getSelection()[0];
+		String rc = ""; //$NON-NLS-1$
+		String name = tableItem.getText();
 		String[] info = pendingServers.get(name);
 		if (info != null && !(info.length < 3)) {
 			contents.getShell().setEnabled(false);
@@ -183,7 +148,7 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 					pendingServers.remove(name);
 					pendingServers.put(newInstance[0], new String[] {
 							newInstance[1], newInstance[2], newInstance[3] });
-					for (TableItem item : instanceTable.getItems()) {
+					for (TableItem item : table.getItems()) {
 						if (item.getText().contentEquals(name)) {
 							item.setText(newInstance[0]);
 						}
@@ -192,38 +157,26 @@ public class FedoraPackagerAdvancedKojiDialogPage extends DialogPage {
 							.bind(KojiText.ServerEntryTemplate, new String[] {
 									name, info[0], info[1], info[2] }), NLS.bind(
 							KojiText.ServerEntryTemplate, newInstance));
+					rc = listPreferenceBuffer;
 				}
 			}
 		}
+		return rc;
 	}
 
 	/**
 	 * Add an item to the list of servers.
-	 * 
-	 * @param serverInfo
-	 *            Array containing Strings for server name, and both server URLs
+	 *
+	 * @param serverInfo Array containing Strings for server name, and both server URLs.
 	 * @return true if successfully added, false otherwise.
 	 */
 	private boolean addServerItem(String[] serverInfo) {
 		if (!pendingServers.containsKey(serverInfo[0])) {
 			pendingServers.put(serverInfo[0], new String[] { serverInfo[1],
 					serverInfo[2], serverInfo[3] });
-			TableItem serverItem = new TableItem(instanceTable, SWT.NONE);
-			serverItem.setText(0, serverInfo[0]);
-			if (instanceTable.getItems().length > 1) {
-				removeButton.setEnabled(true);
-			}
 			return true;
 		} else {
 			return false;
 		}
-	}
-
-	/**
-	 * Apply changes made to server info.
-	 */
-	public void applyChanges() {
-		prefStore.setValue(KojiPreferencesConstants.PREF_SERVER_LIST,
-				listPreferenceBuffer);
 	}
 }
