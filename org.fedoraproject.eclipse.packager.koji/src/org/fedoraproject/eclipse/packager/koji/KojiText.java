@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010-2011 Red Hat Inc. and others.
+ * Copyright (c) 2010, 2013 Red Hat Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -101,6 +101,9 @@ public class KojiText extends NLS {
 	// KojiProjectPropertyPage
 	/****/ public static String KojiProjectPropertyPage_forceCustomTitle;
 	/****/ public static String KojiProjectPropertyPage_ProjectKojiSelect;
+	/****/ public static String KojiProjectPropertyPage_ProjectSettings;
+	/****/ public static String KojiProjectPropertyPage_WorkspaceSettings;
+	/****/ public static String KojiProjectPropertyPage_optionsGroup;
 	// KojiSRPMBuildJob
 	/****/ public static String KojiSRPMBuildJob_ChooseSRPM;
 	/****/ public static String KojiSRPMBuildJob_ConfiguringClient;

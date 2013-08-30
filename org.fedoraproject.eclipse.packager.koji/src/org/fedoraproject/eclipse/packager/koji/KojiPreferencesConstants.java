@@ -12,25 +12,28 @@ public class KojiPreferencesConstants {
 	 */
 	/***/ public static final String PREF_KOJI_SERVER_INFO =
 			"kojiServerInfo"; //$NON-NLS-1$
-	
+
 	/***/ public static final String PREF_SERVER_LIST =
 			"serverList"; //$NON-NLS-1$
-	
-	/***/ public static final String PREF_FORCE_CUSTOM_BUILD = 
+
+	/***/ public static final String PREF_FORCE_CUSTOM_BUILD =
 			"forceCustomTargets"; //$NON-NLS-1$
-	
+
+	/***/ public static final String PREF_PROJECT_SETTINGS =
+			"projectSettings"; //$NON-NLS-1$
+
 	/*
 	 * -------------------------------------------------
 	 *          Default values for preferences
 	 * -------------------------------------------------
 	 */
-	
-	/***/ public static final String DEFAULT_KOJI_SERVER_INFO = 
+
+	/***/ public static final String DEFAULT_KOJI_SERVER_INFO =
 		""; //$NON-NLS-1$
-	
+
 	/**
-	 * Default servers provided by plugin. 
-	 */ 
-	public static final String DEFAULT_SERVER_LIST = 
+	 * Default servers provided by plugin.
+	 */
+	public static final String DEFAULT_SERVER_LIST =
 			""; //$NON-NLS-1$
 }

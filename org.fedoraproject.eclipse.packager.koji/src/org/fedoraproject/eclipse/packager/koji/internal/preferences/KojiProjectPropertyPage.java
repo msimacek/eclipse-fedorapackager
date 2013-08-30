@@ -4,13 +4,21 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
@@ -20,14 +28,23 @@ import org.fedoraproject.eclipse.packager.koji.KojiUtils;
 
 /**
  * Project property page for Koji-related Fedora Packager settings.
- * 
+ *
  */
 public class KojiProjectPropertyPage extends PropertyPage {
+
+	private static final String KOJI_PREFERENCE_ID = "org.fedoraproject.eclipse.packager.preferences.koji"; //$NON-NLS-1$
+	private static final String linkTags = "<a>{0}</a>"; //$NON-NLS-1$
 
 	private Combo serverCombo;
 	private IProject project;
 	private String[][] serverMapping;
 	private Button useCustomTargetsCheck;
+	private Link lnWorkspaceSettings;
+	private Button btnProjectSettings;
+	private GridData gridData;
+	private GridLayout gridLayout;
+	private Group optionsGroup;
+	private Label description;
 
 	@Override
 	protected Control createContents(Composite parent) {
@@ -43,38 +60,102 @@ public class KojiProjectPropertyPage extends PropertyPage {
 				KojiPlugin.PLUGIN_ID));
 		noDefaultAndApplyButton();
 		Composite composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new GridLayout(1, false));
-		// project settings label
-		Label description = new Label(composite, SWT.LEFT);
-		description.setText(KojiText.KojiProjectPropertyPage_ProjectKojiSelect);
-		description.pack();
 
-		serverMapping = KojiUtils.loadServerInfo(new ScopedPreferenceStore(
-				InstanceScope.INSTANCE, KojiPlugin.PLUGIN_ID));
-		// project settings drop-down window
-		serverCombo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
-		serverCombo.setItems(serverMapping[0]);
-		serverCombo
-				.add(KojiText.FedoraPackagerKojiPreferencePage_DefaultPlaceholder);
-		int selectionAddress = KojiUtils.getSelectionAddress(
-				serverMapping,
-				getPreferenceStore().getString(
-						KojiPreferencesConstants.PREF_KOJI_SERVER_INFO));
-		if (selectionAddress > 0) {
-			serverCombo.select(selectionAddress);
-		} else {
-			serverCombo.select(serverCombo.getItemCount() - 1);
-		}
-		serverCombo.pack();
-		useCustomTargetsCheck = new Button(composite, SWT.CHECK);
-		useCustomTargetsCheck
-				.setText(KojiText.KojiProjectPropertyPage_forceCustomTitle);
-		useCustomTargetsCheck.setSelection(Boolean
-				.parseBoolean(getPreferenceStore().getString(
-						KojiPreferencesConstants.PREF_FORCE_CUSTOM_BUILD)));
-		useCustomTargetsCheck.pack();
+		gridLayout = new GridLayout(2, false);
+		composite.setLayout(gridLayout);
+
+		btnProjectSettings = new Button(composite, SWT.CHECK);
+		btnProjectSettings.setText(KojiText.KojiProjectPropertyPage_ProjectSettings);
+		btnProjectSettings.setFont(parent.getFont());
+		btnProjectSettings.setSelection(Boolean.parseBoolean(getPreferenceStore().getString(
+				KojiPreferencesConstants.PREF_PROJECT_SETTINGS)));
+		btnProjectSettings.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				toggleEnabled();
+			}
+		});
+		gridData = new GridData();
+		gridData.horizontalSpan = 1;
+		gridData.horizontalAlignment = GridData.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		btnProjectSettings.setLayoutData(gridData);
+
+		lnWorkspaceSettings = new Link(composite, SWT.NONE);
+		lnWorkspaceSettings.setText(NLS.bind(linkTags, KojiText.KojiProjectPropertyPage_WorkspaceSettings));
+		lnWorkspaceSettings.setFont(parent.getFont());
+		lnWorkspaceSettings.addListener(SWT.Selection, new Listener() {
+			@Override
+			public void handleEvent(Event event) {
+				PreferenceDialog preferenceDialog = PreferencesUtil.createPreferenceDialogOn(getShell(), KOJI_PREFERENCE_ID, new String[] {KOJI_PREFERENCE_ID}, null);
+				preferenceDialog.open();
+				updateComboBoxContents();
+			}
+		});
+
+		optionsGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
+		optionsGroup.setText(KojiText.KojiProjectPropertyPage_optionsGroup);
+		gridData = new GridData();
+		gridLayout = new GridLayout(2, false);
+		gridData.horizontalSpan = 2;
+		gridData.verticalIndent = 5;
+		gridData.horizontalAlignment = GridData.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		optionsGroup.setLayoutData(gridData);
+		optionsGroup.setLayout(gridLayout);
+
+		description = new Label(optionsGroup, SWT.LEFT);
+		description.setText(KojiText.KojiProjectPropertyPage_ProjectKojiSelect);
+		gridData = new GridData();
+		gridData.horizontalAlignment = GridData.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		description.setLayoutData(gridData);
+
+		serverCombo = new Combo(optionsGroup, SWT.DROP_DOWN | SWT.READ_ONLY);
+		updateComboBoxContents();
+
+		useCustomTargetsCheck = new Button(optionsGroup, SWT.CHECK);
+		useCustomTargetsCheck.setText(KojiText.KojiProjectPropertyPage_forceCustomTitle);
+		useCustomTargetsCheck.setSelection(Boolean.parseBoolean(getPreferenceStore().getString(
+				KojiPreferencesConstants.PREF_FORCE_CUSTOM_BUILD)));
+
+		toggleEnabled();
 
 		return composite;
+	}
+
+	/**
+	 * Update the combo box in case the user decides to add a
+	 * new koji server in the preference page.
+	 */
+	private void updateComboBoxContents() {
+		serverMapping = KojiUtils.loadServerInfo(new ScopedPreferenceStore(
+				InstanceScope.INSTANCE, KojiPlugin.PLUGIN_ID));
+		if (serverCombo != null) {
+			serverCombo.removeAll();
+			serverCombo.setItems(serverMapping[0]);
+			serverCombo.add(KojiText.FedoraPackagerKojiPreferencePage_DefaultPlaceholder);
+			int selectionAddress = KojiUtils.getSelectionAddress(serverMapping, getPreferenceStore().getString(
+					KojiPreferencesConstants.PREF_KOJI_SERVER_INFO));
+			if (selectionAddress > 0) {
+				serverCombo.select(selectionAddress);
+			} else {
+				serverCombo.select(serverCombo.getItemCount() - 1);
+			}
+		}
+	}
+
+	/**
+	 * If "Enable project specific settings" is true, so will
+	 * the options below it. The workspace settings link will be opposite
+	 * to what value the checkbox is.
+	 */
+	private void toggleEnabled() {
+		boolean enabled = btnProjectSettings.getSelection();
+		description.setEnabled(enabled);
+		serverCombo.setEnabled(enabled);
+		useCustomTargetsCheck.setEnabled(enabled);
+		lnWorkspaceSettings.setEnabled(!enabled);
 	}
 
 	@Override
@@ -93,6 +174,9 @@ public class KojiProjectPropertyPage extends PropertyPage {
 		getPreferenceStore().setValue(
 				KojiPreferencesConstants.PREF_FORCE_CUSTOM_BUILD,
 				Boolean.toString(useCustomTargetsCheck.getSelection()));
+		getPreferenceStore().setValue(
+				KojiPreferencesConstants.PREF_PROJECT_SETTINGS,
+				Boolean.toString(btnProjectSettings.getSelection()));
 		return true;
 	}
 }

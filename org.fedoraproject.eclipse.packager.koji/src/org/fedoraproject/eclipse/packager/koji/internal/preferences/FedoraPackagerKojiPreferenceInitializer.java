@@ -42,7 +42,7 @@ public class FedoraPackagerKojiPreferenceInitializer extends
 			String xmlrpcUrl = instance.getAttribute("xmlrpcUrl"); //$NON-NLS-1$
 			String customTargets = instance.getAttribute("customTargets"); //$NON-NLS-1$
 			serverList = serverList.concat(NLS.bind(KojiText.ServerEntryTemplate, new String[] {
-					serverName, webUrl, xmlrpcUrl, customTargets })); 
+					serverName, webUrl, xmlrpcUrl, customTargets }));
 			if (existingSettings && webUrl.contentEquals(oldWeb) && xmlrpcUrl.contentEquals(oldXml)){
 				existingSettings = false;
 			}
@@ -61,6 +61,7 @@ public class FedoraPackagerKojiPreferenceInitializer extends
 					+ "," + backupDefaultXml + ",false"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		node.put(KojiPreferencesConstants.PREF_SERVER_LIST, serverList);
+		node.put(KojiPreferencesConstants.PREF_PROJECT_SETTINGS, "true"); //$NON-NLS-1$
 	}
 
 }
