@@ -24,7 +24,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.jface.text.Document;
 import org.eclipse.linuxtools.rpm.core.utils.RPMQuery;
+import org.eclipse.linuxtools.rpm.ui.editor.markers.SpecfileErrorHandler;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.Specfile;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.SpecfilePackage;
 import org.eclipse.linuxtools.rpm.ui.editor.parser.SpecfileParser;
@@ -32,10 +34,10 @@ import org.eclipse.linuxtools.rpm.ui.editor.parser.SpecfileParser;
 /**
  * This class is representing a root directory for a Fedora package in a given
  * branch. It can be a folder in the cvs case or a project in the git case.
- * 
+ *
  */
 public class FedoraProjectRoot implements IProjectRoot {
-	
+
 	private static final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 	protected IContainer rootContainer;
 	private SourcesFile sourcesFile;
@@ -49,7 +51,7 @@ public class FedoraProjectRoot implements IProjectRoot {
 	public FedoraProjectRoot() {
 		// nothing
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#initialize(org.eclipse.core.resources.IContainer, org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType)
@@ -81,7 +83,7 @@ public class FedoraProjectRoot implements IProjectRoot {
 	public IContainer getContainer() {
 		return rootContainer;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getProject()
@@ -99,7 +101,7 @@ public class FedoraProjectRoot implements IProjectRoot {
 	public SourcesFile getSourcesFile() {
 		return sourcesFile;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getPackageName()
@@ -155,6 +157,7 @@ public class FedoraProjectRoot implements IProjectRoot {
 		} catch (CoreException e) {
 			logger.logError(FedoraPackagerText.FedoraProjectRoot_invalidResource, e);
 		}
+		parser.setErrorHandler(new SpecfileErrorHandler(getSpecFile(), new Document(sb.toString())));
 		Specfile specfile = parser.parse(sb.toString());
 		return specfile;
 	}
@@ -194,7 +197,7 @@ public class FedoraProjectRoot implements IProjectRoot {
 	@Override
 	public String[] getPackageNVRs(BranchConfigInstance bci) {
 		Specfile specfile = getSpecfileModel();
-		String version = specfile.getVersion(); 
+		String version = specfile.getVersion();
 		String release = specfile.getRelease().replace("%{?dist}", bci.getDist());  //$NON-NLS-1$
 		List<String> rawNvrs = new ArrayList<>();
 		for (SpecfilePackage p: specfile.getPackages().getPackages()) {
