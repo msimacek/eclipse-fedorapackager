@@ -21,6 +21,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.fedoraproject.eclipse.packager.FedoraPackagerPreferencesConstants;
+import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiPreferencesConstants;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
@@ -46,6 +48,10 @@ public class KojiProjectPropertyPage extends PropertyPage {
 	private Group optionsGroup;
 	private Label description;
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
+	 */
 	@Override
 	protected Control createContents(Composite parent) {
 		if (getElement() instanceof IResource) {
@@ -67,8 +73,8 @@ public class KojiProjectPropertyPage extends PropertyPage {
 		btnProjectSettings = new Button(composite, SWT.CHECK);
 		btnProjectSettings.setText(KojiText.KojiProjectPropertyPage_ProjectSettings);
 		btnProjectSettings.setFont(parent.getFont());
-		btnProjectSettings.setSelection(Boolean.parseBoolean(getPreferenceStore().getString(
-				KojiPreferencesConstants.PREF_PROJECT_SETTINGS)));
+		btnProjectSettings.setSelection(getPreferenceStore().getBoolean(
+				KojiPreferencesConstants.PREF_PROJECT_SETTINGS));
 		btnProjectSettings.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -127,6 +133,7 @@ public class KojiProjectPropertyPage extends PropertyPage {
 	/**
 	 * Update the combo box in case the user decides to add a
 	 * new koji server in the preference page.
+	 *
 	 */
 	private void updateComboBoxContents() {
 		serverMapping = KojiUtils.loadServerInfo(new ScopedPreferenceStore(
@@ -149,6 +156,7 @@ public class KojiProjectPropertyPage extends PropertyPage {
 	 * If "Enable project specific settings" is true, so will
 	 * the options below it. The workspace settings link will be opposite
 	 * to what value the checkbox is.
+	 *
 	 */
 	private void toggleEnabled() {
 		boolean enabled = btnProjectSettings.getSelection();
@@ -158,25 +166,35 @@ public class KojiProjectPropertyPage extends PropertyPage {
 		lnWorkspaceSettings.setEnabled(!enabled);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
+	 */
 	@Override
 	public boolean performOk() {
-		int selection = serverCombo.getSelectionIndex();
-		if (selection >= serverMapping[1].length) {
-			getPreferenceStore()
-					.setValue(
-							KojiPreferencesConstants.PREF_KOJI_SERVER_INFO,
-							KojiText.FedoraPackagerKojiPreferencePage_DefaultPlaceholder);
-		} else if (selection != -1) {
-			String newVal = serverMapping[1][serverCombo.getSelectionIndex()];
-			getPreferenceStore().setValue(
-					KojiPreferencesConstants.PREF_KOJI_SERVER_INFO, newVal);
+		// use the server info from the preference store if .conf is being used
+		if (PackagerPlugin.isConfEnabled()) {
+			String prefServerInfo = PackagerPlugin.getStringPreference(FedoraPackagerPreferencesConstants.PREF_KOJI_SERVER_INFO);
+			getPreferenceStore().setValue(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO, prefServerInfo);
+		// else use the selected server
+		} else {
+			int selection = serverCombo.getSelectionIndex();
+			if (selection >= serverMapping[1].length) {
+				getPreferenceStore()
+						.setValue(
+								KojiPreferencesConstants.PREF_KOJI_SERVER_INFO,
+								KojiText.FedoraPackagerKojiPreferencePage_DefaultPlaceholder);
+			} else if (selection != -1) {
+				String newVal = serverMapping[1][serverCombo.getSelectionIndex()];
+				getPreferenceStore().setValue(
+						KojiPreferencesConstants.PREF_KOJI_SERVER_INFO, newVal);
+			}
 		}
 		getPreferenceStore().setValue(
 				KojiPreferencesConstants.PREF_FORCE_CUSTOM_BUILD,
 				Boolean.toString(useCustomTargetsCheck.getSelection()));
 		getPreferenceStore().setValue(
-				KojiPreferencesConstants.PREF_PROJECT_SETTINGS,
-				Boolean.toString(btnProjectSettings.getSelection()));
+				KojiPreferencesConstants.PREF_PROJECT_SETTINGS, btnProjectSettings.getSelection());
 		return true;
 	}
 }

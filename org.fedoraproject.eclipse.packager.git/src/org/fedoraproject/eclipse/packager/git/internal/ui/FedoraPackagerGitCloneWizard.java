@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Red Hat Inc. and others.
+ * Copyright (c) 2010, 2013 Red Hat Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -81,6 +81,10 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 		this.fasUserName = FedoraSSLFactory.getInstance().getUsernameFromCert();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.wizard.Wizard#addPages()
+	 */
 	@Override
 	public void addPages() {
 		// get Fedora username from cert
@@ -89,11 +93,20 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 		page.init(selection);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
+	 * org.eclipse.jface.viewers.IStructuredSelection)
+	 */
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		this.selection = selection;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
+	 */
 	@Override
 	public boolean performFinish() {
 		try {
@@ -132,8 +145,9 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 
 			// prepare the clone op
 			final FedoraPackagerGitCloneOperation cloneOp = new FedoraPackagerGitCloneOperation();
-			cloneOp.setCloneURI(getGitCloneURL()).setCloneDir(GitUtils.getGitCloneDir()).setPackageName(
-					page.getPackageName());
+			cloneOp.setCloneURI(getGitCloneURL())
+					.setCloneDir(GitUtils.getGitCloneDir())
+					.setPackageName(page.getPackageName());
 			// Make sure we report a nice error if repo not found
 			try {
 				// Perform clone in ModalContext thread with progress
@@ -145,7 +159,7 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 							InterruptedException {
 						try {
 							cloneOp.run(monitor);
-						} catch (IOException|IllegalStateException e) {
+						} catch (IOException | IllegalStateException e) {
 							throw new InvocationTargetException(e);
 						}
 						if (monitor.isCanceled())
@@ -174,7 +188,7 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 						|| e.getTargetException().getCause() instanceof TransportException) {
 					final String errorMessage = NLS
 							.bind(FedoraPackagerGitText.FedoraPackagerGitCloneWizard_badURIError,
-									DefaultScope.INSTANCE.getNode(Activator.PLUGIN_ID).get(GitPreferencesConstants.PREF_CLONE_BASE_URL, "")); //$NON-NLS-1$
+									GitUtils.getDefaultGitBaseUrl());
 					cloneFailChecked(errorMessage);
 					return false; // let user correct
 				}
@@ -186,18 +200,21 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 			IProject newProject = root.getProject(page.getPackageName());
 
 			IPath gitCloneDir = GitUtils.getGitCloneDir();
-			if (! gitCloneDir.toOSString().equals(
+			if (!gitCloneDir.toOSString().equals(
 					DefaultScope.INSTANCE.getNode(Activator.PLUGIN_ID).get(
 							GitPreferencesConstants.PREF_CLONE_DIR, ""))) { //$NON-NLS-1$
-				IProjectDescription description = workspace.newProjectDescription(page.getPackageName());
-				description.setLocation(gitCloneDir.append(page.getPackageName()));
+				IProjectDescription description = workspace
+						.newProjectDescription(page.getPackageName());
+				description.setLocation(gitCloneDir.append(page
+						.getPackageName()));
 				newProject.create(description, null);
 			} else {
 				newProject.create(null);
 			}
 
 			newProject.open(null);
-			RPMProjectNature.addRPMNature(newProject, new NullProgressMonitor());
+			RPMProjectNature
+					.addRPMNature(newProject, new NullProgressMonitor());
 			// Set persistent property so that we know when to show the context
 			// menu item.
 			newProject.setPersistentProperty(PackagerPlugin.PROJECT_PROP,
@@ -216,7 +233,8 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 
 			// Finally ask if the Fedora Packaging perspective should be opened
 			// if not already open.
-			UiUtils.openPerspective(getShell(), UiUtils.afterProjectClonePerspectiveSwitch);
+			UiUtils.openPerspective(getShell(),
+					UiUtils.afterProjectClonePerspectiveSwitch);
 			return true;
 		} catch (InterruptedException e) {
 			MessageDialog
@@ -225,8 +243,9 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 							FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail,
 							FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneCancel);
 			return false;
-		} catch (CoreException|InvocationTargetException|URISyntaxException e) {
-			Activator.handleError(
+		} catch (CoreException | InvocationTargetException | URISyntaxException e) {
+			Activator
+					.handleError(
 							FedoraPackagerGitText.FedoraPackagerGitCloneWizard_cloneFail,
 							e, true);
 			return false;
@@ -282,10 +301,8 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 	 * @return The full clone URL based on the package name.
 	 */
 	private String getGitCloneURL() {
-		String gitBaseURL = DefaultScope.INSTANCE.getNode(Activator.PLUGIN_ID).get(GitPreferencesConstants.PREF_CLONE_BASE_URL, ""); //$NON-NLS-1$
-		if (gitBaseURL != null && !page.getCloneAnonymousButtonChecked()) {
-			return GitUtils.getFullGitURL(gitBaseURL, page.getPackageName());
-		} else if (!fasUserName.equals(FedoraSSL.UNKNOWN_USER)
+		// if the fas username is not unknown and if the clone is not anonymous
+		if (!fasUserName.equals(FedoraSSL.UNKNOWN_USER)
 				&& !page.getCloneAnonymousButtonChecked()) {
 			return GitUtils.getFullGitURL(
 					GitUtils.getAuthenticatedGitBaseUrl(fasUserName),

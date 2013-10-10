@@ -6,6 +6,7 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.osgi.util.NLS;
+import org.fedoraproject.eclipse.packager.FedoraPackagerPreferencesConstants;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiPreferencesConstants;
@@ -13,10 +14,15 @@ import org.fedoraproject.eclipse.packager.koji.KojiText;
 
 /**
  * Class for initialization of Eclipse Fedora Packager preferences.
+ *
  */
 public class FedoraPackagerKojiPreferenceInitializer extends
 		AbstractPreferenceInitializer {
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
+	 */
 	@Override
 	public void initializeDefaultPreferences() {
 		// set default preferences for this plug-in
@@ -29,8 +35,8 @@ public class FedoraPackagerKojiPreferenceInitializer extends
 						"org.fedoraproject.eclipse.packager.koji.instance"); //$NON-NLS-1$
 		String serverList = ""; //$NON-NLS-1$
 		// import old settings if upgrade from old version
-		String oldWeb = PackagerPlugin.getStringPreference("kojiWebURL"); //$NON-NLS-1$
-		String oldXml = PackagerPlugin.getStringPreference("kojiHubURL"); //$NON-NLS-1$
+		String oldWeb = PackagerPlugin.getStringPreference(FedoraPackagerPreferencesConstants.PREF_KOJI_WEB_URL);
+		String oldXml = PackagerPlugin.getStringPreference(FedoraPackagerPreferencesConstants.PREF_KOJI_HUB_URL);
 		boolean existingSettings = false;
 		if (oldWeb != null && oldXml != null && oldWeb.length() > 0 && oldXml.length() > 0){
 			existingSettings = true;
@@ -51,17 +57,28 @@ public class FedoraPackagerKojiPreferenceInitializer extends
 				backupDefaultXml = xmlrpcUrl;
 			}
 		}
-		if (existingSettings){
-			serverList = serverList.concat(NLS.bind(KojiText.ServerEntryTemplate, new String[] {
-					"Existing Koji Settings", oldWeb, oldXml })); //$NON-NLS-1$
-			node.put(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO, oldWeb
-					+ "," + oldXml + ",false"); //$NON-NLS-1$ //$NON-NLS-2$
+		// modify the PREF_KOJI_SERVER_INFO here based on the enabled status of .conf in general preferences
+		if (PackagerPlugin.isConfEnabled()) {
+			// if enabled, set PREF_KOJI_SERVER_INFO as the configuration from .conf
+			String prefServerInfo = PackagerPlugin.getStringPreference(FedoraPackagerPreferencesConstants.PREF_KOJI_SERVER_INFO);
+			node.put(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO, prefServerInfo);
 		} else {
-			node.put(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO, backupDefaultWeb
-					+ "," + backupDefaultXml + ",false"); //$NON-NLS-1$ //$NON-NLS-2$
+			if (existingSettings){
+				serverList = serverList.concat(NLS.bind(KojiText.ServerEntryTemplate, new String[] {
+						"Existing Koji Settings", oldWeb, oldXml })); //$NON-NLS-1$
+				node.put(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO, oldWeb
+						+ "," + oldXml + ",false"); //$NON-NLS-1$ //$NON-NLS-2$
+			} else {
+				node.put(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO, backupDefaultWeb
+						+ "," + backupDefaultXml + ",false"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 		}
 		node.put(KojiPreferencesConstants.PREF_SERVER_LIST, serverList);
-		node.put(KojiPreferencesConstants.PREF_PROJECT_SETTINGS, "true"); //$NON-NLS-1$
-	}
 
+		// initializing DefaultScope preferences here that will be used in ProjectScopes
+		// will prohibit any modifications to the preferences in the project. The
+		// property will not appear in the project .prefs file unless it has not been
+		// set a default value via the DefaultScope. (Figure out why later)
+		// tried and tested by setting the PREF_PROJECT_SETTINGS default to true
+	}
 }

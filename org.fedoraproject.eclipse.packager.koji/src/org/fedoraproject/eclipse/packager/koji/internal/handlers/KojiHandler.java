@@ -11,8 +11,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
+import org.fedoraproject.eclipse.packager.FedoraPackagerPreferencesConstants;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
+import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiPreferencesConstants;
@@ -22,7 +24,7 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 
 /**
  * A root KojiHandler which sets up information used be all KojiHandlers.
- * 
+ *
  */
 public abstract class KojiHandler extends AbstractHandler {
 
@@ -38,10 +40,20 @@ public abstract class KojiHandler extends AbstractHandler {
 				eventResource.getProject()).getNode(KojiPlugin.PLUGIN_ID);
 		ScopedPreferenceStore prefStore = new ScopedPreferenceStore(
 				InstanceScope.INSTANCE, KojiPlugin.PLUGIN_ID);
-		String kojiInfoString = projectPreferences
-				.get(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO,
-						prefStore
-								.getString(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO));
+		boolean useProject = projectPreferences.getBoolean(KojiPreferencesConstants.PREF_PROJECT_SETTINGS, false);
+		String serverSettings = ""; //$NON-NLS-1$
+		// if project settings are preferred over workspace settings
+		if (useProject) {
+			serverSettings = projectPreferences.get(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO,
+					prefStore.getString(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO));
+		// else use the workspace settings in koji preference page
+		} else {
+			serverSettings = new ScopedPreferenceStore(InstanceScope.INSTANCE, KojiPlugin.PLUGIN_ID).getString(
+					KojiPreferencesConstants.PREF_KOJI_SERVER_INFO);
+		}
+		String kojiInfoString = PackagerPlugin.isConfEnabled()
+				? PackagerPlugin.getStringPreference(FedoraPackagerPreferencesConstants.PREF_KOJI_SERVER_INFO)
+				: serverSettings;
 		if (kojiInfoString
 				.contentEquals(KojiText.FedoraPackagerKojiPreferencePage_DefaultPlaceholder)) {
 			kojiInfo = prefStore.getString(
@@ -60,10 +72,10 @@ public abstract class KojiHandler extends AbstractHandler {
 
 		return kojiInfo;
 	}
-	
+
 	/**
 	 * Return the project root and handle errors
-	 * 
+	 *
 	 * @param event
 	 *            the event to be used for retrieving the relevant resource.
 	 * @return the project root or null if a valide root is not found.

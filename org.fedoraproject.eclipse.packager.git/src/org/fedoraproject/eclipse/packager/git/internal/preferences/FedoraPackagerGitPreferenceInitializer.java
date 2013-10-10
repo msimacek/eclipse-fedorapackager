@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010-2011 Red Hat Inc. and others.
+ * Copyright (c) 2010, 2013 Red Hat Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -14,9 +14,9 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.fedoraproject.eclipse.packager.git.Activator;
 import org.fedoraproject.eclipse.packager.git.GitPreferencesConstants;
-import org.fedoraproject.eclipse.packager.git.GitUtils;
 
 /**
  * Class for initialization of Eclipse Fedora Packager preferences.
@@ -29,11 +29,18 @@ public class FedoraPackagerGitPreferenceInitializer extends AbstractPreferenceIn
 	 */
 	@Override
 	public void initializeDefaultPreferences() {
-		// set default preferences for this plug-in
+		// field gets prefilled
 		IEclipsePreferences node = DefaultScope.INSTANCE.getNode(Activator.PLUGIN_ID);
 		node.put(GitPreferencesConstants.PREF_CLONE_BASE_URL,
-				GitUtils.getDefaultGitBaseUrl());
+				GitPreferencesConstants.DEFAULT_CLONE_BASE_URL);
 		node.put(GitPreferencesConstants.PREF_CLONE_DIR,
+				ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString());
+
+		// set to default, the base URL that is not the .conf
+		IPreferenceStore prefStore = Activator.getDefault().getPreferenceStore();
+		prefStore.setDefault(GitPreferencesConstants.PREF_CLONE_BASE_URL,
+				GitPreferencesConstants.DEFAULT_CLONE_BASE_URL);
+		prefStore.setDefault(GitPreferencesConstants.PREF_CLONE_DIR,
 				ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString());
 	}
 

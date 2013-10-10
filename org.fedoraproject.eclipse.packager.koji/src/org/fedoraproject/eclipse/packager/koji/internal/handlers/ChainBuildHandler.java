@@ -11,7 +11,9 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.fedoraproject.eclipse.packager.FedoraPackagerPreferencesConstants;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
+import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiPreferencesConstants;
 import org.fedoraproject.eclipse.packager.koji.KojiUtils;
@@ -20,12 +22,16 @@ import org.fedoraproject.eclipse.packager.koji.internal.ui.ChainBuildDialog;
 
 /**
  * Action for pushing a chain build to Koji.
- * 
+ *
  */
 public class ChainBuildHandler extends AbstractHandler {
 
 	private Shell shell;
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+	 */
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		shell = HandlerUtil.getActiveShellChecked(event);
@@ -33,9 +39,12 @@ public class ChainBuildHandler extends AbstractHandler {
 		List<List<String>> buildList = dialog.open();
 		final IProjectRoot[] roots = dialog.getRoots();
 		if (dialog.getResult() == Window.OK) {
-			String[] kojiInfo = new ScopedPreferenceStore(
-					InstanceScope.INSTANCE, KojiPlugin.PLUGIN_ID).getString(
-					KojiPreferencesConstants.PREF_KOJI_SERVER_INFO).split(","); //$NON-NLS-1$
+			// if using .conf, use the koji server info from the .conf
+			//	else use the setting in koji preference page
+			String[] kojiInfo = PackagerPlugin.isConfEnabled()
+					? PackagerPlugin.getStringPreference(FedoraPackagerPreferencesConstants.PREF_KOJI_SERVER_INFO).split(",") //$NON-NLS-1$
+					: new ScopedPreferenceStore(InstanceScope.INSTANCE, KojiPlugin.PLUGIN_ID).getString(
+							KojiPreferencesConstants.PREF_KOJI_SERVER_INFO).split(","); //$NON-NLS-1$
 			Job job = new KojiChainBuildJob(roots[0].getProductStrings()
 					.getProductName(), shell, roots, kojiInfo, buildList);
 			job.addJobChangeListener(KojiUtils.getJobChangeListener(kojiInfo,

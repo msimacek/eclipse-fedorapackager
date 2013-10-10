@@ -16,7 +16,8 @@ import org.eclipse.osgi.util.NLS;
 /**
  * Translation bundle for FedoraPackager core.
  */
-@SuppressWarnings("javadoc") public class FedoraPackagerText extends NLS {
+@SuppressWarnings("javadoc")
+public class FedoraPackagerText extends NLS {
 
 	/**
 	 * Do not in-line this into the static initializer as the
@@ -85,6 +86,8 @@ import org.eclipse.osgi.util.NLS;
 	/****/ public static String FedoraPackagerPreferencePage_description;
 	/****/ public static String FedoraPackagerPreferencePage_invalidDownloadURLMsg;
 	/****/ public static String FedoraPackagerPreferencePage_invalidUploadURLMsg;
+	/****/ public static String FedoraPackagerPreferencePage_invalidConfigurationFile;
+	/****/ public static String FedoraPackagerPreferencePage_invalidConfigurationFileMissing;
 	/****/ public static String FedoraPackagerPreferencePage_kojiWebURLLabel;
 	/****/ public static String FedoraPackagerPreferencePage_kojiHubURLLabel;
 	/****/ public static String FedoraPackagerPreferencePage_kojiWebURLInvalidMsg;
@@ -93,6 +96,13 @@ import org.eclipse.osgi.util.NLS;
 	/****/ public static String FedoraPackagerPreferencePage_lookasideGroupName;
 	/****/ public static String FedoraPackagerPreferencePage_generalGroupName;
 	/****/ public static String FedoraPackagerPreferencePage_debugSwitchLabel;
+	/****/ public static String FedoraPackagerPreferencePage_fedpkgConfigGroupName;
+	/****/ public static String FedoraPackagerPreferencePage_fedpkgConfigStringLabel;
+	/****/ public static String FedoraPackagerPreferencePage_fedpkgConfigSwitch;
+
+	// FedoraPackagerConfigPreference
+	/****/ public static String FedoraPackagerConfigPreference_parsingFileError;
+	/****/ public static String FedoraPackagerConfigPreference_settingPreferenceError;
 
 	public static String FedoraPackagerPreferencePage_Never;
 

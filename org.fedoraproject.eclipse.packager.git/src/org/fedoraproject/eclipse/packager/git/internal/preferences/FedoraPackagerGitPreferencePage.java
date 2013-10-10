@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010-2011 Red Hat Inc. and others.
+ * Copyright (c) 2010, 2013 Red Hat Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.git.Activator;
 import org.fedoraproject.eclipse.packager.git.FedoraPackagerGitText;
 import org.fedoraproject.eclipse.packager.git.GitPreferencesConstants;
@@ -39,16 +40,27 @@ public class FedoraPackagerGitPreferencePage extends
 	protected static final int GROUP_SPAN = 2;
 	private StringFieldEditor gitCloneURLEditor;
 	private StringFieldEditor gitCloneDir;
-	
+
+	// disabled when .conf is being used
+	private Group gitGroup;
+
 	/**
 	 * default constructor
 	 */
 	public FedoraPackagerGitPreferencePage() {
 		super(GRID);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+	 */
+	@Override
+	public void init(IWorkbench workbench) {
 		setPreferenceStore(new ScopedPreferenceStore(InstanceScope.INSTANCE,Activator.PLUGIN_ID));
 		setDescription(FedoraPackagerGitText.FedoraPackagerGitPreferencePage_description);
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
@@ -59,7 +71,11 @@ public class FedoraPackagerGitPreferencePage extends
 			checkState();
 		}
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#checkState()
+	 */
 	@Override
 	public void checkState() {
 		super.checkState();
@@ -72,19 +88,35 @@ public class FedoraPackagerGitPreferencePage extends
 			setValid(true);
 		}
 	}
-	
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.preference.PreferencePage#isValid()
+	 */
+	@Override
+	public boolean isValid() {
+		// disable modifying the URL if .conf is being used
+		gitCloneURLEditor.setEnabled(!PackagerPlugin.isConfEnabled(), gitGroup);
+		return super.isValid();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
+	 */
 	@Override
 	public void createFieldEditors() {
 		Composite composite = getFieldEditorParent();
-		Group gitGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
+		gitGroup = new Group(composite, SWT.SHADOW_ETCHED_IN);
 		gitGroup.setText(FedoraPackagerGitText.FedoraPackagerGitPreferencePage_gitGroupName);
-		GridDataFactory.fillDefaults().grab(true, false).span(GROUP_SPAN, 1)
-		.applyTo(gitGroup);
+		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).span(2, 1).applyTo(gitGroup);
+		//GridDataFactory.fillDefaults().grab(true, false).span(GROUP_SPAN, 1).applyTo(gitGroup);
 		/* Preference for git clone base url */
 		gitCloneURLEditor = new StringFieldEditor(
 				GitPreferencesConstants.PREF_CLONE_BASE_URL,
 				FedoraPackagerGitText.FedoraPackagerGitPreferencePage_cloneBaseURLLabel,
 				gitGroup);
+		gitCloneURLEditor.load();
 		addField(gitCloneURLEditor);
 
 		gitCloneDir = new StringButtonFieldEditor(GitPreferencesConstants.PREF_CLONE_DIR,
@@ -97,24 +129,16 @@ public class FedoraPackagerGitPreferencePage extends
 				return dialog.open();
 			}
 		};
+		gitCloneDir.load();
 		addField(gitCloneDir);
 		updateMargins(gitGroup);
 	}
-	
+
 	private void updateMargins(Group group) {
 		// make sure there is some room between the group border
 		// and the controls in the group
 		GridLayout layout = (GridLayout) group.getLayout();
 		layout.marginWidth = 5;
 		layout.marginHeight = 5;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
-	 */
-	@Override
-	public void init(IWorkbench workbench) {
-		// empty
 	}
 }

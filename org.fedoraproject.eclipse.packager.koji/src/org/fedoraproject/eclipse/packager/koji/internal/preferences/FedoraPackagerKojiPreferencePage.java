@@ -33,6 +33,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiPreferencesConstants;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
@@ -50,26 +51,44 @@ public class FedoraPackagerKojiPreferencePage extends PreferencePage implements
 	private Button editButton;
 
 	private Composite composite;
+	private Composite buttonList;
 	private Table table;
 	private String[][] serverMapping;
 
 	private String backupPreference;
 	private ScopedPreferenceStore prefStore;
 
-	/**
-	 * Constructor.
-	 *
+	/** Default Constructor */
+	public FedoraPackagerKojiPreferencePage() {}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
-	public FedoraPackagerKojiPreferencePage() {
-		setPreferenceStore(new ScopedPreferenceStore(InstanceScope.INSTANCE, KojiPlugin.PLUGIN_ID));
-		setDescription(KojiText.FedoraPackagerKojiPreferencePage_KojiPreferenceInformation);
+	@Override
+	public void init(IWorkbench workbench) {
 		noDefaultAndApplyButton();
 		prefStore = new ScopedPreferenceStore(InstanceScope.INSTANCE, KojiPlugin.PLUGIN_ID);
 		backupPreference = prefStore.getString(KojiPreferencesConstants.PREF_SERVER_LIST);
+		setPreferenceStore(new ScopedPreferenceStore(InstanceScope.INSTANCE, KojiPlugin.PLUGIN_ID));
+		setDescription(KojiText.FedoraPackagerKojiPreferencePage_KojiPreferenceInformation);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.preference.PreferencePage#isValid()
+	 */
 	@Override
-	public void init(IWorkbench workbench) {}
+	public boolean isValid() {
+		boolean enabled = PackagerPlugin.isConfEnabled();
+		// disable selecting a table item when .conf is being used
+		for (Control button : buttonList.getChildren()) {
+			button.setEnabled(!enabled);
+		}
+		table.setEnabled(!enabled);
+		changeSelection(getCurrentSelection());
+		return super.isValid();
+	}
 
 	/**
 	 * Create a button to be added onto preference page.
@@ -145,6 +164,7 @@ public class FedoraPackagerKojiPreferencePage extends PreferencePage implements
 			TableItem tableItem = table.getItem(index);
 			table.setSelection(index);
 			if (tableItem != null) {
+				uncheckEverythingBut(tableItem);
 				tableItem.setChecked(true);
 			}
 		}
@@ -209,7 +229,7 @@ public class FedoraPackagerKojiPreferencePage extends PreferencePage implements
 		tableViewer.getControl().setLayoutData(gridData);
 
 		// Create a list of buttons
-		Composite buttonList = new Composite(composite, SWT.NONE);
+		buttonList = new Composite(composite, SWT.NONE);
 		gridLayout = new GridLayout();
 		gridData = new GridData();
 		gridData.verticalAlignment = GridData.BEGINNING;
@@ -229,11 +249,25 @@ public class FedoraPackagerKojiPreferencePage extends PreferencePage implements
 		removeButton.addSelectionListener(buttonAdapter);
 
 		refreshTableItems();
-		int currentSelection = KojiUtils.getSelectionAddress(serverMapping, getPreferenceStore().getString(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO));
-		changeSelection(currentSelection);
+		changeSelection(getCurrentSelection());
 		return composite;
 	}
 
+	/**
+	 * Get the current selection of the koji table. If the .conf is being used,
+	 * set the selected as 0. Else, select the one that matches the server in the
+	 * preference store.
+	 *
+	 * @return The current selection of the table.
+	 */
+	private int getCurrentSelection() {
+		return PackagerPlugin.isConfEnabled() ? 0 : KojiUtils.getSelectionAddress(serverMapping, getPreferenceStore().getString(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
+	 */
 	@Override
 	public boolean performOk() {
 		int selection = table.getSelectionIndex();
@@ -251,6 +285,10 @@ public class FedoraPackagerKojiPreferencePage extends PreferencePage implements
 		return false;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.eclipse.jface.preference.PreferencePage#performCancel()
+	 */
 	@Override
 	public boolean performCancel() {
 		String preferences = prefStore.getString(KojiPreferencesConstants.PREF_SERVER_LIST);

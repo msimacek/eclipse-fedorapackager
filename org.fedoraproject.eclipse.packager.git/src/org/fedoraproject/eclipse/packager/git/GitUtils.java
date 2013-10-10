@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010-2011 Red Hat Inc. and others.
+ * Copyright (c) 2010, 2013 Red Hat Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jgit.api.CreateBranchCommand;
@@ -27,11 +28,15 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
+import org.fedoraproject.eclipse.packager.FedoraPackagerPreferencesConstants;
 import org.fedoraproject.eclipse.packager.FedoraSSL;
 import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
+import org.fedoraproject.eclipse.packager.PackagerPlugin;
 
 /**
  * Utility class for Fedora Git related things.
+ *
+ * @since 0.5.0
  */
 public class GitUtils {
 
@@ -50,8 +55,7 @@ public class GitUtils {
 	 * @return The anonymous base URL to clone from.
 	 */
 	public static String getAnonymousGitBaseUrl() {
-		return GitConstants.ANONYMOUS_PROTOCOL
-				+ GitPreferencesConstants.DEFAULT_CLONE_BASE_URL;
+		return GitConstants.ANONYMOUS_PROTOCOL + getPreferenceURL();
 	}
 
 	/**
@@ -61,13 +65,36 @@ public class GitUtils {
 	 */
 	public static String getAuthenticatedGitBaseUrl(String username) {
 		return GitConstants.AUTHENTICATED_PROTOCOL + username
-				+ GitConstants.USERNAME_SEPARATOR
-				+ GitPreferencesConstants.DEFAULT_CLONE_BASE_URL;
+				+ GitConstants.USERNAME_SEPARATOR + getPreferenceURL();
+	}
+
+	/**
+	 * Get the URL stored in the preferences. Gets the .conf clone base url if
+	 * using it is enabled, otherwise it will take the clone base url from the
+	 * Git preference page.
+	 *
+	 * @return The URL stored in the preferences depending on whether or not the
+	 *         user is using settings from the .conf file.
+	 * @since 0.5.0
+	 */
+	public static String getPreferenceURL() {
+		String URL = ""; //$NON-NLS-1$
+		// if .conf is enabled, use the base url from .conf
+		if (PackagerPlugin.isConfEnabled()) {
+			URL = PackagerPlugin.getStringPreference(FedoraPackagerPreferencesConstants.PREF_CLONE_BASE_URL);
+		}
+		// if not enabled, use the base url from the git preference page
+		if (URL.isEmpty()) {
+			URL = InstanceScope.INSTANCE.getNode(Activator.PLUGIN_ID).get(
+					GitPreferencesConstants.PREF_CLONE_BASE_URL, DefaultScope.INSTANCE.getNode(Activator.PLUGIN_ID).get(
+							GitPreferencesConstants.PREF_CLONE_BASE_URL, "")); //$NON-NLS-1$
+		}
+		return URL;
 	}
 
 	/**
 	 * Determine the default Git base URL for cloning. Based on ~/.fedora.cert
-	 * 
+	 *
 	 * @return The default Git base URL for cloning.
 	 */
 	public static String getDefaultGitBaseUrl() {
@@ -75,16 +102,16 @@ public class GitUtils {
 		String user = FedoraSSLFactory.getInstance().getUsernameFromCert();
 		String gitURL;
 		if (!user.equals(FedoraSSL.UNKNOWN_USER)) {
-			gitURL = GitUtils.getAuthenticatedGitBaseUrl(user);
+			gitURL = getAuthenticatedGitBaseUrl(user);
 		} else {
-			gitURL = GitUtils.getAnonymousGitBaseUrl();
+			gitURL = getAnonymousGitBaseUrl();
 		}
 		return gitURL;
 	}
 
 	/**
 	 * Create local branches based on existing remotes (uses the JGit API).
-	 * 
+	 *
 	 * @param git
 	 *            The JGit api access for the desired repo.
 	 * @param monitor
@@ -136,14 +163,14 @@ public class GitUtils {
 	/**
 	 * Get the folder in which the clone operation will be performed.
 	 *
-	 * Use the Git directory as set by the preferences, or simply use
-	 * the default workspace location.
+	 * Use the Git directory as set by the preferences, or simply use the
+	 * default workspace location.
 	 *
 	 * @return The folder (path absolute) in which to perform the clone.
 	 */
 	public static IPath getGitCloneDir() {
-		String cloneDirStr = InstanceScope.INSTANCE.getNode(Activator.PLUGIN_ID).get(GitPreferencesConstants.PREF_CLONE_DIR,
-				DefaultScope.INSTANCE.getNode(Activator.PLUGIN_ID).get(
+		String cloneDirStr = InstanceScope.INSTANCE.getNode(Activator.PLUGIN_ID).get(
+				GitPreferencesConstants.PREF_CLONE_DIR, DefaultScope.INSTANCE.getNode(Activator.PLUGIN_ID).get(
 						GitPreferencesConstants.PREF_CLONE_DIR, "")); //$NON-NLS-1$
 		return new Path(cloneDirStr);
 	}
