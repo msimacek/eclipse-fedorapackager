@@ -44,29 +44,12 @@
     <tycho-extras-version>0.19.0</tycho-extras-version>
     <platform-version-name>kepler</platform-version-name>
     <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
-    <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/</orbit-site>
+    <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20130827064939/repository/</orbit-site>
     <!-- We need this for our dependencies and old versions -->
     <packager-site>https://fedorahosted.org/released/eclipse-fedorapackager/p2-repo/</packager-site>
     <linuxtools-nightly-site>http://download.eclipse.org/linuxtools/update</linuxtools-nightly-site>
   </properties>
 
-  <profiles>
-    <profile>
-      <id>platform-kepler</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-        <property>
-          <name>platform-version-name</name>
-          <value>kepler</value>
-        </property>
-      </activation>
-      <properties>
-        <eclipse-site>http://download.eclipse.org/releases/kepler</eclipse-site>
-        <platform-version>[3.8,4.4)</platform-version>
-      </properties>
-    </profile>
-  </profiles>
-  
   <modules>
     <module>org.fedoraproject.eclipse.packager</module>
     <module>org.fedoraproject.eclipse.packager-feature</module>
