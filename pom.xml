@@ -14,12 +14,6 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   
-  <parent>
-    <groupId>org.eclipse</groupId>
-    <artifactId>eclipse-parent</artifactId>
-    <version>3</version>
-  </parent>
-  
   <prerequisites>
     <maven>3.0.5</maven>
   </prerequisites>
@@ -46,30 +40,17 @@
   </licenses>
 
   <properties>
-    <tycho-version>0.18.0</tycho-version>
-    <tycho-extras-version>0.18.0</tycho-extras-version>
+    <tycho-version>0.19.0</tycho-version>
+    <tycho-extras-version>0.19.0</tycho-extras-version>
     <platform-version-name>kepler</platform-version-name>
     <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
     <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/</orbit-site>
     <!-- We need this for our dependencies and old versions -->
     <packager-site>https://fedorahosted.org/released/eclipse-fedorapackager/p2-repo/</packager-site>
-    <linuxtools-nightly-site>http://download.eclipse.org/linuxtools/update-2.0</linuxtools-nightly-site>
+    <linuxtools-nightly-site>http://download.eclipse.org/linuxtools/update</linuxtools-nightly-site>
   </properties>
 
   <profiles>
-    <profile>
-      <id>platform-helios</id>
-      <activation>
-        <property>
-          <name>platform-version-name</name>
-          <value>helios</value>
-        </property>
-      </activation>
-      <properties>
-        <eclipse-site>http://download.eclipse.org/releases/helios</eclipse-site>
-        <platform-version>[3.6,3.7)</platform-version>
-      </properties>
-    </profile>
     <profile>
       <id>platform-kepler</id>
       <activation>
