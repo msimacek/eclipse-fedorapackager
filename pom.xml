@@ -19,8 +19,8 @@
   </prerequisites>
   
   <groupId>org.fedoraproject.eclipse.packager</groupId>
-  <artifactId>eclipse-fedorapackager-parent</artifactId>
-  <version>0.4.2-SNAPSHOT</version>
+  <artifactId>parent</artifactId>
+  <version>0.5.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Fedora Packager for Eclipse Parent</name>
