@@ -109,20 +109,6 @@
           <resolver>p2</resolver>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.eclipse.tycho.extras</groupId>
-        <artifactId>tycho-source-feature-plugin</artifactId>
-        <version>${tycho-extras-version}</version>
-        <executions>
-          <execution>
-            <id>source-feature</id>
-            <phase>package</phase>
-            <goals>
-              <goal>source-feature</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
     <pluginManagement>
       <plugins>
@@ -156,6 +142,11 @@
               </goals>
             </execution>
           </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.eclipse.tycho.extras</groupId>
+          <artifactId>tycho-source-feature-plugin</artifactId>
+          <version>${tycho-extras-version}</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
