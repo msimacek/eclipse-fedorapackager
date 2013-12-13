@@ -47,6 +47,7 @@ public class KojiBuildInfoTest extends KojiClientTest {
 	 */
 	private HashMap<String, Object> rawBuildinfoMap;
 	
+	@Override
 	@Before
 	public void setUp() throws MalformedURLException  {
 		super.setUp();

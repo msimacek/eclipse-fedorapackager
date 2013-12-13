@@ -41,10 +41,12 @@ public class TestAbstractKojiHubBaseClientTest {
 		// Create a koji client using the mock xmlRpcClient
 		AbstractKojiHubBaseClient mockKojiClient = new AbstractKojiHubBaseClient(
 				"http://example.com") {
+			@Override
 			public HashMap<?, ?> login() {
 				return null;
 			}
 
+			@Override
 			protected void setupXmlRpcClient() {
 				xmlRpcClient = mockXmlRpcClient;
 			}
@@ -80,10 +82,12 @@ public class TestAbstractKojiHubBaseClientTest {
 
 		// Create a Koji client which uses the above client
 		AbstractKojiHubBaseClient client = new AbstractKojiHubBaseClient("http://example.com"){
+			@Override
 			public HashMap<?,?> login(){
 				return null;
 			}
 			
+			@Override
 			protected void setupXmlRpcClient(){
 				this.xmlRpcClient = mockXmlRpcClient;
 			}
