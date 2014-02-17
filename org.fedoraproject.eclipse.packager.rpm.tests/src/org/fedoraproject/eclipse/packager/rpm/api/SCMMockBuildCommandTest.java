@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
-import org.fedoraproject.eclipse.packager.BranchConfigInstance;
 import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
@@ -36,14 +35,12 @@ import org.fedoraproject.eclipse.packager.rpm.api.errors.MockBuildCommandExcepti
 import org.fedoraproject.eclipse.packager.rpm.api.errors.MockNotInstalledException;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.RpmBuildCommandException;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.UserNotInMockGroupException;
-import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.junit.Before;
 import org.junit.Test;
 
 public class SCMMockBuildCommandTest extends FedoraPackagerTest{
 	// download source command
 	private DownloadSourceCommand download;
-	private BranchConfigInstance bci;
 
 	@Override
 	@Before
@@ -52,7 +49,6 @@ public class SCMMockBuildCommandTest extends FedoraPackagerTest{
 		// need to have sources ready
 		download = (DownloadSourceCommand) packager
 				.getCommandInstance(DownloadSourceCommand.ID);
-		bci = FedoraPackagerUtils.getVcsHandler(fpRoot).getBranchConfig();
 	}
 
 
