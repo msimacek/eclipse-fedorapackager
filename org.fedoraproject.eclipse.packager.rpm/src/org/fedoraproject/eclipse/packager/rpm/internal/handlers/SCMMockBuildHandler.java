@@ -25,7 +25,6 @@ import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.IPreferenceHandler;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.rpm.api.MockBuildCommand;
-import org.fedoraproject.eclipse.packager.rpm.api.SCMMockBuildCommand.RepoType;
 import org.fedoraproject.eclipse.packager.rpm.api.SCMMockBuildJob;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
@@ -49,8 +48,7 @@ public class SCMMockBuildHandler extends AbstractHandler
 			final IProjectRoot projectRoot = FedoraPackagerUtils
 					.getProjectRoot(eventResource);
 			Job job = new SCMMockBuildJob(projectRoot.getProductStrings()
-					.getProductName(), shell, projectRoot, RepoType.GIT,
-					getPreference());
+					.getProductName(), shell, projectRoot, getPreference());
 			job.setSystem(true); // Suppress UI. That's done in sub-jobs within.
 			job.schedule();
 		} catch (InvalidProjectRootException e) {

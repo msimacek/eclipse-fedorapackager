@@ -31,7 +31,6 @@ import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredExcepti
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.rpm.RPMPlugin;
 import org.fedoraproject.eclipse.packager.rpm.RpmText;
-import org.fedoraproject.eclipse.packager.rpm.api.SCMMockBuildCommand.RepoType;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.MockBuildCommandException;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.MockNotInstalledException;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.UserNotInMockGroupException;
@@ -49,7 +48,6 @@ public class SCMMockBuildJob extends AbstractMockJob {
 			.getInstance();
 	private SCMMockBuildCommand mockBuild;
 	private DownloadSourceCommand download;
-	private RepoType repo;
 	private String downloadUrlPreference;
 
 	/**
@@ -61,15 +59,12 @@ public class SCMMockBuildJob extends AbstractMockJob {
 	 *            The shell the Job is in
 	 * @param fpRoot
 	 *            The root of the project the Job is run in
-	 * @param repoType
-	 *            The type of repo containing the specfile
 	 * @param downloadUrlPreference
 	 *            The preference for the download URL.
 	 */
 	public SCMMockBuildJob(String name, Shell shell, IProjectRoot fpRoot,
-			RepoType repoType, String downloadUrlPreference) {
+			String downloadUrlPreference) {
 		super(name, shell, fpRoot);
-		repo = repoType;
 		this.downloadUrlPreference = downloadUrlPreference;
 	}
 
@@ -83,17 +78,14 @@ public class SCMMockBuildJob extends AbstractMockJob {
 	 *            The shell the Job is in
 	 * @param fpRoot
 	 *            The root of the project the Job is run in
-	 * @param repoType
-	 *            The type of repo containing the specfile
 	 * @param localSource
 	 *            true to force the use of local source
 	 * @param downloadUrlPreference
 	 *            The preference for the download URL.
 	 */
 	public SCMMockBuildJob(String name, Shell shell, IProjectRoot fpRoot,
-			RepoType repoType, boolean localSource, String downloadUrlPreference) {
+			boolean localSource, String downloadUrlPreference) {
 		super(name, shell, fpRoot);
-		repo = repoType;
 		useRepoSource = localSource;
 		this.downloadUrlPreference = downloadUrlPreference;
 	}
@@ -138,14 +130,9 @@ public class SCMMockBuildJob extends AbstractMockJob {
 		}
 		mockBuild.branchConfig(bci);
 		// set repo type
-		mockBuild.useRepoType(repo);
-		if (repo == RepoType.GIT) {
-			mockBuild.useRepoPath(fpr.getContainer().getParent()
-					.getRawLocation().toString());
-		} else {
-			mockBuild.useRepoPath(fpr.getContainer().getParent().getParent()
-					.getRawLocation().toString());
-		}
+		mockBuild.useRepoPath(fpr.getContainer().getParent()
+				.getRawLocation().toString());
+		
 		mockBuild.usePackage(fpr.getPackageName());
 		mockBuild.useBranch(FedoraPackagerUtils.getVcsHandler(fpr)
 				.getRawCurrentBranchName());

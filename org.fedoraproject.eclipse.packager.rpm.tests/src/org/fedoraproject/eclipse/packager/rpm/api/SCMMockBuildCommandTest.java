@@ -32,7 +32,6 @@ import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitia
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
-import org.fedoraproject.eclipse.packager.rpm.api.SCMMockBuildCommand.RepoType;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.MockBuildCommandException;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.MockNotInstalledException;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.RpmBuildCommandException;
@@ -68,11 +67,11 @@ public class SCMMockBuildCommandTest extends FedoraPackagerTest{
 				.getCommandInstance(SCMMockBuildCommand.ID);
 		MockBuildResult result = mockBuild
 				.useDownloadedSourceDirectory(download.getDownloadFolderPath())
-				.useBranch("f15") //$NON-NLS-1$
+				.useBranch("f19") //$NON-NLS-1$
 				.usePackage("example") //$NON-NLS-1$
 				.useRepoPath(
 						fpRoot.getContainer().getParent().getRawLocation()
-								.toString()).useRepoType(RepoType.GIT)
+								.toString())
 				.useSpec(fpRoot.getSpecFile().getName()).branchConfig(bci)
 				.call(new NullProgressMonitor());
 		assertTrue(result.isSuccessful());

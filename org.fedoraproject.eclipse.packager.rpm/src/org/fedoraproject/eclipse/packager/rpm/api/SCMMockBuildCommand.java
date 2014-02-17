@@ -20,24 +20,6 @@ import java.util.HashMap;
 public class SCMMockBuildCommand extends MockBuildCommand {
 	
 	/**
-	 * Enumeration of supported repository types.
-	 *
-	 */
-	public static enum RepoType{
-		/**
-		 * Git project. 
-		 */
-		GIT,
-		/**
-		 * CVS project.
-		 */
-		CVS,
-		/**
-		 * SVN project.
-		 */
-		SVN;
-	}
-	/**
 	 *  The unique ID of this command.
 	 */
 	public static final String ID = "SCMMockBuildCommand"; //$NON-NLS-1$
@@ -50,20 +32,6 @@ public class SCMMockBuildCommand extends MockBuildCommand {
 	private static final String WRITE_TAR = "write_tar"; //$NON-NLS-1$
 	protected HashMap<String, String> variableHash = new HashMap<>();
 	protected String repoLocation = null;
-	protected RepoType repo = null;
-	
-	/**
-	 * @param repoType The type of repository which contains the package.
-	 * @return This command.
-	 * @throws IllegalArgumentException if {@code null} is passed
-	 */
-	public SCMMockBuildCommand useRepoType(RepoType repoType) throws IllegalArgumentException{
-		if (repoType == null){
-			throw new IllegalArgumentException();
-		}
-		repo = repoType; 
-		return this;
-	}
 	
 	/**
 	 * @param repoLocation The location of the repository folder (i.e. the parent folder).
@@ -156,15 +124,7 @@ public class SCMMockBuildCommand extends MockBuildCommand {
 		if (branch == null){
 			pack = "SCM_BRN"; //$NON-NLS-1$
 		}
-		switch (repo){
-			case GIT: variableHash.put("git_get", "git clone -b " + branch + " file://" + repoLocation + "/" + pack + " " + pack); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-			case CVS: variableHash.put("cvs_get", "cp -rf " + repoLocation + "/" + pack + "/" + branch + " " + pack); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-			case SVN: variableHash.put("svn_get", "svn co file://" + repoLocation + "/" + pack + "/" + branch + " " + pack); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-			//if repo unset locally, set for all possible defaults 
-			default: variableHash.put("git_get", "git clone -b " + branch + " file://" + repoLocation + "/" + pack + " " + pack); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-			 	variableHash.put("cvs_get", "cp -rf " + repoLocation + "/" + pack + "/" + branch + " " + pack); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-			 	variableHash.put("svn_get", "svn co file://" + repoLocation + "/" + pack + "/" + branch + " " + pack); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
-		}
+		variableHash.put("git_get", "git clone -b " + branch + " file://" + repoLocation + "/" + pack + " " + pack); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 	}
 	
 	@Override
@@ -183,10 +143,8 @@ public class SCMMockBuildCommand extends MockBuildCommand {
 		flags.add(MOCK_NO_CLEANUP_AFTER_OPTION);
 		flags.add(resDirOpt);
 		flags.add(SCM_ENABLE_OPTION);
-		if (repo != null){
-			flags.add(SCM_VARIABLE_OPTION);
-			flags.add("method=" + repo.toString().toLowerCase()); //$NON-NLS-1$
-		}
+		flags.add(SCM_VARIABLE_OPTION);
+		flags.add("method=git"); //$NON-NLS-1$
 		for (String key : variableHash.keySet()){
 			flags.add(SCM_VARIABLE_OPTION);
 			flags.add(key + "=" + variableHash.get(key)); //$NON-NLS-1$ 
