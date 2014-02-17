@@ -11,7 +11,6 @@
 package org.fedoraproject.eclipse.packager.git;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
@@ -334,7 +333,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 		}
 		if (maxRelease == -1) {
 			// most likely a new package. ATM this is F-18
-			return "18"; //$NON-NLS-1$
+			return "21"; //$NON-NLS-1$
 		} else {
 			return Integer.toString(maxRelease + 1);
 		}
@@ -426,9 +425,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 							trackingRemoteBranch);
 			RevCommit remoteCommitHead = rw.parseCommit(objRemoteTrackingHead);
 			return !commitHead.equals(remoteCommitHead);
-		} catch (GitAPIException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (GitAPIException|IOException e) {
 			e.printStackTrace();
 		}
 		return true;
@@ -466,9 +463,6 @@ public class FpGitProjectBits implements IFpProjectBits {
 					String line = br.readLine();
 					branchMap.put(line.split(",")[1], line.split(",")[0]); //$NON-NLS-1$ //$NON-NLS-2$
 				}
-			} catch (FileNotFoundException e1) {
-				// should not occur
-				e1.printStackTrace();
 			} catch (IOException e) {
 				// should not occur
 				e.printStackTrace();
