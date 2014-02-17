@@ -43,6 +43,7 @@ import org.fedoraproject.eclipse.packager.tests.utils.git.GitConvertTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ConvertLocalToRemoteCommandTest {
@@ -88,6 +89,7 @@ public class ConvertLocalToRemoteCommandTest {
 	 * @throws Exception
 	 */
 	@Test
+	@Ignore
 	public void testConvertCommand() throws Exception {
 		boolean localRefsOk = false;
 
@@ -150,6 +152,7 @@ public class ConvertLocalToRemoteCommandTest {
 	 * @throws Exception
 	 */
 	@Test
+	@Ignore
 	public void testShouldNotThrowExceptionWhenExistingExpectedRemote()
 			throws IOException, JGitInternalException, URISyntaxException, CoreException,
 			FedoraPackagerCommandInitializationException,

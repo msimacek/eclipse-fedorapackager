@@ -95,7 +95,7 @@ public class DownloadSourceCommandTest {
 		this.testProject.dispose();
 		// The jpackage-utils package usually has 2 source files. That's why we
 		// use the jpackage-utils package for testing
-		this.testProject = new GitTestProject("jpackage-utils");
+		this.testProject = new GitTestProject("javapackages-tools");
 		this.fpRoot = FedoraPackagerUtils.getProjectRoot(this.testProject
 				.getProject());
 		this.packager = new FedoraPackager(fpRoot);
