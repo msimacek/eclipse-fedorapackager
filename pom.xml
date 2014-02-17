@@ -15,7 +15,7 @@
   <modelVersion>4.0.0</modelVersion>
   
   <prerequisites>
-    <maven>3.0.5</maven>
+    <maven>3.1.1</maven>
   </prerequisites>
   
   <groupId>org.fedoraproject.eclipse.packager</groupId>
@@ -40,8 +40,8 @@
   </licenses>
 
   <properties>
-    <tycho-version>0.19.0</tycho-version>
-    <tycho-extras-version>0.19.0</tycho-extras-version>
+    <tycho-version>0.20.0-SNAPSHOT</tycho-version>
+    <tycho-extras-version>0.20.0-SNAPSHOT</tycho-extras-version>
     <platform-version-name>kepler</platform-version-name>
     <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
     <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20130827064939/repository/</orbit-site>
