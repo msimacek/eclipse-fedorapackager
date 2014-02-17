@@ -162,9 +162,7 @@ public class ConvertLocalToRemoteCommand extends
 			projectRoot.getProject().setPersistentProperty(
 					PackagerPlugin.PROJECT_LOCAL_PROP, null);
 
-		} catch (CoreException e) {
-			throw new LocalProjectConversionFailedException(e.getMessage(), e);
-		} catch (IOException e) {
+		} catch (CoreException|IOException e) {
 			throw new LocalProjectConversionFailedException(e.getMessage(), e);
 		}
 
@@ -234,16 +232,7 @@ public class ConvertLocalToRemoteCommand extends
 			}
 			fetch.call();
 
-		} catch (URISyntaxException e) {
-			throw new LocalProjectConversionFailedException(e.getCause()
-					.getMessage(), e);
-		} catch (JGitInternalException e) {
-			throw new LocalProjectConversionFailedException(e.getCause()
-					.getMessage(), e);
-		} catch (GitAPIException e) {
-			throw new LocalProjectConversionFailedException(e.getCause()
-					.getMessage(), e);
-		} catch (IOException e) {
+		} catch (URISyntaxException|JGitInternalException|GitAPIException|IOException e) {
 			throw new LocalProjectConversionFailedException(e.getCause()
 					.getMessage(), e);
 		}
@@ -268,10 +257,7 @@ public class ConvertLocalToRemoteCommand extends
 				throw new OperationCanceledException();
 			}
 			merge.call();
-		} catch (GitAPIException e) {
-			throw new LocalProjectConversionFailedException(e.getCause()
-					.getMessage(), e);
-		} catch (IOException e) {
+		} catch (GitAPIException|IOException e) {
 			throw new LocalProjectConversionFailedException(e.getCause()
 					.getMessage(), e);
 		}
