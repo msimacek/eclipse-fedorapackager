@@ -63,6 +63,7 @@ public class FedoraPackagerText extends NLS {
 	/****/ public static String FedoraPackagerUtils_invalidContainerOrProjectType;
 	/****/ public static String FedoraPackagerUtils_projectRootClassNameMsg;
 	/****/ public static String FedoraPackagerUtils_cannotEvalPackageName;
+	/****/ public static String FedoraPackagerUtils_cannotEvalChangelog;
 	// UnpushedChangesListener
 	/****/ public static String UnpushedChangesListener_checkUnpushedChangesMsg;
 	/****/ public static String UnpushedChangesListener_unpushedChangesError;

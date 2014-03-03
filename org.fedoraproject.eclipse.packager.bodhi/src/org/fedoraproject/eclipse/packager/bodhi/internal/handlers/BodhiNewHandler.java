@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010-2011 Red Hat Inc. and others.
+ * Copyright (c) 2010-2014 Red Hat Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -112,12 +112,10 @@ public class BodhiNewHandler extends AbstractHandler {
 				}
 			}
 
-			// FIXME: Parsing changelog from spec-file seems to be broken
-			// This always returns "". See #49
-			final String clog = ""; //$NON-NLS-1$
-			final String bugIDs = findBug(clog);
 			final IFpProjectBits projectBits = FedoraPackagerUtils
 					.getVcsHandler(projectRoot);
+			final String clog = RPMUtils.getChangelog(projectRoot, projectBits.getBranchConfig());
+			final String bugIDs = findBug(clog);
 			String nvr = RPMUtils.getNVR(projectRoot,
 					projectBits.getBranchConfig());
 			final String[] selectedBuild = { nvr };

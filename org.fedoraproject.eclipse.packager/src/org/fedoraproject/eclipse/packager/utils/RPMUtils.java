@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010-2013 Red Hat Inc. and others.
+ * Copyright (c) 2010-2014 Red Hat Inc. and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -104,6 +104,26 @@ public class RPMUtils {
 			logger.logError(FedoraPackagerText.FedoraPackagerUtils_cannotEvalPackageName, e);
 		}
 		return str;
+	}
+
+	/**
+	 * Returns the first changelog entry retrieved from the .spec file in the project root.
+	 *
+	 * @param projectRoot
+	 *            Container used to retrieve the needed data.
+	 * @param bci
+	 *            Current branch configuration.
+	 * @return changelog text retrieved.
+	 */
+	public static String getChangelog(IProjectRoot projectRoot,
+			BranchConfigInstance bci) {
+		try {
+			String changelogWithHeader = rpmQuery(projectRoot, "CHANGELOGTEXT", bci); //$NON-NLS-1$
+			return changelogWithHeader.replaceAll("^[^\n]*\n[\r\n\t\f ]*", ""); //$NON-NLS-1$//$NON-NLS-2$
+		} catch (IOException e) {
+			logger.logError(FedoraPackagerText.FedoraPackagerUtils_cannotEvalChangelog, e);
+			return ""; //$NON-NLS-1$
+		}
 	}
 
 	/**
