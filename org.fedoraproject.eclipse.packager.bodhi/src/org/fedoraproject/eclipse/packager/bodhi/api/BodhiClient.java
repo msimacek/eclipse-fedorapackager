@@ -353,7 +353,7 @@ public class BodhiClient {
 	 *            The response from the Bodhi instance.
 	 * @return The parsed response.
 	 * @throws IOException
-	 *             If response could not be read or is read imporperly.
+	 *             If response could not be read or is read improperly.
 	 */
 	private String parseResponse(HttpEntity responseEntity) throws IOException {
 
