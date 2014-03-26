@@ -22,7 +22,7 @@ Prefrences page:
   6) upload server settings
     a) host name (fedorapeople.org)
     b) port (22)
-    d) upload directory path ($HOME/copr/)
+    d) upload directory path ($HOME/public_html/copr/)
 
 Commands in context menu:
   1) build SRPM in copr
