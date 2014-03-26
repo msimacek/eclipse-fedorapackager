@@ -1,0 +1,30 @@
+Copr plugin
+
+Use cases:
+  1) create new project at copr
+  2) edit existing project
+  3) build SRPM on copr
+
+Prefrences page:
+  1) use external config file or not? - checkbox
+  2) path to external config file (~/.config/copr by default)
+  3) copr server URL (disabled when using external config)
+  4) auth info (disabled when using external config)
+    a) login
+    b) token
+  5) list of copr projects
+     one project can be selected as default
+     buttons:
+      * add exiting project
+      * create new copr
+      * edit copr
+      * remove copr from the list
+  6) upload server settings
+    a) host name (fedorapeople.org)
+    b) port (22)
+    d) upload directory path ($HOME/copr/)
+
+Commands in context menu:
+  1) build SRPM in copr
+     generates srpm, uploads it to fedorapeople.org and requests build on copr
+       in default project selected in preferences
