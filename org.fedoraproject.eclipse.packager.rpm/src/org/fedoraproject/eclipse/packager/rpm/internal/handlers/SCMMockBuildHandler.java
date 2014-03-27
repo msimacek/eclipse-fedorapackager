@@ -24,7 +24,6 @@ import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.IPreferenceHandler;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
-import org.fedoraproject.eclipse.packager.rpm.api.MockBuildCommand;
 import org.fedoraproject.eclipse.packager.rpm.api.SCMMockBuildJob;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
@@ -36,12 +35,9 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 public class SCMMockBuildHandler extends AbstractHandler
 		implements IPreferenceHandler {
 
-	protected Shell shell;
-	protected MockBuildCommand mockBuild;
-
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		shell =  HandlerUtil.getActiveShellChecked(event);
+		Shell shell =  HandlerUtil.getActiveShellChecked(event);
 		final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 		try {
 			IResource eventResource = FedoraHandlerUtils.getResource(event);
