@@ -175,10 +175,14 @@ public class SelectModulePage extends WizardPage {
 	}
 
 	/**
-	 * @return The name of the package to clone.
+	 * The names of the packages to clone.
+	 * 
+	 * @return a list of package names
 	 */
-	public String getPackageName() {
-		return projectText.getText();
+	public String[] getPackageNames() {
+		final String packages = projectText.getText();
+		String[] names = packages.split(","); //$NON-NLS-1$
+		return names;
 	}
 
 	/**
