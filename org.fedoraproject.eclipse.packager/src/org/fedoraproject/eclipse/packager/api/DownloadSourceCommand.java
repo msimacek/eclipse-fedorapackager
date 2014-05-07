@@ -35,7 +35,6 @@ import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.SourcesFile;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.DownloadFailedException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
 
@@ -91,16 +90,13 @@ public class DownloadSourceCommand extends
 	 * @throws CommandMisconfiguredException
 	 *             If the command was not properly configured when it was
 	 *             called.
-	 * @throws DownloadFailedException
-	 *             If the download of some source failed.
 	 * @throws CommandListenerException
 	 *             If some listener detected a problem.
 	 * @return The result of this command.
 	 */
 	@Override
 	public DownloadSourceResult call(IProgressMonitor monitor)
-			throws SourcesUpToDateException, DownloadFailedException,
-			CommandMisconfiguredException,
+			throws SourcesUpToDateException, CommandMisconfiguredException,
 			CommandListenerException {
 		try {
 			callPreExecListeners();
@@ -144,7 +140,7 @@ public class DownloadSourceCommand extends
 			try {
 				sourceUrl = new URL(url);
 			} catch (MalformedURLException e) {
-				throw new DownloadFailedException(
+				throw new CommandListenerException(
 						NLS.bind(
 								FedoraPackagerText.DownloadSourceCommand_invalidURL,
 						url), e);
@@ -161,7 +157,7 @@ public class DownloadSourceCommand extends
 				try {
 					sources.deleteSource(source);
 				} catch (CoreException coreEx) { /* ignore */ }
-				throw new DownloadFailedException(
+				throw new CommandListenerException(
 						NLS.bind(
 								FedoraPackagerText.DownloadSourceCommand_downloadFileErrorNotInLookaside,
 						file.getName()), e);
@@ -170,12 +166,12 @@ public class DownloadSourceCommand extends
 				try {
 					sources.deleteSource(source);
 				} catch (CoreException coreEx) { /* ignore */ }
-				throw new DownloadFailedException(
+				throw new CommandListenerException(
 						NLS.bind(
 								FedoraPackagerText.DownloadSourceCommand_downloadFileError,
 						file.getName()), e);
 			} catch (CoreException e) {
-				throw new DownloadFailedException(
+				throw new CommandListenerException(
 						NLS.bind(
 								FedoraPackagerText.DownloadSourceCommand_downloadFileError,
 						file.getName()), e);

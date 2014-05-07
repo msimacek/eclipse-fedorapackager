@@ -44,10 +44,6 @@ public class UnpushedChangesListener implements ICommandListener {
 		this.mainMonitor = monitor;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.api.ICommandListener#preExecution()
-	 */
 	@Override
 	public void preExecution() throws CommandListenerException {
 		// indicate some progress, by creating a subtask
@@ -61,10 +57,6 @@ public class UnpushedChangesListener implements ICommandListener {
 		mainMonitor.worked(15);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.api.ICommandListener#postExecution()
-	 */
 	@Override
 	public void postExecution() {
 		// nothing

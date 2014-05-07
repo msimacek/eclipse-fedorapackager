@@ -20,10 +20,10 @@ import org.fedoraproject.eclipse.packager.koji.KojiText;
  * Thrown on Koji login failure.
  */
 public class KojiHubClientLoginException extends FedoraPackagerAPIException {
-	
+
 	private static final long serialVersionUID = 1540744448331042317L;
 	private static final String CERT_REVOKED_STRING = "certificate_revoked"; //$NON-NLS-1$
-	
+
 	private boolean certificatesMissing = false;
 
 	/**
@@ -34,15 +34,15 @@ public class KojiHubClientLoginException extends FedoraPackagerAPIException {
 		this(cause);
 		this.certificatesMissing = certsMissing;
 	}
-	
-	
+
+
 	/**
 	 * @param cause The root cause of the login problem.
 	 */
 	public KojiHubClientLoginException(Throwable cause) {
 		super(KojiText.KojiHubClientLoginException_loginFailedMsg, cause);
 	}
-	
+
 	/**
 	 * @param message The exception message.
 	 */
@@ -56,7 +56,7 @@ public class KojiHubClientLoginException extends FedoraPackagerAPIException {
 
 	/**
 	 * Do some analysis and determine if certificate (~/.fedora.cert) expired.
-	 * 
+	 *
 	 * @return {@code true} If and only if we can say for sure that the
 	 *         certificate expired.
 	 */
@@ -66,23 +66,23 @@ public class KojiHubClientLoginException extends FedoraPackagerAPIException {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Checks if ~/.fedora.cert exists
-	 * 
+	 *
 	 * @return {@code true} If and only if the certificate was missing.
 	 */
 	public boolean isCertificateMissing() {
 		return certificatesMissing;
 	}
-	
+
 	/**
 	 * Determine if this error was caused due to a revoked certificate. This
 	 * usually happens if a user runs fedora-packager-setup on machine A then on
 	 * machine B. If she tries to push a build on machine A without regenerating
 	 * the certificate a cert revoked exception happens. Note that there is about
 	 * an hour of grace period.
-	 * 
+	 *
 	 * @return {@code true} if the certificate was revoked {@code false}
 	 *         otherwise.
 	 */

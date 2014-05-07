@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
@@ -30,9 +31,9 @@ import org.fedoraproject.eclipse.packager.api.errors.ScpFailedException;
 import org.fedoraproject.eclipse.packager.utils.IChannelExec;
 import org.fedoraproject.eclipse.packager.utils.IChannelSftp;
 import org.fedoraproject.eclipse.packager.utils.ISession;
+
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
-import org.eclipse.osgi.util.NLS;
 
 /**
  * A class used to execute a {@code Scp} command. It has setters for all

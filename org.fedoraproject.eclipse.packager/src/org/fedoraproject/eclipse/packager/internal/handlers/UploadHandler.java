@@ -46,7 +46,6 @@ import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.api.errors.FileAvailableInLookasideCacheException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidUploadFileException;
-import org.fedoraproject.eclipse.packager.api.errors.SourcesFileUpdateException;
 import org.fedoraproject.eclipse.packager.api.errors.UploadFailedException;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
@@ -163,21 +162,8 @@ public class UploadHandler extends AbstractHandler implements
 											.getProductName(), e.getMessage());
 							return Status.OK_STATUS;
 						}
-					} catch (CommandListenerException e) {
-						// sources file updating or vcs ignore file updating may
-						// have caused an exception.
-						if (e.getCause() instanceof SourcesFileUpdateException) {
-							String message = e.getCause().getMessage();
-							logger.logError(message, e.getCause());
-							return new Status(IStatus.ERROR,
-									PackagerPlugin.PLUGIN_ID, message,
-									e.getCause());
-						}
+					} catch (CommandListenerException|CommandMisconfiguredException e) {
 						// Something else failed
-						logger.logError(e.getMessage(), e);
-						return new Status(IStatus.ERROR,
-								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
-					} catch (CommandMisconfiguredException e) {
 						logger.logError(e.getMessage(), e);
 						return new Status(IStatus.ERROR,
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);

@@ -17,8 +17,8 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
+import org.fedoraproject.eclipse.packager.PackagerPlugin;
 
 /**
  * Template for SpecFile

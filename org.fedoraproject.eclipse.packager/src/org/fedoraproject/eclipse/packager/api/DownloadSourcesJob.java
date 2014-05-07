@@ -24,8 +24,6 @@ import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.DownloadFailedException;
-import org.fedoraproject.eclipse.packager.api.errors.InvalidCheckSumException;
 import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 
@@ -109,17 +107,7 @@ public class DownloadSourcesJob extends Job {
 						e.getMessage());
 			}
 			return Status.OK_STATUS;
-		} catch (DownloadFailedException|CommandMisconfiguredException|MalformedURLException e) {
-			logger.logError(e.getMessage(), e);
-			return new Status(IStatus.ERROR, PackagerPlugin.PLUGIN_ID,
-					e.getMessage(), e);
-		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof InvalidCheckSumException) {
-				String message = e.getCause().getMessage();
-				logger.logError(message, e.getCause());
-				return new Status(IStatus.ERROR, PackagerPlugin.PLUGIN_ID,
-						message, e.getCause());
-			}
+		} catch (CommandMisconfiguredException|MalformedURLException|CommandListenerException e) {
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, PackagerPlugin.PLUGIN_ID,
 					e.getMessage(), e);

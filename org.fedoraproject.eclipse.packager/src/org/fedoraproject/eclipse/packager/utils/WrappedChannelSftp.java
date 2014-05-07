@@ -4,8 +4,8 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
+import com.jcraft.jsch.SftpException;
 
 /**
  * A class to wrap the jsch object ChannelSftp into an IChannelSftp.
