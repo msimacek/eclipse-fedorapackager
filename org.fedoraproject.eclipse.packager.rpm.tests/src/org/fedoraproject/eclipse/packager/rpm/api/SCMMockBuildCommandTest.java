@@ -24,17 +24,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
-import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.DownloadFailedException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
-import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
-import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
-import org.fedoraproject.eclipse.packager.rpm.api.errors.MockBuildCommandException;
-import org.fedoraproject.eclipse.packager.rpm.api.errors.MockNotInstalledException;
-import org.fedoraproject.eclipse.packager.rpm.api.errors.RpmBuildCommandException;
-import org.fedoraproject.eclipse.packager.rpm.api.errors.UserNotInMockGroupException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,7 +34,7 @@ public class SCMMockBuildCommandTest extends FedoraPackagerTest{
 
 	@Override
 	@Before
-	public void setUp() throws InterruptedException, JGitInternalException, GitAPIException, CoreException, InvalidProjectRootException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CommandMisconfiguredException, CommandListenerException, SourcesUpToDateException, DownloadFailedException, RpmBuildCommandException, IOException  {
+	public void setUp() throws InterruptedException, JGitInternalException, GitAPIException, CoreException, IOException, FedoraPackagerAPIException  {
 		super.setUp();
 		// need to have sources ready
 		download = (DownloadSourceCommand) packager
@@ -53,17 +43,13 @@ public class SCMMockBuildCommandTest extends FedoraPackagerTest{
 
 
 	@Test
-	public void canCreateF15SCMMockBuild() throws CoreException,
-			FedoraPackagerCommandInitializationException,
-			FedoraPackagerCommandNotFoundException,
-			CommandMisconfiguredException, UserNotInMockGroupException,
-			CommandListenerException, MockBuildCommandException,
-			MockNotInstalledException {
+	public void canCreateSCMMockBuild() throws CoreException,
+			FedoraPackagerAPIException {
 		SCMMockBuildCommand mockBuild = (SCMMockBuildCommand) packager
 				.getCommandInstance(SCMMockBuildCommand.ID);
 		MockBuildResult result = mockBuild
 				.useDownloadedSourceDirectory(download.getDownloadFolderPath())
-				.useBranch("f19") //$NON-NLS-1$
+				.useBranch("f20") //$NON-NLS-1$
 				.usePackage("example") //$NON-NLS-1$
 				.useRepoPath(
 						fpRoot.getContainer().getParent().getRawLocation()

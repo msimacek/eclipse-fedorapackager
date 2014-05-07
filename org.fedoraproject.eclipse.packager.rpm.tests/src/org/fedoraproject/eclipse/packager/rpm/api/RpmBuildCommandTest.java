@@ -22,12 +22,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand.BuildType;
-import org.fedoraproject.eclipse.packager.rpm.api.errors.RpmBuildCommandException;
 import org.junit.Test;
 
 /**
@@ -41,14 +38,9 @@ public class RpmBuildCommandTest extends FedoraPackagerTest {
 	 * Test method for
 	 * {@link org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand#checkConfiguration()}. 
 	 * Should have thrown an exception. Command is not properly configured.
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
-	 * @throws RpmBuildCommandException 
-	 * @throws CommandListenerException 
-	 * @throws CommandMisconfiguredException 
 	 */
 	@Test(expected = CommandMisconfiguredException.class)
-	public void testCheckConfiguration() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException {
+	public void testCheckConfiguration() throws FedoraPackagerAPIException {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
 		build.call(new NullProgressMonitor());
@@ -57,15 +49,10 @@ public class RpmBuildCommandTest extends FedoraPackagerTest {
 	/**
 	 * This illustrates proper usage of {@link RpmEvalCommand}. This may take a
 	 * long time.
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
 	 * @throws CoreException 
-	 * @throws RpmBuildCommandException 
-	 * @throws CommandListenerException 
-	 * @throws CommandMisconfiguredException 
 	 */
 	@Test
-	public void canBuildForLocalArchitecture() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException {
+	public void canBuildForLocalArchitecture() throws FedoraPackagerAPIException, CoreException {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
 		RpmBuildResult result;
@@ -88,16 +75,10 @@ public class RpmBuildCommandTest extends FedoraPackagerTest {
 
 	/**
 	 * Test preparing sources.
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
 	 * @throws CoreException 
-	 * @throws IllegalArgumentException 
-	 * @throws RpmBuildCommandException 
-	 * @throws CommandListenerException 
-	 * @throws CommandMisconfiguredException 
 	 */
 	@Test
-	public void canPrepareSources() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException, IllegalArgumentException  {
+	public void canPrepareSources() throws FedoraPackagerAPIException, CoreException  {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
 		List<String> nodeps = new ArrayList<>(1);
@@ -119,15 +100,10 @@ public class RpmBuildCommandTest extends FedoraPackagerTest {
 	
 	/**
 	 * Test compiling.
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
 	 * @throws CoreException 
-	 * @throws RpmBuildCommandException 
-	 * @throws CommandListenerException 
-	 * @throws CommandMisconfiguredException 
 	 */
 	@Test
-	public void canRpmCompile() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException  {
+	public void canRpmCompile() throws FedoraPackagerAPIException, CoreException {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
 		RpmBuildResult result;
@@ -152,15 +128,10 @@ public class RpmBuildCommandTest extends FedoraPackagerTest {
 	
 	/**
 	 * Test install.
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
 	 * @throws CoreException 
-	 * @throws RpmBuildCommandException 
-	 * @throws CommandListenerException 
-	 * @throws CommandMisconfiguredException 
 	 */
 	@Test
-	public void canRpmInstall() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException {
+	public void canRpmInstall() throws FedoraPackagerAPIException, CoreException {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
 		RpmBuildResult result;
@@ -185,16 +156,10 @@ public class RpmBuildCommandTest extends FedoraPackagerTest {
 
 	/**
 	 * Test create SRPM.
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
 	 * @throws CoreException 
-	 * @throws IllegalArgumentException 
-	 * @throws RpmBuildCommandException 
-	 * @throws CommandListenerException 
-	 * @throws CommandMisconfiguredException 
 	 */
 	@Test
-	public void canCreateSRPM() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CoreException, CommandMisconfiguredException, CommandListenerException, RpmBuildCommandException, IllegalArgumentException {
+	public void canCreateSRPM() throws FedoraPackagerAPIException, CoreException {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
 		List<String> nodeps = new ArrayList<>(1);
