@@ -98,7 +98,7 @@ public class DownloadSourcesJob extends Job {
 			}
 			logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
 					DownloadSourceCommand.class.getName()));
-			download.call(monitor);
+			return download.call(monitor);
 		} catch (final SourcesUpToDateException e) {
 			logger.logDebug(e.getMessage(), e);
 			if (!suppressSourcesUpToDateInfo) {
@@ -114,7 +114,6 @@ public class DownloadSourcesJob extends Job {
 		} finally {
 			monitor.done();
 		}
-		return Status.OK_STATUS;
 	}
 
 }

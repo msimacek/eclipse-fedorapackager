@@ -25,7 +25,9 @@ import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.osgi.util.NLS;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
@@ -47,7 +49,7 @@ import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
  *  
  */
 public class DownloadSourceCommand extends
-		FedoraPackagerCommand<DownloadSourceResult> {
+		FedoraPackagerCommand<IStatus> {
 
 	private SourcesFile sources;
 	private ILookasideCache lookasideCache;
@@ -57,10 +59,6 @@ public class DownloadSourceCommand extends
 	 */
 	public static final String ID = "DownloadSourceCommand"; //$NON-NLS-1$
 	
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#initialize(org.fedoraproject.eclipse.packager.FedoraProjectRoot)
-	 */
 	@Override
 	public void initialize(IProjectRoot projectRoot) throws FedoraPackagerCommandInitializationException {
 		super.initialize(projectRoot);
@@ -95,7 +93,7 @@ public class DownloadSourceCommand extends
 	 * @return The result of this command.
 	 */
 	@Override
-	public DownloadSourceResult call(IProgressMonitor monitor)
+	public IStatus call(IProgressMonitor monitor)
 			throws SourcesUpToDateException, CommandMisconfiguredException,
 			CommandListenerException {
 		try {
@@ -123,7 +121,6 @@ public class DownloadSourceCommand extends
 		}
 		// Need to download the rest of the files in the set from the lookaside
 		// cache
-		DownloadSourceResult result = new DownloadSourceResult();
 		int fileNumber = 1;
 		for (final String source : sourcesToGet) {
 			final String url = lookasideCache.getDownloadUrl().toString()
@@ -180,9 +177,8 @@ public class DownloadSourceCommand extends
 		}
 		// Call post-exec listeners
 		callPostExecListeners();
-		result.setSuccessful(true);
 		setCallable(false);
-		return result;
+		return Status.OK_STATUS;
 	}
 
 	@Override
