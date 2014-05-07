@@ -37,19 +37,11 @@ public class ChecksumValidListener implements ICommandListener {
 		this.projectRoot = root;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.api.ICommandListener#preExecution()
-	 */
 	@Override
 	public void preExecution() {
 		// Nothing
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.api.ICommandListener#postExecution()
-	 */
 	@Override
 	public void postExecution() throws CommandListenerException {
 		// do the MD5 check

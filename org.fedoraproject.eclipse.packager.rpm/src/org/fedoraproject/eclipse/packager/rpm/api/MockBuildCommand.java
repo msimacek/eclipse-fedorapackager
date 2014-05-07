@@ -33,7 +33,6 @@ import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredExcepti
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.rpm.RpmText;
-import org.fedoraproject.eclipse.packager.rpm.api.errors.InvalidMockConfigurationException;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.MockBuildCommandException;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.MockNotInstalledException;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.UserNotInMockGroupException;
@@ -66,26 +65,6 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 	private String srpmAbsPath;
 	protected String resultDir;
 	private BranchConfigInstance bci;
-
-	/**
-	 * Set the mock config.
-	 * 
-	 * @param mockConfig
-	 *            The name of the configuration for this build.
-	 * @return This instance.
-	 * @throws InvalidMockConfigurationException
-	 *             If the config was invalid.
-	 */
-	public MockBuildCommand mockConfig(String mockConfig)
-			throws InvalidMockConfigurationException {
-		if (!isSupportedMockConfig(mockConfig)) {
-			throw new InvalidMockConfigurationException(
-					NLS.bind(RpmText.MockBuildCommand_invalidMockConfigError,
-							mockConfig));
-		}
-		this.mockConfig = mockConfig;
-		return this;
-	}
 
 	/**
 	 * Sets the path to the SRPM which should get rebuild using mock. File must

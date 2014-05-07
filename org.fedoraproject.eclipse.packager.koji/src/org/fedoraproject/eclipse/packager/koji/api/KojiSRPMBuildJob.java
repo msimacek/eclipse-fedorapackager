@@ -38,7 +38,6 @@ import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
-import org.fedoraproject.eclipse.packager.api.errors.TagSourcesException;
 import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
@@ -216,11 +215,6 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 			FedoraHandlerUtils.showInformationDialog(shell, fedoraProjectRoot
 					.getProductStrings().getProductName(), e.getMessage());
 			return Status.OK_STATUS;
-		} catch (TagSourcesException e) {
-			// something failed while tagging sources
-			logger.logError(e.getMessage(), e);
-			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
-					e.getMessage(), e);
 		} catch (KojiHubClientException e) {
 			// return some generic error
 			String msg = NLS.bind(KojiText.KojiBuildHandler_unknownBuildError,

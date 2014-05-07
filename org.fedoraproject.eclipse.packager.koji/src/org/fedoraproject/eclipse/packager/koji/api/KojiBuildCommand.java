@@ -19,7 +19,6 @@ import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.TagSourcesException;
 import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
 import org.fedoraproject.eclipse.packager.koji.api.errors.BuildAlreadyExistsException;
@@ -58,7 +57,7 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#
 	 * checkConfiguration()
 	 */
@@ -91,7 +90,7 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 
 	/**
 	 * Sets the XMLRPC based client, which will be used for Koji interaction.
-	 * 
+	 *
 	 * @param client
 	 *            The client to be used.
 	 * @return This instance.
@@ -104,7 +103,7 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 	/**
 	 * Set this to {@code true} if a scratch build should be pushed instead of a
 	 * regular build.
-	 * 
+	 *
 	 * @param newValue
 	 *            True if the build is a scratch build, false otherwise.
 	 * @return This instance.
@@ -117,7 +116,7 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 	/**
 	 * Sets the URL into the source control management system, in order to be
 	 * able to determine which tag/revision to build.
-	 * 
+	 *
 	 * @param location
 	 *            The location of the source: either an SCM location with a
 	 *            specfile and a tarball or the location of an uploaded srpm on
@@ -131,7 +130,7 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 
 	/**
 	 * Sets the build target for which to push the build for.
-	 * 
+	 *
 	 * @param buildTarget
 	 *            The target to build for.
 	 * @return This instance.
@@ -143,7 +142,7 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 
 	/**
 	 * Sets the name-version-release token for which a build should be pushed.
-	 * 
+	 *
 	 * @param nvr
 	 *            The array of name, version and release Strings.
 	 * @return This instance.
@@ -155,7 +154,7 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 
 	/**
 	 * Implementation of the {@code KojiBuildCommand}.
-	 * 
+	 *
 	 * @param monitor
 	 *            The main progress monitor. Each other task is executed as a
 	 *            subtask.
@@ -167,8 +166,6 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 	 *             called.
 	 * @throws UnpushedChangesException
 	 *             If the download of some source failed.
-	 * @throws TagSourcesException
-	 *             If tagging of sources failed.
 	 * @throws CommandListenerException
 	 *             If some listener detected a problem.
 	 * @throws KojiHubClientException
@@ -178,16 +175,13 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 	@Override
 	public BuildResult call(IProgressMonitor monitor)
 			throws CommandMisconfiguredException, BuildAlreadyExistsException,
-			UnpushedChangesException, TagSourcesException,
-			CommandListenerException, KojiHubClientException {
+			UnpushedChangesException, CommandListenerException, KojiHubClientException {
 		try {
 			callPreExecListeners();
 		} catch (CommandListenerException e) {
 			if (e.getCause() instanceof CommandMisconfiguredException) {
 				// explicitly throw the specific exception
 				throw (CommandMisconfiguredException) e.getCause();
-			} else if (e.getCause() instanceof TagSourcesException) {
-				throw (TagSourcesException) e.getCause();
 			} else if (e.getCause() instanceof UnpushedChangesException) {
 				throw (UnpushedChangesException) e.getCause();
 			}
