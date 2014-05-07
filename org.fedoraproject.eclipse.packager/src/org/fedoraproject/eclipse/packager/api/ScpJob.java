@@ -76,7 +76,7 @@ public class ScpJob extends Job {
 		monitor.beginTask(FedoraPackagerText.ScpHandler_taskName,
 				IProgressMonitor.UNKNOWN);
 		FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-		ScpResult result;
+		IStatus result;
 		scpCmd.specFile(projectRoot.getSpecFile().getName());
 		scpCmd.srpmFile(srpm);
 		// scpCmd.srpmFile(((IResource) ld.getResult()[0])
@@ -109,15 +109,15 @@ public class ScpJob extends Job {
 			}
 			scpCmd.session(new WrappedSession(session));
 			result = scpCmd.call(monitor);
-			if (result.isSuccessful()) {
+			if (result.isOK()) {
 				String message = null;
 				message = NLS.bind(
 						FedoraPackagerText.ScpHandler_scpFilesNotifier,
 						fasAccount);
-				finalMessage = result.getHumanReadableMessage(message);
+				finalMessage = message.concat("\n*" + projectRoot.getSpecFile().getName() + "\n*" + srpm); //$NON-NLS-1$ //$NON-NLS-2$
 
 			}
-			return Status.OK_STATUS;
+			return result;
 
 		} catch (CommandMisconfiguredException|CommandListenerException e) {
 			logger.logError(e.getMessage(), e);

@@ -19,7 +19,9 @@ import java.util.Vector;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
@@ -42,7 +44,7 @@ import com.jcraft.jsch.SftpException;
  * instance of this class should only be used for one invocation of the command
  * (means: one call to {@link #call(IProgressMonitor)})
  */
-public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
+public class ScpCommand extends FedoraPackagerCommand<IStatus> {
 
 	/**
 	 * The unique ID of this command.
@@ -56,7 +58,6 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 	private ISession session = null;
 	private boolean scpconfirmed = true;
 	private String fileScpConfirm;
-	protected ScpResult result = null;
 
 	final static FedoraPackagerLogger logger = FedoraPackagerLogger
 			.getInstance();
@@ -76,7 +77,7 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 	 * @return The result of this command.
 	 */
 	@Override
-	public ScpResult call(IProgressMonitor monitor)
+	public IStatus call(IProgressMonitor monitor)
 			throws CommandMisconfiguredException, CommandListenerException,
 			ScpFailedException {
 		try {
@@ -122,19 +123,14 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 			throw new ScpFailedException(e.getMessage(), e);
 		}
 
-		result = new ScpResult(specFile, srpmFile);
-
 		// Call post-exec listeners
 		callPostExecListeners();
 
-		if (scpconfirmed) {
-			result.setSuccessful(true);
-		} else {
-			result.setSuccessful(false);
-		}
 		setCallable(false);
-
-		return result;
+		if (scpconfirmed) {
+			return Status.OK_STATUS;
+		} 
+		return Status.CANCEL_STATUS;
 	}
 
 	/**
