@@ -56,11 +56,4 @@ public class GitTestCase {
 		return project;
 	}
 
-	/**
-	 * @return the iProject
-	 */
-	public IProject getiProject() {
-		return iProject;
-	}
-
 }

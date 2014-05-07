@@ -24,7 +24,6 @@ import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,17 +37,7 @@ import org.fedoraproject.eclipse.packager.BranchConfigInstance;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
-import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.DownloadFailedException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
-import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
-import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
-import org.fedoraproject.eclipse.packager.api.errors.TagSourcesException;
-import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
-import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
-import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.rpm.RpmText;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildResult;
@@ -77,10 +66,7 @@ public class KojiScratchWithSRPMTest {
 	@Before
 	public void setUp() throws InterruptedException, JGitInternalException,
 			GitAPIException, CoreException,
-			InvalidProjectRootException,
-			FedoraPackagerCommandInitializationException,
-			FedoraPackagerCommandNotFoundException, MalformedURLException,
-			SourcesUpToDateException, DownloadFailedException, CommandMisconfiguredException, CommandListenerException  {
+			FedoraPackagerAPIException, MalformedURLException {
 		this.testProject = new GitTestProject("ed");
 		testProject.checkoutBranch("f15");
 		this.fpRoot = FedoraPackagerUtils.getProjectRoot(this.testProject
@@ -114,19 +100,9 @@ public class KojiScratchWithSRPMTest {
 	 * Also, it is required to set Java System property
 	 * "org.fedoraproject.eclipse.packager.tests.koji.testInstanceURL" to point
 	 * to the koji test instance.
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
-	 * @throws KojiHubClientLoginException 
-	 * @throws KojiHubClientException 
-	 * @throws CommandListenerException 
-	 * @throws CommandMisconfiguredException 
-	 * @throws IOException 
-	 * @throws TagSourcesException 
-	 * @throws UnpushedChangesException 
-	 * 
 	 */
 	@Test
-	public void canUploadSRPMAndRequestBuild() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, KojiHubClientLoginException, KojiHubClientException, CommandMisconfiguredException, CommandListenerException, UnpushedChangesException, TagSourcesException  {
+	public void canUploadSRPMAndRequestBuild() throws FedoraPackagerAPIException {
 		KojiUploadSRPMCommand uploadSRPMCommand = (KojiUploadSRPMCommand) packager
 				.getCommandInstance(KojiUploadSRPMCommand.ID);
 		final String uploadPath = "cli-build/"

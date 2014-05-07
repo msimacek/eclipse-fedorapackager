@@ -32,12 +32,8 @@ import org.fedoraproject.eclipse.packager.IFpProjectBits;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
-import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.git.api.ConvertLocalToRemoteCommand;
-import org.fedoraproject.eclipse.packager.git.api.errors.LocalProjectConversionFailedException;
 import org.fedoraproject.eclipse.packager.git.api.errors.RemoteAlreadyExistsException;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitConvertTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
@@ -141,24 +137,14 @@ public class ConvertLocalToRemoteCommandTest {
 	 * @throws CoreException
 	 * @throws URISyntaxException
 	 * @throws JGitInternalException
-	 * @throws FedoraPackagerCommandNotFoundException
-	 * @throws FedoraPackagerCommandInitializationException
-	 * @throws RemoteAlreadyExistsException
-	 * @throws LocalProjectConversionFailedException
-	 * @throws CommandListenerException
-	 * @throws CommandMisconfiguredException
 	 * @throws GitAPIException
-	 *
-	 * @throws Exception
 	 */
 	@Test
 	@Ignore
 	public void testShouldNotThrowExceptionWhenExistingExpectedRemote()
 			throws IOException, JGitInternalException, URISyntaxException, CoreException,
-			FedoraPackagerCommandInitializationException,
-			FedoraPackagerCommandNotFoundException,
-			CommandMisconfiguredException, CommandListenerException,
-			LocalProjectConversionFailedException, RemoteAlreadyExistsException, GitAPIException {
+			FedoraPackagerAPIException,
+			RemoteAlreadyExistsException, GitAPIException {
 
 		// Find the local repository in the project location
 		findGitRepository();
@@ -177,21 +163,14 @@ public class ConvertLocalToRemoteCommandTest {
 	 * @throws CoreException
 	 * @throws URISyntaxException
 	 * @throws JGitInternalException
-	 * @throws FedoraPackagerCommandNotFoundException
-	 * @throws FedoraPackagerCommandInitializationException
-	 * @throws RemoteAlreadyExistsException
-	 * @throws LocalProjectConversionFailedException
-	 * @throws CommandListenerException
-	 * @throws CommandMisconfiguredException
 	 * @throws GitAPIException
 	 *
-	 * @throws Exception
 	 */
 	@Test(expected = RemoteAlreadyExistsException.class)
 	public void testShouldThrowExceptionWhenExistingNonExpectedRemote()
 			throws IOException, JGitInternalException, URISyntaxException, CoreException,
-			FedoraPackagerCommandInitializationException,
-			FedoraPackagerCommandNotFoundException, CommandMisconfiguredException, CommandListenerException, LocalProjectConversionFailedException, RemoteAlreadyExistsException, GitAPIException {
+			FedoraPackagerAPIException,
+			GitAPIException {
 
 		// Find the local repository in the project location
 		findGitRepository();

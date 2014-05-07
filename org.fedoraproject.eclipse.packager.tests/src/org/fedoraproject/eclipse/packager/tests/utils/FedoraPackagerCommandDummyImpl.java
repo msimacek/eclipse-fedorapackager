@@ -16,6 +16,7 @@ import org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
+import org.fedoraproject.eclipse.packager.tests.commands.FedoraPackagerCommandTest;
 
 /**
  * Fixture for {@link FedoraPackagerCommandTest}. It is a very basic

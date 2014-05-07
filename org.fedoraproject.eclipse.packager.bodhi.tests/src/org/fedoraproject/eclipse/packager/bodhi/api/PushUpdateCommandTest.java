@@ -30,7 +30,6 @@ import java.net.URL;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
@@ -38,18 +37,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
-import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
-import org.fedoraproject.eclipse.packager.bodhi.api.BodhiClient;
-import org.fedoraproject.eclipse.packager.bodhi.api.PushUpdateCommand;
 import org.fedoraproject.eclipse.packager.bodhi.api.PushUpdateCommand.RequestType;
 import org.fedoraproject.eclipse.packager.bodhi.api.PushUpdateCommand.UpdateType;
-import org.fedoraproject.eclipse.packager.bodhi.api.PushUpdateResult;
-import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientException;
-import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientLoginException;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.junit.After;
@@ -103,15 +95,9 @@ public class PushUpdateCommandTest {
 	 * Test method for 
 	 * {@link PushUpdateCommand#checkConfiguration()}.
 	 * Should have thrown an exception. Command is not properly configured.
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
-	 * @throws BodhiClientException 
-	 * @throws BodhiClientLoginException 
-	 * @throws CommandMisconfiguredException 
-	 * @throws CommandListenerException 
 	 */
 	@Test(expected=CommandMisconfiguredException.class)
-	public void testCheckConfiguration() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CommandListenerException, CommandMisconfiguredException, BodhiClientLoginException, BodhiClientException  {
+	public void testCheckConfiguration() throws FedoraPackagerAPIException  {
 		PushUpdateCommand pushUpdateCommand = (PushUpdateCommand) packager
 				.getCommandInstance(PushUpdateCommand.ID);
 		pushUpdateCommand.call(new NullProgressMonitor());
@@ -119,18 +105,11 @@ public class PushUpdateCommandTest {
 	
 	/**
 	 * Basic test for {@link PushUpdateCommand}.
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
-	 * @throws BodhiClientException 
-	 * @throws BodhiClientLoginException 
-	 * @throws CommandMisconfiguredException 
-	 * @throws CommandListenerException 
 	 * @throws IOException 
-	 * @throws ClientProtocolException 
 	 * 
 	 */
 	@Test
-	public void canPushUpdate() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, CommandListenerException, CommandMisconfiguredException, BodhiClientLoginException, BodhiClientException, ClientProtocolException, IOException  {
+	public void canPushUpdate() throws FedoraPackagerAPIException, IOException  {
 		PushUpdateCommand pushUpdateCommand = (PushUpdateCommand) packager
 				.getCommandInstance(PushUpdateCommand.ID);
 		URL bodhiServerURL = new URL("http://admin.stg.fedoraproject.org/updates");

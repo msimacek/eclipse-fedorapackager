@@ -10,7 +10,8 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.junit.Test;

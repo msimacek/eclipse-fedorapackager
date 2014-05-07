@@ -23,12 +23,9 @@ import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.DownloadSourcesJob;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.DownloadFailedException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
-import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
-import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
 import org.fedoraproject.eclipse.packager.tests.utils.CorruptDownload;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
@@ -51,7 +48,6 @@ public class DownloadSourceCommandTest {
 	/**
 	 * Set up a Fedora project and run the command.
 	 * 
-	 * @throws Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -81,16 +77,11 @@ public class DownloadSourceCommandTest {
 	 * 
 	 * @throws CoreException
 	 * @throws InterruptedException
-	 * @throws InvalidProjectRootException
-	 * @throws FedoraPackagerCommandNotFoundException
-	 * @throws FedoraPackagerCommandInitializationException
 	 * 
 	 */
 	@Test
 	public void canDownloadSeveralFilesWithoutErrors() throws CoreException,
-			InterruptedException, InvalidProjectRootException,
-			FedoraPackagerCommandInitializationException,
-			FedoraPackagerCommandNotFoundException {
+			InterruptedException, FedoraPackagerAPIException {
 		// not using eclipse-fedorapackager for this test
 		this.testProject.dispose();
 		// The jpackage-utils package usually has 2 source files. That's why we
@@ -110,21 +101,10 @@ public class DownloadSourceCommandTest {
 
 	/**
 	 * Test checksums of source files.
-	 * 
-	 * @throws FedoraPackagerCommandNotFoundException
-	 * @throws FedoraPackagerCommandInitializationException
-	 * @throws CommandListenerException
-	 * @throws CommandMisconfiguredException
-	 * @throws DownloadFailedException
-	 * @throws SourcesUpToDateException
-	 * 
 	 */
 	@Test(expected = CommandListenerException.class)
 	public void canDetectChecksumErrors()
-			throws FedoraPackagerCommandInitializationException,
-			FedoraPackagerCommandNotFoundException, SourcesUpToDateException,
-			DownloadFailedException, CommandMisconfiguredException,
-			CommandListenerException {
+			throws FedoraPackagerAPIException {
 		DownloadSourceCommand downloadCmd = (DownloadSourceCommand) packager
 				.getCommandInstance(DownloadSourceCommand.ID);
 		CorruptDownload checksumDestroyer = new CorruptDownload(fpRoot);
