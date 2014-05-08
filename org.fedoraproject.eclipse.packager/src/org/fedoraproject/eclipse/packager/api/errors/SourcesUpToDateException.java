@@ -22,15 +22,6 @@ public class SourcesUpToDateException extends FedoraPackagerAPIException {
 	/**
 	 * @param message
 	 *            The message associated with this exception.
-	 * @param cause
-	 *            The throwable that caused the exception to be thrown.
-	 */
-	public SourcesUpToDateException(String message, Throwable cause) {
-		super(message, cause);
-	}
-	/**
-	 * @param message
-	 *            The message associated with this exception.
 	 */
 	public SourcesUpToDateException(String message) {
 		super(message);

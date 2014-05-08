@@ -206,12 +206,6 @@ public class UploadSourceCommand extends
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#
-	 * checkConfiguration()
-	 */
 	@Override
 	protected void checkConfiguration() {
 		if (this.fileToUpload == null) {
@@ -285,7 +279,7 @@ public class UploadSourceCommand extends
 
 			if (returnCode != HttpURLConnection.HTTP_OK) {
 				throw new UploadFailedException(response.getStatusLine()
-						.getReasonPhrase(), response);
+						.getReasonPhrase());
 			}
 			String resString = ""; //$NON-NLS-1$
 			if (resEntity != null) {

@@ -23,16 +23,6 @@ public class CommandMisconfiguredException extends FedoraPackagerAPIException {
 
 	/**
 	 * @param message
-	 *            The message associated with this exception.
-	 * @param cause
-	 *            The throwable that caused the exception to be thrown.
-	 */
-	public CommandMisconfiguredException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	/**
-	 * @param message
 	 *            The throwable that caused the exception to be thrown.
 	 */
 	public CommandMisconfiguredException(String message) {
