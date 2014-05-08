@@ -163,12 +163,6 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#
-	 * checkConfiguration()
-	 */
 	@Override
 	protected void checkConfiguration() throws CommandMisconfiguredException {
 		// built type is the only required config

@@ -34,7 +34,7 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 
 	/**
 	 * Default constructor to set up a basic client.
-	 * 
+	 *
 	 * @param kojiHubUrl
 	 *            The koji hub URL.
 	 * @throws MalformedURLException
@@ -56,7 +56,7 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 
 	/**
 	 * Store session info in XMLRPC configuration.
-	 * 
+	 *
 	 * @param sessionKey
 	 *            The key for the Koji session.
 	 * @param sessionID
@@ -80,19 +80,9 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 		xmlRpcConfig.setServerURL(this.kojiHubUrl);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.fedoraproject.eclipse.packager.IKojiHubClient#sslLogin()
-	 */
 	@Override
 	public abstract HashMap<?, ?> login() throws KojiHubClientLoginException;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.fedoraproject.eclipse.packager.IKojiHubClient#logout()
-	 */
 	@Override
 	public void logout() throws KojiHubClientException {
 		ArrayList<String> params = new ArrayList<>();
@@ -104,13 +94,6 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 		discardSession();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient#build(java
-	 * .lang.String, java.lang.String, java.lang.String, boolean)
-	 */
 	@Override
 	public int[] build(String target, List<?> scmURLs, String[] nvrs,
 			boolean scratch) throws KojiHubClientException {
@@ -171,13 +154,6 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 		return new KojiRepoInfo(result);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient#getBuild(java
-	 * .lang.String)
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public KojiBuildInfo getBuild(String nvr) throws KojiHubClientException {
@@ -209,7 +185,7 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 
 	/**
 	 * Set up XMLRPC client.
-	 * 
+	 *
 	 */
 	protected void setupXmlRpcClient() {
 		if (xmlRpcConfig == null) {
@@ -220,14 +196,6 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 		xmlRpcClient.setConfig(this.xmlRpcConfig);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient#uploadFile
-	 * (java.lang.String, java.lang.String, int, java.lang.String, int,
-	 * java.lang.String)
-	 */
 	@Override
 	public boolean uploadFile(String path, String name, int size,
 			String md5sum, int offset, String data)
@@ -249,12 +217,6 @@ public abstract class AbstractKojiHubBaseClient implements IKojiHubClient {
 		return success;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.fedoraproject.eclipse.packager.koji.api.IKojiHubClient#listTags()
-	 */
 	@Override
 	public HashMap<?, ?>[] listTargets() throws KojiHubClientException {
 		try {

@@ -45,12 +45,6 @@ public class RpmEvalCommand extends FedoraPackagerCommand<EvalResult> {
 
 	private String variable;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#
-	 * checkConfiguration()
-	 */
 	@Override
 	protected void checkConfiguration() throws CommandMisconfiguredException {
 		if (variable == null) {

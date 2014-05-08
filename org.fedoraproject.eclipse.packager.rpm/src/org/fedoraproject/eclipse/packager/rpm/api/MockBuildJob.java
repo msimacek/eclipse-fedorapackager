@@ -64,12 +64,6 @@ public class MockBuildJob extends AbstractMockJob {
 		this.srpmPath = srpmPath;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.
-	 * IProgressMonitor)
-	 */
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
 		FedoraPackager fp = new FedoraPackager(fpr);

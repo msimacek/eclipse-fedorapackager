@@ -18,7 +18,6 @@ public class SRPMImportResult extends Result {
 
 	private boolean success;
 	private String[] uploaded;
-	private String[] skipped;
 
 	/**
 	 * @param cmdList
@@ -57,22 +56,4 @@ public class SRPMImportResult extends Result {
 	public String[] getUploaded() {
 		return uploaded;
 	}
-
-	/**
-	 * @return The names of the source files that weren't uploaded.
-	 */
-	public String[] getSkipped() {
-		return skipped;
-	}
-
-	/**
-	 * Set the source files that weren't uploaded.
-	 * 
-	 * @param skipped
-	 *            The names of the files that weren't uploaded.
-	 */
-	public void setSkipped(String[] skipped) {
-		this.skipped = skipped;
-	}
-
 }

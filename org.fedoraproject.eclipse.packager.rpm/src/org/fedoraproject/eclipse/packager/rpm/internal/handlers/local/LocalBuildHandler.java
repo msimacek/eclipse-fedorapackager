@@ -174,14 +174,14 @@ public class LocalBuildHandler extends LocalHandlerDispatcher {
 		return null;
 	}
 
-	/*
+	/**
 	 * Set the build type, overridden by compile/install handler
 	 */
 	protected BuildType getBuildType() {
 		return BuildType.BINARY;
 	}
 
-	/*
+	/**
 	 * Set the task name, overridden by compile/install handler
 	 */
 	protected String getTaskName() {

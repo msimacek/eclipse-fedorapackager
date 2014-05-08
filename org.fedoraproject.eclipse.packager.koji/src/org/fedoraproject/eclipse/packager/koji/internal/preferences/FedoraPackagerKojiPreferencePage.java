@@ -61,10 +61,6 @@ public class FedoraPackagerKojiPreferencePage extends PreferencePage implements
 	/** Default Constructor */
 	public FedoraPackagerKojiPreferencePage() {}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
-	 */
 	@Override
 	public void init(IWorkbench workbench) {
 		noDefaultAndApplyButton();
@@ -74,10 +70,6 @@ public class FedoraPackagerKojiPreferencePage extends PreferencePage implements
 		setDescription(KojiText.FedoraPackagerKojiPreferencePage_KojiPreferenceInformation);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#isValid()
-	 */
 	@Override
 	public boolean isValid() {
 		boolean enabled = PackagerPlugin.isConfEnabled();

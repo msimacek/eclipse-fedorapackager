@@ -48,10 +48,6 @@ public class KojiProjectPropertyPage extends PropertyPage {
 	private Group optionsGroup;
 	private Label description;
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
-	 */
 	@Override
 	protected Control createContents(Composite parent) {
 		if (getElement() instanceof IResource) {
@@ -166,10 +162,6 @@ public class KojiProjectPropertyPage extends PropertyPage {
 		lnWorkspaceSettings.setEnabled(!enabled);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
-	 */
 	@Override
 	public boolean performOk() {
 		// use the server info from the preference store if .conf is being used

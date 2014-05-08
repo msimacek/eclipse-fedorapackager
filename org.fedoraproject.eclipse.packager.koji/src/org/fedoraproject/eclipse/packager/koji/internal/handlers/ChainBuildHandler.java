@@ -28,10 +28,6 @@ public class ChainBuildHandler extends AbstractHandler {
 
 	private Shell shell;
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-	 */
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
 		shell = HandlerUtil.getActiveShellChecked(event);

@@ -110,12 +110,6 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#
-	 * checkConfiguration()
-	 */
 	@Override
 	protected void checkConfiguration() throws CommandMisconfiguredException {
 		// require path to SRPM to be set
@@ -254,13 +248,6 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 		return mockcfg;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#initialize
-	 * (org.fedoraproject.eclipse.packager.FedoraProjectRoot)
-	 */
 	@Override
 	public void initialize(IProjectRoot fp)
 			throws FedoraPackagerCommandInitializationException {

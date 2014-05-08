@@ -29,7 +29,6 @@ public class SCMMockBuildCommand extends MockBuildCommand {
 	private static final String BRANCH = "branch"; //$NON-NLS-1$
 	private static final String SPEC = "spec"; //$NON-NLS-1$
 	private static final String EXT_SRC_DIR = "ext_src_dir"; //$NON-NLS-1$
-	private static final String WRITE_TAR = "write_tar"; //$NON-NLS-1$
 	protected HashMap<String, String> variableHash = new HashMap<>();
 	protected String repoLocation = null;
 	
@@ -98,18 +97,6 @@ public class SCMMockBuildCommand extends MockBuildCommand {
 		return this;
 	}
 	
-	/**
-	 * @param write The true/false value of whether to write a tarball.
-	 * @return This command.
-	 */
-	public SCMMockBuildCommand writeTarball(boolean write){
-		if (!write){ 
-			variableHash.put(WRITE_TAR, "False"); //$NON-NLS-1$ 
-		} else {
-			variableHash.put(WRITE_TAR, "True"); //$NON-NLS-1$ 
-		}
-		return this;
-	}
 	/**
 	 * Set the command used in the chroot to retrieve the local repository.
 	 */

@@ -111,10 +111,6 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 		this.fasUserName = FedoraSSLFactory.getInstance().getUsernameFromCert();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.wizard.Wizard#addPages()
-	 */
 	@Override
 	public void addPages() {
 		// get Fedora username from cert
@@ -123,20 +119,11 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 		page.init(selection);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
-	 * org.eclipse.jface.viewers.IStructuredSelection)
-	 */
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		this.selection = selection;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.wizard.Wizard#performFinish()
-	 */
 	@Override
 	public boolean performFinish() {
 		try {

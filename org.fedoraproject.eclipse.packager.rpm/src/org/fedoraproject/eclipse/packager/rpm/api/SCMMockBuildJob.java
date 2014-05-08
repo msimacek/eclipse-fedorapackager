@@ -68,28 +68,6 @@ public class SCMMockBuildJob extends AbstractMockJob {
 		this.downloadUrlPreference = downloadUrlPreference;
 	}
 
-	/**
-	 * Constructor for forcing Mock to try to build from source in the repo,
-	 * ignoring any specfiles.
-	 *
-	 * @param name
-	 *            The name of the Job
-	 * @param shell
-	 *            The shell the Job is in
-	 * @param fpRoot
-	 *            The root of the project the Job is run in
-	 * @param localSource
-	 *            true to force the use of local source
-	 * @param downloadUrlPreference
-	 *            The preference for the download URL.
-	 */
-	public SCMMockBuildJob(String name, Shell shell, IProjectRoot fpRoot,
-			boolean localSource, String downloadUrlPreference) {
-		super(name, shell, fpRoot);
-		useRepoSource = localSource;
-		this.downloadUrlPreference = downloadUrlPreference;
-	}
-
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
 		FedoraPackager fp = new FedoraPackager(fpr);

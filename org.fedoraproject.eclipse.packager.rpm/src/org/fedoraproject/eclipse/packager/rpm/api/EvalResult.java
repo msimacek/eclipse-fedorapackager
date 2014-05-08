@@ -38,10 +38,6 @@ public class EvalResult extends Result {
 		return evalResult.substring(0, evalResult.indexOf('\n'));
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.api.ICommandResult#wasSuccessful()
-	 */
 	@Override
 	public boolean isSuccessful() {
 		return evalResult != null;

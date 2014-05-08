@@ -55,12 +55,6 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 	 */
 	protected String[] nvr;
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#
-	 * checkConfiguration()
-	 */
 	@Override
 	protected void checkConfiguration() throws CommandMisconfiguredException {
 		// require a client

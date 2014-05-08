@@ -221,7 +221,7 @@ public class LocalBuildHandler extends AbstractHandler implements
 				.getStringPreference(FedoraPackagerPreferencesConstants.PREF_LOOKASIDE_DOWNLOAD_URL);
 	}
 
-	/*
+	/**
 	 * Set the build type, overridden by compile/install handler
 	 */
 	protected BuildType getBuildType() {
@@ -231,7 +231,7 @@ public class LocalBuildHandler extends AbstractHandler implements
 		return this.buildType;
 	}
 
-	/*
+	/**
 	 * Set the task name, overridden by compile/install handler
 	 */
 	protected String getTaskName() {
