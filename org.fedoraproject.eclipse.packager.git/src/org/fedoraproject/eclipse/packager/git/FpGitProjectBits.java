@@ -268,7 +268,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 	 * @param branchName The branch name being examined.
 	 * @return true if given branch name is NOT an ObjectId in string format, false otherwise.
 	 */
-	private boolean isNamedBranch(String branchName) {
+	private static boolean isNamedBranch(String branchName) {
 		if (branchName.startsWith(Constants.R_HEADS)
 				|| branchName.startsWith(Constants.R_TAGS)
 				|| branchName.startsWith(Constants.R_REMOTES)) {
