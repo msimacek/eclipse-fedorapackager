@@ -256,10 +256,6 @@ public class FedoraPackagerKojiPreferencePage extends PreferencePage implements
 		return PackagerPlugin.isConfEnabled() ? 0 : KojiUtils.getSelectionAddress(serverMapping, getPreferenceStore().getString(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
-	 */
 	@Override
 	public boolean performOk() {
 		int selection = table.getSelectionIndex();
@@ -277,10 +273,6 @@ public class FedoraPackagerKojiPreferencePage extends PreferencePage implements
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#performCancel()
-	 */
 	@Override
 	public boolean performCancel() {
 		String preferences = prefStore.getString(KojiPreferencesConstants.PREF_SERVER_LIST);
