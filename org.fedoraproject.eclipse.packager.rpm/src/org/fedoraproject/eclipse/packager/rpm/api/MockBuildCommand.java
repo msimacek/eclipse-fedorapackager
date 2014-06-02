@@ -272,7 +272,7 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 	 * 
 	 * @return {@code true} if mock is available, {@code false} otherwise.
 	 */
-	private boolean isMockInstalled() {
+	private static boolean isMockInstalled() {
 		if (Utils.fileExist(MOCK_BINARY)) {
 			return true;
 		}
@@ -288,7 +288,7 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 	 * @return {@code true} if the mock config exists on the local system for
 	 *         the given string, {@code false} otherwise.
 	 */
-	private boolean isSupportedMockConfig(String candidate) {
+	private static boolean isSupportedMockConfig(String candidate) {
 		File file = new File("/etc/mock/" + candidate + ".cfg"); //$NON-NLS-1$ //$NON-NLS-2$
 		if (file.exists()) {
 			return true;

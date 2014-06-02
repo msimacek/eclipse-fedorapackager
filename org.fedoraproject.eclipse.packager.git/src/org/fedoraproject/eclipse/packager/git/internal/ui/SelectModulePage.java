@@ -210,7 +210,7 @@ public class SelectModulePage extends WizardPage {
 	 * Try our best to set the working sets field to something sensible based on the
 	 * current selection.
 	 */
-	private IWorkingSet[] getSelectedWorkingSet(IStructuredSelection selection) {
+	private static IWorkingSet[] getSelectedWorkingSet(IStructuredSelection selection) {
 		if (!(selection instanceof ITreeSelection))
 			return EMPTY_WORKING_SET_ARRAY;
 
@@ -252,7 +252,7 @@ public class SelectModulePage extends WizardPage {
 		}
 	}
 
-	private void updateMargins(Group group) {
+	private static void updateMargins(Group group) {
 		// make sure there is some room between the group border
 		// and the controls in the group
 		GridLayout layout = (GridLayout) group.getLayout();

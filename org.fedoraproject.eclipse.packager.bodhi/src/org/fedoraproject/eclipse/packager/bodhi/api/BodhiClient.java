@@ -230,8 +230,6 @@ public class BodhiClient {
 	 * 
 	 * @param builds
 	 *            N-V-R's for which to push an update for
-	 * @param release
-	 *            For example "F15".
 	 * @param type
 	 *            One of "bugfix", "security", "enhancement", "newpackage".
 	 * @param request
@@ -257,8 +255,7 @@ public class BodhiClient {
 	 * @throws BodhiClientException
 	 *             If some error occurred.
 	 */
-	public BodhiUpdateResponse createNewUpdate(String[] builds, String release,
-			String type, String request, String bugs, String notes,
+	public BodhiUpdateResponse createNewUpdate(String[] builds, String type, String request, String bugs, String notes,
 			String csrfToken, boolean suggestReboot,
 			boolean enableKarmaAutomatism, int stableKarmaThreshold,
 			int unstableKarmaThreshold, boolean closeBugsWhenStable)
@@ -355,7 +352,7 @@ public class BodhiClient {
 	 * @throws IOException
 	 *             If response could not be read or is read improperly.
 	 */
-	private String parseResponse(HttpEntity responseEntity) throws IOException {
+	private static String parseResponse(HttpEntity responseEntity) throws IOException {
 
 		String responseText = ""; //$NON-NLS-1$
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(

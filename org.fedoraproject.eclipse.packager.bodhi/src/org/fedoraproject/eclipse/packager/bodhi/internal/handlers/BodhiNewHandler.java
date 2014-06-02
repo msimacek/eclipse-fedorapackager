@@ -356,14 +356,14 @@ public class BodhiNewHandler extends AbstractHandler {
 		return null;
 	}
 
-	/*
+	/**
 	 * Parse bugs listed in a changelog string
 	 *
-	 * @param clog
+	 * @param clog The changelog.
 	 *
 	 * @return A comma separated list of bugs, or the empty string.
 	 */
-	private String findBug(String clog) {
+	private static String findBug(String clog) {
 		String bugs = ""; //$NON-NLS-1$
 		Pattern p = Pattern.compile("#([0-9]*)"); //$NON-NLS-1$
 		Matcher m = p.matcher(clog);
@@ -373,7 +373,7 @@ public class BodhiNewHandler extends AbstractHandler {
 		return bugs.length() > 0 ? bugs.substring(0, bugs.length() - 1) : bugs;
 	}
 
-	private ISecurePreferences getBodhiNode() {
+	private static ISecurePreferences getBodhiNode() {
 		ISecurePreferences preferences = SecurePreferencesFactory.getDefault();
 		if (preferences == null)
 			return null;

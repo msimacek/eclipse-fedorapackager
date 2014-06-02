@@ -150,7 +150,7 @@ public class LocalFedoraPackagerPageTwo extends WizardPage {
 		setControl(container);
 	}
 
-	private void addListener(Link link, final String url) {
+	private static void addListener(Link link, final String url) {
 		link.addListener(SWT.Selection, new Listener() {
 			@Override
 			public void handleEvent(Event event) {
@@ -158,9 +158,7 @@ public class LocalFedoraPackagerPageTwo extends WizardPage {
 						.getBrowserSupport();
 				try {
 					support.getExternalBrowser().openURL(new URL(url));
-				} catch (PartInitException e) {
-					e.printStackTrace();
-				} catch (MalformedURLException e) {
+				} catch (PartInitException|MalformedURLException e) {
 					e.printStackTrace();
 				}
 			}
@@ -194,7 +192,7 @@ public class LocalFedoraPackagerPageTwo extends WizardPage {
 	 * @param link
 	 *            Link widget to set layout on.
 	 */
-	private void setLayout(Link link) {
+	private static void setLayout(Link link) {
 		GridData layout = new GridData();
 		layout.horizontalIndent = 20;
 		layout.horizontalSpan = 3;

@@ -435,7 +435,7 @@ public class BodhiNewUpdateDialog extends Dialog {
 		this.lblError.redraw();
 	}
 
-	private Color getColor(int systemColorID) {
+	private static Color getColor(int systemColorID) {
 		Display display = Display.getCurrent();
 		return display.getSystemColor(systemColorID);
 	}

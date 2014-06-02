@@ -31,9 +31,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
-import org.fedoraproject.eclipse.packager.bodhi.api.BodhiClient;
-import org.fedoraproject.eclipse.packager.bodhi.api.BodhiLoginResponse;
-import org.fedoraproject.eclipse.packager.bodhi.api.BodhiUpdateResponse;
 import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientException;
 import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientLoginException;
 import org.junit.Before;
@@ -208,7 +205,7 @@ public class BodhiClientTest {
 		// push the update
 		String[] builds = { PACKAGE_UPDATE_NVR };
 		BodhiUpdateResponse updateResponse = client.createNewUpdate(builds,
-				"F15", "enhancement", "testing", "",
+				"enhancement", "testing", "",
 				"This is a test. Please disregard", "", false, true, 3, -3, true);
 		assertEquals("Update successfully created", updateResponse.getFlashMsg());
 		assertEquals("ed", updateResponse.getUpdates()[0].getBuilds()[0].getPkg().getName());

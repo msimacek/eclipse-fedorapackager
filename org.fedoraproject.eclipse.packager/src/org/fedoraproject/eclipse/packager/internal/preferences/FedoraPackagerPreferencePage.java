@@ -272,7 +272,7 @@ public class FedoraPackagerPreferencePage extends FieldEditorPreferencePage
 	 *
 	 * @param group The group to update the margins of.
 	 */
-	private void updateMargins(Group group) {
+	private static void updateMargins(Group group) {
 		GridLayout layout = (GridLayout) group.getLayout();
 		GridData data = (GridData) group.getLayoutData();
 		layout.marginWidth = 5;

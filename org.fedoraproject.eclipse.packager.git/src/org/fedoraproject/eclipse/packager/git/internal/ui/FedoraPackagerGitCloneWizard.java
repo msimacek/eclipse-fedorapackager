@@ -366,7 +366,7 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 		}
 	}
 
-	private void configureRpmlintBuilder(IProject project) throws CoreException {
+	private static void configureRpmlintBuilder(IProject project) throws CoreException {
 		IProjectDescription desc = project.getDescription();
 		String[] natures = desc.getNatureIds();
 

@@ -274,7 +274,7 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 		return fullRpmBuildCommand.toArray(new String[0]);
 	}
 
-	private String convertCmdList(String[] cmdList) {
+	private static String convertCmdList(String[] cmdList) {
 		String cmd = new String();
 		for (String token : cmdList) {
 			cmd += token + " "; //$NON-NLS-1$;

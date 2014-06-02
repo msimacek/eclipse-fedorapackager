@@ -107,7 +107,7 @@ public class FedoraPackagerKojiPreferencePage extends PreferencePage implements
 	 * @param columnText The name of the column.
 	 * @return The newly created column.
 	 */
-	private TableViewerColumn createTableViewerColumn(TableViewer tableViewer, String columnText) {
+	private static TableViewerColumn createTableViewerColumn(TableViewer tableViewer, String columnText) {
 		TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setText(columnText);

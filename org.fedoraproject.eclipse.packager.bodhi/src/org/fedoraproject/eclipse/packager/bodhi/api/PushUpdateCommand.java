@@ -410,7 +410,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 		// It looks like release is extracted from the build NVRs. Not sure, why
 		// it's there.
 		BodhiUpdateResponse updateResponse = this.client
-				.createNewUpdate(builds, release, updateType, requestType,
+				.createNewUpdate(builds, updateType, requestType,
 						bugs, comment, csrfToken, suggestReboot,
 						enableKarmaAutomatism, stableKarmaThreshold,
 						unpushKarmaThreshold, closeBugsWhenStable);

@@ -114,7 +114,7 @@ public class FedoraPackagerGitPreferencePage extends
 		updateMargins(gitGroup);
 	}
 
-	private void updateMargins(Group group) {
+	private static void updateMargins(Group group) {
 		// make sure there is some room between the group border
 		// and the controls in the group
 		GridLayout layout = (GridLayout) group.getLayout();

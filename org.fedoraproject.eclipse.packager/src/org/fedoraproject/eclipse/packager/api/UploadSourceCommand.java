@@ -439,7 +439,7 @@ public class UploadSourceCommand extends
 	 * @throws IOException
 	 *             If method cannot use streams properly.
 	 */
-	private HttpClient fedoraSslEnable(HttpClient base)
+	private static HttpClient fedoraSslEnable(HttpClient base)
 			throws GeneralSecurityException, FileNotFoundException, IOException {
 
 		// Get a SSL related instance for setting up SSL connections.
@@ -463,7 +463,7 @@ public class UploadSourceCommand extends
 	 * @throws IOException
 	 *             If method cannot use streams properly.
 	 */
-	private String parseResponse(HttpEntity responseEntity) throws IOException {
+	private static String parseResponse(HttpEntity responseEntity) throws IOException {
 
 		String responseText = ""; //$NON-NLS-1$
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(

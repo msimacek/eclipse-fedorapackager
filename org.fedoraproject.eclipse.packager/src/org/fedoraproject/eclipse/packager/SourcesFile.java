@@ -184,7 +184,7 @@ public class SourcesFile {
 	 * @return True if the given md5 is the same as the calculated one, false
 	 *         otherwise.
 	 */
-	private boolean checkMD5(String storedMd5, IResource resource) {
+	private static boolean checkMD5(String storedMd5, IResource resource) {
 		// open file
 		File file = resource.getLocation().toFile();
 		String md5 = calculateChecksum(file);
