@@ -76,7 +76,7 @@ public class GitUtils {
 	 *         user is using settings from the .conf file.
 	 * @since 0.5.0
 	 */
-	public static String getPreferenceURL() {
+	private static String getPreferenceURL() {
 		String URL = ""; //$NON-NLS-1$
 		// if .conf is enabled, use the base url from .conf
 		if (PackagerPlugin.isConfEnabled()) {
@@ -152,9 +152,7 @@ public class GitUtils {
 					branchCreateCmd.call();
 				}
 			}
-		} catch (JGitInternalException e) {
-			e.printStackTrace();
-		} catch (GitAPIException e) {
+		} catch (JGitInternalException|GitAPIException e) {
 			e.printStackTrace();
 		}
 	}
