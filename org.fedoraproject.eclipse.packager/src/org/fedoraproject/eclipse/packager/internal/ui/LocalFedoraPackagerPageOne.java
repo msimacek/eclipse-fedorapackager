@@ -12,6 +12,7 @@ package org.fedoraproject.eclipse.packager.internal.ui;
 
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
@@ -23,18 +24,24 @@ import org.fedoraproject.eclipse.packager.FedoraPackagerText;
  */
 public class LocalFedoraPackagerPageOne extends WizardNewProjectCreationPage {
 
+	private IStructuredSelection selection;
+
 	/**
 	 * Create the wizard.
 	 * 
 	 * @param pageName
 	 *            The name of this page.
+	 * @param selection 
+	 *            the current object selection
 	 */
-	public LocalFedoraPackagerPageOne(String pageName) {
+	public LocalFedoraPackagerPageOne(String pageName,
+			IStructuredSelection selection) {
 		super(pageName);
 		setTitle(FedoraPackagerText.LocalFedoraPackagerWizardPage_title);
 		setDescription(FedoraPackagerText.LocalFedoraPackagerWizardPage_description);
 		setImageDescriptor(ImageDescriptor.createFromFile(getClass(),
 				FedoraPackagerText.LocalFedoraPackagerWizardPage_image));
+		this.selection = selection;
 	}
 
 	/**
@@ -50,6 +57,9 @@ public class LocalFedoraPackagerPageOne extends WizardNewProjectCreationPage {
 
 		GridLayout layout = new GridLayout();
 		container.setLayout(layout);
+
+		String[] workingSetTypeIds = new String[] { "org.eclipse.ui.resourceWorkingSetPage" }; //$NON-NLS-1$
+		createWorkingSetGroup(container, selection, workingSetTypeIds);
 
 		// Advise the user that a new Git repository will be created
 		setMessage(FedoraPackagerText.LocalFedoraPackagerPageOne_lblNoteGit,

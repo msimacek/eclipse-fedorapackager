@@ -51,7 +51,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkingSet;
-import org.eclipse.ui.PlatformUI;
 import org.fedoraproject.eclipse.packager.FedoraSSL;
 import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
@@ -71,6 +70,7 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 		IImportWizard {
 
 	private SelectModulePage page;
+	private IWorkbench workbench;
 	private IStructuredSelection selection;
 	private String fasUserName;
 
@@ -114,13 +114,13 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 	@Override
 	public void addPages() {
 		// get Fedora username from cert
-		page = new SelectModulePage(fasUserName);
+		page = new SelectModulePage(fasUserName, selection);
 		addPage(page);
-		page.init(selection);
 	}
 
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
+		this.workbench = workbench;
 		this.selection = selection;
 	}
 
@@ -217,11 +217,9 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 				configureRpmlintBuilder(newProject);
 	
 				// Add new project to working sets, if requested
-				IWorkingSet[] workingSets = page.getWorkingSets();
-				if (workingSets.length > 0) {
-					PlatformUI.getWorkbench().getWorkingSetManager()
-							.addToWorkingSets(newProject, workingSets);
-				}
+				IWorkingSet[] workingSets = page.getSelectedWorkingSets();
+				workbench.getWorkingSetManager().addToWorkingSets(newProject,
+						workingSets);
 			}
 
 			// Finally ask if the Fedora Packaging perspective should be opened

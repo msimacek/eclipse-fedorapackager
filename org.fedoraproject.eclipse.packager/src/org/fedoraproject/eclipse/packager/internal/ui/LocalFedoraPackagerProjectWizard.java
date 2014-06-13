@@ -30,6 +30,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.fedoraproject.eclipse.packager.FedoraSSL;
 import org.fedoraproject.eclipse.packager.LocalProjectType;
@@ -53,6 +54,9 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 	private LocalFedoraPackagerPageThree pageThree;
 	private LocalFedoraPackagerPageFour pageFour;
 
+	private IWorkbench workbench;
+	private IStructuredSelection selection;
+
 	private IWorkspaceRoot root;
 	private IProject project;
 	private IProjectDescription description;
@@ -62,6 +66,8 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 	@Override
 	public void init(IWorkbench workbench, IStructuredSelection selection) {
 		setNeedsProgressMonitor(true);
+		this.workbench = workbench;
+		this.selection = selection;
 	}
 
 	/*
@@ -72,7 +78,7 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 	@Override
 	public void addPages() {
 		super.addPages();
-		pageOne = new LocalFedoraPackagerPageOne(PAGE_ONE);
+		pageOne = new LocalFedoraPackagerPageOne(PAGE_ONE, selection);
 		addPage(pageOne);
 		File fedoraCert = new File(FedoraSSL.DEFAULT_CERT_FILE);
 		if (!fedoraCert.exists()) {
@@ -109,6 +115,11 @@ public class LocalFedoraPackagerProjectWizard extends Wizard implements
 						ConnectProviderOperation connect = new ConnectProviderOperation(
 								project);
 						connect.execute(null);
+
+						// Add new project to working sets, if requested
+						IWorkingSet[] workingSets = pageOne.getSelectedWorkingSets();
+						workbench.getWorkingSetManager().addToWorkingSets(project,
+								workingSets);
 
 						// Finally ask if the Fedora Packaging perspective
 						// should be opened
