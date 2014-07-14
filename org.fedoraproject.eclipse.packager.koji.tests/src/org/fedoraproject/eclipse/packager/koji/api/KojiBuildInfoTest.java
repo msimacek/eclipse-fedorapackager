@@ -78,7 +78,7 @@ public class KojiBuildInfoTest extends KojiClientTest {
 					return rawBuildinfoMap;
 
 				return null;
-			};
+			}
 		};
 		this.kojiClient.setXmlRpcClient(mockXmlRpcClinet);
 		KojiBuildInfo info = kojiClient.getBuild(EFP_NVR);
@@ -110,7 +110,7 @@ public class KojiBuildInfoTest extends KojiClientTest {
 					return rawBuildinfoMap;
 
 				return null;
-			};
+			}
 		};
 		this.kojiClient.setXmlRpcClient(mockXmlRpcClinet);
 		KojiBuildInfo info = kojiClient.getBuild(NON_EXISTING_NVR);

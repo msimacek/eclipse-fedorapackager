@@ -320,7 +320,7 @@ public class UploadSourceCommandTest {
 	 * 
 	 * @param newFile
 	 */
-	private void writeRandomContentToFile(File newFile) {
+	private static void writeRandomContentToFile(File newFile) {
 		try (FileOutputStream out = new FileOutputStream(newFile)){
 			StringBuilder randomContent = new StringBuilder();
 			randomContent.append(Math.random());

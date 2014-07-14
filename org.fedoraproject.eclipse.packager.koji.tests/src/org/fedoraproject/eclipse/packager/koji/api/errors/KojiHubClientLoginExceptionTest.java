@@ -30,7 +30,7 @@ public class KojiHubClientLoginExceptionTest {
 			// FedoraSSLTest
 			return true;
 		}
-	};
+	}
 
 	@Before
 	public void setUp() {
