@@ -116,11 +116,11 @@ public class LocalFedoraPackagerPageFour extends SpecfileNewWizardPage {
 	 */
 	private void dialogChanged() {
 		String fileName = getFileName();
-		if (getProjectName().length() == 0) {
+		if (getProjectName().isEmpty()) {
 			updateStatus(Messages.SpecfileNewWizardPage_22);
 			return;
 		}
-		if (fileName.length() == 0) {
+		if (fileName.isEmpty()) {
 			updateStatus(Messages.SpecfileNewWizardPage_25);
 			return;
 		}

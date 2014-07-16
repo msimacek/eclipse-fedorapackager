@@ -334,7 +334,7 @@ public class FedoraPackagerUtils {
 				}
 			}
 			// We need at least one project root
-			if (projectRootList.size() == 0) {
+			if (projectRootList.isEmpty()) {
 				throw new FedoraPackagerExtensionPointException(NLS.bind(
 						FedoraPackagerText.extensionNotFoundError,
 						PROJECT_ROOT_EXTENSIONPOINT_NAME));

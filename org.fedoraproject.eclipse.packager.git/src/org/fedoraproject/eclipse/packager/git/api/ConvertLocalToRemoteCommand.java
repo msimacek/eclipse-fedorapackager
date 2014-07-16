@@ -105,7 +105,7 @@ public class ConvertLocalToRemoteCommand extends
 			Set<String> existingRemoteList = git.getRepository().getConfig()
 					.getSubsections(ConfigConstants.CONFIG_REMOTE_SECTION);
 
-			if (existingRemoteList.size() == 0) {
+			if (existingRemoteList.isEmpty()) {
 				addRemote = true;
 				addBranch = true;
 			}

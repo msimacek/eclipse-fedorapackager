@@ -64,7 +64,7 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 		}
 		// we also require scmURL to be set
 		if (location == null
-				|| location.size() == 0
+				|| location.isEmpty()
 				|| !(location.get(0) instanceof String || location.get(0) instanceof List<?>)) {
 			throw new CommandMisconfiguredException(
 					KojiText.KojiBuildCommand_configErrorNoScmURL);
