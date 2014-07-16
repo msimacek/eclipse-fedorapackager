@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -109,7 +111,7 @@ public interface IProjectRoot {
 	 * 
 	 * @return The list of N-V-Rs sorted in ascending order.
 	 */
-	public String[] getPackageNVRs(BranchConfigInstance bci);
+	public List<String> getPackageNVRs(BranchConfigInstance bci);
 
 	/**
 	 * Validates a non-initialized version of the implementing IProjectRoot.

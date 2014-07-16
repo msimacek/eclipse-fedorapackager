@@ -14,7 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
@@ -150,7 +150,7 @@ public class FedoraProjectRoot implements IProjectRoot {
 	}
 
 	@Override
-	public String[] getPackageNVRs(BranchConfigInstance bci) {
+	public List<String> getPackageNVRs(BranchConfigInstance bci) {
 		Specfile specfile = getSpecfileModel();
 		String version = specfile.getVersion();
 		String release = specfile.getRelease().replace("%{?dist}", bci.getDist());  //$NON-NLS-1$
@@ -158,9 +158,8 @@ public class FedoraProjectRoot implements IProjectRoot {
 		for (SpecfilePackage p: specfile.getPackages().getPackages()) {
 			rawNvrs.add(p.getFullPackageName() + "-" + version + "-" + release); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		String[] nvrs = rawNvrs.toArray(new String[]{});
-		Arrays.sort(nvrs);
-		return nvrs;
+		Collections.sort(rawNvrs);
+		return rawNvrs;
 	}
 
 	/**
