@@ -25,7 +25,7 @@ import org.eclipse.jsch.ui.UserInfoPrompter;
 import org.eclipse.osgi.util.NLS;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
-import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
+import org.fedoraproject.eclipse.packager.FedoraSSL;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
@@ -82,7 +82,7 @@ public class ScpJob extends Job {
 		// scpCmd.srpmFile(((IResource) ld.getResult()[0])
 		// .getName());
 
-		String fasAccount = FedoraSSLFactory.getInstance()
+		String fasAccount = new FedoraSSL()
 				.getUsernameFromCert();
 		JSch jsch = new JSch();
 

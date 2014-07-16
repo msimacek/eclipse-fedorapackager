@@ -29,7 +29,6 @@ import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.fedoraproject.eclipse.packager.FedoraPackagerPreferencesConstants;
 import org.fedoraproject.eclipse.packager.FedoraSSL;
-import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 
 /**
@@ -98,7 +97,7 @@ public class GitUtils {
 	 */
 	public static String getDefaultGitBaseUrl() {
 		// Figure out if we have an anonymous or a FAS user
-		String user = FedoraSSLFactory.getInstance().getUsernameFromCert();
+		String user = new FedoraSSL().getUsernameFromCert();
 		String gitURL;
 		if (!user.equals(FedoraSSL.UNKNOWN_USER)) {
 			gitURL = getAuthenticatedGitBaseUrl(user);

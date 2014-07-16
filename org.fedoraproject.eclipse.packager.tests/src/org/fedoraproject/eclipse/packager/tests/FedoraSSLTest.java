@@ -30,7 +30,6 @@ import org.apache.commons.ssl.KeyMaterial;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.fedoraproject.eclipse.packager.FedoraSSL;
-import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.osgi.framework.FrameworkUtil;
@@ -69,11 +68,11 @@ public class FedoraSSLTest {
 		File fedoraUploadCert = new File(fedUploadCertName);
 		File fedoraServerCert = new File(fedServerCertName);
 		File validCert = new File(validCertName);
-		this.expiredFedoraSSL = FedoraSSLFactory.getInstance(fedoraCert,
+		this.expiredFedoraSSL = new FedoraSSL(fedoraCert,
 				fedoraUploadCert, fedoraServerCert);
-		this.anonymousFedoraSSL = FedoraSSLFactory.getInstance(new File("/tmp/i_do_not_exist.cert"),
+		this.anonymousFedoraSSL = new FedoraSSL(new File("/tmp/i_do_not_exist.cert"),
 				fedoraUploadCert, fedoraServerCert);
-		this.validFedoraSSL = FedoraSSLFactory.getInstance(validCert,
+		this.validFedoraSSL = new FedoraSSL(validCert,
 				fedoraUploadCert, fedoraServerCert);
 	}
 

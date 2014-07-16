@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.api.errors;
 
-import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
+import org.fedoraproject.eclipse.packager.FedoraSSL;
 
 
 /**
@@ -45,7 +45,7 @@ public class UploadFailedException extends FedoraPackagerAPIException {
 	 *         certificate expired.
 	 */
 	public boolean isCertificateExpired() {
-		if (!FedoraSSLFactory.getInstance().isFedoraCertValid()) {
+		if (!new FedoraSSL().isFedoraCertValid()) {
 			return true;
 		}
 		return false;

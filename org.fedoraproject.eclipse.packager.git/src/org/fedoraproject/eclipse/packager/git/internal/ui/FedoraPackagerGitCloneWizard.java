@@ -52,7 +52,6 @@ import org.eclipse.ui.IImportWizard;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkingSet;
 import org.fedoraproject.eclipse.packager.FedoraSSL;
-import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.QuestionMessageDialog;
 import org.fedoraproject.eclipse.packager.git.Activator;
@@ -108,7 +107,7 @@ public class FedoraPackagerGitCloneWizard extends Wizard implements
 		// required to show progress info of clone job
 		setNeedsProgressMonitor(true);
 		// retrieve FAS username
-		this.fasUserName = FedoraSSLFactory.getInstance().getUsernameFromCert();
+		this.fasUserName = new FedoraSSL().getUsernameFromCert();
 	}
 
 	@Override

@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
-import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
+import org.fedoraproject.eclipse.packager.FedoraSSL;
 import org.fedoraproject.eclipse.packager.IFpProjectBits;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 
@@ -134,7 +134,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 		if (!isInitialized()) {
 			return null;
 		}
-		String username = FedoraSSLFactory.getInstance().getUsernameFromCert();
+		String username = new FedoraSSL().getUsernameFromCert();
 		String packageName = this.project.getProject().getName();
 		if (username.equals("anonymous")) { //$NON-NLS-1$
 			return "git://pkgs.fedoraproject.org/" + packageName + ".git"; //$NON-NLS-1$ //$NON-NLS-2$

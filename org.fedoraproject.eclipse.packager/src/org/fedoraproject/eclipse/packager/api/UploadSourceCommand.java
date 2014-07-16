@@ -43,7 +43,6 @@ import org.eclipse.osgi.util.NLS;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.FedoraSSL;
-import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.SourcesFile;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
@@ -443,7 +442,7 @@ public class UploadSourceCommand extends
 			throws GeneralSecurityException, FileNotFoundException, IOException {
 
 		// Get a SSL related instance for setting up SSL connections.
-		FedoraSSL fedoraSSL = FedoraSSLFactory.getInstance();
+		FedoraSSL fedoraSSL = new FedoraSSL();
 		SSLSocketFactory sf = new SSLSocketFactory(
 				fedoraSSL.getInitializedSSLContext(), // may throw FileNotFoundE
 				SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);

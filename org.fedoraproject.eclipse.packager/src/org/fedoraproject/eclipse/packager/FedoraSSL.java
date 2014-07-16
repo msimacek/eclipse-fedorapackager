@@ -66,10 +66,19 @@ public class FedoraSSL {
 	private File fedoraUploadCert;
 	private File fedoraServerCert;
 	private boolean allCertsExist = false;
+	
+	/**
+	 * Create a FedoraSSL using default location of certificates.
+	 */
+	public FedoraSSL() {
+		this(new File(FedoraSSL.DEFAULT_CERT_FILE), new File(
+				FedoraSSL.DEFAULT_UPLOAD_CA_CERT), new File(
+				FedoraSSL.DEFAULT_SERVER_CA_CERT));
+	}
 
 	/**
 	 * Create a Fedora SSL object from given cert files. The use of this
-	 * constructor is discouraged. Use {@link FedoraSSLFactory#getInstance()}
+	 * constructor is discouraged. 
 	 * instead.
 	 *
 	 * @param fedoraCert
@@ -79,7 +88,7 @@ public class FedoraSSL {
 	 * @param fedoraServerCert
 	 *            The server certificate file.
 	 */
-	FedoraSSL(File fedoraCert, File fedoraUploadCert, File fedoraServerCert) {
+	public FedoraSSL(File fedoraCert, File fedoraUploadCert, File fedoraServerCert) {
 		this.fedoraCert = fedoraCert;
 		this.fedoraServerCert = fedoraServerCert;
 		this.fedoraUploadCert = fedoraUploadCert;

@@ -25,7 +25,6 @@ import javax.net.ssl.SSLSession;
 
 import org.apache.xmlrpc.XmlRpcException;
 import org.fedoraproject.eclipse.packager.FedoraSSL;
-import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
 
@@ -105,8 +104,7 @@ public class KojiSSLHubClient extends AbstractKojiHubBaseClient {
 
 	protected SSLContext getInitializedSSLContext()
 			throws FileNotFoundException, GeneralSecurityException, IOException {
-		FedoraSSL fedoraSSL = FedoraSSLFactory.getInstance();
-		return fedoraSSL.getInitializedSSLContext();
+		return new FedoraSSL().getInitializedSSLContext();
 	}
 
 	/**
@@ -123,7 +121,7 @@ public class KojiSSLHubClient extends AbstractKojiHubBaseClient {
 		};
 		SSLContext ctxt = null;
 		// may throw exceptions (dealt with in login())
-		ctxt = getInitializedSSLContext();
+		ctxt = new FedoraSSL().getInitializedSSLContext();
 		// set up the proper socket
 		HttpsURLConnection.setDefaultSSLSocketFactory(ctxt.getSocketFactory());
 		HttpsURLConnection.setDefaultHostnameVerifier(hv);
