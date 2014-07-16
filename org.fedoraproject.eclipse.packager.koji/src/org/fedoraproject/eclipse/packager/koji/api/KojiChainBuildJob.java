@@ -42,7 +42,7 @@ public class KojiChainBuildJob extends KojiBuildJob {
 	private IProjectRoot hostRoot;
 	private Shell shell;
 	private List<List<String>> sourceLocations;
-	private IProjectRoot[] projectRoots;
+	private List<IProjectRoot> projectRoots;
 	private final BranchConfigInstance RAWHIDECONFIG = new BranchConfigInstance(
 			".fc18", "18", "fedora", "rawhide", "master"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
@@ -60,10 +60,10 @@ public class KojiChainBuildJob extends KojiBuildJob {
 	 *            the same list in parallel and sublists are built in the order
 	 *            they appear in the main list.
 	 */
-	public KojiChainBuildJob(String name, Shell shell, IProjectRoot[] fprs,
+	public KojiChainBuildJob(String name, Shell shell, List<IProjectRoot> fprs,
 			String[] kojiInfo, List<List<String>> sourceLocations) {
-		super(name, shell, fprs[0], kojiInfo, true);
-		hostRoot = fprs[0];
+		super(name, shell, fprs.get(0), kojiInfo, true);
+		hostRoot = fprs.get(0);
 		this.shell = shell;
 		this.sourceLocations = sourceLocations;
 		projectRoots = fprs;
@@ -101,9 +101,9 @@ public class KojiChainBuildJob extends KojiBuildJob {
 
 		kojiBuildCmd.setKojiClient(kojiClient);
 		kojiBuildCmd.sourceLocation(sourceLocations);
-		String[] nvr = new String[projectRoots.length];
-		for (int i = 0; i < projectRoots.length; i++) {
-			nvr[i] = RPMUtils.getNVR(projectRoots[i], bci);
+		String[] nvr = new String[projectRoots.size()];
+		for (int i = 0; i < projectRoots.size(); i++) {
+			nvr[i] = RPMUtils.getNVR(projectRoots.get(i), bci);
 		}
 		kojiBuildCmd.nvr(nvr).isScratchBuild(false);
 		logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,

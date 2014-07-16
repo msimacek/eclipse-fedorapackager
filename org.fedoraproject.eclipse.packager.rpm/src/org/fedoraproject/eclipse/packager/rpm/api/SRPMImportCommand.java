@@ -263,7 +263,7 @@ public class SRPMImportCommand {
 					stageSet.add(file);
 				}
 			}
-			result.setUploaded(uploadedFiles.toArray(new String[0]));
+			result.setUploaded(uploadedFiles);
 			monitor.subTask(RpmText.SRPMImportCommand_StagingChanges);
 			// Do VCS update
 			if (projectBits.updateVCS(monitor)

@@ -33,7 +33,7 @@ public class ChainBuildHandler extends AbstractHandler {
 		shell = HandlerUtil.getActiveShellChecked(event);
 		ChainBuildDialog dialog = new ChainBuildDialog(shell);
 		List<List<String>> buildList = dialog.open();
-		final IProjectRoot[] roots = dialog.getRoots();
+		final List<IProjectRoot> roots = dialog.getRoots();
 		if (dialog.getResult() == Window.OK) {
 			// if using .conf, use the koji server info from the .conf
 			//	else use the setting in koji preference page
@@ -41,10 +41,10 @@ public class ChainBuildHandler extends AbstractHandler {
 					? PackagerPlugin.getStringPreference(FedoraPackagerPreferencesConstants.PREF_KOJI_SERVER_INFO).split(",") //$NON-NLS-1$
 					: new ScopedPreferenceStore(InstanceScope.INSTANCE, KojiPlugin.PLUGIN_ID).getString(
 							KojiPreferencesConstants.PREF_KOJI_SERVER_INFO).split(","); //$NON-NLS-1$
-			Job job = new KojiChainBuildJob(roots[0].getProductStrings()
+			Job job = new KojiChainBuildJob(roots.get(0).getProductStrings()
 					.getProductName(), shell, roots, kojiInfo, buildList);
 			job.addJobChangeListener(KojiUtils.getJobChangeListener(kojiInfo,
-					roots[0]));
+					roots.get(0)));
 			job.setUser(true);
 			job.schedule();
 		}

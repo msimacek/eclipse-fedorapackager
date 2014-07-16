@@ -43,13 +43,13 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 
 /**
  * Dialog for getting information required for a chain build.
- * 
+ *
  */
 public class ChainBuildDialog extends Dialog {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param parent
 	 *            Parent shell to the shell the dialog will be launched in.
 	 */
@@ -66,7 +66,7 @@ public class ChainBuildDialog extends Dialog {
 
 	/**
 	 * Open dialog for user interaction.
-	 * 
+	 *
 	 * @return List of lists used for the chainBuild srcs argument in the Koji
 	 *         api.
 	 */
@@ -127,7 +127,7 @@ public class ChainBuildDialog extends Dialog {
 				}
 			}
 		});
-		
+
 		DropTarget tableTarget = new DropTarget(projectTable, DND.DROP_MOVE);
 		tableTarget.setTransfer(types);
 		tableTarget.addDropListener(new DropTargetAdapter() {
@@ -210,7 +210,7 @@ public class ChainBuildDialog extends Dialog {
 		buildTree = new Tree(buildGroup, SWT.CHECK | SWT.MULTI);
 		new TreeItem(buildTree, SWT.NONE).setText("Group 1"); //$NON-NLS-1$
 		buildTree.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		
+
 		DragSource treeSource = new DragSource(buildTree, DND.DROP_MOVE);
 		treeSource.setTransfer(types);
 		treeSource.addDragListener(new DragSourceAdapter() {
@@ -249,7 +249,7 @@ public class ChainBuildDialog extends Dialog {
 				}
 			}
 		});
-		
+
 		DropTarget treeTarget = new DropTarget(buildTree, DND.DROP_MOVE);
 		treeTarget.setTransfer(types);
 		treeTarget.addDropListener(new DropTargetAdapter() {
@@ -278,7 +278,7 @@ public class ChainBuildDialog extends Dialog {
 				}
 			}
 		});
-		
+
 		Button removeButton = new Button(buildGroup, SWT.NONE);
 		removeButton.setText(KojiText.ChainBuildDialog_RemoveButton);
 		removeButton
@@ -435,7 +435,7 @@ public class ChainBuildDialog extends Dialog {
 
 	/**
 	 * Get result of dialog.
-	 * 
+	 *
 	 * @return OK iff "Start Build" is pressed and there are packages in the
 	 *         build list. Cancel otherwise.
 	 */
@@ -449,11 +449,11 @@ public class ChainBuildDialog extends Dialog {
 
 	/**
 	 * Get project roots for all packages used in the build.
-	 * 
+	 *
 	 * @return The roots.
 	 */
-	public IProjectRoot[] getRoots() {
-		return rootList.toArray(new IProjectRoot[] {});
+	public List<IProjectRoot> getRoots() {
+		return rootList;
 	}
 
 	private void resetTable() {
