@@ -80,7 +80,7 @@ public class SourcesFile {
 				sourcesFile.getContents()));){
 			
 			String line = br.readLine();
-			while (line != null && !line.contentEquals("")) { //$NON-NLS-1$
+			while (line != null && !line.isEmpty()) {
 				String[] source = line.split("\\s+"); //$NON-NLS-1$
 				if (source.length != 2) {
 					continue;

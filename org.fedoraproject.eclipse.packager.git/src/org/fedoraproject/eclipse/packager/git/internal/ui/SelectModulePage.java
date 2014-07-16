@@ -83,10 +83,10 @@ public class SelectModulePage extends WizardPage {
 
 			@Override
 			public void modifyText(ModifyEvent e) {
-				if (projectText.getText() == null || projectText.getText().equals("")){ //$NON-NLS-1$
+				if (projectText.getText() == null || projectText.getText().isEmpty()){
 					setPageComplete(false);
 					setErrorMessage(null);
-				} else if (projectText.getText().trim().equals("")){ //$NON-NLS-1$
+				} else if (projectText.getText().trim().isEmpty()){
 					setPageComplete(false);
 					setErrorMessage(FedoraPackagerGitText.SelectModulePage_badPackageName);
 				} else {
