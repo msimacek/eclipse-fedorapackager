@@ -205,16 +205,16 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 
 			// Call build command
 			buildResult = kojiBuildCmd.call(subMonitor.newChild(10));
-		} catch (CommandMisconfiguredException|CommandListenerException e) {
-			// This shouldn't happen, but report error anyway
-			logger.logError(e.getMessage(), e);
-			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
-					e.getMessage(), e);
 		} catch (BuildAlreadyExistsException|UnpushedChangesException e) {
 			logger.logDebug(e.getMessage(), e);
 			FedoraHandlerUtils.showInformationDialog(shell, fedoraProjectRoot
 					.getProductStrings().getProductName(), e.getMessage());
 			return Status.OK_STATUS;
+		} catch (CommandMisconfiguredException|CommandListenerException e) {
+			// This shouldn't happen, but report error anyway
+			logger.logError(e.getMessage(), e);
+			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
+					e.getMessage(), e);
 		} catch (KojiHubClientException e) {
 			// return some generic error
 			String msg = NLS.bind(KojiText.KojiBuildHandler_unknownBuildError,

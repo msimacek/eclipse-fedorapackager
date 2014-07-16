@@ -19,7 +19,6 @@ import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
 import org.fedoraproject.eclipse.packager.koji.api.errors.BuildAlreadyExistsException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
@@ -158,8 +157,6 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 	 * @throws CommandMisconfiguredException
 	 *             If the command was not properly configured when it was
 	 *             called.
-	 * @throws UnpushedChangesException
-	 *             If the download of some source failed.
 	 * @throws CommandListenerException
 	 *             If some listener detected a problem.
 	 * @throws KojiHubClientException
@@ -169,15 +166,13 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 	@Override
 	public BuildResult call(IProgressMonitor monitor)
 			throws CommandMisconfiguredException, BuildAlreadyExistsException,
-			UnpushedChangesException, CommandListenerException, KojiHubClientException {
+			CommandListenerException, KojiHubClientException {
 		try {
 			callPreExecListeners();
 		} catch (CommandListenerException e) {
 			if (e.getCause() instanceof CommandMisconfiguredException) {
 				// explicitly throw the specific exception
 				throw (CommandMisconfiguredException) e.getCause();
-			} else if (e.getCause() instanceof UnpushedChangesException) {
-				throw (UnpushedChangesException) e.getCause();
 			}
 			throw e;
 		}
