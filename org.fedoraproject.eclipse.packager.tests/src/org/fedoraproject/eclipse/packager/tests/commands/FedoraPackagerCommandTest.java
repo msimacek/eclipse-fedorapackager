@@ -90,7 +90,7 @@ public class FedoraPackagerCommandTest {
 	}
 	
 	@Test
-	public void canRegisterCommandListeners() throws Exception {
+	public void canRegisterCommandListeners() {
 		FedoraPackagerCommandDummyImpl fpCmd = new FedoraPackagerCommandDummyImpl();
 		fpCmd.initialize(fpRoot);
 		DummyPreExecCmdListener preExecListener = new DummyPreExecCmdListener();
