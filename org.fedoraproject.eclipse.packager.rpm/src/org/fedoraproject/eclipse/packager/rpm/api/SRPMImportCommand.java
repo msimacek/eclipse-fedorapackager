@@ -276,7 +276,7 @@ public class SRPMImportCommand {
 			stageSet.add(fpr.getSourcesFile().getName());
 			stageSet.add(projectBits.getIgnoreFileName());
 			FedoraPackagerUtils.getVcsHandler(fpr).stageChanges(
-					stageSet.toArray(new String[0]));
+					stageSet);
 		} catch (CoreException | FedoraPackagerAPIException | IOException e) {
 			throw new SRPMImportCommandException(e.getMessage(), e);
 		}

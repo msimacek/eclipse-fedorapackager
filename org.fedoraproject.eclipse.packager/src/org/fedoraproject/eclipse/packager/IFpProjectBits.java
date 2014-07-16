@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager;
 
+import java.util.Set;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -115,7 +117,7 @@ public interface IFpProjectBits {
 	 * @param files
 	 *            The files to add the changes to the repository.
 	 */
-	public void stageChanges(String[] files);
+	public void stageChanges(Set<String> files);
 
 	/**
 	 * Returns the name of the ignore file for the given VCS.

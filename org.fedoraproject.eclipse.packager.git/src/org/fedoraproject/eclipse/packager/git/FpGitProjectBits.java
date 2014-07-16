@@ -431,15 +431,8 @@ public class FpGitProjectBits implements IFpProjectBits {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.fedoraproject.eclipse.packager.IFpProjectBits#stageChanges(java.lang
-	 * .String[])
-	 */
 	@Override
-	public void stageChanges(String[] files) {
+	public void stageChanges(Set<String> files) {
 		try {
 			for (String filePattern : files) {
 				git.add().addFilepattern(filePattern).call();
