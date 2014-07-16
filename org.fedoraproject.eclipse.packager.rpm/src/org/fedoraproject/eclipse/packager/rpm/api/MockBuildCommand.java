@@ -126,8 +126,6 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 	/**
 	 * Implementation of the mock build command.
 	 * 
-	 * @throws CommandMisconfiguredException
-	 *             If the command wasn't properly configured when called.
 	 * @throws UserNotInMockGroupException
 	 *             If the current user was not member of the system group
 	 *             "mock".
@@ -140,16 +138,12 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 	 */
 	@Override
 	public MockBuildResult call(IProgressMonitor monitor)
-			throws CommandMisconfiguredException, UserNotInMockGroupException,
+			throws UserNotInMockGroupException,
 			CommandListenerException, MockBuildCommandException,
 			MockNotInstalledException {
 		try {
 			callPreExecListeners();
 		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof CommandMisconfiguredException) {
-				// explicitly throw the specific exception
-				throw (CommandMisconfiguredException) e.getCause();
-			}
 			throw e;
 		}
 		if (monitor.isCanceled()) {

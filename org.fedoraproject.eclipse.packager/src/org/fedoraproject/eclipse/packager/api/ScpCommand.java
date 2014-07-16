@@ -62,13 +62,10 @@ public class ScpCommand extends FedoraPackagerCommand<IStatus> {
 	final static FedoraPackagerLogger logger = FedoraPackagerLogger
 			.getInstance();
 
-	/*
+	/**
 	 * Implementation of the {@code ScpCommand}.
 	 *
-	 * @param monitor
-	 *
-	 * @throws CommandMisconfiguredException If the command was not properly
-	 * configured when it was called.
+	 * @param monitor The progress monitor.
 	 *
 	 * @throws CommandListenerException If some listener detected a problem.
 	 *
@@ -78,15 +75,10 @@ public class ScpCommand extends FedoraPackagerCommand<IStatus> {
 	 */
 	@Override
 	public IStatus call(IProgressMonitor monitor)
-			throws CommandMisconfiguredException, CommandListenerException,
-			ScpFailedException {
+			throws CommandListenerException, ScpFailedException {
 		try {
 			callPreExecListeners();
 		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof CommandMisconfiguredException) {
-				// explicitly throw the specific exception
-				throw (CommandMisconfiguredException) e.getCause();
-			}
 			throw e;
 		}
 

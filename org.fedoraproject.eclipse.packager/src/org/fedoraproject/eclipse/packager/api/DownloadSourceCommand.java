@@ -36,7 +36,6 @@ import org.fedoraproject.eclipse.packager.ILookasideCache;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.SourcesFile;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
 
@@ -83,24 +82,16 @@ public class DownloadSourceCommand extends
 	 *            as a subtask.
 	 * @throws SourcesUpToDateException
 	 *             If the source files are already downloaded and up-to-date.
-	 * @throws CommandMisconfiguredException
-	 *             If the command was not properly configured when it was
-	 *             called.
 	 * @throws CommandListenerException
 	 *             If some listener detected a problem.
 	 * @return The result of this command.
 	 */
 	@Override
 	public IStatus call(IProgressMonitor monitor)
-			throws SourcesUpToDateException, CommandMisconfiguredException,
-			CommandListenerException {
+			throws SourcesUpToDateException, CommandListenerException {
 		try {
 			callPreExecListeners();
 		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof CommandMisconfiguredException) {
-				// explicitly throw the specific exception
-				throw (CommandMisconfiguredException)e.getCause();
-			}
 			throw e;
 		}
 		// provide hint which URL is going to be used

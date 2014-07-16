@@ -46,7 +46,6 @@ import org.fedoraproject.eclipse.packager.FedoraSSL;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.SourcesFile;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FileAvailableInLookasideCacheException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidUploadFileException;
@@ -176,8 +175,6 @@ public class UploadSourceCommand extends
 	 * @throws FileAvailableInLookasideCacheException
 	 *             If the to-be-uploaded file is already available in the
 	 *             lookaside cache.
-	 * @throws CommandMisconfiguredException
-	 *             If the command was not properly configured.
 	 * @throws CommandListenerException
 	 *             If a listener caused an error.
 	 * @throws UploadFailedException
@@ -186,15 +183,10 @@ public class UploadSourceCommand extends
 	@Override
 	public UploadSourceResult call(IProgressMonitor subMonitor)
 			throws FileAvailableInLookasideCacheException,
-			CommandMisconfiguredException, CommandListenerException,
-			UploadFailedException {
+			CommandListenerException, UploadFailedException {
 		try {
 			callPreExecListeners();
 		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof CommandMisconfiguredException) {
-				// explicitly throw the specific exception
-				throw (CommandMisconfiguredException) e.getCause();
-			}
 			throw e;
 		}
 		// Check if source is available, first.

@@ -57,14 +57,10 @@ public class FedoraPackagerCommandDummyImpl extends FedoraPackagerCommand<IStatu
 	 */
 	@Override
 	public IStatus call(IProgressMonitor monitor)
-			throws CommandMisconfiguredException, CommandListenerException {
+			throws CommandListenerException {
 		try {
 			callPreExecListeners();
 		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof CommandMisconfiguredException) {
-				throw (CommandMisconfiguredException)e.getCause();
-			}
-			// rethrow
 			throw e;
 		}
 		callPostExecListeners();

@@ -35,7 +35,6 @@ import org.fedoraproject.eclipse.packager.IFpProjectBits;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
@@ -146,7 +145,7 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 			uploadSRPMCommand.setKojiClient(kojiClient)
 					.setRemotePath(uploadPath).setSRPM(srpmPath.toOSString())
 					.call(subMonitor.newChild(80));
-		} catch (CommandMisconfiguredException|CommandListenerException e) {
+		} catch (CommandListenerException e) {
 			// This shouldn't happen, but report error anyway
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
@@ -210,7 +209,7 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 			FedoraHandlerUtils.showInformationDialog(shell, fedoraProjectRoot
 					.getProductStrings().getProductName(), e.getMessage());
 			return Status.OK_STATUS;
-		} catch (CommandMisconfiguredException|CommandListenerException e) {
+		} catch (CommandListenerException e) {
 			// This shouldn't happen, but report error anyway
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,

@@ -349,7 +349,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 					BodhiText.PushUpdateCommand_configErrorNoFedoraRelease);
 		}
 		// require a comment
-		if (comment == null || comment.equals("")) { //$NON-NLS-1$
+		if (comment == null || comment.isEmpty()) { //$NON-NLS-1$
 			throw new CommandMisconfiguredException(
 					BodhiText.PushUpdateCommand_configErrorNoUpdateComment);
 		}
@@ -363,8 +363,6 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 	/**
 	 * Perform the update.
 	 *
-	 * @throws CommandMisconfiguredException
-	 *             If the command was configured wrongly.
 	 * @throws CommandListenerException
 	 *             If a command listener threw an exception.
 	 *
@@ -377,15 +375,10 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 	 */
 	@Override
 	public PushUpdateResult call(IProgressMonitor monitor)
-			throws CommandListenerException, CommandMisconfiguredException,
-			BodhiClientLoginException, BodhiClientException {
+			throws CommandListenerException, BodhiClientLoginException, BodhiClientException {
 		try {
 			callPreExecListeners();
 		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof CommandMisconfiguredException) {
-				// explicitly throw the specific exception
-				throw (CommandMisconfiguredException) e.getCause();
-			}
 			throw e;
 		}
 		// bugs list may be unset

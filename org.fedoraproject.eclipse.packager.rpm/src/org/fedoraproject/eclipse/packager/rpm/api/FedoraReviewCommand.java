@@ -14,7 +14,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.rpm.RpmText;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.FedoraReviewNotInstalledException;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.MockBuildCommandException;
@@ -44,16 +43,12 @@ public class FedoraReviewCommand extends
 
 	@Override
 	public FedoraReviewResult call(IProgressMonitor monitor)
-			throws CommandMisconfiguredException, UserNotInMockGroupException,
+			throws UserNotInMockGroupException,
 			CommandListenerException, MockBuildCommandException,
 			FedoraReviewNotInstalledException {
 		try {
 			callPreExecListeners();
 		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof CommandMisconfiguredException) {
-				// explicitly throw the specific exception
-				throw (CommandMisconfiguredException) e.getCause();
-			}
 			throw e;
 		}
 		if (monitor.isCanceled()) {

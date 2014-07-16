@@ -179,8 +179,6 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 	/**
 	 * Implementation of rpm build command. Triggers a build as configured.
 	 *
-	 * @throws CommandMisconfiguredException
-	 *             If the command isn't properly configured.
 	 * @throws CommandListenerException
 	 *             If a command listener failed.
 	 * @throws RpmBuildCommandException
@@ -188,15 +186,11 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 	 */
 	@Override
 	public RpmBuildResult call(IProgressMonitor monitor)
-			throws CommandMisconfiguredException, CommandListenerException,
+			throws CommandListenerException,
 			RpmBuildCommandException {
 		try {
 			callPreExecListeners();
 		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof CommandMisconfiguredException) {
-				// explicitly throw the specific exception
-				throw (CommandMisconfiguredException) e.getCause();
-			}
 			throw e;
 		}
 

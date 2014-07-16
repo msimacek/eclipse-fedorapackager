@@ -28,7 +28,6 @@ import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.rpm.RPMPlugin;
 import org.fedoraproject.eclipse.packager.rpm.RpmText;
@@ -105,7 +104,7 @@ public class MockBuildJob extends AbstractMockJob {
 						result = mockBuild.call(monitor);
 						fpr.getProject().refreshLocal(IResource.DEPTH_INFINITE,
 								monitor);
-					} catch (CommandMisconfiguredException|CoreException|CommandListenerException|MockBuildCommandException e) {
+					} catch (CoreException|CommandListenerException|MockBuildCommandException e) {
 						// This shouldn't happen, but report error
 						// anyway
 						logger.logError(e.getMessage(), e);

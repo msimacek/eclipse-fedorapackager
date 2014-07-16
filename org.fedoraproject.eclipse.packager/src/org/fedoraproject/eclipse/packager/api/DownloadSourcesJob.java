@@ -23,7 +23,6 @@ import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 
@@ -107,7 +106,7 @@ public class DownloadSourcesJob extends Job {
 						e.getMessage());
 			}
 			return Status.OK_STATUS;
-		} catch (CommandMisconfiguredException|MalformedURLException|CommandListenerException e) {
+		} catch (MalformedURLException|CommandListenerException e) {
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, PackagerPlugin.PLUGIN_ID,
 					e.getMessage(), e);

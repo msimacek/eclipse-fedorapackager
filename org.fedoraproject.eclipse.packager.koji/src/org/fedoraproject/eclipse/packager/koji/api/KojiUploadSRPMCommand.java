@@ -42,18 +42,14 @@ public class KojiUploadSRPMCommand extends FedoraPackagerCommand<BuildResult> {
 		private FileInputStream fis;
 		private String remotePath;
 		private IKojiHubClient client;
-		
+
 		@Override
-		public BuildResult call(IProgressMonitor monitor) 
-				throws CommandMisconfiguredException, KojiHubClientException, 
+		public BuildResult call(IProgressMonitor monitor)
+				throws KojiHubClientException,
 				KojiHubClientLoginException, CommandListenerException{
 			try {
 				callPreExecListeners();
 			} catch (CommandListenerException e) {
-				if (e.getCause() instanceof CommandMisconfiguredException) {
-					// explicitly throw the specific exception
-					throw (CommandMisconfiguredException)e.getCause();
-				}
 				throw e;
 			}
 			try {
@@ -69,13 +65,13 @@ public class KojiUploadSRPMCommand extends FedoraPackagerCommand<BuildResult> {
 						KojiText.KojiUploadSRPMCommand_CouldNotRead , srpm.getName()));
 			}
 			client.login();
-			
+
 			String srpmName = srpm.getName();
 			byte[] readData = null;
 			boolean success = true;
-			
+
 			try {
-				
+
 				int chunkSize = Math.min(fis.available(), 1000000);
 				int chunkOffset = 0;
 				String md5sum = null;
@@ -105,7 +101,7 @@ public class KojiUploadSRPMCommand extends FedoraPackagerCommand<BuildResult> {
 			result.setSuccessful(success);
 			return result;
 		}
-		
+
 		/**
 		 * @param srpmPath The path of the rpm to use.
 		 * @return This command.
@@ -114,7 +110,7 @@ public class KojiUploadSRPMCommand extends FedoraPackagerCommand<BuildResult> {
 			srpm = new File(srpmPath);
 			return this;
 		}
-		
+
 		/**
 		 * @param remotePath The path on the server to upload the SRPM to.
 		 * @return This command.
@@ -123,7 +119,7 @@ public class KojiUploadSRPMCommand extends FedoraPackagerCommand<BuildResult> {
 			this.remotePath = remotePath;
 			return this;
 		}
-		
+
 		/**
 		 * @param client The client used when connecting to koji.
 		 * @return This command.
@@ -151,6 +147,6 @@ public class KojiUploadSRPMCommand extends FedoraPackagerCommand<BuildResult> {
 				throw new CommandMisconfiguredException(
 						KojiText.KojiUploadSRPMCommand_NoUploadPath);
 			}
-			
+
 		}
 }

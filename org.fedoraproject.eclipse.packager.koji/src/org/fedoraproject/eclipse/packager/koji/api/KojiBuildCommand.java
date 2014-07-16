@@ -154,9 +154,6 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 	 * @throws BuildAlreadyExistsException
 	 *             If a build which would have otherwise be pushed already
 	 *             existed in Koji.
-	 * @throws CommandMisconfiguredException
-	 *             If the command was not properly configured when it was
-	 *             called.
 	 * @throws CommandListenerException
 	 *             If some listener detected a problem.
 	 * @throws KojiHubClientException
@@ -165,15 +162,11 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 	 */
 	@Override
 	public BuildResult call(IProgressMonitor monitor)
-			throws CommandMisconfiguredException, BuildAlreadyExistsException,
+			throws BuildAlreadyExistsException,
 			CommandListenerException, KojiHubClientException {
 		try {
 			callPreExecListeners();
 		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof CommandMisconfiguredException) {
-				// explicitly throw the specific exception
-				throw (CommandMisconfiguredException) e.getCause();
-			}
 			throw e;
 		}
 		if (monitor.isCanceled()) {

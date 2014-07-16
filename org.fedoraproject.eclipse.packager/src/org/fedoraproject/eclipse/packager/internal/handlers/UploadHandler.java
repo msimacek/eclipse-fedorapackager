@@ -41,7 +41,6 @@ import org.fedoraproject.eclipse.packager.api.SourcesFileUpdater;
 import org.fedoraproject.eclipse.packager.api.UploadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.UploadSourceResult;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.api.errors.FileAvailableInLookasideCacheException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
@@ -162,7 +161,7 @@ public class UploadHandler extends AbstractHandler implements
 											.getProductName(), e.getMessage());
 							return Status.OK_STATUS;
 						}
-					} catch (CommandListenerException|CommandMisconfiguredException e) {
+					} catch (CommandListenerException e) {
 						// Something else failed
 						logger.logError(e.getMessage(), e);
 						return new Status(IStatus.ERROR,

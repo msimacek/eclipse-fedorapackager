@@ -27,7 +27,6 @@ import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.DownloadSourcesJob;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.rpm.RPMPlugin;
 import org.fedoraproject.eclipse.packager.rpm.RpmText;
@@ -139,7 +138,7 @@ public class SCMMockBuildJob extends AbstractMockJob {
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
 						return status;
 					} catch (MockBuildCommandException | CoreException
-							| CommandListenerException|CommandMisconfiguredException e) {
+							| CommandListenerException e) {
 						// Some unknown or unexpected error occurred
 						logger.logError(e.getMessage(), e.getCause());
 						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,

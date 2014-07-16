@@ -34,7 +34,6 @@ import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.UnpushedChangesListener;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
@@ -157,7 +156,7 @@ public class KojiBuildJob extends KojiJob {
 			FedoraHandlerUtils.showInformationDialog(shell, fedoraProjectRoot
 					.getProductStrings().getProductName(), e.getMessage());
 			return Status.OK_STATUS;
-		} catch (CommandListenerException|ExecutionException|InterruptedException|CommandMisconfiguredException e) {
+		} catch (CommandListenerException|ExecutionException|InterruptedException e) {
 			// This shouldn't happen, but report error anyway
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,

@@ -36,7 +36,6 @@ import org.fedoraproject.eclipse.packager.IFpProjectBits;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.git.FedoraPackagerGitText;
 import org.fedoraproject.eclipse.packager.git.GitUtils;
 import org.fedoraproject.eclipse.packager.git.api.errors.LocalProjectConversionFailedException;
@@ -70,9 +69,6 @@ public class ConvertLocalToRemoteCommand extends
 	 * 
 	 * @param monitor
 	 *            The monitor to show progress.
-	 * @throws CommandMisconfiguredException
-	 *             If the command was not properly configured when it was
-	 *             called.
 	 * @throws CommandListenerException
 	 *             If some listener detected a problem.
 	 * @return The result of this command.
@@ -83,16 +79,12 @@ public class ConvertLocalToRemoteCommand extends
 	 */
 	@Override
 	public ConvertLocalResult call(IProgressMonitor monitor)
-			throws CommandMisconfiguredException, CommandListenerException,
+			throws CommandListenerException,
 			LocalProjectConversionFailedException, RemoteAlreadyExistsException {
 
 		try {
 			callPreExecListeners();
 		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof CommandMisconfiguredException) {
-				// explicitly throw the specific exception
-				throw (CommandMisconfiguredException) e.getCause();
-			}
 			throw e;
 		}
 

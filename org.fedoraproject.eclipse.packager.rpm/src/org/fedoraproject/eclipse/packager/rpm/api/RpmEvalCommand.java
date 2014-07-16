@@ -68,8 +68,6 @@ public class RpmEvalCommand extends FedoraPackagerCommand<EvalResult> {
 	/**
 	 * Call the RPM eval.
 	 * 
-	 * @throws CommandMisconfiguredException
-	 *             If command is misconfigured.
 	 * @throws CommandListenerException
 	 *             If some listener failed.
 	 * @throws RpmEvalCommandException
@@ -77,15 +75,11 @@ public class RpmEvalCommand extends FedoraPackagerCommand<EvalResult> {
 	 */
 	@Override
 	public EvalResult call(IProgressMonitor monitor)
-			throws CommandMisconfiguredException, CommandListenerException,
+			throws CommandListenerException,
 			RpmEvalCommandException {
 		try {
 			callPreExecListeners();
 		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof CommandMisconfiguredException) {
-				// explicitly throw the specific exception
-				throw (CommandMisconfiguredException) e.getCause();
-			}
 			throw e;
 		}
 		if (monitor.isCanceled()) {

@@ -29,7 +29,6 @@ import org.fedoraproject.eclipse.packager.FedoraSSL;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.ScpFailedException;
 import org.fedoraproject.eclipse.packager.utils.WrappedSession;
 
@@ -119,7 +118,7 @@ public class ScpJob extends Job {
 			}
 			return result;
 
-		} catch (CommandMisconfiguredException|CommandListenerException e) {
+		} catch (CommandListenerException e) {
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, PackagerPlugin.PLUGIN_ID,
 					e.getMessage(), e);
