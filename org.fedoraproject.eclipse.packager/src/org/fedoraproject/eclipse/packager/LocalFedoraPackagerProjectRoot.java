@@ -31,52 +31,27 @@ public class LocalFedoraPackagerProjectRoot extends FedoraProjectRoot {
 		// nothing
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#initialize(org.eclipse.core.resources.IContainer, org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType)
-	 * Also @see org.fedoraproject.eclipse.packager.FedoraProjectRoot#initialize(container, type)
-	 */
 	@Override
 	public void initialize(IContainer container) {
 		this.rootContainer = container;
 		this.productStrings = new ProductStringsNonTranslatable();
 	}
 
-	/*
-	 * sources file not applicable for local projects
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getSourcesFile()
-	 */
 	@Override
 	public SourcesFile getSourcesFile() {
 		return null;
 	}
 	
-	/*
-	 * lookaside cache not applicable for local projects
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getLookAsideCache()
-	 * @see also org.fedoraproject.eclipse.packager.FedoraProjectRoot#getLookAsideCache()
-	 */
 	@Override
 	public ILookasideCache getLookAsideCache() {
 		return null;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getSupportedProjectPropertyNames()
-	 * @see also org.fedoraproject.eclipse.packager.FedoraProjectRoot#getSupportedProjectPropertyNames()
-	 */
 	@Override
 	public QualifiedName[] getSupportedProjectPropertyNames() {
 		return new QualifiedName[] { PackagerPlugin.PROJECT_LOCAL_PROP };
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#validate(IContainer candidate)
-	 */
 	@Override
 	public boolean validate(IContainer candidate) {
 		// For a local Fedora project we only require a .spec file. 
