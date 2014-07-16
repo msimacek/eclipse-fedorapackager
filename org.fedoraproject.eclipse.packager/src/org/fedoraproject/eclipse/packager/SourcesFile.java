@@ -13,7 +13,6 @@ package org.fedoraproject.eclipse.packager;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PipedInputStream;
@@ -206,8 +205,6 @@ public class SourcesFile {
 			byte buf[] = new byte[(int) file.length()];
 			fis.read(buf); // read entire file into buf array
 			result = DigestUtils.md5Hex(buf);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
