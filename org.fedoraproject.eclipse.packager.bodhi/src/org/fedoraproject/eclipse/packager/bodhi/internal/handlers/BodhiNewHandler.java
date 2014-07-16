@@ -178,7 +178,7 @@ public class BodhiNewHandler extends AbstractHandler {
 			}
 
 			// all data gathered, push update
-			Job job = new Job(projectRoot.getProductStrings().getProductName()) { //$NON-NLS-1$
+			Job job = new Job(projectRoot.getProductStrings().getProductName()) {
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					monitor.beginTask(

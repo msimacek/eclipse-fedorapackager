@@ -349,7 +349,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 					BodhiText.PushUpdateCommand_configErrorNoFedoraRelease);
 		}
 		// require a comment
-		if (comment == null || comment.isEmpty()) { //$NON-NLS-1$
+		if (comment == null || comment.isEmpty()) {
 			throw new CommandMisconfiguredException(
 					BodhiText.PushUpdateCommand_configErrorNoUpdateComment);
 		}
