@@ -35,7 +35,7 @@ public class AddNewBuildDialog extends InputDialog {
 	 */
 	public AddNewBuildDialog(Shell parent) {
 		super(parent, BodhiText.AddNewBuildDialog_addAnotherBuild,
-				BodhiText.AddNewBuildDialog_packageBuildsLbl, "",
+				BodhiText.AddNewBuildDialog_packageBuildsLbl, "", //$NON-NLS-1$
 				new IInputValidator() {
 
 					@Override

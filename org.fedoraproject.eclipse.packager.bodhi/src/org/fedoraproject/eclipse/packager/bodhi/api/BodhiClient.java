@@ -48,7 +48,7 @@ public class BodhiClient {
 	// Use 30 sec connection timeout
 	private static final int CONNECTION_TIMEOUT = 30000;
 	// Delimiter for pushing several builds as one update
-	private static final String BUILDS_DELIMITER = ",";
+	private static final String BUILDS_DELIMITER = ","; //$NON-NLS-1$
 
 	// Parameter name constants for login
 	private static final String LOGIN_PARAM_NAME = "login"; //$NON-NLS-1$

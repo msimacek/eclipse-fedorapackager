@@ -40,10 +40,10 @@ public class DateTime {
 	 *            A the JSON string to parse from.
 	 */
 	private void parseFromJson(String serializedJSON) {
-		int plusIndex = serializedJSON.indexOf("+");
+		int plusIndex = serializedJSON.indexOf("+"); //$NON-NLS-1$
 		String time = serializedJSON.substring(0, plusIndex);
 		String timeShift = serializedJSON.substring(plusIndex + 1);
-		timezone = TimeZone.getTimeZone("UTC+" + timeShift);
+		timezone = TimeZone.getTimeZone("UTC+" + timeShift); //$NON-NLS-1$
 		this.time = Timestamp.valueOf(time);
 	}
 
