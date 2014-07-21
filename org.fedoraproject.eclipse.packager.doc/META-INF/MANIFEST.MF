@@ -5,5 +5,5 @@ Bundle-SymbolicName: org.fedoraproject.eclipse.packager.doc;singleton:=true
 Bundle-Version: 0.5.0.qualifier
 Require-Bundle: org.eclipse.help
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: %Bundle-Vendor

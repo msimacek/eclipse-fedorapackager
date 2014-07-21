@@ -16,7 +16,7 @@ Require-Bundle: org.eclipse.ui,
  org.apache.commons.ssl,
  com.jcraft.jsch
 Eclipse-RegisterBuddy: org.apache.log4j
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Export-Package: org.fedoraproject.eclipse.packager.tests,
  org.fedoraproject.eclipse.packager.tests.utils,
