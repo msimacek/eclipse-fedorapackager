@@ -301,13 +301,11 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 		String resDirOpt = MOCK_RESULT_DIR_OPTION;
 		resDirOpt += "="; //$NON-NLS-1$
 		resDirOpt += this.resultDir;
-		String[] mockCmd;
 		// default non-SCM flags
 		assert this.srpmAbsPath != null;
-		mockCmd = new String[] { MOCK_BINARY, MOCK_CHROOT_CONFIG_OPTION,
+		return new String[] { MOCK_BINARY, MOCK_CHROOT_CONFIG_OPTION,
 				this.mockConfig, MOCK_NO_CLEANUP_AFTER_OPTION, resDirOpt,
 				MOCK_REBUILD_OPTION, srpmAbsPath };
-		return mockCmd;
 	}
 
 	private class MockBuildThread extends Thread {
