@@ -141,11 +141,7 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 			throws UserNotInMockGroupException,
 			CommandListenerException, MockBuildCommandException,
 			MockNotInstalledException {
-		try {
-			callPreExecListeners();
-		} catch (CommandListenerException e) {
-			throw e;
-		}
+		callPreExecListeners();
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}
