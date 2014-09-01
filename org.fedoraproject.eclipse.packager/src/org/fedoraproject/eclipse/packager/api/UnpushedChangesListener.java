@@ -56,9 +56,4 @@ public class UnpushedChangesListener implements ICommandListener {
 		mainMonitor.worked(15);
 	}
 
-	@Override
-	public void postExecution() {
-		// nothing
-	}
-
 }

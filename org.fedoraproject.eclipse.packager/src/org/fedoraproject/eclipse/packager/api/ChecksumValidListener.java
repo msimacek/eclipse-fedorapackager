@@ -37,11 +37,6 @@ public class ChecksumValidListener implements ICommandListener {
 	}
 	
 	@Override
-	public void preExecution() {
-		// Nothing
-	}
-
-	@Override
 	public void postExecution() throws CommandListenerException {
 		// do the MD5 check
 		Set<String> sourcesToGet = projectRoot.getSourcesFile()

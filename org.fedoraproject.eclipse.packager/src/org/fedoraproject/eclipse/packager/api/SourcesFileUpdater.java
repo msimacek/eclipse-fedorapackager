@@ -53,11 +53,6 @@ public class SourcesFileUpdater implements ICommandListener {
 		this.shouldReplace = newValue;
 	}
 
-	@Override
-	public void preExecution() {
-		// nothing
-	}
-
 	/**
 	 * Updates the {@code sources} file for the Fedora project root of this
 	 * instance and add the new file as required.

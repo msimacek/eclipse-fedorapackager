@@ -43,7 +43,7 @@ public class MockBuildCommandTest extends FedoraPackagerTest {
 	@Before
 	public void setUp() throws InterruptedException, JGitInternalException, GitAPIException, CoreException, IOException, FedoraPackagerAPIException  {
 		super.setUp();
-		testProject.checkoutBranch("f15"); //$NON-NLS-1$
+		testProject.checkoutBranch("f17"); //$NON-NLS-1$
 		testProject.getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 
 		// build fresh SRPM

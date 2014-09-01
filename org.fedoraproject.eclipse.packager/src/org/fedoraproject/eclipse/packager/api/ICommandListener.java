@@ -27,7 +27,8 @@ public interface ICommandListener {
 	 * @throws CommandListenerException
 	 *             May be used to signify pre-execution problems.
 	 */
-	public void preExecution() throws CommandListenerException;
+	public default void preExecution() throws CommandListenerException {
+	}
 
 	/**
 	 * Called just before a command finished execution. Use this if you need to
@@ -36,5 +37,6 @@ public interface ICommandListener {
 	 * @throws CommandListenerException
 	 *             May be used to signify post execution problems.
 	 */
-	public void postExecution() throws CommandListenerException;
+	public default void postExecution() throws CommandListenerException {
+	}
 }

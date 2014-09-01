@@ -37,9 +37,4 @@ public class CheckConfigListener implements ICommandListener {
 		cmd.checkConfiguration();
 	}
 
-	@Override
-	public void postExecution() {
-		// nothing to do for this listener
-	}
-
 }
