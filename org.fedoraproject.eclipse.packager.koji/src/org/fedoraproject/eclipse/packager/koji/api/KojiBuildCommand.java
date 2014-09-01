@@ -164,11 +164,7 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 	public BuildResult call(IProgressMonitor monitor)
 			throws BuildAlreadyExistsException,
 			CommandListenerException, KojiHubClientException {
-		try {
-			callPreExecListeners();
-		} catch (CommandListenerException e) {
-			throw e;
-		}
+		callPreExecListeners();
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}

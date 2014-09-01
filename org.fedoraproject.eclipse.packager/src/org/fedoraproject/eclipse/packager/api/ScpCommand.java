@@ -76,11 +76,7 @@ public class ScpCommand extends FedoraPackagerCommand<IStatus> {
 	@Override
 	public IStatus call(IProgressMonitor monitor)
 			throws CommandListenerException, ScpFailedException {
-		try {
-			callPreExecListeners();
-		} catch (CommandListenerException e) {
-			throw e;
-		}
+		callPreExecListeners();
 
 		try {
 			session.setConfig("StrictHostKeyChecking", "no"); //$NON-NLS-1$ //$NON-NLS-2$

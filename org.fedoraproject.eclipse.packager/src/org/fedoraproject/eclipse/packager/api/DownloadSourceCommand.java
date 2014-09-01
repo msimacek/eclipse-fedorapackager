@@ -89,11 +89,7 @@ public class DownloadSourceCommand extends
 	@Override
 	public IStatus call(IProgressMonitor monitor)
 			throws SourcesUpToDateException, CommandListenerException {
-		try {
-			callPreExecListeners();
-		} catch (CommandListenerException e) {
-			throw e;
-		}
+		callPreExecListeners();
 		// provide hint which URL is going to be used
 		FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 		logger.logDebug(NLS.bind(

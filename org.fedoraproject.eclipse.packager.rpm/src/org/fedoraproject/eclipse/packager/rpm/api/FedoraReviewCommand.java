@@ -46,11 +46,7 @@ public class FedoraReviewCommand extends
 			throws UserNotInMockGroupException,
 			CommandListenerException, MockBuildCommandException,
 			FedoraReviewNotInstalledException {
-		try {
-			callPreExecListeners();
-		} catch (CommandListenerException e) {
-			throw e;
-		}
+		callPreExecListeners();
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}

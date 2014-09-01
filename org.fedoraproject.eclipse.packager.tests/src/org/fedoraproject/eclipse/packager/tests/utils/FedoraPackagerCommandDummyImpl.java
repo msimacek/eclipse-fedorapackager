@@ -58,11 +58,7 @@ public class FedoraPackagerCommandDummyImpl extends FedoraPackagerCommand<IStatu
 	@Override
 	public IStatus call(IProgressMonitor monitor)
 			throws CommandListenerException {
-		try {
-			callPreExecListeners();
-		} catch (CommandListenerException e) {
-			throw e;
-		}
+		callPreExecListeners();
 		callPostExecListeners();
 		setCallable(false);
 		return Status.OK_STATUS;

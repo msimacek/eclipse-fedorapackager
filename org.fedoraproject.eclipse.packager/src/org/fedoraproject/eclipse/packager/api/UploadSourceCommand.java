@@ -184,11 +184,7 @@ public class UploadSourceCommand extends
 	public UploadSourceResult call(IProgressMonitor subMonitor)
 			throws FileAvailableInLookasideCacheException,
 			CommandListenerException, UploadFailedException {
-		try {
-			callPreExecListeners();
-		} catch (CommandListenerException e) {
-			throw e;
-		}
+		callPreExecListeners();
 		// Check if source is available, first.
 		checkSourceAvailable();
 		// Ok, file is missing. Perform the actual upload.

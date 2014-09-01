@@ -376,11 +376,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 	@Override
 	public PushUpdateResult call(IProgressMonitor monitor)
 			throws CommandListenerException, BodhiClientLoginException, BodhiClientException {
-		try {
-			callPreExecListeners();
-		} catch (CommandListenerException e) {
-			throw e;
-		}
+		callPreExecListeners();
 		// bugs list may be unset
 		if (this.bugs == null) {
 			this.bugs = NO_BUGS;

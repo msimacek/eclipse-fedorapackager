@@ -47,11 +47,7 @@ public class KojiUploadSRPMCommand extends FedoraPackagerCommand<BuildResult> {
 		public BuildResult call(IProgressMonitor monitor)
 				throws KojiHubClientException,
 				KojiHubClientLoginException, CommandListenerException{
-			try {
-				callPreExecListeners();
-			} catch (CommandListenerException e) {
-				throw e;
-			}
+			callPreExecListeners();
 			try {
 				fis = new FileInputStream(srpm);
 				monitor.beginTask(NLS.bind(

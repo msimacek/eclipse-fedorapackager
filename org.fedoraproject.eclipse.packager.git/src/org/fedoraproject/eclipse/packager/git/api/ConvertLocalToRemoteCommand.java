@@ -82,11 +82,7 @@ public class ConvertLocalToRemoteCommand extends
 			throws CommandListenerException,
 			LocalProjectConversionFailedException, RemoteAlreadyExistsException {
 
-		try {
-			callPreExecListeners();
-		} catch (CommandListenerException e) {
-			throw e;
-		}
+		callPreExecListeners();
 
 		IFpProjectBits projectBits = FedoraPackagerUtils
 				.getVcsHandler(projectRoot);

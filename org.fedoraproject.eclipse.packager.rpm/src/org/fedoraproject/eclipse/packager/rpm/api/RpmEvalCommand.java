@@ -77,11 +77,7 @@ public class RpmEvalCommand extends FedoraPackagerCommand<EvalResult> {
 	public EvalResult call(IProgressMonitor monitor)
 			throws CommandListenerException,
 			RpmEvalCommandException {
-		try {
-			callPreExecListeners();
-		} catch (CommandListenerException e) {
-			throw e;
-		}
+		callPreExecListeners();
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}

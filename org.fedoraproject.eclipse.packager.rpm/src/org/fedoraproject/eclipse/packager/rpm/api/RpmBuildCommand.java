@@ -188,11 +188,7 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 	public RpmBuildResult call(IProgressMonitor monitor)
 			throws CommandListenerException,
 			RpmBuildCommandException {
-		try {
-			callPreExecListeners();
-		} catch (CommandListenerException e) {
-			throw e;
-		}
+		callPreExecListeners();
 
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();
