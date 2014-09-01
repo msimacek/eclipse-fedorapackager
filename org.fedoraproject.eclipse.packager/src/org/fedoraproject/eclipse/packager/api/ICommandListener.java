@@ -17,6 +17,7 @@ import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
  * in order for you to get pre/post actions executed. If more than one Listener
  * is registered for a command they get executed in the order they were added.
  */
+@SuppressWarnings("unused")
 public interface ICommandListener {
 
 	/**
