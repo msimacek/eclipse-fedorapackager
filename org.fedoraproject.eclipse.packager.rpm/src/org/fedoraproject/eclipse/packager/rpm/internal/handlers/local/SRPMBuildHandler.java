@@ -105,7 +105,7 @@ public class SRPMBuildHandler extends LocalHandlerDispatcher {
 
 	@Override
 	protected AbstractHandler getDispatchee() {
-		return new SRPMBuildHandler();
+		return new org.fedoraproject.eclipse.packager.rpm.internal.handlers.SRPMBuildHandler();
 	}
 
 }
