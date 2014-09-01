@@ -60,7 +60,6 @@ public class FedoraPackagerUtils {
 	private static final String PROJECT_ROOT_CLASS_ATTRIBUTE_NAME = "class"; //$NON-NLS-1$
 	private static final String VCS_CONTRIBUTION_EXTENSIONPOINT_NAME = "vcsContribution"; //$NON-NLS-1$
 	private static final String VCS_CONTRIBUTION_ELEMENT_NAME = "vcs"; //$NON-NLS-1$
-	private static final String VCS_CONTRIBUTION_TYPE_ATTRIBUTE_NAME = "type"; //$NON-NLS-1$
 	private static final String VCS_CONTRIBUTION_CONTRIB_PLUGIN_ID_ATTRIBUTE_NAME = "contribPlugin"; //$NON-NLS-1$
 	private static final String VCS_CONTRIBUTION_CLASS_ATTRIBUTE_NAME = "class"; //$NON-NLS-1$
 
@@ -131,12 +130,7 @@ public class FedoraPackagerUtils {
 						&& elements[i]
 								.getAttribute(
 										VCS_CONTRIBUTION_CONTRIB_PLUGIN_ID_ATTRIBUTE_NAME)
-								.startsWith(propertyName.getQualifier())
-						&& elements[i]
-								.getAttribute(VCS_CONTRIBUTION_TYPE_ATTRIBUTE_NAME) != null
-						&& elements[i].getAttribute(
-								VCS_CONTRIBUTION_TYPE_ATTRIBUTE_NAME).equals(
-								"GIT")) { //$NON-NLS-1$
+								.startsWith(propertyName.getQualifier())) {
 					try {
 						IConfigurationElement bob = elements[i];
 						IFpProjectBits vcsContributor = (IFpProjectBits) bob

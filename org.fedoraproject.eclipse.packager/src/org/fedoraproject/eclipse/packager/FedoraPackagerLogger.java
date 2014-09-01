@@ -114,7 +114,7 @@ public class FedoraPackagerLogger {
 	public void logDebug(String message, Throwable reason) {
 		if (currentLogLevel == LogLevel.DEBUG) {
 			log.log(new Status(IStatus.INFO, PackagerPlugin.PLUGIN_ID,
-					DEBUG_STATUS, message, reason));
+					message, reason));
 		}
 	}
 	
