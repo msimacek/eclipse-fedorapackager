@@ -35,11 +35,6 @@ public class FedoraReviewCommand extends
 	protected static final String MOCK_GROUP_NAME = "mock"; //$NON-NLS-1$
 
 	@Override
-	protected void checkConfiguration() {
-		// no prereqs
-	}
-
-	@Override
 	public FedoraReviewResult call(IProgressMonitor monitor)
 			throws UserNotInMockGroupException,
 			CommandListenerException, MockBuildCommandException,

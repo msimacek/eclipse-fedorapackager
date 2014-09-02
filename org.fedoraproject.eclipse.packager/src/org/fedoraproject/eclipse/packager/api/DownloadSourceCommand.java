@@ -166,11 +166,6 @@ public class DownloadSourceCommand extends
 		return Status.OK_STATUS;
 	}
 
-	@Override
-	protected void checkConfiguration() {
-		// We are good to go with the defaults. No-Op.
-	}
-
 	/**
 	 * Carry out the download for a given IFile.
 	 * 

@@ -23,8 +23,7 @@ import org.junit.Test;
 public class RpmEvalCommandTest extends FedoraPackagerTest {
 
 	/**
-	 * Test method for 
-	 * {@link org.fedoraproject.eclipse.packager.rpm.api.RpmEvalCommand#checkConfiguration()}.
+	 * Test method for input validation.
 	 * Should have thrown an exception. Command is not properly configured.
 	 */
 	@Test(expected=CommandMisconfiguredException.class)

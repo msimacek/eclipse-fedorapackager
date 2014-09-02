@@ -39,15 +39,6 @@ public class FedoraPackagerCommandDummyImpl extends FedoraPackagerCommand<IStatu
 		}
 	}
 	
-	@Override
-	protected void checkConfiguration() throws CommandMisconfiguredException {
-		// pretend to require configured set to true
-		if (!configured) {
-			throw new CommandMisconfiguredException(
-					"Dummy command implementation is not configured!"); //$NON-NLS-1$
-		}
-	}
-	
 	public void setConfiguration(boolean configured) {
 		this.configured = configured;
 	}
@@ -59,6 +50,11 @@ public class FedoraPackagerCommandDummyImpl extends FedoraPackagerCommand<IStatu
 	public IStatus call(IProgressMonitor monitor)
 			throws CommandListenerException {
 		callPreExecListeners();
+		// pretend to require configured set to true
+		if (!configured) {
+			throw new CommandMisconfiguredException(
+				"Dummy command implementation is not configured!"); //$NON-NLS-1$
+		}
 		callPostExecListeners();
 		setCallable(false);
 		return Status.OK_STATUS;

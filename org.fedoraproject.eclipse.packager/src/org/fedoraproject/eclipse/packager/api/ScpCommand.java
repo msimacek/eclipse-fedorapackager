@@ -77,7 +77,15 @@ public class ScpCommand extends FedoraPackagerCommand<IStatus> {
 	public IStatus call(IProgressMonitor monitor)
 			throws CommandListenerException, ScpFailedException {
 		callPreExecListeners();
+		if (this.session == null) {
+			throw new CommandMisconfiguredException(
+					FedoraPackagerText.ScpCommand_NoSession);
+		}
 
+		if ((this.specFile == null) || (this.srpmFile == null)) {
+			throw new CommandMisconfiguredException(
+					FedoraPackagerText.ScpCommand_filesToScpMissing);
+		}
 		try {
 			session.setConfig("StrictHostKeyChecking", "no"); //$NON-NLS-1$ //$NON-NLS-2$
 			session.connect();
@@ -272,19 +280,6 @@ public class ScpCommand extends FedoraPackagerCommand<IStatus> {
 
 		} catch (JSchException|IOException e) {
 			throw new ScpFailedException(e.getMessage(), e);
-		}
-	}
-
-	@Override
-	protected void checkConfiguration() throws CommandMisconfiguredException {
-		if (this.session == null) {
-			throw new CommandMisconfiguredException(
-					FedoraPackagerText.ScpCommand_NoSession);
-		}
-
-		if ((this.specFile == null) || (this.srpmFile == null)) {
-			throw new CommandMisconfiguredException(
-					FedoraPackagerText.ScpCommand_filesToScpMissing);
 		}
 	}
 

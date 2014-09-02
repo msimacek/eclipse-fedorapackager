@@ -185,20 +185,16 @@ public class UploadSourceCommand extends
 			throws FileAvailableInLookasideCacheException,
 			CommandListenerException, UploadFailedException {
 		callPreExecListeners();
+		if (this.fileToUpload == null) {
+			throw new IllegalStateException(
+					FedoraPackagerText.UploadSourceCommand_uploadFileUnspecified);
+		}
 		// Check if source is available, first.
 		checkSourceAvailable();
 		// Ok, file is missing. Perform the actual upload.
 		UploadSourceResult result = upload(subMonitor);
 		callPostExecListeners();
 		return result;
-	}
-
-	@Override
-	protected void checkConfiguration() {
-		if (this.fileToUpload == null) {
-			throw new IllegalStateException(
-					FedoraPackagerText.UploadSourceCommand_uploadFileUnspecified);
-		}
 	}
 
 	/**

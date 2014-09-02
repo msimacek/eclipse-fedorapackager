@@ -36,7 +36,7 @@ public class RpmBuildCommandTest extends FedoraPackagerTest {
 
 	/**
 	 * Test method for
-	 * {@link org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand#checkConfiguration()}. 
+	 * input validation. 
 	 * Should have thrown an exception. Command is not properly configured.
 	 */
 	@Test(expected = CommandMisconfiguredException.class)

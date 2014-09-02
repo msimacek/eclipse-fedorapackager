@@ -250,9 +250,4 @@ public class ConvertLocalToRemoteCommand extends
 					.getMessage(), e);
 		}
 	}
-
-	@Override
-	protected void checkConfiguration() {
-		// We are good to go with the defaults. No-Op.
-	}
 }

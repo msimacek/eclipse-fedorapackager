@@ -163,19 +163,6 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 		return this;
 	}
 
-	@Override
-	protected void checkConfiguration() throws CommandMisconfiguredException {
-		// built type is the only required config
-		if (buildTypeFlags == null) {
-			throw new CommandMisconfiguredException(
-					RpmText.RpmBuildCommand_buildTypeRequired);
-		}
-		if (bci == null) {
-			throw new CommandMisconfiguredException(
-					RpmText.RpmBuildCommand_NoBranchConfig);
-		}
-	}
-
 	/**
 	 * Implementation of rpm build command. Triggers a build as configured.
 	 *
@@ -186,10 +173,17 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 	 */
 	@Override
 	public RpmBuildResult call(IProgressMonitor monitor)
-			throws CommandListenerException,
-			RpmBuildCommandException {
+			throws CommandListenerException, RpmBuildCommandException {
 		callPreExecListeners();
-
+		// built type is the only required config
+		if (buildTypeFlags == null) {
+			throw new CommandMisconfiguredException(
+					RpmText.RpmBuildCommand_buildTypeRequired);
+		}
+		if (bci == null) {
+			throw new CommandMisconfiguredException(
+					RpmText.RpmBuildCommand_NoBranchConfig);
+		}
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}
@@ -200,7 +194,8 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}
-		RpmBuildThread rbt = new RpmBuildThread(buildType, cmdList, projectRoot.getPackageName());
+		RpmBuildThread rbt = new RpmBuildThread(buildType, cmdList,
+				projectRoot.getPackageName());
 		rbt.start();
 		while (rbt.getState() != Thread.State.TERMINATED) {
 			if (monitor.isCanceled()) {
@@ -278,7 +273,8 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 		private RpmBuildResult result;
 		private String packageName;
 
-		public RpmBuildThread(BuildType buildType, String[] cmdList, String packageName) {
+		public RpmBuildThread(BuildType buildType, String[] cmdList,
+				String packageName) {
 			super();
 			this.buildType = buildType;
 			this.cmdList = cmdList;
@@ -299,7 +295,8 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 						convertCmdList(cmdList)));
 				child = RuntimeProcessFactory.getFactory().exec(cmdList, null);
 
-				is = new BufferedInputStream(new SequenceInputStream(child.getInputStream(), child.getErrorStream()));
+				is = new BufferedInputStream(new SequenceInputStream(
+						child.getInputStream(), child.getErrorStream()));
 
 			} catch (IOException e) {
 				FedoraHandlerUtils.showErrorDialog(new Shell(),
@@ -307,7 +304,8 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 						RpmText.RpmBuildCommand_BuildDidNotStart);
 			}
 			// Do the console writing
-			final MessageConsole console = FedoraPackagerConsole.getConsole(packageName);
+			final MessageConsole console = FedoraPackagerConsole
+					.getConsole(packageName);
 			IConsoleManager manager = ConsolePlugin.getDefault()
 					.getConsoleManager();
 			manager.addConsoles(new IConsole[] { console });

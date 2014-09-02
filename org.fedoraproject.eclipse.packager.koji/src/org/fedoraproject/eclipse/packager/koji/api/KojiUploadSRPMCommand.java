@@ -34,115 +34,119 @@ import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginExce
  *
  */
 public class KojiUploadSRPMCommand extends FedoraPackagerCommand<BuildResult> {
-		/**
-		 * Unique ID for this command.
-		 */
-		public final static String ID = "KojiUploadSRPMCommand"; //$NON-NLS-1$
-		private File srpm;
-		private FileInputStream fis;
-		private String remotePath;
-		private IKojiHubClient client;
+	/**
+	 * Unique ID for this command.
+	 */
+	public final static String ID = "KojiUploadSRPMCommand"; //$NON-NLS-1$
+	private File srpm;
+	private FileInputStream fis;
+	private String remotePath;
+	private IKojiHubClient client;
 
-		@Override
-		public BuildResult call(IProgressMonitor monitor)
-				throws KojiHubClientException,
-				KojiHubClientLoginException, CommandListenerException{
-			callPreExecListeners();
-			try {
-				fis = new FileInputStream(srpm);
-				monitor.beginTask(NLS.bind(
-						KojiText.KojiUploadSRPMJob_KojiUpload,
-						srpm.getName()), fis.available());
-			} catch (FileNotFoundException e){
-				throw new CommandMisconfiguredException(NLS.bind(
-						KojiText.KojiUploadSRPMCommand_FileNotFound, srpm.getName()));
-			} catch (IOException e) {
-				throw new CommandMisconfiguredException(NLS.bind(
-						KojiText.KojiUploadSRPMCommand_CouldNotRead , srpm.getName()));
-			}
-			client.login();
+	@Override
+	public BuildResult call(IProgressMonitor monitor)
+			throws KojiHubClientException, KojiHubClientLoginException,
+			CommandListenerException {
+		callPreExecListeners();
+		if (client == null) {
+			throw new CommandMisconfiguredException(NLS.bind(
+					KojiText.KojiBuildCommand_configErrorNoClient,
+					this.projectRoot.getProductStrings().getBuildToolName()));
+		}
+		if (srpm == null) {
+			throw new CommandMisconfiguredException(
+					KojiText.KojiUploadSRPMCommand_NoSRPM);
+		}
+		if (!srpm.getName().endsWith(".src.rpm")) { //$NON-NLS-1$
+			throw new CommandMisconfiguredException(NLS.bind(
+					KojiText.KojiUploadSRPMCommand_InvalidSRPM, srpm.getName()));
+		}
+		if (remotePath == null) {
+			throw new CommandMisconfiguredException(
+					KojiText.KojiUploadSRPMCommand_NoUploadPath);
+		}
+		try {
+			fis = new FileInputStream(srpm);
+			monitor.beginTask(
+					NLS.bind(KojiText.KojiUploadSRPMJob_KojiUpload,
+							srpm.getName()), fis.available());
+		} catch (FileNotFoundException e) {
+			throw new CommandMisconfiguredException(
+					NLS.bind(KojiText.KojiUploadSRPMCommand_FileNotFound,
+							srpm.getName()));
+		} catch (IOException e) {
+			throw new CommandMisconfiguredException(
+					NLS.bind(KojiText.KojiUploadSRPMCommand_CouldNotRead,
+							srpm.getName()));
+		}
+		client.login();
 
-			String srpmName = srpm.getName();
-			byte[] readData = null;
-			boolean success = true;
+		String srpmName = srpm.getName();
+		byte[] readData = null;
+		boolean success = true;
 
-			try {
+		try {
 
-				int chunkSize = Math.min(fis.available(), 1000000);
-				int chunkOffset = 0;
-				String md5sum = null;
-				String base64 = null;
-				while (chunkSize > 0){
-					readData = new byte[chunkSize];
-					fis.read(readData);
-					md5sum = Hex.encodeHexString(
-							MessageDigest.getInstance("MD5").digest(readData)); //$NON-NLS-1$
-					base64 = Base64.encode(readData);
-					success = (success && client.uploadFile(remotePath, srpmName, chunkSize, md5sum, chunkOffset, base64));
-					monitor.worked(chunkSize);
-					chunkOffset += chunkSize;
-					chunkSize = Math.min(fis.available(), 1000000);
-					if (monitor.isCanceled()){
-						throw new OperationCanceledException();
-					}
+			int chunkSize = Math.min(fis.available(), 1000000);
+			int chunkOffset = 0;
+			String md5sum = null;
+			String base64 = null;
+			while (chunkSize > 0) {
+				readData = new byte[chunkSize];
+				fis.read(readData);
+				md5sum = Hex.encodeHexString(MessageDigest
+						.getInstance("MD5").digest(readData)); //$NON-NLS-1$
+				base64 = Base64.encode(readData);
+				success = (success && client.uploadFile(remotePath, srpmName,
+						chunkSize, md5sum, chunkOffset, base64));
+				monitor.worked(chunkSize);
+				chunkOffset += chunkSize;
+				chunkSize = Math.min(fis.available(), 1000000);
+				if (monitor.isCanceled()) {
+					throw new OperationCanceledException();
 				}
-			} catch (IOException e1) {
-				throw new CommandMisconfiguredException(NLS.bind(
-						KojiText.KojiUploadSRPMCommand_CouldNotRead , srpm.getName()));
-			} catch (NoSuchAlgorithmException e) {
-				// should not occur
-				throw new CommandMisconfiguredException(KojiText.KojiUploadSRPMCommand_NoMD5);
 			}
-			BuildResult result = new BuildResult();
-			result.setSuccessful(success);
-			return result;
+		} catch (IOException e1) {
+			throw new CommandMisconfiguredException(
+					NLS.bind(KojiText.KojiUploadSRPMCommand_CouldNotRead,
+							srpm.getName()));
+		} catch (NoSuchAlgorithmException e) {
+			// should not occur
+			throw new CommandMisconfiguredException(
+					KojiText.KojiUploadSRPMCommand_NoMD5);
 		}
+		BuildResult result = new BuildResult();
+		result.setSuccessful(success);
+		return result;
+	}
 
-		/**
-		 * @param srpmPath The path of the rpm to use.
-		 * @return This command.
-		 */
-		public KojiUploadSRPMCommand setSRPM(String srpmPath){
-			srpm = new File(srpmPath);
-			return this;
-		}
+	/**
+	 * @param srpmPath
+	 *            The path of the rpm to use.
+	 * @return This command.
+	 */
+	public KojiUploadSRPMCommand setSRPM(String srpmPath) {
+		srpm = new File(srpmPath);
+		return this;
+	}
 
-		/**
-		 * @param remotePath The path on the server to upload the SRPM to.
-		 * @return This command.
-		 */
-		public KojiUploadSRPMCommand setRemotePath(String remotePath){
-			this.remotePath = remotePath;
-			return this;
-		}
+	/**
+	 * @param remotePath
+	 *            The path on the server to upload the SRPM to.
+	 * @return This command.
+	 */
+	public KojiUploadSRPMCommand setRemotePath(String remotePath) {
+		this.remotePath = remotePath;
+		return this;
+	}
 
-		/**
-		 * @param client The client used when connecting to koji.
-		 * @return This command.
-		 */
-		public KojiUploadSRPMCommand setKojiClient(IKojiHubClient client){
-			this.client = client;
-			return this;
-		}
-
-		@Override
-		protected void checkConfiguration()
-				throws CommandMisconfiguredException {
-			if (client == null){
-				throw new CommandMisconfiguredException(NLS.bind(
-						KojiText.KojiBuildCommand_configErrorNoClient,
-						this.projectRoot.getProductStrings().getBuildToolName()));
-			} if (srpm == null){
-				throw new CommandMisconfiguredException(
-						KojiText.KojiUploadSRPMCommand_NoSRPM);
-			} if (!srpm.getName().endsWith(".src.rpm")){ //$NON-NLS-1$
-				throw new CommandMisconfiguredException(NLS.bind(
-						KojiText.KojiUploadSRPMCommand_InvalidSRPM ,
-						srpm.getName()));
-			} if (remotePath == null){
-				throw new CommandMisconfiguredException(
-						KojiText.KojiUploadSRPMCommand_NoUploadPath);
-			}
-
-		}
+	/**
+	 * @param client
+	 *            The client used when connecting to koji.
+	 * @return This command.
+	 */
+	public KojiUploadSRPMCommand setKojiClient(IKojiHubClient client) {
+		this.client = client;
+		return this;
+	}
 }

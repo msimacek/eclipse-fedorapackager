@@ -54,33 +54,6 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 	 */
 	protected String[] nvr;
 
-	@Override
-	protected void checkConfiguration() throws CommandMisconfiguredException {
-		// require a client
-		if (kojiClient == null) {
-			throw new CommandMisconfiguredException(NLS.bind(
-					KojiText.KojiBuildCommand_configErrorNoClient,
-					this.projectRoot.getProductStrings().getBuildToolName()));
-		}
-		// we also require scmURL to be set
-		if (location == null
-				|| location.isEmpty()
-				|| !(location.get(0) instanceof String || location.get(0) instanceof List<?>)) {
-			throw new CommandMisconfiguredException(
-					KojiText.KojiBuildCommand_configErrorNoScmURL);
-		}
-		// distribution can't be null
-		if (buildTarget == null) {
-			throw new CommandMisconfiguredException(
-					KojiText.KojiBuildCommand_configErrorNoBuildTarget);
-		}
-		// nvr can't be null
-		if (nvr == null || nvr.length == 0) {
-			throw new CommandMisconfiguredException(
-					KojiText.KojiBuildCommand_configErrorNoNVR);
-		}
-	}
-
 	/**
 	 * Sets the XMLRPC based client, which will be used for Koji interaction.
 	 *
@@ -162,9 +135,32 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 	 */
 	@Override
 	public BuildResult call(IProgressMonitor monitor)
-			throws BuildAlreadyExistsException,
-			CommandListenerException, KojiHubClientException {
+			throws BuildAlreadyExistsException, CommandListenerException,
+			KojiHubClientException {
 		callPreExecListeners();
+		// require a client
+		if (kojiClient == null) {
+			throw new CommandMisconfiguredException(NLS.bind(
+					KojiText.KojiBuildCommand_configErrorNoClient,
+					this.projectRoot.getProductStrings().getBuildToolName()));
+		}
+		// we also require scmURL to be set
+		if (location == null
+				|| location.isEmpty()
+				|| !(location.get(0) instanceof String || location.get(0) instanceof List<?>)) {
+			throw new CommandMisconfiguredException(
+					KojiText.KojiBuildCommand_configErrorNoScmURL);
+		}
+		// distribution can't be null
+		if (buildTarget == null) {
+			throw new CommandMisconfiguredException(
+					KojiText.KojiBuildCommand_configErrorNoBuildTarget);
+		}
+		// nvr can't be null
+		if (nvr == null || nvr.length == 0) {
+			throw new CommandMisconfiguredException(
+					KojiText.KojiBuildCommand_configErrorNoNVR);
+		}
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}

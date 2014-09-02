@@ -45,14 +45,6 @@ public class RpmEvalCommand extends FedoraPackagerCommand<EvalResult> {
 
 	private String variable;
 
-	@Override
-	protected void checkConfiguration() throws CommandMisconfiguredException {
-		if (variable == null) {
-			throw new CommandMisconfiguredException(
-					RpmText.RpmEvalCommand_variableMustBeSet);
-		}
-	}
-
 	/**
 	 * Set the variable, which should get evaluated.
 	 * 
@@ -78,6 +70,10 @@ public class RpmEvalCommand extends FedoraPackagerCommand<EvalResult> {
 			throws CommandListenerException,
 			RpmEvalCommandException {
 		callPreExecListeners();
+		if (variable == null) {
+			throw new CommandMisconfiguredException(
+					RpmText.RpmEvalCommand_variableMustBeSet);
+		}
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}

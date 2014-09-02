@@ -110,7 +110,6 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 		return this;
 	}
 
-	@Override
 	protected void checkConfiguration() throws CommandMisconfiguredException {
 		// require path to SRPM to be set
 		if (srpmAbsPath == null) {
@@ -142,6 +141,7 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 			CommandListenerException, MockBuildCommandException,
 			MockNotInstalledException {
 		callPreExecListeners();
+		checkConfiguration();
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}
