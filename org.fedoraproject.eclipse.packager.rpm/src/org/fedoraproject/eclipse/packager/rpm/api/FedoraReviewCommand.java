@@ -9,9 +9,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.linuxtools.rpm.core.utils.Utils;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
-import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.rpm.RpmText;
@@ -63,9 +61,6 @@ public class FedoraReviewCommand extends
 		}
 		String[] reviewCommand = new String[] { "fedora-review", //$NON-NLS-1$
 				"-n", projectRoot.getPackageName() }; //$NON-NLS-1$
-		FedoraPackagerLogger.getInstance().logDebug(
-				NLS.bind(RpmText.FedoraReviewCommand_CommandLog,
-						MockUtils.convertCLICmd(reviewCommand)));
 		FedoraReviewResult result = new FedoraReviewResult(reviewCommand);
 		MockUtils.checkMockGroupMembership();
 		try {

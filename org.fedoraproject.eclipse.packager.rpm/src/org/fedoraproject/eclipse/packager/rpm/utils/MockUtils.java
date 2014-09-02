@@ -68,21 +68,6 @@ public class MockUtils {
 	}
 
 	/**
-	 * Convenience method to convert the command list into a String.
-	 * 
-	 * @param cmdList
-	 *            The command and arguments as a list of Strings.
-	 * @return The command list in String format.
-	 */
-	public static String convertCLICmd(String[] cmdList) {
-		String cmd = new String();
-		for (String token : cmdList) {
-			cmd += token + " "; //$NON-NLS-1$
-		}
-		return cmd.trim();
-	}
-
-	/**
 	 * Run a command on the system.
 	 * 
 	 * @param command

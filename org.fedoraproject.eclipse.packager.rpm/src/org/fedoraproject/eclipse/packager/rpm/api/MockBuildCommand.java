@@ -324,10 +324,6 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 		@Override
 		public void run() {
 			result = new MockBuildResult(cmdList, resultDir);
-			// log the mock call
-			FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-			logger.logDebug(NLS.bind(RpmText.MockBuildCommand_mockCommandLog,
-					MockUtils.convertCLICmd(cmdList)));
 			try {
 				if (MockUtils.runCommand(cmdList, packageName, new Observer[] {
 						new MockBuildStatusObserver(monitor),
