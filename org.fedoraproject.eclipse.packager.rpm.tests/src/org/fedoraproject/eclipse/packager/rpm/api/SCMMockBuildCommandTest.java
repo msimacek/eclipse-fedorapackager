@@ -14,37 +14,22 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
-import org.junit.Before;
 import org.junit.Test;
 
 public class SCMMockBuildCommandTest extends FedoraPackagerTest{
-	// download source command
-	private DownloadSourceCommand download;
-
-	@Override
-	@Before
-	public void setUp() throws InterruptedException, JGitInternalException, GitAPIException, CoreException, IOException, FedoraPackagerAPIException  {
-		super.setUp();
-		// need to have sources ready
-		download = (DownloadSourceCommand) packager
-				.getCommandInstance(DownloadSourceCommand.ID);
-	}
-
-
 	@Test
 	public void canCreateSCMMockBuild() throws CoreException,
 			FedoraPackagerAPIException {
+		DownloadSourceCommand download = (DownloadSourceCommand) packager
+				.getCommandInstance(DownloadSourceCommand.ID);
 		SCMMockBuildCommand mockBuild = (SCMMockBuildCommand) packager
 				.getCommandInstance(SCMMockBuildCommand.ID);
 		MockBuildResult result = mockBuild

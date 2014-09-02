@@ -16,7 +16,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,31 +24,14 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.rpm.api.RpmBuildCommand.BuildType;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
  * Some basic tests for the mock build command.
  */
 public class MockBuildCommandTest extends FedoraPackagerTest {
-
-	private String srpmPath;
-
-	@Override
-	@Before
-	public void setUp() throws InterruptedException, JGitInternalException, GitAPIException, CoreException, IOException, FedoraPackagerAPIException  {
-		super.setUp();
-		testProject.checkoutBranch("f17"); //$NON-NLS-1$
-		testProject.getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-
-		// build fresh SRPM
-		RpmBuildResult srpmBuildResult = createSRPM();
-		this.srpmPath = srpmBuildResult.getAbsoluteSRPMFilePath();
-	}
 
 	/**
 	 * This test may take >= 15 mins to run. Be patient :)
@@ -60,6 +42,8 @@ public class MockBuildCommandTest extends FedoraPackagerTest {
 	 */
 	@Test
 	public void canCreateMockBuild() throws FedoraPackagerAPIException, FileNotFoundException, CoreException {
+		RpmBuildResult srpmBuildResult = createSRPM();
+		String srpmPath = srpmBuildResult.getAbsoluteSRPMFilePath();
 		MockBuildCommand mockBuild = (MockBuildCommand) packager
 				.getCommandInstance(MockBuildCommand.ID);
 		MockBuildResult result = mockBuild.pathToSRPM(srpmPath)
