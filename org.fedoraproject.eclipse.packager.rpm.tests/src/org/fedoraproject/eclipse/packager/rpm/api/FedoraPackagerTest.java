@@ -46,7 +46,7 @@ public class FedoraPackagerTest {
 
 		this.testProject = new GitTestProject("example", TestsUtils.prepLocalGitTestProject(exampleGitdirPath)); //$NON-NLS-1$
 
-		testProject.checkoutBranch("f17"); //$NON-NLS-1$
+		testProject.checkoutBranch("f20"); //$NON-NLS-1$
 		this.fpRoot = FedoraPackagerUtils.getProjectRoot((this.testProject
 				.getProject()));
 		this.packager = new FedoraPackager(fpRoot);
