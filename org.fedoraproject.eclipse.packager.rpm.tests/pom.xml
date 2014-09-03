@@ -5,7 +5,7 @@
   <parent>
     <artifactId>parent</artifactId>
     <groupId>org.fedoraproject.eclipse.packager</groupId>
-    <version>0.5.0</version>
+    <version>0.5.1-SNAPSHOT</version>
   </parent>
   <artifactId>org.fedoraproject.eclipse.packager.rpm.tests</artifactId>
   <packaging>eclipse-test-plugin</packaging>
