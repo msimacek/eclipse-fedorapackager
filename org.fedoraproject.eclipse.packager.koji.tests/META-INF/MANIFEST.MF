@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.fedoraproject.eclipse.packager.koji.tests
 Fragment-Host: org.fedoraproject.eclipse.packager.koji
-Bundle-Version: 0.5.0.qualifier
+Bundle-Version: 0.5.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.easymock,
  org.junit,
