@@ -227,9 +227,8 @@ public class UploadHandler extends AbstractHandler implements
 								PackagerPlugin.PLUGIN_ID, message);
 					}
 
-					IStatus res = Status.OK_STATUS;
 					// Do VCS update
-					res = projectBits.updateVCS(monitor);
+					IStatus res = projectBits.updateVCS(monitor);
 					if (res.isOK()) {
 						if (monitor.isCanceled()) {
 							throw new OperationCanceledException();
