@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.rpm.api;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -69,7 +70,7 @@ public class RpmBuildCommandTest extends FedoraPackagerTest {
 				new Path("noarch")); //$NON-NLS-1$
 		assertNotNull(noArchFolder);
 		// there should be one RPM
-		assertTrue(((IContainer) noArchFolder).members().length == 1);
+		assertEquals(1, ((IContainer) noArchFolder).members().length);
 	}
 
 	/**
