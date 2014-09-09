@@ -55,14 +55,13 @@ public class RpmBuildCommandTest extends FedoraPackagerTest {
 	public void canBuildForLocalArchitecture() throws FedoraPackagerAPIException, CoreException {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
-		RpmBuildResult result;
 		List<String> distDefines = new ArrayList<>();
 		distDefines.add("--define"); //$NON-NLS-1$
 		distDefines.add("dist .fc17"); //$NON-NLS-1$
 		distDefines.add("--define"); //$NON-NLS-1$
 		distDefines.add("fedora 17"); //$NON-NLS-1$
 		build.buildType(BuildType.BINARY).branchConfig(bci);
-		result = build.call(new NullProgressMonitor());
+		RpmBuildResult result = build.call(new NullProgressMonitor());
 		assertTrue(result.isSuccessful());
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());
@@ -83,8 +82,7 @@ public class RpmBuildCommandTest extends FedoraPackagerTest {
 				.getCommandInstance(RpmBuildCommand.ID);
 		List<String> nodeps = new ArrayList<>(1);
 		nodeps.add(RpmBuildCommand.NO_DEPS);
-		RpmBuildResult result;
-			result = build.buildType(BuildType.PREP).flags(nodeps)
+		RpmBuildResult result = build.buildType(BuildType.PREP).flags(nodeps)
 					.branchConfig(bci).call(new NullProgressMonitor());
 		assertTrue(result.isSuccessful());
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
@@ -106,8 +104,7 @@ public class RpmBuildCommandTest extends FedoraPackagerTest {
 	public void canRpmCompile() throws FedoraPackagerAPIException, CoreException {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
-		RpmBuildResult result;
-			result = build.buildType(BuildType.COMPILE).branchConfig(bci).call(new NullProgressMonitor());
+		RpmBuildResult result = build.buildType(BuildType.COMPILE).branchConfig(bci).call(new NullProgressMonitor());
 		assertTrue(result.isSuccessful());
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());
@@ -134,8 +131,7 @@ public class RpmBuildCommandTest extends FedoraPackagerTest {
 	public void canRpmInstall() throws FedoraPackagerAPIException, CoreException {
 		RpmBuildCommand build = (RpmBuildCommand) packager
 				.getCommandInstance(RpmBuildCommand.ID);
-		RpmBuildResult result;
-			result = build.buildType(BuildType.INSTALL).branchConfig(bci).call(new NullProgressMonitor());
+		RpmBuildResult result = build.buildType(BuildType.INSTALL).branchConfig(bci).call(new NullProgressMonitor());
 		assertTrue(result.isSuccessful());
 		fpRoot.getContainer().refreshLocal(IResource.DEPTH_INFINITE,
 				new NullProgressMonitor());
@@ -164,8 +160,7 @@ public class RpmBuildCommandTest extends FedoraPackagerTest {
 				.getCommandInstance(RpmBuildCommand.ID);
 		List<String> nodeps = new ArrayList<>(1);
 		nodeps.add(RpmBuildCommand.NO_DEPS);
-		RpmBuildResult result;
-			result = build.buildType(BuildType.SOURCE).flags(nodeps)
+		RpmBuildResult result = build.buildType(BuildType.SOURCE).flags(nodeps)
 					.branchConfig(bci).call(new NullProgressMonitor());
 		assertTrue(result.isSuccessful());
 		// should contain at least one SRPM
