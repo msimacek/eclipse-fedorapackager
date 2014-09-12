@@ -16,9 +16,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 import org.apache.commons.codec.binary.Hex;
-import org.apache.ws.commons.util.Base64;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.osgi.util.NLS;
@@ -96,7 +96,7 @@ public class KojiUploadSRPMCommand extends FedoraPackagerCommand<BuildResult> {
 				fis.read(readData);
 				md5sum = Hex.encodeHexString(MessageDigest
 						.getInstance("MD5").digest(readData)); //$NON-NLS-1$
-				base64 = Base64.encode(readData);
+				base64 = Base64.getEncoder().encodeToString(readData);
 				success = (success && client.uploadFile(remotePath, srpmName,
 						chunkSize, md5sum, chunkOffset, base64));
 				monitor.worked(chunkSize);
