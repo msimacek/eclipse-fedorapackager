@@ -20,17 +20,13 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import org.eclipse.osgi.util.NLS;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
@@ -39,6 +35,9 @@ import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientException;
 import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientLoginException;
 import org.fedoraproject.eclipse.packager.bodhi.deserializers.DateTimeDeserializer;
 import org.fedoraproject.eclipse.packager.bodhi.fas.DateTime;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Bodhi JSON over HTTP client.
@@ -144,13 +143,14 @@ public class BodhiClient {
 			post.addHeader(ACCEPT_HTTP_HEADER_NAME, MIME_JSON);
 
 			// Construct the multipart POST request body.
-			MultipartEntity reqEntity = new MultipartEntity();
-			reqEntity.addPart(LOGIN_PARAM_NAME, new StringBody(
-					LOGIN_PARAM_VALUE));
-			reqEntity.addPart(USERNAME_PARAM_NAME, new StringBody(username));
-			reqEntity.addPart(PASSWORD_PARAM_NAME, new StringBody(password));
+			MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
+			reqEntity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+			
+			reqEntity.addTextBody(LOGIN_PARAM_NAME, LOGIN_PARAM_VALUE);
+			reqEntity.addTextBody(USERNAME_PARAM_NAME, username);
+			reqEntity.addTextBody(PASSWORD_PARAM_NAME, password);
 
-			post.setEntity(reqEntity);
+			post.setEntity(reqEntity.build());
 
 			HttpResponse response = httpclient.execute(post);
 			HttpEntity resEntity = response.getEntity();
@@ -273,26 +273,21 @@ public class BodhiClient {
 			String buildsParamValue = buildsNVR.toString();
 
 			// Construct the multipart POST request body.
-			MultipartEntity reqEntity = new MultipartEntity();
-			reqEntity.addPart(BUILDS_PARAM_NAME, new StringBody(
-					buildsParamValue));
-			reqEntity.addPart(TYPE_PARAM_NAME, new StringBody(type));
-			reqEntity.addPart(REQUEST_PARAM_NAME, new StringBody(request));
-			reqEntity.addPart(BUGS_PARAM_NAME, new StringBody(bugs));
-			reqEntity.addPart(CSRF_PARAM_NAME, new StringBody(csrfToken));
-			reqEntity.addPart(AUTOKARMA_PARAM_NAME,
-					new StringBody(String.valueOf(enableKarmaAutomatism)));
-			reqEntity.addPart(NOTES_PARAM_NAME, new StringBody(notes));
-			reqEntity.addPart(SUGGEST_REBOOT,
-					new StringBody(String.valueOf(suggestReboot)));
-			reqEntity.addPart(STABLE_KARMA,
-					new StringBody(String.valueOf(stableKarmaThreshold)));
-			reqEntity.addPart(UNSTABLE_KARMA,
-					new StringBody(String.valueOf(unstableKarmaThreshold)));
-			reqEntity.addPart(CLOSE_BUGS_WHEN_STABLE,
-					new StringBody(String.valueOf(closeBugsWhenStable)));
+			MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
+			reqEntity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+			reqEntity.addTextBody(BUILDS_PARAM_NAME, buildsParamValue);
+			reqEntity.addTextBody(TYPE_PARAM_NAME, type);
+			reqEntity.addTextBody(REQUEST_PARAM_NAME, request);
+			reqEntity.addTextBody(BUGS_PARAM_NAME, bugs);
+			reqEntity.addTextBody(CSRF_PARAM_NAME, csrfToken);
+			reqEntity.addTextBody(AUTOKARMA_PARAM_NAME, String.valueOf(enableKarmaAutomatism));
+			reqEntity.addTextBody(NOTES_PARAM_NAME, notes);
+			reqEntity.addTextBody(SUGGEST_REBOOT,String.valueOf(suggestReboot));
+			reqEntity.addTextBody(STABLE_KARMA,String.valueOf(stableKarmaThreshold));
+			reqEntity.addTextBody(UNSTABLE_KARMA,String.valueOf(unstableKarmaThreshold));
+			reqEntity.addTextBody(CLOSE_BUGS_WHEN_STABLE, String.valueOf(closeBugsWhenStable));
 
-			post.setEntity(reqEntity);
+			post.setEntity(reqEntity.build());
 
 			HttpResponse response = httpclient.execute(post);
 			HttpEntity resEntity = response.getEntity();

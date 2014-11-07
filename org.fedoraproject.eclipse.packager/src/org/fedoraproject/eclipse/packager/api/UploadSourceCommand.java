@@ -27,9 +27,8 @@ import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreConnectionPNames;
@@ -243,18 +242,13 @@ public class UploadSourceCommand extends
 					uploadURI));
 
 			// Construct the multipart POST request body.
-			MultipartEntity reqEntity = new MultipartEntity();
-			reqEntity.addPart(FILENAME_PARAM_NAME,
-					new StringBody(fileToUpload.getName()));
-			reqEntity.addPart(PACKAGENAME_PARAM_NAME, new StringBody(
-					RPMQuery.eval(projectRoot.getSpecfileModel().getName()).trim()));
-			reqEntity
-					.addPart(
-							CHECKSUM_PARAM_NAME,
-							new StringBody(SourcesFile
-									.calculateChecksum(fileToUpload)));
+			MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
+			reqEntity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+			reqEntity.addTextBody(FILENAME_PARAM_NAME, fileToUpload.getName());
+			reqEntity.addTextBody(PACKAGENAME_PARAM_NAME, RPMQuery.eval(projectRoot.getSpecfileModel().getName()).trim());
+			reqEntity.addTextBody(CHECKSUM_PARAM_NAME, SourcesFile.calculateChecksum(fileToUpload));
 
-			post.setEntity(reqEntity);
+			post.setEntity(reqEntity.build());
 
 			HttpResponse response = client.execute(post);
 			HttpEntity resEntity = response.getEntity();
@@ -322,20 +316,15 @@ public class UploadSourceCommand extends
 			}
 
 			HttpPost post = new HttpPost(uploadUrl);
-			FileBody uploadFileBody = new FileBody(fileToUpload);
 			// For the actual upload we must not provide the
 			// "filename" parameter (FILENAME_PARAM_NAME). Otherwise,
 			// the file won't be stored in the lookaside cache.
-			MultipartEntity reqEntity = new MultipartEntity();
-			reqEntity.addPart(FILE_PARAM_NAME, uploadFileBody);
-			reqEntity.addPart(PACKAGENAME_PARAM_NAME, new StringBody(
-					projectRoot.getSpecfileModel().getName()));
-			reqEntity
-					.addPart(
-							CHECKSUM_PARAM_NAME,
-							new StringBody(SourcesFile
-									.calculateChecksum(fileToUpload)));
-
+			MultipartEntityBuilder builder = MultipartEntityBuilder.create(); 
+			builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+			builder.addBinaryBody(FILE_PARAM_NAME, fileToUpload);
+			builder.addTextBody(PACKAGENAME_PARAM_NAME, projectRoot.getSpecfileModel().getName());
+			builder.addTextBody(CHECKSUM_PARAM_NAME, SourcesFile.calculateChecksum(fileToUpload));
+			HttpEntity reqEntity = builder.build();
 			// Not sure why it's ~ content-length * 2, but that's what it is...
 			final long totalsize = reqEntity.getContentLength() * 2;
 			subMonitor
