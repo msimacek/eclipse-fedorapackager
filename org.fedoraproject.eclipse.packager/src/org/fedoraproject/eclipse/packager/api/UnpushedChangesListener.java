@@ -11,7 +11,6 @@
 package org.fedoraproject.eclipse.packager.api;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IFpProjectBits;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
@@ -46,8 +45,6 @@ public class UnpushedChangesListener implements ICommandListener {
 	@Override
 	public void preExecution() throws UnpushedChangesException {
 		// indicate some progress, by creating a subtask
-		FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-		logger.logDebug(FedoraPackagerText.UnpushedChangesListener_checkUnpushedChangesMsg);
 		mainMonitor.subTask(FedoraPackagerText.UnpushedChangesListener_checkUnpushedChangesMsg);
 		IFpProjectBits projectBits = FedoraPackagerUtils.getVcsHandler(projectRoot);
 		if (projectBits.hasLocalChanges()) {

@@ -28,7 +28,6 @@ import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
-import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
@@ -259,14 +258,6 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 		return fullRpmBuildCommand.toArray(new String[0]);
 	}
 
-	private static String convertCmdList(String[] cmdList) {
-		String cmd = new String();
-		for (String token : cmdList) {
-			cmd += token + " "; //$NON-NLS-1$;
-		}
-		return cmd.trim();
-	}
-
 	private class RpmBuildThread extends Thread {
 		private BuildType buildType;
 		private String[] cmdList;
@@ -287,12 +278,6 @@ public class RpmBuildCommand extends FedoraPackagerCommand<RpmBuildResult> {
 			result = new RpmBuildResult(cmdList);
 			Process child = null;
 			try {
-				// log the build command, which was issued
-				FedoraPackagerLogger logger = FedoraPackagerLogger
-						.getInstance();
-				logger.logDebug(NLS.bind(
-						RpmText.RpmBuildCommand_commandStringMsg,
-						convertCmdList(cmdList)));
 				child = RuntimeProcessFactory.getFactory().exec(cmdList, null);
 
 				is = new BufferedInputStream(new SequenceInputStream(

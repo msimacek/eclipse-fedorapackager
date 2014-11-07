@@ -30,7 +30,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.osgi.util.NLS;
-import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.ILookasideCache;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
@@ -90,13 +89,6 @@ public class DownloadSourceCommand extends
 	public IStatus call(IProgressMonitor monitor)
 			throws SourcesUpToDateException, CommandListenerException {
 		callPreExecListeners();
-		// provide hint which URL is going to be used
-		FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-		logger.logDebug(NLS.bind(
-				FedoraPackagerText.DownloadSourceCommand_usingDownloadURLMsg,
-				lookasideCache.getDownloadUrl().toString()));
-		
-		
 		// Check if there are any sources to download (i.e. md5 does not match or
 		// files are not present in the current Fedora project root).
 		Set<String> sourcesToGet = sources.getMissingSources();

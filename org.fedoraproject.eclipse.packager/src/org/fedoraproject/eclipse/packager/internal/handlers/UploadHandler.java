@@ -106,9 +106,6 @@ public class UploadHandler extends AbstractHandler implements
 						if (checksum.equals(sourceFile.getSources().get(
 								resource.getName()))) {
 							// Candidate file already in sources and up-to-date
-							logger.logDebug(NLS
-									.bind(FedoraPackagerText.UploadHandler_versionOfFileExistsAndUpToDate,
-											resource.getName()));
 							FedoraHandlerUtils
 									.showInformationDialog(
 											shell,
@@ -141,9 +138,6 @@ public class UploadHandler extends AbstractHandler implements
 						// overridden in the Red Hat version.
 						setSSLPolicy(uploadCmd);
 						uploadCmd.addCommandListener(sourcesUpdater);
-						logger.logDebug(NLS.bind(
-								FedoraPackagerText.callingCommand,
-								UploadSourceCommand.class.getName()));
 						try {
 							result = uploadCmd.call(new SubProgressMonitor(
 									monitor, 1));
@@ -153,7 +147,6 @@ public class UploadHandler extends AbstractHandler implements
 							// need to upload, but we should still update
 							// sources files
 							// and vcs ignore files as required.
-							logger.logDebug(e.getMessage(), e);
 							sourcesUpdater.postExecution();
 							// report that there was no upload required.
 							FedoraHandlerUtils.showInformationDialog(shell,
@@ -194,7 +187,6 @@ public class UploadHandler extends AbstractHandler implements
 						return new Status(IStatus.ERROR,
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
 					} catch (InvalidUploadFileException e) {
-						logger.logDebug(e.getMessage(), e);
 						FedoraHandlerUtils.showInformationDialog(shell,
 								projectRoot.getProductStrings()
 										.getProductName(), e.getMessage());
@@ -205,7 +197,6 @@ public class UploadHandler extends AbstractHandler implements
 						String message = NLS
 								.bind(FedoraPackagerText.UploadHandler_invalidUrlError,
 										e.getMessage());
-						logger.logDebug(message, e);
 						FedoraHandlerUtils.showInformationDialog(shell,
 								projectRoot.getProductStrings()
 										.getProductName(), message);
@@ -222,7 +213,6 @@ public class UploadHandler extends AbstractHandler implements
 					if (result != null && !result.isSuccessful()) {
 						// probably a 404 or some such
 						String message = result.getErrorString();
-						logger.logDebug(message);
 						return new Status(IStatus.ERROR,
 								PackagerPlugin.PLUGIN_ID, message);
 					}
@@ -242,7 +232,7 @@ public class UploadHandler extends AbstractHandler implements
 							project.refreshLocal(IResource.DEPTH_INFINITE,
 									monitor);
 						} catch (CoreException e) {
-							logger.logDebug(FedoraPackagerText.FedoraProjectRoot_failedToRefreshResource, e);
+							logger.logError(FedoraPackagerText.FedoraProjectRoot_failedToRefreshResource, e);
 						}
 					}
 

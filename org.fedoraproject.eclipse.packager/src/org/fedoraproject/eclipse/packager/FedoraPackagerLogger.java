@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.ILogListener;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.preference.IPreferenceStore;
 
 /**
  * Log errors or informative messages to the Eclipse log. In future we may want
@@ -45,12 +44,10 @@ public class FedoraPackagerLogger {
 	public static final int ERROR_STATUS = 1;
 
 	private ILog log;
-	private LogLevel currentLogLevel;
 	private static FedoraPackagerLogger instance;
 
 	private FedoraPackagerLogger() {
 		log = PackagerPlugin.getDefault().getLog();
-		setConfig();
 	}
 
 	/**
@@ -90,35 +87,6 @@ public class FedoraPackagerLogger {
 	}
 
 	/**
-	 * Logs informative debug messages. Messages are only logged if debugging
-	 * is turned on.
-	 * 
-	 * @param message
-	 *            A human readable localized message.
-	 */
-	public void logDebug(String message) {
-		if (currentLogLevel == LogLevel.DEBUG) {
-			log.log(new Status(IStatus.INFO, PackagerPlugin.PLUGIN_ID, message));
-		}
-	}
-
-	/**
-	 * Logs informative debug messages. Messages are only logged if debugging
-	 * is turned on.
-	 * 
-	 * @param message
-	 *            A human readable localized message.
-	 * @param reason
-	 *            The exception indicating what really happened.
-	 */
-	public void logDebug(String message, Throwable reason) {
-		if (currentLogLevel == LogLevel.DEBUG) {
-			log.log(new Status(IStatus.INFO, PackagerPlugin.PLUGIN_ID,
-					message, reason));
-		}
-	}
-	
-	/**
 	 * Logs and info message to the error log.
 	 * 
 	 * @param message
@@ -126,28 +94,5 @@ public class FedoraPackagerLogger {
 	 */
 	public void logInfo(String message) {
 		log.log(new Status(IStatus.INFO, PackagerPlugin.PLUGIN_ID, message));
-	}
-	
-	
-	/**
-	 * Refresh the log so that updated debug options are respected.
-	 */
-	public void refreshConfig() {
-		setConfig();
-	}
-
-	private void setConfig() {
-		// default to error log level. i.e. show only errors.
-		// Should we use DebugOptionsListener here?
-		if (isDebugEnabled()) {
-			currentLogLevel = LogLevel.DEBUG;
-		} else {
-			currentLogLevel = LogLevel.ERROR;
-		}
-	}
-	
-	private static boolean isDebugEnabled() {
-		IPreferenceStore prefStore = PackagerPlugin.getDefault().getPreferenceStore();
-		return prefStore.getBoolean(FedoraPackagerPreferencesConstants.PREF_DEBUG_MODE);
 	}
 }

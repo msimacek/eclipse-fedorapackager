@@ -76,7 +76,6 @@ public class FedoraReviewHandler extends AbstractHandler {
 								e.getMessage(), e);
 					} catch (FedoraPackagerCommandNotFoundException e) {
 						// nothing critical, advise the user what to do.
-						logger.logDebug(e.getMessage());
 						FedoraHandlerUtils.showInformationDialog(shell,
 								projectRoot.getProductStrings()
 										.getProductName(), e.getMessage());
@@ -85,7 +84,6 @@ public class FedoraReviewHandler extends AbstractHandler {
 						return status;
 					} catch (UserNotInMockGroupException e) {
 						// nothing critical, advise the user what to do.
-						logger.logDebug(e.getMessage());
 						FedoraHandlerUtils.showInformationDialog(shell,
 								projectRoot.getProductStrings()
 										.getProductName(), e.getMessage());
@@ -103,7 +101,6 @@ public class FedoraReviewHandler extends AbstractHandler {
 								e.getMessage(), e.getCause());
 					} catch (FedoraReviewNotInstalledException e) {
 						// nothing critical, advise the user what to do.
-						logger.logDebug(e.getMessage());
 						FedoraHandlerUtils.showInformationDialog(shell,
 								projectRoot.getProductStrings()
 										.getProductName(), e.getMessage());

@@ -39,7 +39,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.linuxtools.rpm.core.utils.RPMQuery;
 import org.eclipse.osgi.util.NLS;
-import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.FedoraSSL;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
@@ -234,12 +233,6 @@ public class UploadSourceCommand extends
 			}
 
 			HttpPost post = new HttpPost(uploadURI);
-
-			// provide hint which URL is going to be used
-			FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-			logger.logDebug(NLS.bind(
-					FedoraPackagerText.UploadSourceCommand_usingUploadURLMsg,
-					uploadURI));
 
 			// Construct the multipart POST request body.
 			MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();

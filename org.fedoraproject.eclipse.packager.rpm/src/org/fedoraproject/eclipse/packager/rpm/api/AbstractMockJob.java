@@ -88,19 +88,11 @@ public abstract class AbstractMockJob extends Job {
 					return;
 				}
 				if (result.isSuccessful()) {
-					logger.logDebug(NLS.bind(
-							RpmText.AbstractMockJob_mockSucceededMsg, result
-									.getResultDirectoryPath().getLocation()
-									.toFile().getAbsolutePath()));
 					showMessageDialog(NLS.bind(
 							RpmText.AbstractMockJob_mockSucceededMsgHTML,
 							result.getResultDirectoryPath().getFullPath()
 									.toOSString()));
 				} else {
-					logger.logDebug(NLS.bind(
-							RpmText.AbstractMockJob_mockFailedMsg, result
-									.getResultDirectoryPath().getLocation()
-									.toFile().getAbsolutePath()));
 					showMessageDialog(NLS.bind(
 							RpmText.AbstractMockJob_mockFailedMsgHTML, result
 									.getResultDirectoryPath().getFullPath()

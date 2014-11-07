@@ -20,10 +20,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
-import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
@@ -76,8 +74,6 @@ public class MockBuildJob extends AbstractMockJob {
 			return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
 					e.getMessage(), e);
 		}
-		logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
-				MockBuildCommand.class.getName()));
 		try {
 			mockBuild.pathToSRPM(srpmPath.toOSString());
 		} catch (FileNotFoundException e) {
@@ -112,7 +108,6 @@ public class MockBuildJob extends AbstractMockJob {
 								e.getMessage(), e);
 					} catch (UserNotInMockGroupException|MockNotInstalledException e) {
 						// nothing critical, advise the user what to do.
-						logger.logDebug(e.getMessage());
 						FedoraHandlerUtils.showInformationDialog(shell, fpr
 								.getProductStrings().getProductName(), e
 								.getMessage());

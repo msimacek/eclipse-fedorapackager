@@ -28,7 +28,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
-import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IFpProjectBits;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
@@ -110,8 +109,6 @@ public class KojiBuildJob extends KojiJob {
 		kojiBuildCmd.sourceLocation(sourceLocation);
 		String nvr = RPMUtils.getNVR(fedoraProjectRoot, bci);
 		kojiBuildCmd.nvr(new String[] { nvr }).isScratchBuild(isScratch);
-		logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
-				KojiBuildCommand.class.getName()));
 		try {
 			// login
 			kojiClient.login();
@@ -143,9 +140,6 @@ public class KojiBuildJob extends KojiJob {
 				}
 				kojiBuildCmd.buildTarget(buildTarget);
 			}
-			logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
-					KojiBuildCommand.class.getName()));
-
 			// Call build command.
 			// Make sure to set the buildResult variable, since it is used
 			// by getBuildResult() which is in turn called from the handler

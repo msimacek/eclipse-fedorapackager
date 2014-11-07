@@ -48,8 +48,6 @@ public class KojiText extends NLS {
 	/****/ public static String KojiBuildCommand_configErrorNoBuildTarget;
 	/****/ public static String KojiBuildCommand_configErrorNoNVR;
 	/****/ public static String KojiBuildCommand_kojiLogInTask;
-	/****/ public static String KojiBuildCommand_scratchBuildLogMsg;
-	/****/ public static String KojiBuildCommand_buildLogMsg;
 	// BuildAlreadyExistsException
 	/****/ public static String BuildAlreadyExistsException_msg;
 	// ChainBuildDialog
@@ -107,7 +105,6 @@ public class KojiText extends NLS {
 	// KojiSRPMBuildJob
 	/****/ public static String KojiSRPMBuildJob_ChooseSRPM;
 	/****/ public static String KojiSRPMBuildJob_ConfiguringClient;
-	/****/ public static String KojiSRPMBuildJob_logTarget;
 	/****/ public static String KojiSRPMBuildJob_NoSRPMsFound;
 	/****/ public static String KojiSRPMBuildJob_UploadingSRPM;
 	// KojiTagDialog

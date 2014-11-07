@@ -139,10 +139,6 @@ public class FedoraPackagerUtils {
 						if (vcsContributor != null) {
 							vcsContributor.initialize(fedoraprojectRoot);
 						}
-						FedoraPackagerLogger logger = FedoraPackagerLogger
-								.getInstance();
-						logger.logDebug("Using " + vcsContributor.getClass().getName() + //$NON-NLS-1$
-								" as IFpProjectBits"); //$NON-NLS-1$
 						return vcsContributor;
 					} catch (CoreException e) {
 						e.printStackTrace();
@@ -368,11 +364,6 @@ public class FedoraPackagerUtils {
 							.getPersistentProperty(propName);
 					if (property != null) {
 						// match found
-						FedoraPackagerLogger logger = FedoraPackagerLogger
-								.getInstance();
-						logger.logDebug(NLS
-								.bind(FedoraPackagerText.FedoraPackagerUtils_projectRootClassNameMsg,
-										root.getClass().getName()));
 						return root;
 					}
 				} catch (CoreException e) {

@@ -181,13 +181,7 @@ public class BodhiClient {
 						"{0} {1}", response.getStatusLine().getStatusCode(), //$NON-NLS-1$
 						response.getStatusLine().getReasonPhrase()), response);
 			} else {
-				String responseString = ""; //$NON-NLS-1$
 				if (resEntity != null) {
-					try {
-						responseString = parseResponse(resEntity);
-					} catch (IOException e) {
-						// ignore
-					}
 					EntityUtils.consume(resEntity); // clean up resources
 				}
 			}

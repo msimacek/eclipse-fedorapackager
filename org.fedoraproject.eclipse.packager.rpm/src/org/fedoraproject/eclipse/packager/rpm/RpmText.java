@@ -50,8 +50,6 @@ public class RpmText extends NLS {
 	/****/ public static String FedoraReviewHandler_TaskName;
 	/****/ public static String FedoraReviewHandler_NoReview;
 	// AbstractMockJob
-	/****/ public static String AbstractMockJob_mockFailedMsg;
-	/****/ public static String AbstractMockJob_mockSucceededMsg;
 	/****/ public static String AbstractMockJob_mockFailedMsgHTML;
 	/****/ public static String AbstractMockJob_mockSucceededMsgHTML;
 	/****/ public static String AbstractMockJob_mockCancelledMsg;
@@ -67,7 +65,6 @@ public class RpmText extends NLS {
 	// RpmBuildCommand
 	/****/ public static String RpmBuildCommand_distDefinesNullError;
 	/****/ public static String RpmBuildCommand_flagsNullError;
-	/****/ public static String RpmBuildCommand_commandStringMsg;
 	/****/ public static String RpmBuildCommand_branchConfigNullError;
 	/****/ public static String RpmBuildCommand_buildTypeRequired;
 	/****/ public static String RpmBuildCommand_callRpmBuildMsg;
@@ -83,7 +80,6 @@ public class RpmText extends NLS {
 	/****/ public static String MockBuildCommand_srpmPathDoesNotExist;
 	/****/ public static String MockBuildCommand_mockCommandLog;
 	/****/ public static String MockBuildCommand_callMockBuildMsg;
-	/****/ public static String MockBuildCommand_usingDefaultMockConfig;
 	/****/ public static String MockBuildCommand_branchConfigNullError;
 	// SCMMockBuildCommand
 	/****/ public static String SCMMockBuildCommand_invalidRepoType;

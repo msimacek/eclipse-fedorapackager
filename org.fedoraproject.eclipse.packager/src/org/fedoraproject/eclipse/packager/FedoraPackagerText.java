@@ -42,7 +42,6 @@ public class FedoraPackagerText extends NLS {
 	/****/ public static String UploadSourceCommand_uploadFileUnspecified;
 	/****/ public static String UploadSourceCommand_uploadFileInvalid;
 	/****/ public static String UploadSourceCommand_uploadingFileSubTaskName;
-	/****/ public static String UploadSourceCommand_usingUploadURLMsg;
 	// FileAvailableInLookasideCacheException
 	/****/ public static String FileAvailableInLookasideCacheException_message;
 	// DownloadSourceCommand
@@ -52,7 +51,6 @@ public class FedoraPackagerText extends NLS {
 	/****/ public static String DownloadSourceCommand_invalidURL;
 	/****/ public static String DownloadSourceCommand_downloadingFileXofY;
 	/****/ public static String DownloadSourceCommand_downloadFileErrorNotInLookaside;
-	/****/ public static String DownloadSourceCommand_usingDownloadURLMsg;
 	// SourcesFile
 	/****/ public static String SourcesFile_saveFailedMsg;
 	/****/ public static String SourcesFile_saveJob;
@@ -61,7 +59,6 @@ public class FedoraPackagerText extends NLS {
 	// FedoraPackagerUtils
 	/****/ public static String FedoraPackagerUtils_invalidProjectRootError;
 	/****/ public static String FedoraPackagerUtils_invalidContainerOrProjectType;
-	/****/ public static String FedoraPackagerUtils_projectRootClassNameMsg;
 	/****/ public static String FedoraPackagerUtils_cannotEvalPackageName;
 	/****/ public static String FedoraPackagerUtils_cannotEvalChangelog;
 	// UnpushedChangesListener
@@ -125,7 +122,6 @@ public class FedoraPackagerText extends NLS {
 	/****/ public static String somethingUnexpectedHappenedError;
 	/****/ public static String commandWasCalledInTheWrongState;
 	/****/ public static String invalidFedoraProjectRootError;
-	/****/ public static String callingCommand;
 	/****/ public static String extensionNotFoundError;
 	//Local Fedora Packager Project-wizards-main
 	/****/ public static String LocalFedoraPackagerWizardPage_title;
@@ -166,8 +162,6 @@ public class FedoraPackagerText extends NLS {
 	//Fedora Packager Project-perspective message
 	/****/ public static String UiUtils_switchPerspectiveQuestionTitle;
 	/****/ public static String UiUtils_switchPerspectiveQuestionMsg;
-	// LocalHandlerDispatcher
-	/****/ public static String LocalHandlerDispatcher_dispatchToHandlerMsg;
 	// ScpCommand
 	/****/ public static String ScpCommand_choosePrivateKey;
 	/****/ public static String ScpCommand_filesToScpMissing;

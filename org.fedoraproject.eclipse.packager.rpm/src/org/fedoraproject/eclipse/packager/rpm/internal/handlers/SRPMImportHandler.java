@@ -19,12 +19,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerPreferencesConstants;
-import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.FileDialogRunable;
 import org.fedoraproject.eclipse.packager.api.IPreferenceHandler;
@@ -71,8 +69,6 @@ public class SRPMImportHandler extends AbstractHandler implements
 				monitor.beginTask(RpmText.SRPMImportJob_InitialSetup,
 						IProgressMonitor.UNKNOWN);
 				try {
-					logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
-							SRPMImportCommand.class.getName()));
 					SRPMImportCommand srpmImport = new SRPMImportCommand(srpm,
 							fprContainer.getProject(), fprContainer,
 							getPreference(), self);

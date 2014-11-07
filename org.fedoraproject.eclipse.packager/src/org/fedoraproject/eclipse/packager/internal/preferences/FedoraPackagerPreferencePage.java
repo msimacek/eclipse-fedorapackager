@@ -68,10 +68,6 @@ public class FedoraPackagerPreferencePage extends FieldEditorPreferencePage
 		super(GRID);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
-	 */
 	@Override
 	public void init(IWorkbench workbench) {
 		setPreferenceStore(PackagerPlugin.getDefault().getPreferenceStore());
@@ -130,10 +126,6 @@ public class FedoraPackagerPreferencePage extends FieldEditorPreferencePage
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
-	 */
 	@Override
 	protected void createFieldEditors() {
 		Composite composite = getFieldEditorParent();
@@ -235,14 +227,9 @@ public class FedoraPackagerPreferencePage extends FieldEditorPreferencePage
 		updateMargins(fedpkgConfigGroup);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#performOk()
-	 */
 	@Override
 	public boolean performOk() {
 		super.performOk();
-		FedoraPackagerLogger.getInstance().refreshConfig();
 		if (getConfigPreference()) {
 			try {
 				preferencesToSave.flush();
@@ -255,10 +242,6 @@ public class FedoraPackagerPreferencePage extends FieldEditorPreferencePage
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#performApply()
-	 */
 	@Override
 	public void performApply() {
 		// will not save the preferences unless OK is pressed

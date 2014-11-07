@@ -203,9 +203,6 @@ public class BodhiNewHandler extends AbstractHandler {
 								.unstableKarmaThreshold(
 										updateDialog
 												.getUnstableKarmaThreshold());
-						logger.logInfo(NLS.bind(
-								FedoraPackagerText.callingCommand,
-								PushUpdateCommand.class.getName()));
 						updateResult = update.call(monitor);
 						return Status.OK_STATUS;
 					} catch (FedoraPackagerAPIException e) {
@@ -282,7 +279,6 @@ public class BodhiNewHandler extends AbstractHandler {
 					final String msg = NLS.bind(
 							BodhiText.BodhiNewHandler_pushingUpdateFailedMsg,
 							updateResult.getDetails());
-					logger.logDebug(msg);
 					PlatformUI.getWorkbench().getDisplay()
 							.asyncExec(new Runnable() {
 								@Override

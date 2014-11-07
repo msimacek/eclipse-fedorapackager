@@ -17,10 +17,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
-import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
@@ -82,8 +80,6 @@ public class SCMMockBuildJob extends AbstractMockJob {
 			return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
 					e.getMessage(), e);
 		}
-		logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
-				SCMMockBuildCommand.class.getName()));
 		// sources need to be downloaded
 		if (!useRepoSource) {
 			Job downloadSourcesJob = new DownloadSourcesJob(
@@ -130,7 +126,6 @@ public class SCMMockBuildJob extends AbstractMockJob {
 								monitor);
 					} catch (UserNotInMockGroupException e) {
 						// nothing critical, advise the user what to do.
-						logger.logDebug(e.getMessage());
 						FedoraHandlerUtils.showInformationDialog(shell, fpr
 								.getProductStrings().getProductName(), e
 								.getMessage());
@@ -145,7 +140,6 @@ public class SCMMockBuildJob extends AbstractMockJob {
 								e.getMessage(), e.getCause());
 					} catch (MockNotInstalledException e) {
 						// nothing critical, advise the user what to do.
-						logger.logDebug(e.getMessage());
 						FedoraHandlerUtils.showInformationDialog(shell, fpr
 								.getProductStrings().getProductName(), e
 								.getMessage());

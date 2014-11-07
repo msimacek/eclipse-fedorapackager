@@ -15,7 +15,6 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.osgi.util.NLS;
-import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
@@ -168,12 +167,6 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 		// main monitor worked for 30
 		BuildResult result = new BuildResult();
 		monitor.subTask(KojiText.KojiBuildCommand_sendBuildCmd);
-		FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-		if (this.scratchBuild) {
-			logger.logDebug(KojiText.KojiBuildCommand_scratchBuildLogMsg);
-		} else {
-			logger.logDebug(KojiText.KojiBuildCommand_buildLogMsg);
-		}
 		// attempt to push build
 		int taskId = this.kojiClient.build(buildTarget, location, nvr,
 				scratchBuild)[0];

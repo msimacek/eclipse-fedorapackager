@@ -24,7 +24,6 @@ import org.eclipse.linuxtools.rpm.core.utils.Utils;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
-import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand;
@@ -209,8 +208,6 @@ public class MockBuildCommand extends FedoraPackagerCommand<MockBuildResult> {
 	 */
 	private String getDefaultMockcfg() {
 		assert this.mockConfig == null;
-		FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-		logger.logDebug(RpmText.MockBuildCommand_usingDefaultMockConfig);
 		String distvar = bci.getDistVariable();
 		String distval = bci.getDistVal();
 		String mockcfg = null;

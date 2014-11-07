@@ -22,7 +22,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.util.NLS;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
-import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
@@ -75,11 +74,7 @@ public class SRPMBuildJob extends Job {
 			srpmBuild.buildType(BuildType.SOURCE).flags(nodeps);
 			// set branch config
 			srpmBuild.branchConfig(bci);
-			logger.logDebug(NLS.bind(RpmText.MockBuildHandler_creatingSrpm,
-					fedoraProjectRoot.getPackageName()));
 			try {
-				logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
-						RpmBuildCommand.class.getName()));
 				srpmBuildResult = srpmBuild.call(monitor);
 				fedoraProjectRoot.getProject().refreshLocal(
 						IResource.DEPTH_INFINITE, monitor);

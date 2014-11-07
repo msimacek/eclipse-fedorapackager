@@ -16,7 +16,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
@@ -95,11 +94,8 @@ public class DownloadSourcesJob extends Job {
 				// cache falls back to the default URL if not set.
 				download.setDownloadURL(downloadUrlPreference);
 			}
-			logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
-					DownloadSourceCommand.class.getName()));
 			return download.call(monitor);
 		} catch (final SourcesUpToDateException e) {
-			logger.logDebug(e.getMessage(), e);
 			if (!suppressSourcesUpToDateInfo) {
 				FedoraHandlerUtils.showInformationDialog(shell,
 						fedoraProjectRoot.getProductStrings().getProductName(),
