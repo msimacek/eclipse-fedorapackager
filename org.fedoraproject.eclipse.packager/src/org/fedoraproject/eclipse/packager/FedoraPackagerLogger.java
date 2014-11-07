@@ -148,7 +148,6 @@ public class FedoraPackagerLogger {
 	
 	private static boolean isDebugEnabled() {
 		IPreferenceStore prefStore = PackagerPlugin.getDefault().getPreferenceStore();
-		boolean debugEnabled = prefStore.getBoolean(FedoraPackagerPreferencesConstants.PREF_DEBUG_MODE);
-		return (PackagerPlugin.inDebugMode() || debugEnabled);
+		return prefStore.getBoolean(FedoraPackagerPreferencesConstants.PREF_DEBUG_MODE);
 	}
 }
