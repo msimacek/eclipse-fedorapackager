@@ -36,8 +36,6 @@ public class BodhiText extends NLS {
 	/****/ public static String AddNewBuildDialog_cancelBtn;
 	/****/ public static String AddNewBuildDialog_dialogTitle;
 	/****/ public static String AddNewBuildDialog_packageBuildsLbl;
-	// BodhiClient Strings
-	/****/ public static String BodhiClient_rawJsonStringMsg;
 	// PushUpdateCommand
 	/****/ public static String PushUpdateCommand_configErrorNoClient;
 	/****/ public static String PushUpdateCommand_configErrorNoUpdateType;

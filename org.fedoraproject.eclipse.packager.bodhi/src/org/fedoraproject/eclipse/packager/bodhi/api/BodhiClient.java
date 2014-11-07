@@ -28,9 +28,6 @@ import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.osgi.util.NLS;
-import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
-import org.fedoraproject.eclipse.packager.PackagerPlugin;
-import org.fedoraproject.eclipse.packager.bodhi.BodhiText;
 import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientException;
 import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientLoginException;
 import org.fedoraproject.eclipse.packager.bodhi.deserializers.DateTimeDeserializer;
@@ -108,12 +105,6 @@ public class BodhiClient {
 			} finally {
 				EntityUtils.consume(resEntity); // clean up resources
 			}
-		}
-		// log JSON string if in debug mode
-		if (PackagerPlugin.inDebugMode()) {
-			FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-			logger.logInfo(NLS.bind(BodhiText.BodhiClient_rawJsonStringMsg,
-					jsonString));
 		}
 		// Deserialize from JSON
 		GsonBuilder gsonBuilder = new GsonBuilder();
@@ -198,14 +189,6 @@ public class BodhiClient {
 						// ignore
 					}
 					EntityUtils.consume(resEntity); // clean up resources
-				}
-				// log JSON string if in debug mode
-				if (PackagerPlugin.inDebugMode()) {
-					FedoraPackagerLogger logger = FedoraPackagerLogger
-							.getInstance();
-					logger.logInfo(NLS.bind(
-							BodhiText.BodhiClient_rawJsonStringMsg,
-							responseString));
 				}
 			}
 		} catch (IOException e) {
@@ -306,14 +289,6 @@ public class BodhiClient {
 						// ignore
 					}
 					EntityUtils.consume(resEntity); // clean up resources
-				}
-				// log JSON string if in debug mode
-				if (PackagerPlugin.inDebugMode()) {
-					FedoraPackagerLogger logger = FedoraPackagerLogger
-							.getInstance();
-					logger.logInfo(NLS.bind(
-							BodhiText.BodhiClient_rawJsonStringMsg,
-							rawJsonString));
 				}
 				// deserialize the result from the JSON response
 				GsonBuilder gsonBuilder = new GsonBuilder();
