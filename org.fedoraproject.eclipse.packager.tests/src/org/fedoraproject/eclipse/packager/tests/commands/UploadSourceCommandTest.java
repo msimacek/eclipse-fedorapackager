@@ -31,11 +31,11 @@ import java.net.MalformedURLException;
 import java.util.Stack;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
@@ -140,8 +140,8 @@ public class UploadSourceCommandTest {
 		File file = new File(fileName);
 		MockableUploadSourceCommand uploadCmd = (MockableUploadSourceCommand) packager
 				.getCommandInstance(MockableUploadSourceCommand.ID);
-		HttpClient mockClient = createStrictMock(HttpClient.class);
-		HttpResponse mockResponse = createMock(HttpResponse.class);
+		CloseableHttpClient mockClient = createStrictMock(CloseableHttpClient.class);
+		CloseableHttpResponse mockResponse = createMock(CloseableHttpResponse.class);
 		StatusLine mockStatus = createMock(StatusLine.class);
 		HttpEntity mockEntity = createMock(HttpEntity.class);
 		expect(mockClient.execute((HttpUriRequest) anyObject())).andReturn(
@@ -174,8 +174,8 @@ public class UploadSourceCommandTest {
 	public void canUploadSources() throws FedoraPackagerAPIException, IOException {
 		MockableUploadSourceCommand uploadCmd = (MockableUploadSourceCommand) packager
 				.getCommandInstance(MockableUploadSourceCommand.ID);
-		HttpClient mockClient = createStrictMock(HttpClient.class);
-		HttpResponse mockResponse = createMock(HttpResponse.class);
+		CloseableHttpClient mockClient = createStrictMock(CloseableHttpClient.class);
+		CloseableHttpResponse mockResponse = createMock(CloseableHttpResponse.class);
 		StatusLine mockStatus = createMock(StatusLine.class);
 		HttpEntity mockEntity = createMock(HttpEntity.class);
 		expect(mockClient.execute((HttpUriRequest) anyObject())).andReturn(
@@ -244,8 +244,8 @@ public class UploadSourceCommandTest {
 				newUploadFile);
 		MockableUploadSourceCommand uploadCmd = (MockableUploadSourceCommand) packager
 				.getCommandInstance(MockableUploadSourceCommand.ID);
-		HttpClient mockClient = createStrictMock(HttpClient.class);
-		HttpResponse mockResponse = createMock(HttpResponse.class);
+		CloseableHttpClient mockClient = createStrictMock(CloseableHttpClient.class);
+		CloseableHttpResponse mockResponse = createMock(CloseableHttpResponse.class);
 		StatusLine mockStatus = createMock(StatusLine.class);
 		HttpEntity mockEntity = createMock(HttpEntity.class);
 		expect(mockClient.execute((HttpUriRequest) anyObject())).andReturn(

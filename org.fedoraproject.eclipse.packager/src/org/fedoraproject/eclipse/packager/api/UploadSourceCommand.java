@@ -21,18 +21,18 @@ import java.security.GeneralSecurityException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.params.HttpParams;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -209,7 +209,7 @@ public class UploadSourceCommand extends
 	private void checkSourceAvailable()
 			throws FileAvailableInLookasideCacheException,
 			UploadFailedException {
-		HttpClient client = getClient();
+		CloseableHttpClient client = getClient();
 		try {
 			String uploadURI = null;
 			uploadURI = this.projectRoot.getLookAsideCache().getUploadUrl()
@@ -219,14 +219,14 @@ public class UploadSourceCommand extends
 			if (fedoraSslEnabled) {
 				// user requested Fedora SSL enabled client
 				try {
-					client = fedoraSslEnable(client);
+					client = fedoraSslEnable();
 				} catch (GeneralSecurityException e) {
 					throw new UploadFailedException(e.getMessage(), e);
 				}
 			} else if (trustAllSSLEnabled) {
 				// use accept all SSL enabled client
 				try {
-					client = FedoraPackagerUtils.trustAllSslEnable(client);
+					client = FedoraPackagerUtils.trustAllSslEnable();
 				} catch (GeneralSecurityException e) {
 					throw new UploadFailedException(e.getMessage(), e);
 				}
@@ -279,7 +279,11 @@ public class UploadSourceCommand extends
 			// When HttpClient instance is no longer needed,
 			// shut down the connection manager to ensure
 			// immediate deallocation of all system resources
-			client.getConnectionManager().shutdown();
+			try {
+				client.close();
+			} catch (IOException e) {
+				// ignore
+			}
 		}
 	}
 
@@ -295,17 +299,17 @@ public class UploadSourceCommand extends
 	 */
 	private UploadSourceResult upload(final IProgressMonitor subMonitor)
 			throws UploadFailedException {
-		HttpClient client = getClient();
+		CloseableHttpClient client = getClient();
 		try {
 			String uploadUrl = projectRoot.getLookAsideCache().getUploadUrl()
 					.toString();
 
 			if (fedoraSslEnabled) {
 				// user requested a Fedora SSL enabled client
-				client = fedoraSslEnable(client);
+				client = fedoraSslEnable();
 			} else if (trustAllSSLEnabled) {
 				// use an trust-all SSL enabled client
-				client = FedoraPackagerUtils.trustAllSslEnable(client);
+				client = FedoraPackagerUtils.trustAllSslEnable();
 			}
 
 			HttpPost post = new HttpPost(uploadUrl);
@@ -377,46 +381,55 @@ public class UploadSourceCommand extends
 			// When HttpClient instance is no longer needed,
 			// shut down the connection manager to ensure
 			// immediate deallocation of all system resources
-			client.getConnectionManager().shutdown();
+			try {
+				client.close();
+			} catch (IOException e) {
+				// ignore
+			}
 		}
 	}
 
 	/**
 	 * @return A properly configured HTTP client instance
 	 */
-	protected HttpClient getClient() {
+	protected CloseableHttpClient getClient() {
 		// Set up client with proper timeout
-		HttpParams params = new BasicHttpParams();
-		params.setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,
-				CONNECTION_TIMEOUT);
-		return new DefaultHttpClient(params);
+		HttpClientBuilder builder = HttpClientBuilder.create();
+		RequestConfig config = RequestConfig.custom().setConnectionRequestTimeout(CONNECTION_TIMEOUT).build();
+		builder.setDefaultRequestConfig(config);
+		return builder.build();
 	}
 
 	/**
 	 * Wrap a basic HttpClient object in a Fedora SSL enabled HttpClient (which
 	 * includes Fedora SSL authentication cert) object.
 	 *
-	 * @param base
-	 *            The HttpClient to wrap.
 	 * @return The SSL wrapped HttpClient.
 	 * @throws GeneralSecurityException
 	 *             The method fails for security reasons.
 	 * @throws IOException
 	 *             If method cannot use streams properly.
 	 */
-	private static HttpClient fedoraSslEnable(HttpClient base)
+	private static CloseableHttpClient fedoraSslEnable()
 			throws GeneralSecurityException, FileNotFoundException, IOException {
 
 		// Get a SSL related instance for setting up SSL connections.
 		FedoraSSL fedoraSSL = new FedoraSSL();
-		SSLSocketFactory sf = new SSLSocketFactory(
-				fedoraSSL.getInitializedSSLContext(), // may throw FileNotFoundE
-				SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-		ClientConnectionManager ccm = base.getConnectionManager();
-		SchemeRegistry sr = ccm.getSchemeRegistry();
-		Scheme https = new Scheme("https", 443, sf); //$NON-NLS-1$
-		sr.register(https);
-		return new DefaultHttpClient(ccm, base.getParams());
+		HttpClientBuilder builder = HttpClientBuilder.create();
+		SSLConnectionSocketFactory sslConnectionFactory = new SSLConnectionSocketFactory(
+				fedoraSSL.getInitializedSSLContext(),
+				SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+		builder.setSSLSocketFactory(sslConnectionFactory);
+		Registry<ConnectionSocketFactory> registry = RegistryBuilder
+				.<ConnectionSocketFactory> create()
+				.register("https", sslConnectionFactory) //$NON-NLS-1$
+				.build();
+
+		HttpClientConnectionManager ccm = new BasicHttpClientConnectionManager(
+				registry);
+
+		builder.setConnectionManager(ccm);
+		return builder.build();
 	}
 
 	/**

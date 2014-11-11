@@ -15,23 +15,23 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.params.HttpParams;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.osgi.util.NLS;
 import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientException;
 import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientLoginException;
 import org.fedoraproject.eclipse.packager.bodhi.deserializers.DateTimeDeserializer;
 import org.fedoraproject.eclipse.packager.bodhi.fas.DateTime;
+import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -75,7 +75,7 @@ public class BodhiClient {
 	private static final String MIME_JSON = "application/json"; //$NON-NLS-1$
 
 	// The http client to use for transport
-	protected HttpClient httpclient;
+	protected CloseableHttpClient httpclient;
 
 	// The base URL to use for connections
 	protected URL bodhiServerUrl;
@@ -199,7 +199,11 @@ public class BodhiClient {
 		// When HttpClient instance is no longer needed,
 		// shut down the connection manager to ensure
 		// immediate deallocation of all system resources
-		httpclient.getConnectionManager().shutdown();
+		try {
+			httpclient.close();
+		} catch (IOException e) {
+		    //ignore as there isn't much to be done
+		}
 	}
 
 	/**
@@ -299,12 +303,16 @@ public class BodhiClient {
 	/**
 	 * @return A properly configured HTTP client instance
 	 */
-	protected HttpClient getClient() {
-		// Set up client with proper timeout
-		HttpParams params = new BasicHttpParams();
-		params.setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,
-				CONNECTION_TIMEOUT);
-		return new DefaultHttpClient(params);
+	protected CloseableHttpClient getClient() {
+		try {
+			return FedoraPackagerUtils.trustAllSslEnable();
+		} catch (GeneralSecurityException e) {
+			// Set up client with proper timeout
+			HttpClientBuilder builder = HttpClientBuilder.create();
+			RequestConfig config = RequestConfig.custom().setConnectionRequestTimeout(CONNECTION_TIMEOUT).build();
+			builder.setDefaultRequestConfig(config);
+			return builder.build();
+		}
 	}
 
 	/**

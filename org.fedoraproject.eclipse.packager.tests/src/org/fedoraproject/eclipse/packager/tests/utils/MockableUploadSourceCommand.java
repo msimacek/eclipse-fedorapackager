@@ -1,19 +1,19 @@
 package org.fedoraproject.eclipse.packager.tests.utils;
 
-import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.fedoraproject.eclipse.packager.api.UploadSourceCommand;
 
 public class MockableUploadSourceCommand extends UploadSourceCommand {
 	
-	protected HttpClient client;
+	protected CloseableHttpClient client;
 	public static String ID = "MockableUploadSourceCommand";
 	
 	@Override
-	protected HttpClient getClient() {
+	protected CloseableHttpClient getClient() {
 		return client;
 	}
 	
-	public MockableUploadSourceCommand setClient(HttpClient client){
+	public MockableUploadSourceCommand setClient(CloseableHttpClient client){
 		this.client = client;
 		return this;
 	}

@@ -28,11 +28,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
@@ -114,13 +114,13 @@ public class PushUpdateCommandTest {
 				.getCommandInstance(PushUpdateCommand.ID);
 		URL bodhiServerURL = new URL("http://admin.stg.fedoraproject.org/updates");
 		
-		final HttpClient mockClient = createMock(HttpClient.class);
-		HttpResponse mockResponse = createMock(HttpResponse.class);
+		final CloseableHttpClient mockClient = createMock(CloseableHttpClient.class);
+		CloseableHttpResponse mockResponse = createMock(CloseableHttpResponse.class);
 		StatusLine mockStatus = createMock(StatusLine.class);
 		HttpEntity mockEntity = createMock(HttpEntity.class);
 		BodhiClient client = new BodhiClient(bodhiServerURL) {
 			@Override
-			protected HttpClient getClient() {
+			protected CloseableHttpClient getClient() {
 				return mockClient;
 			}
 		};
