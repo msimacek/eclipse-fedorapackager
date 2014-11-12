@@ -124,7 +124,7 @@ public class FedoraSSL {
 
 		KeyMaterial kmat = getFedoraCertKeyMaterial();
 
-		SSLContext sc = SSLContext.getInstance("SSL"); //$NON-NLS-1$
+		SSLContext sc = SSLContext.getInstance("TLS"); //$NON-NLS-1$
 
 		sc.init((KeyManager[]) kmat.getKeyManagers(),
 				(TrustManager[]) tc.getTrustManagers(),

@@ -49,6 +49,7 @@ public class UserValidationResponse {
 			loginResponse = client.login(username, password);
 		} catch (BodhiClientLoginException e) {
 			// login failed
+			e.printStackTrace();
 			if (e.isInvalidCredentials()) {
 				this.valid = false;
 				return;

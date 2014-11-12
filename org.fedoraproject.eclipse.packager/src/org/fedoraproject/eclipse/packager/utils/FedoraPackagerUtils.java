@@ -253,7 +253,7 @@ public class FedoraPackagerUtils {
 		} };
 
 		// set up the all-trusting trust manager
-		SSLContext sc = SSLContext.getInstance("SSL"); //$NON-NLS-1$
+		SSLContext sc = SSLContext.getInstance("TLS"); //$NON-NLS-1$
 		sc.init(null, trustAllCerts, new java.security.SecureRandom());
 		
 		HttpClientBuilder builder = HttpClientBuilder.create();
