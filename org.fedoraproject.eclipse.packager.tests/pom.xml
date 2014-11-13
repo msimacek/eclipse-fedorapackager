@@ -12,17 +12,4 @@
 
   <name>Fedora Packager for Eclipse Testing Plug-in</name>
 
-  <build>
-     <plugins>
-      <plugin>
-        <groupId>org.eclipse.tycho</groupId>
-        <artifactId>tycho-surefire-plugin</artifactId>
-        <configuration>
-          <useUIHarness>true</useUIHarness>
-          <useUIThread>false</useUIThread>
-          <product>org.eclipse.platform.ide</product>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 </project>
