@@ -209,28 +209,11 @@ public class UploadSourceCommand extends
 	private void checkSourceAvailable()
 			throws FileAvailableInLookasideCacheException,
 			UploadFailedException {
-		CloseableHttpClient client = getClient();
-		try {
+		try (CloseableHttpClient client = getClient()){
 			String uploadURI = null;
 			uploadURI = this.projectRoot.getLookAsideCache().getUploadUrl()
 					.toString();
 			assert uploadURI != null;
-
-			if (fedoraSslEnabled) {
-				// user requested Fedora SSL enabled client
-				try {
-					client = fedoraSslEnable();
-				} catch (GeneralSecurityException e) {
-					throw new UploadFailedException(e.getMessage(), e);
-				}
-			} else if (trustAllSSLEnabled) {
-				// use accept all SSL enabled client
-				try {
-					client = FedoraPackagerUtils.trustAllSslEnable();
-				} catch (GeneralSecurityException e) {
-					throw new UploadFailedException(e.getMessage(), e);
-				}
-			}
 
 			HttpPost post = new HttpPost(uploadURI);
 
@@ -275,15 +258,6 @@ public class UploadSourceCommand extends
 
 		} catch (IOException|CoreException e) {
 			throw new UploadFailedException(e.getMessage(), e);
-		} finally {
-			// When HttpClient instance is no longer needed,
-			// shut down the connection manager to ensure
-			// immediate deallocation of all system resources
-			try {
-				client.close();
-			} catch (IOException e) {
-				// ignore
-			}
 		}
 	}
 
@@ -299,18 +273,9 @@ public class UploadSourceCommand extends
 	 */
 	private UploadSourceResult upload(final IProgressMonitor subMonitor)
 			throws UploadFailedException {
-		CloseableHttpClient client = getClient();
-		try {
+		try (CloseableHttpClient client = getClient()) {
 			String uploadUrl = projectRoot.getLookAsideCache().getUploadUrl()
 					.toString();
-
-			if (fedoraSslEnabled) {
-				// user requested a Fedora SSL enabled client
-				client = fedoraSslEnable();
-			} else if (trustAllSSLEnabled) {
-				// use an trust-all SSL enabled client
-				client = FedoraPackagerUtils.trustAllSslEnable();
-			}
 
 			HttpPost post = new HttpPost(uploadUrl);
 			// For the actual upload we must not provide the
@@ -375,24 +340,27 @@ public class UploadSourceCommand extends
 
 			subMonitor.done();
 			return new UploadSourceResult(response);
-		} catch (IOException|GeneralSecurityException e) {
+		} catch (IOException e) {
 			throw new UploadFailedException(e.getMessage(), e);
-		} finally {
-			// When HttpClient instance is no longer needed,
-			// shut down the connection manager to ensure
-			// immediate deallocation of all system resources
-			try {
-				client.close();
-			} catch (IOException e) {
-				// ignore
-			}
 		}
 	}
 
 	/**
 	 * @return A properly configured HTTP client instance
+	 * @throws UploadFailedException If an IO or security exception appeared.
 	 */
-	protected CloseableHttpClient getClient() {
+	protected CloseableHttpClient getClient() throws UploadFailedException {
+		try {
+			if (fedoraSslEnabled) {
+				// user requested a Fedora SSL enabled client
+				return fedoraSslEnable();
+			} else if (trustAllSSLEnabled) {
+				// use an trust-all SSL enabled client
+				return FedoraPackagerUtils.trustAllSslEnable();
+			}
+		} catch (GeneralSecurityException | IOException e) {
+			throw new UploadFailedException(e.getMessage(), e);
+		}
 		// Set up client with proper timeout
 		HttpClientBuilder builder = HttpClientBuilder.create();
 		RequestConfig config = RequestConfig.custom().setConnectionRequestTimeout(CONNECTION_TIMEOUT).build();
