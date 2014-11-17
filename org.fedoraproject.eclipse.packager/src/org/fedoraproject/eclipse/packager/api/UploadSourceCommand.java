@@ -94,13 +94,6 @@ public class UploadSourceCommand extends
 	// should be used or not
 	private boolean trustAllSSLEnabled = false;
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#initialize
-	 * (org.fedoraproject.eclipse.packager.FedoraProjectRoot)
-	 */
 	@Override
 	public void initialize(IProjectRoot projectRoot)
 			throws FedoraPackagerCommandInitializationException {
