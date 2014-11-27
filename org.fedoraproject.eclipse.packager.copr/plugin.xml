@@ -12,6 +12,27 @@
  -->
 
 <plugin>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="popup:org.eclipse.fedoraproject.packager.main?before=org.fedoraproject.eclipse.packager.kojisep">
+         <command
+               commandId="org.fedoraproject.eclipse.packager.copr.BuildCommand"
+               label="%command.label.0"
+               mnemonic="%command.mnemonic.0"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            category="org.fedoraproject.eclipse.packager.preferences"
+            class="org.fedoraproject.eclipse.packager.copr.internal.pref.CoprPreferencePage"
+            id="org.fedoraproject.eclipse.packager.preferences.copr"
+            name="Copr">
+      </page>
+   </extension>
    <!-- Keyboard shortcut definitions -->
 
 </plugin>
