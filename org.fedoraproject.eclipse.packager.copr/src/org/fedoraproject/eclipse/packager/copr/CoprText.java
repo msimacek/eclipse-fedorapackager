@@ -11,6 +11,11 @@ import org.eclipse.osgi.util.NLS;
 public class CoprText extends NLS {
 	private static final String BUNDLE_NAME = "org.fedoraproject.eclipse.packager.copr.coprtext"; //$NON-NLS-1$
 
+	/****/ public static String CoprHandler_NoLoginToken;
+	/****/ public static String CoprHandler_NoName;
+	/****/ public static String CoprHandler_NoURL;
+	/****/ public static String CoprHandler_NoUsername;
+
 	/****/ public static String CoprPreferencePage_DefaultUsername;
 	/****/ public static String CoprPreferencePage_Description;
 	/****/ public static String CoprPreferencePage_LoginField;
