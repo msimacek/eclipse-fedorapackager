@@ -17,6 +17,10 @@ public class CoprText extends NLS {
 	/****/ public static String CoprPreferencePage_TokenField;
 	/****/ public static String CoprPreferencePage_URLField;
 
+	/****/ public static String CoprProjectProperties_Description;
+	/****/ public static String CoprProjectProperties_NameField;
+	/****/ public static String CoprProjectProperties_UsernameField;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, CoprText.class);

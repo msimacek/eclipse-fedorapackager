@@ -33,6 +33,14 @@
             name="Copr">
       </page>
    </extension>
+   <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            class="org.fedoraproject.eclipse.packager.copr.internal.pref.CoprProjectProperties"
+            id="org.fedoraproject.eclipse.packager.copr.prefs.CoprProjectProperties"
+            name="Fedora Packager Copr">
+      </page>
+   </extension>
    <!-- Keyboard shortcut definitions -->
 
 </plugin>
