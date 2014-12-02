@@ -13,6 +13,14 @@
 
 <plugin>
    <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.fedoraproject.eclipse.packager.copr.internal.handlers.CoprBuildHandler"
+            id="org.fedoraproject.eclipse.packager.copr.BuildCommand"
+            name="%command.name.0">
+      </command>
+   </extension>
+   <extension
          point="org.eclipse.ui.menus">
       <menuContribution
             locationURI="popup:org.eclipse.fedoraproject.packager.main?before=org.fedoraproject.eclipse.packager.kojisep">

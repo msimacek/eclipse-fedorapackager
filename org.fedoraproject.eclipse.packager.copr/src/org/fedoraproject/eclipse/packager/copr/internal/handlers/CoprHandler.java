@@ -27,10 +27,15 @@ import org.fedoraproject.copr.client.CoprService;
 import org.fedoraproject.copr.client.CoprSession;
 import org.fedoraproject.copr.client.ProjectId;
 import org.fedoraproject.copr.client.impl.DefaultCoprService;
+import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
+import org.fedoraproject.eclipse.packager.FedoraPackagerText;
+import org.fedoraproject.eclipse.packager.IProjectRoot;
+import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.copr.CoprConfigurationConstants;
 import org.fedoraproject.eclipse.packager.copr.CoprPlugin;
 import org.fedoraproject.eclipse.packager.copr.CoprText;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
+import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 
 /**
  * Base class for Copr plugin command handlers
@@ -47,6 +52,7 @@ public abstract class CoprHandler extends AbstractHandler {
 	protected CoprService coprService;
 	protected CoprSession coprSession;
 	protected ProjectId coprProject;
+	protected FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 
 	protected void prepareService(ExecutionEvent event)
 			throws ExecutionException {
@@ -103,5 +109,22 @@ public abstract class CoprHandler extends AbstractHandler {
 		coprProject = new ProjectId();
 		coprProject.setUserName(projectUsername);
 		coprProject.setProjectName(projectName);
+	}
+
+	// TODO copypasted from KojiHandler
+	IProjectRoot getProjectRoot(ExecutionEvent event) {
+		final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
+		IResource eventResource = FedoraHandlerUtils.getResource(event);
+		try {
+			final IProjectRoot projectRoot = FedoraPackagerUtils
+					.getProjectRoot(eventResource);
+			return projectRoot;
+		} catch (InvalidProjectRootException e) {
+			logger.logError(FedoraPackagerText.invalidFedoraProjectRootError, e);
+			FedoraHandlerUtils.showErrorDialog(shell, "Error", //$NON-NLS-1$
+					FedoraPackagerText.invalidFedoraProjectRootError);
+		}
+
+		return null;
 	}
 }
