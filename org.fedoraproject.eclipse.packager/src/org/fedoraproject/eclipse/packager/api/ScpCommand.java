@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
@@ -30,9 +31,9 @@ import org.fedoraproject.eclipse.packager.api.errors.ScpFailedException;
 import org.fedoraproject.eclipse.packager.utils.IChannelExec;
 import org.fedoraproject.eclipse.packager.utils.IChannelSftp;
 import org.fedoraproject.eclipse.packager.utils.ISession;
+
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
-import org.eclipse.osgi.util.NLS;
 
 /**
  * A class used to execute a {@code Scp} command. It has setters for all
@@ -220,10 +221,17 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 			throws ScpFailedException {
 		FileInputStream fis = null;
 
+		File localFile = new File(fileToScp);
+		if (!localFile.isAbsolute()) {
+			localFile = new File(projectRoot.getProject().getLocation()
+					.toString()
+					+ IPath.SEPARATOR + fileToScp);
+		}
+
 		// exec 'scp -t remoteFile' remotely
-		String remoteFile = PUBLIC_HTML + IPath.SEPARATOR + REMOTE_DIR
-				+ IPath.SEPARATOR + fileToScp;
-		String command = "scp -p -t " + remoteFile; //$NON-NLS-1$
+		String remotePath = PUBLIC_HTML + IPath.SEPARATOR + REMOTE_DIR
+				+ IPath.SEPARATOR + localFile.getName();
+		String command = "scp -p -t " + remotePath; //$NON-NLS-1$
 
 		IChannelExec channel;
 		try {
@@ -243,15 +251,13 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 			// send "C0644 filesize filename", where filename should not include
 			// '/'
-			String localFile = projectRoot.getProject().getLocation()
-					.toString()
-					+ IPath.SEPARATOR + fileToScp;
-			long filesize = (new File(localFile)).length();
+			long filesize = localFile.length();
 			command = "C0644 " + filesize + " "; //$NON-NLS-1$ //$NON-NLS-2$
-			if (localFile.lastIndexOf('/') > 0) {
-				command += localFile.substring(localFile.lastIndexOf('/') + 1);
+			String localPath = localFile.toString();
+			if (localPath.lastIndexOf('/') > 0) {
+				command += localPath.substring(localPath.lastIndexOf('/') + 1);
 			} else {
-				command += localFile;
+				command += localPath;
 			}
 			command += "\n"; //$NON-NLS-1$
 
