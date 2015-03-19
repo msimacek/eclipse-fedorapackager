@@ -61,10 +61,6 @@ public class FedoraPackagerKojiPreferencePage extends PreferencePage implements
 	/** Default Constructor */
 	public FedoraPackagerKojiPreferencePage() {}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
-	 */
 	@Override
 	public void init(IWorkbench workbench) {
 		noDefaultAndApplyButton();
@@ -74,10 +70,6 @@ public class FedoraPackagerKojiPreferencePage extends PreferencePage implements
 		setDescription(KojiText.FedoraPackagerKojiPreferencePage_KojiPreferenceInformation);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#isValid()
-	 */
 	@Override
 	public boolean isValid() {
 		boolean enabled = PackagerPlugin.isConfEnabled();
@@ -115,7 +107,7 @@ public class FedoraPackagerKojiPreferencePage extends PreferencePage implements
 	 * @param columnText The name of the column.
 	 * @return The newly created column.
 	 */
-	private TableViewerColumn createTableViewerColumn(TableViewer tableViewer, String columnText) {
+	private static TableViewerColumn createTableViewerColumn(TableViewer tableViewer, String columnText) {
 		TableViewerColumn column = new TableViewerColumn(tableViewer, SWT.NONE);
 		column.getColumn().setWidth(200);
 		column.getColumn().setText(columnText);
@@ -264,10 +256,6 @@ public class FedoraPackagerKojiPreferencePage extends PreferencePage implements
 		return PackagerPlugin.isConfEnabled() ? 0 : KojiUtils.getSelectionAddress(serverMapping, getPreferenceStore().getString(KojiPreferencesConstants.PREF_KOJI_SERVER_INFO));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#performOk()
-	 */
 	@Override
 	public boolean performOk() {
 		int selection = table.getSelectionIndex();
@@ -285,10 +273,6 @@ public class FedoraPackagerKojiPreferencePage extends PreferencePage implements
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#performCancel()
-	 */
 	@Override
 	public boolean performCancel() {
 		String preferences = prefStore.getString(KojiPreferencesConstants.PREF_SERVER_LIST);

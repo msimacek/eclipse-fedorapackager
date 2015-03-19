@@ -43,6 +43,6 @@ public abstract class Result implements ICommandResult {
 	}
 
 	@Override
-	abstract public boolean isSuccessful();
+	public abstract boolean isSuccessful();
 
 }

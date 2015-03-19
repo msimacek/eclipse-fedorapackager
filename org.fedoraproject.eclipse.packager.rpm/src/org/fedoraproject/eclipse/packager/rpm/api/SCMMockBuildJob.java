@@ -17,17 +17,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
-import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.DownloadSourcesJob;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.rpm.RPMPlugin;
 import org.fedoraproject.eclipse.packager.rpm.RpmText;
@@ -68,28 +65,6 @@ public class SCMMockBuildJob extends AbstractMockJob {
 		this.downloadUrlPreference = downloadUrlPreference;
 	}
 
-	/**
-	 * Constructor for forcing Mock to try to build from source in the repo,
-	 * ignoring any specfiles.
-	 *
-	 * @param name
-	 *            The name of the Job
-	 * @param shell
-	 *            The shell the Job is in
-	 * @param fpRoot
-	 *            The root of the project the Job is run in
-	 * @param localSource
-	 *            true to force the use of local source
-	 * @param downloadUrlPreference
-	 *            The preference for the download URL.
-	 */
-	public SCMMockBuildJob(String name, Shell shell, IProjectRoot fpRoot,
-			boolean localSource, String downloadUrlPreference) {
-		super(name, shell, fpRoot);
-		useRepoSource = localSource;
-		this.downloadUrlPreference = downloadUrlPreference;
-	}
-
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
 		FedoraPackager fp = new FedoraPackager(fpr);
@@ -105,8 +80,6 @@ public class SCMMockBuildJob extends AbstractMockJob {
 			return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
 					e.getMessage(), e);
 		}
-		logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
-				SCMMockBuildCommand.class.getName()));
 		// sources need to be downloaded
 		if (!useRepoSource) {
 			Job downloadSourcesJob = new DownloadSourcesJob(
@@ -153,7 +126,6 @@ public class SCMMockBuildJob extends AbstractMockJob {
 								monitor);
 					} catch (UserNotInMockGroupException e) {
 						// nothing critical, advise the user what to do.
-						logger.logDebug(e.getMessage());
 						FedoraHandlerUtils.showInformationDialog(shell, fpr
 								.getProductStrings().getProductName(), e
 								.getMessage());
@@ -161,14 +133,13 @@ public class SCMMockBuildJob extends AbstractMockJob {
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
 						return status;
 					} catch (MockBuildCommandException | CoreException
-							| CommandListenerException|CommandMisconfiguredException e) {
+							| CommandListenerException e) {
 						// Some unknown or unexpected error occurred
 						logger.logError(e.getMessage(), e.getCause());
 						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
 								e.getMessage(), e.getCause());
 					} catch (MockNotInstalledException e) {
 						// nothing critical, advise the user what to do.
-						logger.logDebug(e.getMessage());
 						FedoraHandlerUtils.showInformationDialog(shell, fpr
 								.getProductStrings().getProductName(), e
 								.getMessage());

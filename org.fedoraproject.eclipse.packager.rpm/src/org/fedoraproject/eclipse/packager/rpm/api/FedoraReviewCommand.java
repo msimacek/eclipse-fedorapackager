@@ -9,12 +9,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.linuxtools.rpm.core.utils.Utils;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
-import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.rpm.RpmText;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.FedoraReviewNotInstalledException;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.MockBuildCommandException;
@@ -38,24 +35,11 @@ public class FedoraReviewCommand extends
 	protected static final String MOCK_GROUP_NAME = "mock"; //$NON-NLS-1$
 
 	@Override
-	protected void checkConfiguration() {
-		// no prereqs
-	}
-
-	@Override
 	public FedoraReviewResult call(IProgressMonitor monitor)
-			throws CommandMisconfiguredException, UserNotInMockGroupException,
+			throws UserNotInMockGroupException,
 			CommandListenerException, MockBuildCommandException,
 			FedoraReviewNotInstalledException {
-		try {
-			callPreExecListeners();
-		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof CommandMisconfiguredException) {
-				// explicitly throw the specific exception
-				throw (CommandMisconfiguredException) e.getCause();
-			}
-			throw e;
-		}
+		callPreExecListeners();
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}
@@ -72,9 +56,6 @@ public class FedoraReviewCommand extends
 		}
 		String[] reviewCommand = new String[] { "fedora-review", //$NON-NLS-1$
 				"-n", projectRoot.getPackageName() }; //$NON-NLS-1$
-		FedoraPackagerLogger.getInstance().logDebug(
-				NLS.bind(RpmText.FedoraReviewCommand_CommandLog,
-						MockUtils.convertCLICmd(reviewCommand)));
 		FedoraReviewResult result = new FedoraReviewResult(reviewCommand);
 		MockUtils.checkMockGroupMembership();
 		try {

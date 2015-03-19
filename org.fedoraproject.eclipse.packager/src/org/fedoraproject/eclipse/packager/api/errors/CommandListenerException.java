@@ -26,4 +26,21 @@ public class CommandListenerException extends FedoraPackagerAPIException {
 	public CommandListenerException(Throwable cause) {
 		super("unused", cause); //$NON-NLS-1$
 	}
+
+	/**
+	 * Wrap an exception with additional message.
+	 * @param message The additional message
+	 * @param cause The exception to wrap.
+	 */
+	public CommandListenerException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	/**
+	 * Creates a message only exception.
+	 * @param message The message.
+	 */
+	public CommandListenerException(String message) {
+		super(message);
+	}
 }

@@ -10,8 +10,7 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.api.errors;
 
-import org.apache.http.HttpResponse;
-import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
+import org.fedoraproject.eclipse.packager.FedoraSSL;
 
 
 /**
@@ -22,23 +21,6 @@ public class UploadFailedException extends FedoraPackagerAPIException {
 	
 	private static final long serialVersionUID = -8250214677451435086L;
 	
-	// Store response in order to be able to determine the real cause of
-	// the exception if something went wrong on HTTP level. I.e. URL unavailable
-	// or similar
-	private HttpResponse response;
-	
-	/**
-	 * @param message
-	 *            The message associated with this exception.
-	 * @param response
-	 *            The HTTP response. Pass if some HTTP error occured. I.e.
-	 *            status code != 200.
-	 */
-	public UploadFailedException(String message, HttpResponse response) {
-		super(message);
-		this.response = response;
-	}
-	
 	/**
 	 * @param message
 	 *            The message associated with this exception.
@@ -47,7 +29,6 @@ public class UploadFailedException extends FedoraPackagerAPIException {
 	 */
 	public UploadFailedException(String message, Throwable cause) {
 		super(message, cause);
-		this.response = null;
 	}
 	/**
 	 * @param message
@@ -55,7 +36,6 @@ public class UploadFailedException extends FedoraPackagerAPIException {
 	 */
 	public UploadFailedException(String message) {
 		super(message);
-		this.response = null;
 	}
 	
 	/**
@@ -65,7 +45,7 @@ public class UploadFailedException extends FedoraPackagerAPIException {
 	 *         certificate expired.
 	 */
 	public boolean isCertificateExpired() {
-		if (!FedoraSSLFactory.getInstance().isFedoraCertValid()) {
+		if (!new FedoraSSL().isFedoraCertValid()) {
 			return true;
 		}
 		return false;
@@ -90,10 +70,4 @@ public class UploadFailedException extends FedoraPackagerAPIException {
 		return false;
 	}
 	
-	/**
-	 * @return The HTTP response if available, {@code null} otherwise.
-	 */
-	public HttpResponse getHttpResponse() {
-		return this.response;
-	}
 }

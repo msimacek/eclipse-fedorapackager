@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.api;
 
-import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 
 /**
  * A simple listener which makes sure that each command is properly configured
@@ -33,18 +31,8 @@ public class CheckConfigListener implements ICommandListener {
 	 * Make sure we can call and execute the command.
 	 */
 	@Override
-	public void preExecution() throws CommandListenerException {
+	public void preExecution() {
 		cmd.checkCallable();
-		try {
-			cmd.checkConfiguration();
-		} catch (CommandMisconfiguredException e) {
-			throw new CommandListenerException(e);
-		}
-	}
-
-	@Override
-	public void postExecution() {
-		// nothing to do for this listener
 	}
 
 }

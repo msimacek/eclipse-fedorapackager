@@ -31,16 +31,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
-import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
-import org.fedoraproject.eclipse.packager.api.errors.TagSourcesException;
-import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
-import org.fedoraproject.eclipse.packager.koji.api.errors.BuildAlreadyExistsException;
-import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
-import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientLoginException;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.junit.After;
@@ -77,7 +70,6 @@ public class KojiBuildCommandTest {
 
 	/**
 	 * @throws CoreException 
-	 * @throws java.lang.Exception
 	 */
 	@After
 	public void tearDown() throws CoreException  {
@@ -88,17 +80,9 @@ public class KojiBuildCommandTest {
 	 * Test method for 
 	 * {@link org.fedoraproject.eclipse.packager.koji.api.KojiBuildCommand#checkConfiguration()}.
 	 * Should have thrown an exception. Command is not properly configured.
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
-	 * @throws KojiHubClientException 
-	 * @throws CommandListenerException 
-	 * @throws TagSourcesException 
-	 * @throws UnpushedChangesException 
-	 * @throws CommandMisconfiguredException 
-	 * @throws BuildAlreadyExistsException 
 	 */
 	@Test(expected=CommandMisconfiguredException.class)
-	public void testCheckConfiguration() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, BuildAlreadyExistsException, CommandMisconfiguredException, UnpushedChangesException, TagSourcesException, CommandListenerException, KojiHubClientException  {
+	public void testCheckConfiguration() throws FedoraPackagerAPIException  {
 		KojiBuildCommand buildCommand = (KojiBuildCommand) packager
 				.getCommandInstance(KojiBuildCommand.ID);
 		buildCommand.call(new NullProgressMonitor());
@@ -107,17 +91,9 @@ public class KojiBuildCommandTest {
 	/**
 	 *  This illustrates proper usage of {@link KojiBuildCommand}. Since
 	 *  it's using a stubbed client it does not actually push a build to koji.
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
-	 * @throws KojiHubClientLoginException 
-	 * @throws KojiHubClientException 
-	 * @throws CommandListenerException 
-	 * @throws TagSourcesException 
-	 * @throws UnpushedChangesException 
-	 * @throws CommandMisconfiguredException 
 	 */
 	@Test
-	public void canPushFakeScratchBuild() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, KojiHubClientLoginException, KojiHubClientException, CommandMisconfiguredException, UnpushedChangesException, TagSourcesException, CommandListenerException {
+	public void canPushFakeScratchBuild() throws FedoraPackagerAPIException {
 		KojiBuildCommand buildCommand = (KojiBuildCommand) packager
 				.getCommandInstance(KojiBuildCommand.ID);
 		IKojiHubClient kojiClient = createMock(IKojiHubClient.class);

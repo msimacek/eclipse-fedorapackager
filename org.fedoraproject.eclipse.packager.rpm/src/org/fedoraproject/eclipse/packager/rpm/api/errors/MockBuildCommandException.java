@@ -30,11 +30,4 @@ public class MockBuildCommandException extends FedoraPackagerAPIException {
 		super(msg, cause);
 	}
 
-	/**
-	 * @param msg
-	 *            The message associated with this exception.
-	 */
-	public MockBuildCommandException(String msg) {
-		super(msg);
-	}
 }

@@ -29,7 +29,6 @@ import org.fedoraproject.eclipse.packager.IFpProjectBits;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
@@ -103,30 +102,7 @@ public class LocalBuildHandler extends LocalHandlerDispatcher {
 											.branchConfig(bci).call(monitor);
 									projectRoot.getProject().refreshLocal(
 											IResource.DEPTH_INFINITE, monitor);
-								} catch (CommandMisconfiguredException e) {
-									// This shouldn't happen, but report error
-									// anyway
-									logger.logError(e.getMessage(), e);
-									return new Status(IStatus.ERROR,
-											RPMPlugin.PLUGIN_ID,
-											e.getMessage(), e);
-								} catch (CommandListenerException e) {
-									// There are no command listeners
-									// registered, so
-									// shouldn't
-									// happen. Do something reasonable anyway.
-									logger.logError(e.getMessage(), e);
-									return new Status(IStatus.ERROR,
-											RPMPlugin.PLUGIN_ID,
-											e.getMessage(), e);
-								} catch (RpmBuildCommandException e) {
-									logger.logError(e.getMessage(),
-											e.getCause());
-									return new Status(IStatus.ERROR,
-											RPMPlugin.PLUGIN_ID,
-											e.getMessage(), e.getCause());
-								} catch (IllegalArgumentException e) {
-									// setting distDefines failed
+								} catch (CommandListenerException|RpmBuildCommandException|IllegalArgumentException e) {
 									logger.logError(e.getMessage(), e);
 									return new Status(IStatus.ERROR,
 											RPMPlugin.PLUGIN_ID,
@@ -174,14 +150,14 @@ public class LocalBuildHandler extends LocalHandlerDispatcher {
 		return null;
 	}
 
-	/*
+	/**
 	 * Set the build type, overridden by compile/install handler
 	 */
 	protected BuildType getBuildType() {
 		return BuildType.BINARY;
 	}
 
-	/*
+	/**
 	 * Set the task name, overridden by compile/install handler
 	 */
 	protected String getTaskName() {

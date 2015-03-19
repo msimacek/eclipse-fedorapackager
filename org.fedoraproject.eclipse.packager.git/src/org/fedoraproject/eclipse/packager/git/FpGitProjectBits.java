@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ListDialog;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
-import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
+import org.fedoraproject.eclipse.packager.FedoraSSL;
 import org.fedoraproject.eclipse.packager.IFpProjectBits;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 
@@ -134,7 +134,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 		if (!isInitialized()) {
 			return null;
 		}
-		String username = FedoraSSLFactory.getInstance().getUsernameFromCert();
+		String username = new FedoraSSL().getUsernameFromCert();
 		String packageName = this.project.getProject().getName();
 		if (username.equals("anonymous")) { //$NON-NLS-1$
 			return "git://pkgs.fedoraproject.org/" + packageName + ".git"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -268,7 +268,7 @@ public class FpGitProjectBits implements IFpProjectBits {
 	 * @param branchName The branch name being examined.
 	 * @return true if given branch name is NOT an ObjectId in string format, false otherwise.
 	 */
-	private boolean isNamedBranch(String branchName) {
+	private static boolean isNamedBranch(String branchName) {
 		if (branchName.startsWith(Constants.R_HEADS)
 				|| branchName.startsWith(Constants.R_TAGS)
 				|| branchName.startsWith(Constants.R_REMOTES)) {
@@ -431,15 +431,8 @@ public class FpGitProjectBits implements IFpProjectBits {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.fedoraproject.eclipse.packager.IFpProjectBits#stageChanges(java.lang
-	 * .String[])
-	 */
 	@Override
-	public void stageChanges(String[] files) {
+	public void stageChanges(Set<String> files) {
 		try {
 			for (String filePattern : files) {
 				git.add().addFilepattern(filePattern).call();

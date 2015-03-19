@@ -28,9 +28,7 @@
       point="org.fedoraproject.eclipse.packager.vcsContribution">
    <vcs
          class="org.fedoraproject.eclipse.packager.git.FpGitProjectBits"
-         contribPlugin="org.fedoraproject.eclipse.packager.git"
-         name="Git"
-         type="GIT">
+         contribPlugin="org.fedoraproject.eclipse.packager.git">
    </vcs>
 </extension>
    <extension

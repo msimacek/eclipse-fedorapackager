@@ -364,7 +364,7 @@ public class BodhiNewUpdateDialog extends Dialog {
 			setValidationError(BodhiText.BodhiNewUpdateDialog_buildsSelectionErrorMsg);
 			return false;
 		}
-		if (!bugs.equals("") && !bugs.matches("[0-9]+(,[0-9]+)*")) { //$NON-NLS-1$ //$NON-NLS-2$
+		if (!bugs.isEmpty() && !bugs.matches("[0-9]+(,[0-9]+)*")) { //$NON-NLS-1$
 			setValidationError(BodhiText.BodhiNewUpdateDialog_invalidBugsErrorMsg);
 			return false;
 		}
@@ -388,7 +388,7 @@ public class BodhiNewUpdateDialog extends Dialog {
 			return false;
 		}
 		// Update notice must not be empty
-		if (txtComment.getText().trim().equals("")) { //$NON-NLS-1$
+		if (txtComment.getText().trim().isEmpty()) {
 			setValidationError(BodhiText.BodhiNewUpdateDialog_invalidNotesErrorMsg);
 			return false;
 		}
@@ -435,7 +435,7 @@ public class BodhiNewUpdateDialog extends Dialog {
 		this.lblError.redraw();
 	}
 
-	private Color getColor(int systemColorID) {
+	private static Color getColor(int systemColorID) {
 		Display display = Display.getCurrent();
 		return display.getSystemColor(systemColorID);
 	}

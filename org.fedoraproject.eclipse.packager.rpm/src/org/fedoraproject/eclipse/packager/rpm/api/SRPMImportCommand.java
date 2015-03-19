@@ -38,7 +38,6 @@ import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.SourcesFileUpdater;
 import org.fedoraproject.eclipse.packager.api.UploadSourceCommand;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
@@ -83,24 +82,6 @@ public class SRPMImportCommand {
 		this.sslPolicyCallback = sslPolicyCallback;
 	}
 
-	protected void checkConfiguration() throws CommandMisconfiguredException {
-		if (srpm == null) {
-			throw new CommandMisconfiguredException(
-					RpmText.SRPMImportCommand_PathNotSet);
-		} else if (!new File(srpm).exists()) {
-			throw new CommandMisconfiguredException(NLS.bind(
-					RpmText.SRPMImportCommand_SRPMNotFound, srpm));
-		}
-		if (project == null) {
-			throw new CommandMisconfiguredException(
-					RpmText.SRPMImportCommand_ProjectNotSet);
-		}
-		if (sslPolicyCallback == null) {
-			throw new CommandMisconfiguredException(
-					RpmText.SRPMImportCommand_CallbackNotSet);
-		}
-	}
-
 	protected UploadSourceCommand getUploadSourceCommand()
 			throws InvalidProjectRootException,
 			FedoraPackagerCommandInitializationException,
@@ -123,7 +104,6 @@ public class SRPMImportCommand {
 			throws SRPMImportCommandException {
 		Set<String> stageSet = new HashSet<>();
 		Set<String> uploadedFiles = new HashSet<>();
-		Set<String> skippedUploads = new HashSet<>();
 		// install rpm to the project folder
 		SRPMImportOperation sio = new SRPMImportOperation(project, new File(srpm),
 					RPMProjectLayout.FLAT);
@@ -277,15 +257,13 @@ public class SRPMImportCommand {
 						// ignore, imports that update an existing repo can have
 						// identical files in an update, but these files don't
 						// really need to be uploaded
-						skippedUploads.add(file);
 					}
 
 				} else {
 					stageSet.add(file);
 				}
 			}
-			result.setUploaded(uploadedFiles.toArray(new String[0]));
-			result.setSkipped(skippedUploads.toArray(new String[0]));
+			result.setUploaded(uploadedFiles);
 			monitor.subTask(RpmText.SRPMImportCommand_StagingChanges);
 			// Do VCS update
 			if (projectBits.updateVCS(monitor)
@@ -298,7 +276,7 @@ public class SRPMImportCommand {
 			stageSet.add(fpr.getSourcesFile().getName());
 			stageSet.add(projectBits.getIgnoreFileName());
 			FedoraPackagerUtils.getVcsHandler(fpr).stageChanges(
-					stageSet.toArray(new String[0]));
+					stageSet);
 		} catch (CoreException | FedoraPackagerAPIException | IOException e) {
 			throw new SRPMImportCommandException(e.getMessage(), e);
 		}

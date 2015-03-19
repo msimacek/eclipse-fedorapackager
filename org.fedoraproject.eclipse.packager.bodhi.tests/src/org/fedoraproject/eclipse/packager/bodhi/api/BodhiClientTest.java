@@ -25,15 +25,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
-import org.fedoraproject.eclipse.packager.bodhi.api.BodhiClient;
-import org.fedoraproject.eclipse.packager.bodhi.api.BodhiLoginResponse;
-import org.fedoraproject.eclipse.packager.bodhi.api.BodhiUpdateResponse;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientException;
 import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientLoginException;
 import org.junit.Before;
@@ -68,13 +65,13 @@ public class BodhiClientTest {
 	
 	@Test
 	public void testLogin() throws ClientProtocolException, IOException, BodhiClientLoginException  {
-		final HttpClient mockClient = createMock(HttpClient.class);
-		HttpResponse mockResponse = createMock(HttpResponse.class);
+		final CloseableHttpClient mockClient = createMock(CloseableHttpClient.class);
+		CloseableHttpResponse mockResponse = createMock(CloseableHttpResponse.class);
 		StatusLine mockStatus = createMock(StatusLine.class);
 		HttpEntity mockEntity = createMock(HttpEntity.class);
 		BodhiClient client = new BodhiClient(bodhiUrl) {
 			@Override
-			protected HttpClient getClient() {
+			protected CloseableHttpClient getClient() {
 				return mockClient;
 			}
 		};
@@ -100,13 +97,13 @@ public class BodhiClientTest {
 	
 	@Test(expected=BodhiClientLoginException.class)
 	public void testLoginUnsuccessfull() throws ClientProtocolException, IOException, BodhiClientLoginException  {
-		final HttpClient mockClient = createMock(HttpClient.class);
-		HttpResponse mockResponse = createMock(HttpResponse.class);
+		final CloseableHttpClient mockClient = createMock(CloseableHttpClient.class);
+		CloseableHttpResponse mockResponse = createMock(CloseableHttpResponse.class);
 		StatusLine mockStatus = createMock(StatusLine.class);
 		HttpEntity mockEntity = createMock(HttpEntity.class);
 		BodhiClient client = new BodhiClient(bodhiUrl) {
 			@Override
-			protected HttpClient getClient() {
+			protected CloseableHttpClient getClient() {
 				return mockClient;
 			}
 		};
@@ -129,13 +126,13 @@ public class BodhiClientTest {
 
 	@Test
 	public void testLogout() throws ClientProtocolException, IOException, BodhiClientLoginException, BodhiClientException {
-		final HttpClient mockClient = createMock(HttpClient.class);
-		HttpResponse mockResponse = createMock(HttpResponse.class);
+		final CloseableHttpClient mockClient = createMock(CloseableHttpClient.class);
+		CloseableHttpResponse mockResponse = createMock(CloseableHttpResponse.class);
 		StatusLine mockStatus = createMock(StatusLine.class);
 		HttpEntity mockEntity = createMock(HttpEntity.class);
 		BodhiClient client = new BodhiClient(bodhiUrl) {
 			@Override
-			protected HttpClient getClient() {
+			protected CloseableHttpClient getClient() {
 				return mockClient;
 			}
 		};
@@ -172,13 +169,13 @@ public class BodhiClientTest {
 	 */
 	@Test
 	public void canCreateNewUpdate() throws ClientProtocolException, IOException, BodhiClientLoginException, BodhiClientException  {
-		final HttpClient mockClient = createMock(HttpClient.class);
-		HttpResponse mockResponse = createMock(HttpResponse.class);
+		final CloseableHttpClient mockClient = createMock(CloseableHttpClient.class);
+		CloseableHttpResponse mockResponse = createMock(CloseableHttpResponse.class);
 		StatusLine mockStatus = createMock(StatusLine.class);
 		HttpEntity mockEntity = createMock(HttpEntity.class);
 		BodhiClient client = new BodhiClient(bodhiUrl) {
 			@Override
-			protected HttpClient getClient() {
+			protected CloseableHttpClient getClient() {
 				return mockClient;
 			}
 		};
@@ -208,7 +205,7 @@ public class BodhiClientTest {
 		// push the update
 		String[] builds = { PACKAGE_UPDATE_NVR };
 		BodhiUpdateResponse updateResponse = client.createNewUpdate(builds,
-				"F15", "enhancement", "testing", "",
+				"enhancement", "testing", "",
 				"This is a test. Please disregard", "", false, true, 3, -3, true);
 		assertEquals("Update successfully created", updateResponse.getFlashMsg());
 		assertEquals("ed", updateResponse.getUpdates()[0].getBuilds()[0].getPkg().getName());

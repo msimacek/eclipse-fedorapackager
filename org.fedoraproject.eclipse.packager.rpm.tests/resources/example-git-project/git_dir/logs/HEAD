@@ -12,3 +12,6 @@ cb492f26881d1a3538750784507690d07e666553 2495c64c9c44392df3c0812dd384204aa8d0b72
 e879e552883739122941e7407b343c5897708c97 eb7a8af755f9e1643b910b02946636f172cb1448 Sami Wagiaalla <swagiaal@redhat.com> 1337797856 -0400	commit (amend): Initial commit
 eb7a8af755f9e1643b910b02946636f172cb1448 b1cc6f1ce4409051c6b1d15b35da29fb332d716e Sami Wagiaalla <swagiaal@redhat.com> 1338237286 -0400	commit (amend): Initial commit
 b1cc6f1ce4409051c6b1d15b35da29fb332d716e 60549be4f4bd6f3220fa301b1f8d42e447749833 Sami Wagiaalla <swagiaal@redhat.com> 1338237848 -0400	commit (amend): Initial commit
+60549be4f4bd6f3220fa301b1f8d42e447749833 60549be4f4bd6f3220fa301b1f8d42e447749833 Alexander Kurtakov <akurtako@redhat.com> 1409692016 +0300	checkout: moving from master to f17
+60549be4f4bd6f3220fa301b1f8d42e447749833 60549be4f4bd6f3220fa301b1f8d42e447749833 Alexander Kurtakov <akurtako@redhat.com> 1409692031 +0300	checkout: moving from f17 to f20
+60549be4f4bd6f3220fa301b1f8d42e447749833 60549be4f4bd6f3220fa301b1f8d42e447749833 Alexander Kurtakov <akurtako@redhat.com> 1409692037 +0300	checkout: moving from f20 to master

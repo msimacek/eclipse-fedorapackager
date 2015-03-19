@@ -62,7 +62,7 @@ public class ScpHandler extends AbstractHandler {
 					options.add(resource);
 				}
 			}
-			if (options.size() == 0) {
+			if (options.isEmpty()) {
 				return null;
 			}
 			final IResource[] syncOptions = options.toArray(new IResource[0]);

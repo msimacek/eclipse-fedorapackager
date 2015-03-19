@@ -15,12 +15,9 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.osgi.util.NLS;
-import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.TagSourcesException;
-import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
 import org.fedoraproject.eclipse.packager.koji.api.errors.BuildAlreadyExistsException;
 import org.fedoraproject.eclipse.packager.koji.api.errors.KojiHubClientException;
@@ -56,14 +53,90 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 	 */
 	protected String[] nvr;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#
-	 * checkConfiguration()
+	/**
+	 * Sets the XMLRPC based client, which will be used for Koji interaction.
+	 *
+	 * @param client
+	 *            The client to be used.
+	 * @return This instance.
+	 */
+	public KojiBuildCommand setKojiClient(IKojiHubClient client) {
+		this.kojiClient = client;
+		return this;
+	}
+
+	/**
+	 * Set this to {@code true} if a scratch build should be pushed instead of a
+	 * regular build.
+	 *
+	 * @param newValue
+	 *            True if the build is a scratch build, false otherwise.
+	 * @return This instance.
+	 */
+	public KojiBuildCommand isScratchBuild(boolean newValue) {
+		this.scratchBuild = newValue;
+		return this;
+	}
+
+	/**
+	 * Sets the URL into the source control management system, in order to be
+	 * able to determine which tag/revision to build.
+	 *
+	 * @param location
+	 *            The location of the source: either an SCM location with a
+	 *            specfile and a tarball or the location of an uploaded srpm on
+	 *            the Koji server.
+	 * @return This instance.
+	 */
+	public KojiBuildCommand sourceLocation(List<?> location) {
+		this.location = location;
+		return this;
+	}
+
+	/**
+	 * Sets the build target for which to push the build for.
+	 *
+	 * @param buildTarget
+	 *            The target to build for.
+	 * @return This instance.
+	 */
+	public KojiBuildCommand buildTarget(String buildTarget) {
+		this.buildTarget = buildTarget;
+		return this;
+	}
+
+	/**
+	 * Sets the name-version-release token for which a build should be pushed.
+	 *
+	 * @param nvr
+	 *            The array of name, version and release Strings.
+	 * @return This instance.
+	 */
+	public KojiBuildCommand nvr(String[] nvr) {
+		this.nvr = nvr;
+		return this;
+	}
+
+	/**
+	 * Implementation of the {@code KojiBuildCommand}.
+	 *
+	 * @param monitor
+	 *            The main progress monitor. Each other task is executed as a
+	 *            subtask.
+	 * @throws BuildAlreadyExistsException
+	 *             If a build which would have otherwise be pushed already
+	 *             existed in Koji.
+	 * @throws CommandListenerException
+	 *             If some listener detected a problem.
+	 * @throws KojiHubClientException
+	 *             If some other error occured while pushing a build.
+	 * @return The result of this command.
 	 */
 	@Override
-	protected void checkConfiguration() throws CommandMisconfiguredException {
+	public BuildResult call(IProgressMonitor monitor)
+			throws BuildAlreadyExistsException, CommandListenerException,
+			KojiHubClientException {
+		callPreExecListeners();
 		// require a client
 		if (kojiClient == null) {
 			throw new CommandMisconfiguredException(NLS.bind(
@@ -72,7 +145,7 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 		}
 		// we also require scmURL to be set
 		if (location == null
-				|| location.size() == 0
+				|| location.isEmpty()
 				|| !(location.get(0) instanceof String || location.get(0) instanceof List<?>)) {
 			throw new CommandMisconfiguredException(
 					KojiText.KojiBuildCommand_configErrorNoScmURL);
@@ -87,112 +160,6 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 			throw new CommandMisconfiguredException(
 					KojiText.KojiBuildCommand_configErrorNoNVR);
 		}
-	}
-
-	/**
-	 * Sets the XMLRPC based client, which will be used for Koji interaction.
-	 * 
-	 * @param client
-	 *            The client to be used.
-	 * @return This instance.
-	 */
-	public KojiBuildCommand setKojiClient(IKojiHubClient client) {
-		this.kojiClient = client;
-		return this;
-	}
-
-	/**
-	 * Set this to {@code true} if a scratch build should be pushed instead of a
-	 * regular build.
-	 * 
-	 * @param newValue
-	 *            True if the build is a scratch build, false otherwise.
-	 * @return This instance.
-	 */
-	public KojiBuildCommand isScratchBuild(boolean newValue) {
-		this.scratchBuild = newValue;
-		return this;
-	}
-
-	/**
-	 * Sets the URL into the source control management system, in order to be
-	 * able to determine which tag/revision to build.
-	 * 
-	 * @param location
-	 *            The location of the source: either an SCM location with a
-	 *            specfile and a tarball or the location of an uploaded srpm on
-	 *            the Koji server.
-	 * @return This instance.
-	 */
-	public KojiBuildCommand sourceLocation(List<?> location) {
-		this.location = location;
-		return this;
-	}
-
-	/**
-	 * Sets the build target for which to push the build for.
-	 * 
-	 * @param buildTarget
-	 *            The target to build for.
-	 * @return This instance.
-	 */
-	public KojiBuildCommand buildTarget(String buildTarget) {
-		this.buildTarget = buildTarget;
-		return this;
-	}
-
-	/**
-	 * Sets the name-version-release token for which a build should be pushed.
-	 * 
-	 * @param nvr
-	 *            The array of name, version and release Strings.
-	 * @return This instance.
-	 */
-	public KojiBuildCommand nvr(String[] nvr) {
-		this.nvr = nvr;
-		return this;
-	}
-
-	/**
-	 * Implementation of the {@code KojiBuildCommand}.
-	 * 
-	 * @param monitor
-	 *            The main progress monitor. Each other task is executed as a
-	 *            subtask.
-	 * @throws BuildAlreadyExistsException
-	 *             If a build which would have otherwise be pushed already
-	 *             existed in Koji.
-	 * @throws CommandMisconfiguredException
-	 *             If the command was not properly configured when it was
-	 *             called.
-	 * @throws UnpushedChangesException
-	 *             If the download of some source failed.
-	 * @throws TagSourcesException
-	 *             If tagging of sources failed.
-	 * @throws CommandListenerException
-	 *             If some listener detected a problem.
-	 * @throws KojiHubClientException
-	 *             If some other error occured while pushing a build.
-	 * @return The result of this command.
-	 */
-	@Override
-	public BuildResult call(IProgressMonitor monitor)
-			throws CommandMisconfiguredException, BuildAlreadyExistsException,
-			UnpushedChangesException, TagSourcesException,
-			CommandListenerException, KojiHubClientException {
-		try {
-			callPreExecListeners();
-		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof CommandMisconfiguredException) {
-				// explicitly throw the specific exception
-				throw (CommandMisconfiguredException) e.getCause();
-			} else if (e.getCause() instanceof TagSourcesException) {
-				throw (TagSourcesException) e.getCause();
-			} else if (e.getCause() instanceof UnpushedChangesException) {
-				throw (UnpushedChangesException) e.getCause();
-			}
-			throw e;
-		}
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();
 		}
@@ -200,12 +167,6 @@ public class KojiBuildCommand extends FedoraPackagerCommand<BuildResult> {
 		// main monitor worked for 30
 		BuildResult result = new BuildResult();
 		monitor.subTask(KojiText.KojiBuildCommand_sendBuildCmd);
-		FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-		if (this.scratchBuild) {
-			logger.logDebug(KojiText.KojiBuildCommand_scratchBuildLogMsg);
-		} else {
-			logger.logDebug(KojiText.KojiBuildCommand_buildLogMsg);
-		}
 		// attempt to push build
 		int taskId = this.kojiClient.build(buildTarget, location, nvr,
 				scratchBuild)[0];

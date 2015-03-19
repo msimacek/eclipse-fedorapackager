@@ -42,7 +42,7 @@ public class KojiHubClientException extends FedoraPackagerAPIException {
 	/**
 	 * Create a new KojiHubClientException with a status object to be used for
 	 * functions which are required to return a status object.
-	 * 
+	 *
 	 * @param msg
 	 *            The error message.
 	 * @param cause
@@ -62,14 +62,6 @@ public class KojiHubClientException extends FedoraPackagerAPIException {
 	 */
 	public KojiHubClientException(Throwable cause) {
 		super("Client error", cause); //$NON-NLS-1$
-	}
-
-	/**
-	 * @param msg
-	 *            The message associated with this exception.
-	 */
-	public KojiHubClientException(String msg) {
-		super(msg);
 	}
 
 	/**

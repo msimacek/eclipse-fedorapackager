@@ -20,15 +20,12 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
-import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.rpm.RPMPlugin;
 import org.fedoraproject.eclipse.packager.rpm.RpmText;
@@ -64,12 +61,6 @@ public class MockBuildJob extends AbstractMockJob {
 		this.srpmPath = srpmPath;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.
-	 * IProgressMonitor)
-	 */
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
 		FedoraPackager fp = new FedoraPackager(fpr);
@@ -83,8 +74,6 @@ public class MockBuildJob extends AbstractMockJob {
 			return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
 					e.getMessage(), e);
 		}
-		logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
-				MockBuildCommand.class.getName()));
 		try {
 			mockBuild.pathToSRPM(srpmPath.toOSString());
 		} catch (FileNotFoundException e) {
@@ -111,7 +100,7 @@ public class MockBuildJob extends AbstractMockJob {
 						result = mockBuild.call(monitor);
 						fpr.getProject().refreshLocal(IResource.DEPTH_INFINITE,
 								monitor);
-					} catch (CommandMisconfiguredException|CoreException|CommandListenerException|MockBuildCommandException e) {
+					} catch (CoreException|CommandListenerException|MockBuildCommandException e) {
 						// This shouldn't happen, but report error
 						// anyway
 						logger.logError(e.getMessage(), e);
@@ -119,7 +108,6 @@ public class MockBuildJob extends AbstractMockJob {
 								e.getMessage(), e);
 					} catch (UserNotInMockGroupException|MockNotInstalledException e) {
 						// nothing critical, advise the user what to do.
-						logger.logDebug(e.getMessage());
 						FedoraHandlerUtils.showInformationDialog(shell, fpr
 								.getProductStrings().getProductName(), e
 								.getMessage());

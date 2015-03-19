@@ -20,7 +20,7 @@
   
   <groupId>org.fedoraproject.eclipse.packager</groupId>
   <artifactId>parent</artifactId>
-  <version>0.5.0-SNAPSHOT</version>
+  <version>0.5.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Fedora Packager for Eclipse Parent</name>
@@ -40,11 +40,11 @@
   </licenses>
 
   <properties>
-    <tycho-version>0.20.0</tycho-version>
-    <tycho-extras-version>0.20.0</tycho-extras-version>
-    <platform-version-name>kepler</platform-version-name>
+    <tycho-version>0.21.0</tycho-version>
+    <tycho-extras-version>0.21.0</tycho-extras-version>
+    <platform-version-name>luna</platform-version-name>
     <eclipse-site>http://download.eclipse.org/releases/${platform-version-name}</eclipse-site>
-    <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20130827064939/repository/</orbit-site>
+    <orbit-site>http://download.eclipse.org/tools/orbit/downloads/drops/R20140525021250/repository/</orbit-site>
     <!-- We need this for our dependencies and old versions -->
     <packager-site>https://fedorahosted.org/released/eclipse-fedorapackager/p2-repo/</packager-site>
     <linuxtools-nightly-site>http://download.eclipse.org/linuxtools/update</linuxtools-nightly-site>
@@ -87,12 +87,7 @@
       <layout>p2</layout>
       <url>${linuxtools-nightly-site}</url>
     </repository>
-    <repository>
-      <id>maven.eclipse.org</id>
-      <url>http://maven.eclipse.org/nexus/content/groups/public/</url>
-    </repository>
   </repositories>
-  
   <build>
     <plugins>
       <plugin>
@@ -126,8 +121,15 @@
 			<version>${tycho-version}</version>
 			<configuration>
 				<useUIHarness>true</useUIHarness>
-				<useUIThread>true</useUIThread>
+				<useUIThread>false</useUIThread>
 				<product>org.eclipse.platform.ide</product>
+                                <dependencies>
+                                    <dependency>
+                                        <type>p2-installable-unit</type>
+                                        <artifactId>org.eclipse.platform.feature.group</artifactId>
+                                        <version>${sdk-version}</version>
+                                    </dependency>
+                                </dependencies>
 			</configuration>
 		</plugin>
         <plugin>
@@ -186,7 +188,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.3</version>
+          <version>3.4</version>
         </plugin>
       </plugins>
     </pluginManagement>

@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.api;
 
-import java.util.ArrayList;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionPoint;
@@ -44,33 +42,6 @@ public class FedoraPackager {
 			throw new IllegalArgumentException(
 					FedoraPackagerText.FedoraPackager_Cant_Create);
 		this.root = root;
-	}
-
-	/**
-	 * Get a list of all registered Fedora packager command IDs. Each command id
-	 * may be used to get the desired command instance from the registry using
-	 * {@link FedoraPackager#getCommandInstance(String)}.
-	 * 
-	 * @return A list of registered command ids.
-	 */
-	public String[] getRegisteredCommandIDs() {
-		ArrayList<String> cmdIdList = new ArrayList<>();
-		IExtensionPoint packagerCommandExtension = Platform
-				.getExtensionRegistry().getExtensionPoint(
-						PackagerPlugin.PLUGIN_ID, CMD_EXTENSIONPOINT_NAME);
-		if (packagerCommandExtension != null) {
-			for (IConfigurationElement command : packagerCommandExtension
-					.getConfigurationElements()) {
-				if (command.getName().equals(CMD_ELEMENT_NAME)) {
-					String cmdId = command.getAttribute(CMD_ID_ATTRIBUTE_NAME);
-					if (cmdId != null) {
-						cmdIdList.add(cmdId);
-					}
-				}
-			}
-		}
-		String[] result = new String[cmdIdList.size()];
-		return cmdIdList.toArray(result);
 	}
 
 	/**

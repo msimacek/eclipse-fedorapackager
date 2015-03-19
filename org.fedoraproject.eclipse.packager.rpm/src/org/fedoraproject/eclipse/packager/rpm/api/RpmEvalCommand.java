@@ -45,20 +45,6 @@ public class RpmEvalCommand extends FedoraPackagerCommand<EvalResult> {
 
 	private String variable;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#
-	 * checkConfiguration()
-	 */
-	@Override
-	protected void checkConfiguration() throws CommandMisconfiguredException {
-		if (variable == null) {
-			throw new CommandMisconfiguredException(
-					RpmText.RpmEvalCommand_variableMustBeSet);
-		}
-	}
-
 	/**
 	 * Set the variable, which should get evaluated.
 	 * 
@@ -74,8 +60,6 @@ public class RpmEvalCommand extends FedoraPackagerCommand<EvalResult> {
 	/**
 	 * Call the RPM eval.
 	 * 
-	 * @throws CommandMisconfiguredException
-	 *             If command is misconfigured.
 	 * @throws CommandListenerException
 	 *             If some listener failed.
 	 * @throws RpmEvalCommandException
@@ -83,16 +67,12 @@ public class RpmEvalCommand extends FedoraPackagerCommand<EvalResult> {
 	 */
 	@Override
 	public EvalResult call(IProgressMonitor monitor)
-			throws CommandMisconfiguredException, CommandListenerException,
+			throws CommandListenerException,
 			RpmEvalCommandException {
-		try {
-			callPreExecListeners();
-		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof CommandMisconfiguredException) {
-				// explicitly throw the specific exception
-				throw (CommandMisconfiguredException) e.getCause();
-			}
-			throw e;
+		callPreExecListeners();
+		if (variable == null) {
+			throw new CommandMisconfiguredException(
+					RpmText.RpmEvalCommand_variableMustBeSet);
 		}
 		if (monitor.isCanceled()) {
 			throw new OperationCanceledException();

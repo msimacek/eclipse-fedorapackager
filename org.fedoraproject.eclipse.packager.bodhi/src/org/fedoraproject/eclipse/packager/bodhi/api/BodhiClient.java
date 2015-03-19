@@ -15,30 +15,26 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.params.HttpParams;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import org.eclipse.osgi.util.NLS;
-import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
-import org.fedoraproject.eclipse.packager.PackagerPlugin;
-import org.fedoraproject.eclipse.packager.bodhi.BodhiText;
 import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientException;
 import org.fedoraproject.eclipse.packager.bodhi.api.errors.BodhiClientLoginException;
 import org.fedoraproject.eclipse.packager.bodhi.deserializers.DateTimeDeserializer;
 import org.fedoraproject.eclipse.packager.bodhi.fas.DateTime;
+import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * Bodhi JSON over HTTP client.
@@ -48,7 +44,7 @@ public class BodhiClient {
 	// Use 30 sec connection timeout
 	private static final int CONNECTION_TIMEOUT = 30000;
 	// Delimiter for pushing several builds as one update
-	private static final String BUILDS_DELIMITER = ",";
+	private static final String BUILDS_DELIMITER = ","; //$NON-NLS-1$
 
 	// Parameter name constants for login
 	private static final String LOGIN_PARAM_NAME = "login"; //$NON-NLS-1$
@@ -79,7 +75,7 @@ public class BodhiClient {
 	private static final String MIME_JSON = "application/json"; //$NON-NLS-1$
 
 	// The http client to use for transport
-	protected HttpClient httpclient;
+	protected CloseableHttpClient httpclient;
 
 	// The base URL to use for connections
 	protected URL bodhiServerUrl;
@@ -110,12 +106,6 @@ public class BodhiClient {
 				EntityUtils.consume(resEntity); // clean up resources
 			}
 		}
-		// log JSON string if in debug mode
-		if (PackagerPlugin.inDebugMode()) {
-			FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-			logger.logInfo(NLS.bind(BodhiText.BodhiClient_rawJsonStringMsg,
-					jsonString));
-		}
 		// Deserialize from JSON
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		gsonBuilder.registerTypeAdapter(DateTime.class,
@@ -144,13 +134,14 @@ public class BodhiClient {
 			post.addHeader(ACCEPT_HTTP_HEADER_NAME, MIME_JSON);
 
 			// Construct the multipart POST request body.
-			MultipartEntity reqEntity = new MultipartEntity();
-			reqEntity.addPart(LOGIN_PARAM_NAME, new StringBody(
-					LOGIN_PARAM_VALUE));
-			reqEntity.addPart(USERNAME_PARAM_NAME, new StringBody(username));
-			reqEntity.addPart(PASSWORD_PARAM_NAME, new StringBody(password));
+			MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
+			reqEntity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+			
+			reqEntity.addTextBody(LOGIN_PARAM_NAME, LOGIN_PARAM_VALUE);
+			reqEntity.addTextBody(USERNAME_PARAM_NAME, username);
+			reqEntity.addTextBody(PASSWORD_PARAM_NAME, password);
 
-			post.setEntity(reqEntity);
+			post.setEntity(reqEntity.build());
 
 			HttpResponse response = httpclient.execute(post);
 			HttpEntity resEntity = response.getEntity();
@@ -190,22 +181,8 @@ public class BodhiClient {
 						"{0} {1}", response.getStatusLine().getStatusCode(), //$NON-NLS-1$
 						response.getStatusLine().getReasonPhrase()), response);
 			} else {
-				String responseString = ""; //$NON-NLS-1$
 				if (resEntity != null) {
-					try {
-						responseString = parseResponse(resEntity);
-					} catch (IOException e) {
-						// ignore
-					}
 					EntityUtils.consume(resEntity); // clean up resources
-				}
-				// log JSON string if in debug mode
-				if (PackagerPlugin.inDebugMode()) {
-					FedoraPackagerLogger logger = FedoraPackagerLogger
-							.getInstance();
-					logger.logInfo(NLS.bind(
-							BodhiText.BodhiClient_rawJsonStringMsg,
-							responseString));
 				}
 			}
 		} catch (IOException e) {
@@ -222,7 +199,11 @@ public class BodhiClient {
 		// When HttpClient instance is no longer needed,
 		// shut down the connection manager to ensure
 		// immediate deallocation of all system resources
-		httpclient.getConnectionManager().shutdown();
+		try {
+			httpclient.close();
+		} catch (IOException e) {
+		    //ignore as there isn't much to be done
+		}
 	}
 
 	/**
@@ -230,8 +211,6 @@ public class BodhiClient {
 	 * 
 	 * @param builds
 	 *            N-V-R's for which to push an update for
-	 * @param release
-	 *            For example "F15".
 	 * @param type
 	 *            One of "bugfix", "security", "enhancement", "newpackage".
 	 * @param request
@@ -257,8 +236,7 @@ public class BodhiClient {
 	 * @throws BodhiClientException
 	 *             If some error occurred.
 	 */
-	public BodhiUpdateResponse createNewUpdate(String[] builds, String release,
-			String type, String request, String bugs, String notes,
+	public BodhiUpdateResponse createNewUpdate(String[] builds, String type, String request, String bugs, String notes,
 			String csrfToken, boolean suggestReboot,
 			boolean enableKarmaAutomatism, int stableKarmaThreshold,
 			int unstableKarmaThreshold, boolean closeBugsWhenStable)
@@ -276,26 +254,21 @@ public class BodhiClient {
 			String buildsParamValue = buildsNVR.toString();
 
 			// Construct the multipart POST request body.
-			MultipartEntity reqEntity = new MultipartEntity();
-			reqEntity.addPart(BUILDS_PARAM_NAME, new StringBody(
-					buildsParamValue));
-			reqEntity.addPart(TYPE_PARAM_NAME, new StringBody(type));
-			reqEntity.addPart(REQUEST_PARAM_NAME, new StringBody(request));
-			reqEntity.addPart(BUGS_PARAM_NAME, new StringBody(bugs));
-			reqEntity.addPart(CSRF_PARAM_NAME, new StringBody(csrfToken));
-			reqEntity.addPart(AUTOKARMA_PARAM_NAME,
-					new StringBody(String.valueOf(enableKarmaAutomatism)));
-			reqEntity.addPart(NOTES_PARAM_NAME, new StringBody(notes));
-			reqEntity.addPart(SUGGEST_REBOOT,
-					new StringBody(String.valueOf(suggestReboot)));
-			reqEntity.addPart(STABLE_KARMA,
-					new StringBody(String.valueOf(stableKarmaThreshold)));
-			reqEntity.addPart(UNSTABLE_KARMA,
-					new StringBody(String.valueOf(unstableKarmaThreshold)));
-			reqEntity.addPart(CLOSE_BUGS_WHEN_STABLE,
-					new StringBody(String.valueOf(closeBugsWhenStable)));
+			MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
+			reqEntity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+			reqEntity.addTextBody(BUILDS_PARAM_NAME, buildsParamValue);
+			reqEntity.addTextBody(TYPE_PARAM_NAME, type);
+			reqEntity.addTextBody(REQUEST_PARAM_NAME, request);
+			reqEntity.addTextBody(BUGS_PARAM_NAME, bugs);
+			reqEntity.addTextBody(CSRF_PARAM_NAME, csrfToken);
+			reqEntity.addTextBody(AUTOKARMA_PARAM_NAME, String.valueOf(enableKarmaAutomatism));
+			reqEntity.addTextBody(NOTES_PARAM_NAME, notes);
+			reqEntity.addTextBody(SUGGEST_REBOOT,String.valueOf(suggestReboot));
+			reqEntity.addTextBody(STABLE_KARMA,String.valueOf(stableKarmaThreshold));
+			reqEntity.addTextBody(UNSTABLE_KARMA,String.valueOf(unstableKarmaThreshold));
+			reqEntity.addTextBody(CLOSE_BUGS_WHEN_STABLE, String.valueOf(closeBugsWhenStable));
 
-			post.setEntity(reqEntity);
+			post.setEntity(reqEntity.build());
 
 			HttpResponse response = httpclient.execute(post);
 			HttpEntity resEntity = response.getEntity();
@@ -315,14 +288,6 @@ public class BodhiClient {
 					}
 					EntityUtils.consume(resEntity); // clean up resources
 				}
-				// log JSON string if in debug mode
-				if (PackagerPlugin.inDebugMode()) {
-					FedoraPackagerLogger logger = FedoraPackagerLogger
-							.getInstance();
-					logger.logInfo(NLS.bind(
-							BodhiText.BodhiClient_rawJsonStringMsg,
-							rawJsonString));
-				}
 				// deserialize the result from the JSON response
 				GsonBuilder gsonBuilder = new GsonBuilder();
 				Gson gson = gsonBuilder.create();
@@ -338,12 +303,16 @@ public class BodhiClient {
 	/**
 	 * @return A properly configured HTTP client instance
 	 */
-	protected HttpClient getClient() {
-		// Set up client with proper timeout
-		HttpParams params = new BasicHttpParams();
-		params.setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,
-				CONNECTION_TIMEOUT);
-		return new DefaultHttpClient(params);
+	protected CloseableHttpClient getClient() {
+		try {
+			return FedoraPackagerUtils.trustAllSslEnable();
+		} catch (GeneralSecurityException e) {
+			// Set up client with proper timeout
+			HttpClientBuilder builder = HttpClientBuilder.create();
+			RequestConfig config = RequestConfig.custom().setConnectionRequestTimeout(CONNECTION_TIMEOUT).build();
+			builder.setDefaultRequestConfig(config);
+			return builder.build();
+		}
 	}
 
 	/**
@@ -355,7 +324,7 @@ public class BodhiClient {
 	 * @throws IOException
 	 *             If response could not be read or is read improperly.
 	 */
-	private String parseResponse(HttpEntity responseEntity) throws IOException {
+	private static String parseResponse(HttpEntity responseEntity) throws IOException {
 
 		String responseText = ""; //$NON-NLS-1$
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(

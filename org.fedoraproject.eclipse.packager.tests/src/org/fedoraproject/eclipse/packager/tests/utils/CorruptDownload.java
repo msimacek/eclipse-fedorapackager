@@ -34,11 +34,6 @@ public class CorruptDownload implements ICommandListener {
 		this.fedoraProjectRoot = fpRoot;
 	}
 
-	@Override
-	public void preExecution() {
-		// nothing
-	}
-
 	/**
 	 * Intentionally destroy MD5sums of sources files.
 	 */

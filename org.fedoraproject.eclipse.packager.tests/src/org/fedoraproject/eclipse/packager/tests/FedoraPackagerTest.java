@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.tests;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
@@ -23,7 +22,6 @@ import org.eclipse.core.runtime.Path;
 import org.fedoraproject.eclipse.packager.FedoraProjectRoot;
 import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
-import org.fedoraproject.eclipse.packager.api.UploadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
@@ -58,25 +56,6 @@ public class FedoraPackagerTest {
 	@After
 	public void tearDown() throws CoreException {
 		this.packagerProject.delete(true, true, null);
-	}
-
-	/**
-	 * FedoraPackager should know about all registered commands from various
-	 * plug-ins such as Koji and Bodhi. The core plug-in contributes
-	 * {@link DownloadSourceCommand} and {@link UploadSourceCommand}, so those
-	 * two should be there in any case.
-	 */
-	@Test
-	public void canGetRegisteredCommandIDs() {
-		String[] regCommands = packager.getRegisteredCommandIDs();
-		int downloadUploadThereCounter = 2;
-		for (String commandId : regCommands) {
-			if (commandId.equals(DownloadSourceCommand.ID)
-					|| commandId.equals(UploadSourceCommand.ID)) {
-				downloadUploadThereCounter--;
-			}
-		}
-		assertEquals(downloadUploadThereCounter, 0);
 	}
 
 	/**

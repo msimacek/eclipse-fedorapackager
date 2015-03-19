@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.api.errors;
 
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 
 /**
  * Thrown if copying spec and srpm files to the fedorapeople.org was not

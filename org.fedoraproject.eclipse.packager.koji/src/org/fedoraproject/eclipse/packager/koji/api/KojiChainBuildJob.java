@@ -17,14 +17,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
-import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.UnpushedChangesListener;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
-import org.fedoraproject.eclipse.packager.api.errors.TagSourcesException;
 import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
@@ -44,7 +41,7 @@ public class KojiChainBuildJob extends KojiBuildJob {
 	private IProjectRoot hostRoot;
 	private Shell shell;
 	private List<List<String>> sourceLocations;
-	private IProjectRoot[] projectRoots;
+	private List<IProjectRoot> projectRoots;
 	private final BranchConfigInstance RAWHIDECONFIG = new BranchConfigInstance(
 			".fc18", "18", "fedora", "rawhide", "master"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
@@ -62,10 +59,10 @@ public class KojiChainBuildJob extends KojiBuildJob {
 	 *            the same list in parallel and sublists are built in the order
 	 *            they appear in the main list.
 	 */
-	public KojiChainBuildJob(String name, Shell shell, IProjectRoot[] fprs,
+	public KojiChainBuildJob(String name, Shell shell, List<IProjectRoot> fprs,
 			String[] kojiInfo, List<List<String>> sourceLocations) {
-		super(name, shell, fprs[0], kojiInfo, true);
-		hostRoot = fprs[0];
+		super(name, shell, fprs.get(0), kojiInfo, true);
+		hostRoot = fprs.get(0);
 		this.shell = shell;
 		this.sourceLocations = sourceLocations;
 		projectRoots = fprs;
@@ -103,13 +100,11 @@ public class KojiChainBuildJob extends KojiBuildJob {
 
 		kojiBuildCmd.setKojiClient(kojiClient);
 		kojiBuildCmd.sourceLocation(sourceLocations);
-		String[] nvr = new String[projectRoots.length];
-		for (int i = 0; i < projectRoots.length; i++) {
-			nvr[i] = RPMUtils.getNVR(projectRoots[i], bci);
+		String[] nvr = new String[projectRoots.size()];
+		for (int i = 0; i < projectRoots.size(); i++) {
+			nvr[i] = RPMUtils.getNVR(projectRoots.get(i), bci);
 		}
 		kojiBuildCmd.nvr(nvr).isScratchBuild(false);
-		logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
-				KojiBuildCommand.class.getName()));
 		try {
 			// login
 			kojiClient.login();
@@ -141,9 +136,6 @@ public class KojiChainBuildJob extends KojiBuildJob {
 				}
 				kojiBuildCmd.buildTarget(buildTarget);
 			}
-			logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
-					KojiBuildCommand.class.getName()));
-
 			// Call build command.
 			// Make sure to set the buildResult variable, since it is used
 			// by getBuildResult() which is in turn called from the handler
@@ -154,12 +146,7 @@ public class KojiChainBuildJob extends KojiBuildJob {
 			FedoraHandlerUtils.showInformationDialog(shell, hostRoot
 					.getProductStrings().getProductName(), e.getMessage());
 			return Status.OK_STATUS;
-		} catch (TagSourcesException e) {
-			// something failed while tagging sources
-			logger.logError(e.getMessage(), e);
-			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
-					e.getMessage(), e);
-		} catch (CommandMisconfiguredException|CommandListenerException|ExecutionException|InterruptedException e) {
+		} catch (CommandListenerException|ExecutionException|InterruptedException e) {
 			// This shouldn't happen, but report error anyway
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,

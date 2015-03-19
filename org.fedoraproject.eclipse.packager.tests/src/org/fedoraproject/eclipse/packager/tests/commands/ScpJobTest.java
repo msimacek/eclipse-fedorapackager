@@ -8,6 +8,7 @@ import java.io.File;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
@@ -15,7 +16,6 @@ import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.ScpCommand;
 import org.fedoraproject.eclipse.packager.api.ScpJob;
-import org.fedoraproject.eclipse.packager.api.ScpResult;
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 import org.junit.Before;
@@ -62,10 +62,8 @@ public class ScpJobTest {
 				"example-fedora-project-0.1.11-1.fc18.src.rpm",
 				new ScpCommand() {
 					@Override
-					public ScpResult call(IProgressMonitor monitor) {
-						result = new ScpResult(specFile, srpmFile);
-						result.setSuccessful(true);
-						return result;
+					public IStatus call(IProgressMonitor monitor) {
+						return Status.OK_STATUS;
 					}
 				});
 

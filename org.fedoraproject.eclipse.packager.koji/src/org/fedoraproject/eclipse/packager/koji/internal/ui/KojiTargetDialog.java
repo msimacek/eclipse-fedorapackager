@@ -21,7 +21,7 @@ import org.fedoraproject.eclipse.packager.koji.KojiText;
 
 /**
  * Dialog prompting user for a build target.
- * 
+ *
  */
 public class KojiTargetDialog extends TitleAreaDialog {
 
@@ -46,7 +46,7 @@ public class KojiTargetDialog extends TitleAreaDialog {
 	/**
 	 * Use this constructor if you have a list of targets that is already
 	 * ordered in the way it is intended to be displayed.
-	 * 
+	 *
 	 * @param parent
 	 *            The dialog's parent shell.
 	 * @param targets
@@ -79,7 +79,7 @@ public class KojiTargetDialog extends TitleAreaDialog {
 								.contentEquals(targetText.getText())) {
 					targetList.deselectAll();
 				}
-				if (targetText.getText().trim().contentEquals("")) { //$NON-NLS-1$
+				if (targetText.getText().trim().isEmpty()) {
 					getButton(IDialogConstants.OK_ID).setEnabled(false);
 				} else {
 					getButton(IDialogConstants.OK_ID).setEnabled(true);
@@ -111,7 +111,7 @@ public class KojiTargetDialog extends TitleAreaDialog {
 	/**
 	 * Create and open the dialog, returning the chosen target. If there user
 	 * hits cancel instead of OK return null.
-	 * 
+	 *
 	 * @return The chosen target.
 	 */
 	public String openForTarget() {

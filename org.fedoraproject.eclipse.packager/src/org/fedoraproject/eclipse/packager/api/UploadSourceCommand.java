@@ -21,33 +21,29 @@ import java.security.GeneralSecurityException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.CoreConnectionPNames;
-import org.apache.http.params.HttpParams;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.linuxtools.rpm.core.utils.RPMQuery;
 import org.eclipse.osgi.util.NLS;
-import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.FedoraSSL;
-import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.SourcesFile;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FileAvailableInLookasideCacheException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidUploadFileException;
@@ -98,13 +94,6 @@ public class UploadSourceCommand extends
 	// should be used or not
 	private boolean trustAllSSLEnabled = false;
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#initialize
-	 * (org.fedoraproject.eclipse.packager.FedoraProjectRoot)
-	 */
 	@Override
 	public void initialize(IProjectRoot projectRoot)
 			throws FedoraPackagerCommandInitializationException {
@@ -177,8 +166,6 @@ public class UploadSourceCommand extends
 	 * @throws FileAvailableInLookasideCacheException
 	 *             If the to-be-uploaded file is already available in the
 	 *             lookaside cache.
-	 * @throws CommandMisconfiguredException
-	 *             If the command was not properly configured.
 	 * @throws CommandListenerException
 	 *             If a listener caused an error.
 	 * @throws UploadFailedException
@@ -187,16 +174,11 @@ public class UploadSourceCommand extends
 	@Override
 	public UploadSourceResult call(IProgressMonitor subMonitor)
 			throws FileAvailableInLookasideCacheException,
-			CommandMisconfiguredException, CommandListenerException,
-			UploadFailedException {
-		try {
-			callPreExecListeners();
-		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof CommandMisconfiguredException) {
-				// explicitly throw the specific exception
-				throw (CommandMisconfiguredException) e.getCause();
-			}
-			throw e;
+			CommandListenerException, UploadFailedException {
+		callPreExecListeners();
+		if (this.fileToUpload == null) {
+			throw new IllegalStateException(
+					FedoraPackagerText.UploadSourceCommand_uploadFileUnspecified);
 		}
 		// Check if source is available, first.
 		checkSourceAvailable();
@@ -204,20 +186,6 @@ public class UploadSourceCommand extends
 		UploadSourceResult result = upload(subMonitor);
 		callPostExecListeners();
 		return result;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#
-	 * checkConfiguration()
-	 */
-	@Override
-	protected void checkConfiguration() {
-		if (this.fileToUpload == null) {
-			throw new IllegalStateException(
-					FedoraPackagerText.UploadSourceCommand_uploadFileUnspecified);
-		}
 	}
 
 	/**
@@ -234,50 +202,22 @@ public class UploadSourceCommand extends
 	private void checkSourceAvailable()
 			throws FileAvailableInLookasideCacheException,
 			UploadFailedException {
-		HttpClient client = getClient();
-		try {
+		try (CloseableHttpClient client = getClient()){
 			String uploadURI = null;
 			uploadURI = this.projectRoot.getLookAsideCache().getUploadUrl()
 					.toString();
 			assert uploadURI != null;
 
-			if (fedoraSslEnabled) {
-				// user requested Fedora SSL enabled client
-				try {
-					client = fedoraSslEnable(client);
-				} catch (GeneralSecurityException e) {
-					throw new UploadFailedException(e.getMessage(), e);
-				}
-			} else if (trustAllSSLEnabled) {
-				// use accept all SSL enabled client
-				try {
-					client = FedoraPackagerUtils.trustAllSslEnable(client);
-				} catch (GeneralSecurityException e) {
-					throw new UploadFailedException(e.getMessage(), e);
-				}
-			}
-
 			HttpPost post = new HttpPost(uploadURI);
 
-			// provide hint which URL is going to be used
-			FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-			logger.logDebug(NLS.bind(
-					FedoraPackagerText.UploadSourceCommand_usingUploadURLMsg,
-					uploadURI));
-
 			// Construct the multipart POST request body.
-			MultipartEntity reqEntity = new MultipartEntity();
-			reqEntity.addPart(FILENAME_PARAM_NAME,
-					new StringBody(fileToUpload.getName()));
-			reqEntity.addPart(PACKAGENAME_PARAM_NAME, new StringBody(
-					RPMQuery.eval(projectRoot.getSpecfileModel().getName()).trim()));
-			reqEntity
-					.addPart(
-							CHECKSUM_PARAM_NAME,
-							new StringBody(SourcesFile
-									.calculateChecksum(fileToUpload)));
+			MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
+			reqEntity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+			reqEntity.addTextBody(FILENAME_PARAM_NAME, fileToUpload.getName());
+			reqEntity.addTextBody(PACKAGENAME_PARAM_NAME, RPMQuery.eval(projectRoot.getSpecfileModel().getName()).trim());
+			reqEntity.addTextBody(CHECKSUM_PARAM_NAME, SourcesFile.calculateChecksum(fileToUpload));
 
-			post.setEntity(reqEntity);
+			post.setEntity(reqEntity.build());
 
 			HttpResponse response = client.execute(post);
 			HttpEntity resEntity = response.getEntity();
@@ -285,7 +225,7 @@ public class UploadSourceCommand extends
 
 			if (returnCode != HttpURLConnection.HTTP_OK) {
 				throw new UploadFailedException(response.getStatusLine()
-						.getReasonPhrase(), response);
+						.getReasonPhrase());
 			}
 			String resString = ""; //$NON-NLS-1$
 			if (resEntity != null) {
@@ -311,11 +251,6 @@ public class UploadSourceCommand extends
 
 		} catch (IOException|CoreException e) {
 			throw new UploadFailedException(e.getMessage(), e);
-		} finally {
-			// When HttpClient instance is no longer needed,
-			// shut down the connection manager to ensure
-			// immediate deallocation of all system resources
-			client.getConnectionManager().shutdown();
 		}
 	}
 
@@ -331,34 +266,20 @@ public class UploadSourceCommand extends
 	 */
 	private UploadSourceResult upload(final IProgressMonitor subMonitor)
 			throws UploadFailedException {
-		HttpClient client = getClient();
-		try {
+		try (CloseableHttpClient client = getClient()) {
 			String uploadUrl = projectRoot.getLookAsideCache().getUploadUrl()
 					.toString();
 
-			if (fedoraSslEnabled) {
-				// user requested a Fedora SSL enabled client
-				client = fedoraSslEnable(client);
-			} else if (trustAllSSLEnabled) {
-				// use an trust-all SSL enabled client
-				client = FedoraPackagerUtils.trustAllSslEnable(client);
-			}
-
 			HttpPost post = new HttpPost(uploadUrl);
-			FileBody uploadFileBody = new FileBody(fileToUpload);
 			// For the actual upload we must not provide the
 			// "filename" parameter (FILENAME_PARAM_NAME). Otherwise,
 			// the file won't be stored in the lookaside cache.
-			MultipartEntity reqEntity = new MultipartEntity();
-			reqEntity.addPart(FILE_PARAM_NAME, uploadFileBody);
-			reqEntity.addPart(PACKAGENAME_PARAM_NAME, new StringBody(
-					projectRoot.getSpecfileModel().getName()));
-			reqEntity
-					.addPart(
-							CHECKSUM_PARAM_NAME,
-							new StringBody(SourcesFile
-									.calculateChecksum(fileToUpload)));
-
+			MultipartEntityBuilder builder = MultipartEntityBuilder.create(); 
+			builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+			builder.addBinaryBody(FILE_PARAM_NAME, fileToUpload);
+			builder.addTextBody(PACKAGENAME_PARAM_NAME, projectRoot.getSpecfileModel().getName());
+			builder.addTextBody(CHECKSUM_PARAM_NAME, SourcesFile.calculateChecksum(fileToUpload));
+			HttpEntity reqEntity = builder.build();
 			// Not sure why it's ~ content-length * 2, but that's what it is...
 			final long totalsize = reqEntity.getContentLength() * 2;
 			subMonitor
@@ -412,52 +333,64 @@ public class UploadSourceCommand extends
 
 			subMonitor.done();
 			return new UploadSourceResult(response);
-		} catch (IOException|GeneralSecurityException e) {
+		} catch (IOException e) {
 			throw new UploadFailedException(e.getMessage(), e);
-		} finally {
-			// When HttpClient instance is no longer needed,
-			// shut down the connection manager to ensure
-			// immediate deallocation of all system resources
-			client.getConnectionManager().shutdown();
 		}
 	}
 
 	/**
 	 * @return A properly configured HTTP client instance
+	 * @throws UploadFailedException If an IO or security exception appeared.
 	 */
-	protected HttpClient getClient() {
+	protected CloseableHttpClient getClient() throws UploadFailedException {
+		try {
+			if (fedoraSslEnabled) {
+				// user requested a Fedora SSL enabled client
+				return fedoraSslEnable();
+			} else if (trustAllSSLEnabled) {
+				// use an trust-all SSL enabled client
+				return FedoraPackagerUtils.trustAllSslEnable();
+			}
+		} catch (GeneralSecurityException | IOException e) {
+			throw new UploadFailedException(e.getMessage(), e);
+		}
 		// Set up client with proper timeout
-		HttpParams params = new BasicHttpParams();
-		params.setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,
-				CONNECTION_TIMEOUT);
-		return new DefaultHttpClient(params);
+		HttpClientBuilder builder = HttpClientBuilder.create();
+		RequestConfig config = RequestConfig.custom().setConnectionRequestTimeout(CONNECTION_TIMEOUT).build();
+		builder.setDefaultRequestConfig(config);
+		return builder.build();
 	}
 
 	/**
 	 * Wrap a basic HttpClient object in a Fedora SSL enabled HttpClient (which
 	 * includes Fedora SSL authentication cert) object.
 	 *
-	 * @param base
-	 *            The HttpClient to wrap.
 	 * @return The SSL wrapped HttpClient.
 	 * @throws GeneralSecurityException
 	 *             The method fails for security reasons.
 	 * @throws IOException
 	 *             If method cannot use streams properly.
 	 */
-	private HttpClient fedoraSslEnable(HttpClient base)
+	private static CloseableHttpClient fedoraSslEnable()
 			throws GeneralSecurityException, FileNotFoundException, IOException {
 
 		// Get a SSL related instance for setting up SSL connections.
-		FedoraSSL fedoraSSL = FedoraSSLFactory.getInstance();
-		SSLSocketFactory sf = new SSLSocketFactory(
-				fedoraSSL.getInitializedSSLContext(), // may throw FileNotFoundE
-				SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-		ClientConnectionManager ccm = base.getConnectionManager();
-		SchemeRegistry sr = ccm.getSchemeRegistry();
-		Scheme https = new Scheme("https", 443, sf); //$NON-NLS-1$
-		sr.register(https);
-		return new DefaultHttpClient(ccm, base.getParams());
+		FedoraSSL fedoraSSL = new FedoraSSL();
+		HttpClientBuilder builder = HttpClientBuilder.create();
+		SSLConnectionSocketFactory sslConnectionFactory = new SSLConnectionSocketFactory(
+				fedoraSSL.getInitializedSSLContext(),
+				SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+		builder.setSSLSocketFactory(sslConnectionFactory);
+		Registry<ConnectionSocketFactory> registry = RegistryBuilder
+				.<ConnectionSocketFactory> create()
+				.register("https", sslConnectionFactory) //$NON-NLS-1$
+				.build();
+
+		HttpClientConnectionManager ccm = new BasicHttpClientConnectionManager(
+				registry);
+
+		builder.setConnectionManager(ccm);
+		return builder.build();
 	}
 
 	/**
@@ -469,7 +402,7 @@ public class UploadSourceCommand extends
 	 * @throws IOException
 	 *             If method cannot use streams properly.
 	 */
-	private String parseResponse(HttpEntity responseEntity) throws IOException {
+	private static String parseResponse(HttpEntity responseEntity) throws IOException {
 
 		String responseText = ""; //$NON-NLS-1$
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(

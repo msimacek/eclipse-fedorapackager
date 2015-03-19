@@ -41,12 +41,10 @@ import org.fedoraproject.eclipse.packager.api.SourcesFileUpdater;
 import org.fedoraproject.eclipse.packager.api.UploadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.UploadSourceResult;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.api.errors.FileAvailableInLookasideCacheException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidUploadFileException;
-import org.fedoraproject.eclipse.packager.api.errors.SourcesFileUpdateException;
 import org.fedoraproject.eclipse.packager.api.errors.UploadFailedException;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
@@ -108,9 +106,6 @@ public class UploadHandler extends AbstractHandler implements
 						if (checksum.equals(sourceFile.getSources().get(
 								resource.getName()))) {
 							// Candidate file already in sources and up-to-date
-							logger.logDebug(NLS
-									.bind(FedoraPackagerText.UploadHandler_versionOfFileExistsAndUpToDate,
-											resource.getName()));
 							FedoraHandlerUtils
 									.showInformationDialog(
 											shell,
@@ -143,9 +138,6 @@ public class UploadHandler extends AbstractHandler implements
 						// overridden in the Red Hat version.
 						setSSLPolicy(uploadCmd);
 						uploadCmd.addCommandListener(sourcesUpdater);
-						logger.logDebug(NLS.bind(
-								FedoraPackagerText.callingCommand,
-								UploadSourceCommand.class.getName()));
 						try {
 							result = uploadCmd.call(new SubProgressMonitor(
 									monitor, 1));
@@ -155,7 +147,6 @@ public class UploadHandler extends AbstractHandler implements
 							// need to upload, but we should still update
 							// sources files
 							// and vcs ignore files as required.
-							logger.logDebug(e.getMessage(), e);
 							sourcesUpdater.postExecution();
 							// report that there was no upload required.
 							FedoraHandlerUtils.showInformationDialog(shell,
@@ -164,20 +155,7 @@ public class UploadHandler extends AbstractHandler implements
 							return Status.OK_STATUS;
 						}
 					} catch (CommandListenerException e) {
-						// sources file updating or vcs ignore file updating may
-						// have caused an exception.
-						if (e.getCause() instanceof SourcesFileUpdateException) {
-							String message = e.getCause().getMessage();
-							logger.logError(message, e.getCause());
-							return new Status(IStatus.ERROR,
-									PackagerPlugin.PLUGIN_ID, message,
-									e.getCause());
-						}
 						// Something else failed
-						logger.logError(e.getMessage(), e);
-						return new Status(IStatus.ERROR,
-								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
-					} catch (CommandMisconfiguredException e) {
 						logger.logError(e.getMessage(), e);
 						return new Status(IStatus.ERROR,
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
@@ -209,7 +187,6 @@ public class UploadHandler extends AbstractHandler implements
 						return new Status(IStatus.ERROR,
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
 					} catch (InvalidUploadFileException e) {
-						logger.logDebug(e.getMessage(), e);
 						FedoraHandlerUtils.showInformationDialog(shell,
 								projectRoot.getProductStrings()
 										.getProductName(), e.getMessage());
@@ -220,7 +197,6 @@ public class UploadHandler extends AbstractHandler implements
 						String message = NLS
 								.bind(FedoraPackagerText.UploadHandler_invalidUrlError,
 										e.getMessage());
-						logger.logDebug(message, e);
 						FedoraHandlerUtils.showInformationDialog(shell,
 								projectRoot.getProductStrings()
 										.getProductName(), message);
@@ -237,14 +213,12 @@ public class UploadHandler extends AbstractHandler implements
 					if (result != null && !result.isSuccessful()) {
 						// probably a 404 or some such
 						String message = result.getErrorString();
-						logger.logDebug(message);
 						return new Status(IStatus.ERROR,
 								PackagerPlugin.PLUGIN_ID, message);
 					}
 
-					IStatus res = Status.OK_STATUS;
 					// Do VCS update
-					res = projectBits.updateVCS(monitor);
+					IStatus res = projectBits.updateVCS(monitor);
 					if (res.isOK()) {
 						if (monitor.isCanceled()) {
 							throw new OperationCanceledException();
@@ -258,7 +232,7 @@ public class UploadHandler extends AbstractHandler implements
 							project.refreshLocal(IResource.DEPTH_INFINITE,
 									monitor);
 						} catch (CoreException e) {
-							logger.logDebug(FedoraPackagerText.FedoraProjectRoot_failedToRefreshResource, e);
+							logger.logError(FedoraPackagerText.FedoraProjectRoot_failedToRefreshResource, e);
 						}
 					}
 

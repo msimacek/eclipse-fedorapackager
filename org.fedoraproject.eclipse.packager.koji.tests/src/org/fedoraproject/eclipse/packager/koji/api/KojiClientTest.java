@@ -20,7 +20,7 @@ public class KojiClientTest {
 		@Override
 		protected void setupXmlRpcClient() {
 			// Do nothing the mock client was set in the constructor.
-		};
+		}
 		
 		@Override
 		protected SSLContext getInitializedSSLContext()
@@ -37,7 +37,7 @@ public class KojiClientTest {
 		
 		@Override
 		public void logout() {}
-	};
+	}
 	
 	protected MockKojiSSLHubClient kojiClient;
 

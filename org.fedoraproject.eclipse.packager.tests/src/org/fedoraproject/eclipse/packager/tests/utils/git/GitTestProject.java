@@ -43,7 +43,8 @@ public class GitTestProject {
 	protected Git git;
 
 	public GitTestProject(String packageName) throws InterruptedException {
-		this(packageName, getGitCloneUrl(packageName));
+		this(packageName, GitUtils.getFullGitURL(GitUtils.getAnonymousGitBaseUrl(),
+				packageName));
 	}
 
 	/**
@@ -107,7 +108,6 @@ public class GitTestProject {
 	/**
 	 * Get underlying IProject
 	 *
-	 * @return
 	 */
 	public IProject getProject() {
 		return this.project;
@@ -147,11 +147,6 @@ public class GitTestProject {
 		checkoutCmd.call();
 		// refresh after checkout
 		project.refreshLocal(IResource.DEPTH_INFINITE, null);
-	}
-
-	private static String getGitCloneUrl(String packageName) {
-		return GitUtils.getFullGitURL(GitUtils.getAnonymousGitBaseUrl(),
-				packageName);
 	}
 
 	protected void setPersistentProperty() {

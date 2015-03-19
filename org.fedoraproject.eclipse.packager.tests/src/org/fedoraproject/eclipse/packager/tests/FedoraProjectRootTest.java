@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.tests;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -18,6 +17,8 @@ import static org.junit.Assert.assertSame;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -180,16 +181,16 @@ public class FedoraProjectRootTest {
 		fpRoot = FedoraPackagerUtils
 				.getProjectRoot(gitTestProject.getProject());
 		assertNotNull(fpRoot);
-		String[] nvrs = fpRoot.getPackageNVRs(FedoraPackagerUtils
+		List<String> nvrs = fpRoot.getPackageNVRs(FedoraPackagerUtils
 				.getVcsHandler(fpRoot).getBranchConfig());
 		// expected list
-		String[] expectedNvrs = new String[] {
-				"eclipse-mylyn-tasks-3.5.1-4.fc15",
-				"eclipse-mylyn-tasks-bugzilla-3.5.1-4.fc15",
-				"eclipse-mylyn-tasks-trac-3.5.1-4.fc15",
-				"eclipse-mylyn-tasks-web-3.5.1-4.fc15" };
-		assertEquals(4, nvrs.length);
-		assertArrayEquals(expectedNvrs, nvrs);
+		List<String> expectedNvrs = new ArrayList<>();
+		expectedNvrs.add("eclipse-mylyn-tasks-3.5.1-4.fc15");
+		expectedNvrs.add("eclipse-mylyn-tasks-bugzilla-3.5.1-4.fc15");
+		expectedNvrs.add("eclipse-mylyn-tasks-trac-3.5.1-4.fc15");
+		expectedNvrs.add("eclipse-mylyn-tasks-web-3.5.1-4.fc15");
+		assertEquals(4, nvrs.size());
+		assertEquals(expectedNvrs, nvrs);
 	}
 
 }

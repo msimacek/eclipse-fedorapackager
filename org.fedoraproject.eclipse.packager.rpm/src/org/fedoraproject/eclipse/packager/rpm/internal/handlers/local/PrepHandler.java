@@ -30,7 +30,6 @@ import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
@@ -72,12 +71,7 @@ public class PrepHandler extends LocalHandlerDispatcher {
 				// get RPM build command in order to produce an SRPM
 				prepCommand = (RpmBuildCommand) fp
 						.getCommandInstance(RpmBuildCommand.ID);
-			} catch (FedoraPackagerCommandNotFoundException e) {
-				logger.logError(e.getMessage(), e);
-				FedoraHandlerUtils.showErrorDialog(shell, projectRoot
-						.getProductStrings().getProductName(), e.getMessage());
-				return null;
-			} catch (FedoraPackagerCommandInitializationException e) {
+			} catch (FedoraPackagerCommandNotFoundException|FedoraPackagerCommandInitializationException e) {
 				logger.logError(e.getMessage(), e);
 				FedoraHandlerUtils.showErrorDialog(shell, projectRoot
 						.getProductStrings().getProductName(), e.getMessage());
@@ -106,7 +100,7 @@ public class PrepHandler extends LocalHandlerDispatcher {
 										.flags(nodeps).call(monitor);
 								projectRoot.getProject().refreshLocal(
 										IResource.DEPTH_INFINITE, monitor);
-							} catch (CommandMisconfiguredException|CommandListenerException e) {
+							} catch (CommandListenerException e) {
 								// This shouldn't happen, but report error
 								// anyway
 								logger.logError(e.getMessage(), e);

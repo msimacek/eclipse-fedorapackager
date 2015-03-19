@@ -129,7 +129,7 @@ public class ScpCommandTest {
 		command.session(session);
 		command.specFile("example-fedora-project.spec");
 		command.srpmFile("example-fedora-project-0.1.11-1.fc18.src.rpm");
-		assertTrue(command.call(new NullProgressMonitor()).isSuccessful());
+		assertTrue(command.call(new NullProgressMonitor()).isOK());
 		verify(session);
 		verify(channelSftp);
 		verify(channelExec);

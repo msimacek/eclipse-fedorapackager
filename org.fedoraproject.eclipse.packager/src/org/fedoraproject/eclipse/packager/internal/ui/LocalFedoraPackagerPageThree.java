@@ -235,7 +235,7 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 	 *            The group in which the controls are created.
 	 * @return Text
 	 */
-	private Text createText(Group grp) {
+	private static Text createText(Group grp) {
 		Text text = new Text(grp, SWT.BORDER | SWT.SINGLE);
 		GridData layoutData = new GridData(GridData.FILL_HORIZONTAL);
 		text.setLayoutData(layoutData);
@@ -251,7 +251,7 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 	 *            label's text
 	 * @return Button
 	 */
-	private Label createLabel(Group grp, String text) {
+	private static Label createLabel(Group grp, String text) {
 		Label label = new Label(grp, SWT.NONE);
 		label.setText(text);
 		GridData layoutData = new GridData();
@@ -269,7 +269,7 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 	 *            push button's text
 	 * @return Button
 	 */
-	private Button createPushButton(Group grp, String text) {
+	private static Button createPushButton(Group grp, String text) {
 		Button button = new Button(grp, SWT.PUSH);
 		button.setText(text);
 		return button;
@@ -284,7 +284,7 @@ public class LocalFedoraPackagerPageThree extends WizardPage {
 	 *            radio button's text
 	 * @return Button
 	 */
-	private Button createRadioButton(Group grp, String text) {
+	private static Button createRadioButton(Group grp, String text) {
 		Button button = new Button(grp, SWT.RADIO);
 		button.setText(text);
 		GridData layoutData = new GridData();

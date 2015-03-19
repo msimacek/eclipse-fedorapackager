@@ -42,19 +42,6 @@ public class MockBuildResult extends Result {
 	}
 	
 	/**
-	 * @param cmdList
-	 *            The command list used for the mock call.
-	 * @param resultDir
-	 *            The directory where mock build result logs reside.
-	 */
-	public MockBuildResult(String[] cmdList, IContainer resultDir) {
-		super(cmdList);
-		this.resultDir = resultDir;
-		// will be set to false by an observer if there was an error
-		this.successful = true;
-	}
-	
-	/**
 	 * Sets the successful state of the result.
 	 * 
 	 * @param success The new success state.
@@ -71,9 +58,6 @@ public class MockBuildResult extends Result {
 		return this.resultDir;
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.api.ICommandResult#wasSuccessful()
-	 */
 	@Override
 	public boolean isSuccessful() {
 		return successful;

@@ -12,14 +12,6 @@ public class RemoteAlreadyExistsException extends FedoraPackagerAPIException {
 	
 	/**
 	 * @param message The message associated with this exception.
-	 * @param cause The Throwable that caused this exception.
-	 */
-	public RemoteAlreadyExistsException(String message,	Throwable cause) {
-		super(message, cause);
-	}
-
-	/**
-	 * @param message The message associated with this exception.
 	 */
 	public RemoteAlreadyExistsException(String message) {
 		super(message);

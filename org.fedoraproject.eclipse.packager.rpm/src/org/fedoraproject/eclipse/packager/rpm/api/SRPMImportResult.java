@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager.rpm.api;
 
+import java.util.Set;
+
 /**
  * Implementation of Result for SRPMImport
  * 
@@ -17,8 +19,7 @@ package org.fedoraproject.eclipse.packager.rpm.api;
 public class SRPMImportResult extends Result {
 
 	private boolean success;
-	private String[] uploaded;
-	private String[] skipped;
+	private Set<String> uploaded;
 
 	/**
 	 * @param cmdList
@@ -47,32 +48,14 @@ public class SRPMImportResult extends Result {
 	 * @param files
 	 *            The names of the files uploaded.
 	 */
-	public void setUploaded(String[] files) {
+	public void setUploaded(Set<String> files) {
 		uploaded = files;
 	}
 
 	/**
 	 * @return The names of the successfully uploaded files.
 	 */
-	public String[] getUploaded() {
+	public Set<String> getUploaded() {
 		return uploaded;
 	}
-
-	/**
-	 * @return The names of the source files that weren't uploaded.
-	 */
-	public String[] getSkipped() {
-		return skipped;
-	}
-
-	/**
-	 * Set the source files that weren't uploaded.
-	 * 
-	 * @param skipped
-	 *            The names of the files that weren't uploaded.
-	 */
-	public void setSkipped(String[] skipped) {
-		this.skipped = skipped;
-	}
-
 }

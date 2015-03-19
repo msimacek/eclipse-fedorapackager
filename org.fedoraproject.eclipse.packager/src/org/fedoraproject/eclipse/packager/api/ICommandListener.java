@@ -17,6 +17,7 @@ import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
  * in order for you to get pre/post actions executed. If more than one Listener
  * is registered for a command they get executed in the order they were added.
  */
+@SuppressWarnings("unused")
 public interface ICommandListener {
 
 	/**
@@ -27,7 +28,8 @@ public interface ICommandListener {
 	 * @throws CommandListenerException
 	 *             May be used to signify pre-execution problems.
 	 */
-	public void preExecution() throws CommandListenerException;
+	public default void preExecution() throws CommandListenerException {
+	}
 
 	/**
 	 * Called just before a command finished execution. Use this if you need to
@@ -36,5 +38,6 @@ public interface ICommandListener {
 	 * @throws CommandListenerException
 	 *             May be used to signify post execution problems.
 	 */
-	public void postExecution() throws CommandListenerException;
+	public default void postExecution() throws CommandListenerException {
+	}
 }

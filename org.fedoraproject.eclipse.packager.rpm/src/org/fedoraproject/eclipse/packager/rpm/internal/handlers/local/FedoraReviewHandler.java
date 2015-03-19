@@ -24,7 +24,6 @@ import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
@@ -77,22 +76,14 @@ public class FedoraReviewHandler extends AbstractHandler {
 								e.getMessage(), e);
 					} catch (FedoraPackagerCommandNotFoundException e) {
 						// nothing critical, advise the user what to do.
-						logger.logDebug(e.getMessage());
 						FedoraHandlerUtils.showInformationDialog(shell,
 								projectRoot.getProductStrings()
 										.getProductName(), e.getMessage());
 						IStatus status = new Status(IStatus.INFO,
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
 						return status;
-					} catch (CommandMisconfiguredException e) {
-						// This shouldn't happen, but report error
-						// anyway
-						logger.logError(e.getMessage(), e);
-						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
-								e.getMessage(), e);
 					} catch (UserNotInMockGroupException e) {
 						// nothing critical, advise the user what to do.
-						logger.logDebug(e.getMessage());
 						FedoraHandlerUtils.showInformationDialog(shell,
 								projectRoot.getProductStrings()
 										.getProductName(), e.getMessage());
@@ -100,9 +91,6 @@ public class FedoraReviewHandler extends AbstractHandler {
 								PackagerPlugin.PLUGIN_ID, e.getMessage(), e);
 						return status;
 					} catch (CommandListenerException e) {
-						// There are no command listeners registered, so
-						// shouldn't
-						// happen. Do something reasonable anyway.
 						logger.logError(e.getMessage(), e);
 						return new Status(IStatus.ERROR, RPMPlugin.PLUGIN_ID,
 								e.getMessage(), e);
@@ -113,7 +101,6 @@ public class FedoraReviewHandler extends AbstractHandler {
 								e.getMessage(), e.getCause());
 					} catch (FedoraReviewNotInstalledException e) {
 						// nothing critical, advise the user what to do.
-						logger.logDebug(e.getMessage());
 						FedoraHandlerUtils.showInformationDialog(shell,
 								projectRoot.getProductStrings()
 										.getProductName(), e.getMessage());

@@ -19,10 +19,6 @@ import org.fedoraproject.eclipse.packager.koji.KojiText;
 public class FedoraPackagerKojiPreferenceInitializer extends
 		AbstractPreferenceInitializer {
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
-	 */
 	@Override
 	public void initializeDefaultPreferences() {
 		// set default preferences for this plug-in

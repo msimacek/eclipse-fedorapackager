@@ -59,7 +59,7 @@ public class KojiSSLHubClientTest extends KojiClientTest {
 					return mockSessionData;
 
 				return null;
-			};
+			}
 		};
 
 		kojiClient.setXmlRpcClient(mockXmlRpcClinet);
@@ -97,7 +97,7 @@ public class KojiSSLHubClientTest extends KojiClientTest {
 					return mockBuildInfo;
 
 				return null;
-			};
+			}
 		};
 		this.kojiClient.setXmlRpcClient(mockXmlRpcClinet);
 
@@ -125,7 +125,7 @@ public class KojiSSLHubClientTest extends KojiClientTest {
 					return "99";
 
 				return null;
-			};
+			}
 		};
 		this.kojiClient.setXmlRpcClient(mockXmlRpcClinet);
 

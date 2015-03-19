@@ -18,9 +18,6 @@ import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
  */
 public class RpmBuildCommandException extends FedoraPackagerAPIException {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1189026188243127676L;
 
 	/**

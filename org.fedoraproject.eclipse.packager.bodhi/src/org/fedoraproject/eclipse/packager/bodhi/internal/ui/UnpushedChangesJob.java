@@ -14,7 +14,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.UnpushedChangesListener;
-import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
 
 /**
@@ -46,10 +45,8 @@ public class UnpushedChangesJob implements IRunnableWithProgress {
 		monitor.beginTask(this.jobName, 30);
 		try {
 			unpushedChangesListener.preExecution();
-		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof UnpushedChangesException) {
-				this.unpushedChanges = true;
-			}
+		} catch (UnpushedChangesException e) {
+			this.unpushedChanges = true;
 		}
 		monitor.done();
 	}

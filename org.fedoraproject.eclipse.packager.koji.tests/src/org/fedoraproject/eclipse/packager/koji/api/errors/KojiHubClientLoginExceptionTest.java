@@ -15,7 +15,6 @@ import static org.junit.Assert.assertFalse;
 import java.security.GeneralSecurityException;
 
 import org.fedoraproject.eclipse.packager.FedoraSSL;
-import org.fedoraproject.eclipse.packager.MockableFedoraSSL;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,14 +22,14 @@ public class KojiHubClientLoginExceptionTest {
 
 	private KojiHubClientLoginException exceptionUnderTest;
 
-	private static class MockFedoraSSL extends MockableFedoraSSL {
+	private static class MockFedoraSSL extends FedoraSSL {
 		@Override
 		public boolean isFedoraCertValid() {
 			// Mock this function here as this function is unit tested in
 			// FedoraSSLTest
 			return true;
 		}
-	};
+	}
 
 	@Before
 	public void setUp() {

@@ -56,27 +56,6 @@ public class ConvertLocalResult implements ICommandResult {
 	}
 
 	/**
-	 * @return boolean
-	 */
-	public boolean getAddRemote() {
-		return this.addRemote;
-	}
-
-	/**
-	 * @return boolean
-	 */
-	public boolean getAddBranch() {
-		return this.addBranch;
-	}
-
-	/**
-	 * @return boolean
-	 */
-	public boolean getHadFetched() {
-		return this.hadFetched;
-	}
-
-	/**
 	 * @param message
 	 *            the initial message
 	 * @return String the message to be shown to the user

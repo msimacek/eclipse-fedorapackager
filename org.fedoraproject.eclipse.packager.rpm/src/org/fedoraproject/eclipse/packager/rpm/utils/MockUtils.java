@@ -1,11 +1,8 @@
 package org.fedoraproject.eclipse.packager.rpm.utils;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Observer;
 
 import org.eclipse.core.filesystem.EFS;
@@ -44,19 +41,9 @@ public class MockUtils {
 	 */
 	public static void checkMockGroupMembership()
 			throws UserNotInMockGroupException, MockBuildCommandException {
-		String grpCheckCmd[] = { "groups" }; //$NON-NLS-1$
-		try (InputStream is = Utils.runCommandToInputStream(grpCheckCmd);
-				BufferedReader br = new BufferedReader(
-						new InputStreamReader(is))) {
-
-			String line;
-			StringBuffer groupsOutput = new StringBuffer();
-			while ((line = br.readLine()) != null) {
-				groupsOutput.append(line);
-			}
-			br.close();
+		try {
 			// groups command output should list the mock group
-			String outputString = groupsOutput.toString();
+			String outputString = Utils.runCommandToString("groups"); //$NON-NLS-1$
 			if (!outputString.contains(MOCK_GROUP_NAME)) {
 				throw new UserNotInMockGroupException(NLS.bind(
 						RpmText.MockBuildCommand_userNotInMockGroupMsg,
@@ -65,21 +52,6 @@ public class MockUtils {
 		} catch (IOException e) {
 			throw new MockBuildCommandException(e.getMessage(), e);
 		}
-	}
-
-	/**
-	 * Convenience method to convert the command list into a String.
-	 * 
-	 * @param cmdList
-	 *            The command and arguments as a list of Strings.
-	 * @return The command list in String format.
-	 */
-	public static String convertCLICmd(String[] cmdList) {
-		String cmd = new String();
-		for (String token : cmdList) {
-			cmd += token + " "; //$NON-NLS-1$
-		}
-		return cmd.trim();
 	}
 
 	/**

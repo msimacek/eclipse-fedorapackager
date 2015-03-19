@@ -25,17 +25,16 @@ import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.osgi.util.NLS;
-import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.ILookasideCache;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.SourcesFile;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.DownloadFailedException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
 
@@ -48,7 +47,7 @@ import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
  *  
  */
 public class DownloadSourceCommand extends
-		FedoraPackagerCommand<DownloadSourceResult> {
+		FedoraPackagerCommand<IStatus> {
 
 	private SourcesFile sources;
 	private ILookasideCache lookasideCache;
@@ -58,10 +57,6 @@ public class DownloadSourceCommand extends
 	 */
 	public static final String ID = "DownloadSourceCommand"; //$NON-NLS-1$
 	
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#initialize(org.fedoraproject.eclipse.packager.FedoraProjectRoot)
-	 */
 	@Override
 	public void initialize(IProjectRoot projectRoot) throws FedoraPackagerCommandInitializationException {
 		super.initialize(projectRoot);
@@ -71,13 +66,11 @@ public class DownloadSourceCommand extends
 	
 	/**
 	 * @param downloadURL The URL to the download resource
-	 * @return this instance.
 	 * @throws MalformedURLException If an invalid URL has been provided.
 	 */
-	public DownloadSourceCommand setDownloadURL(String downloadURL)
+	public void setDownloadURL(String downloadURL)
 			throws MalformedURLException {
 		this.lookasideCache.setDownloadUrl(downloadURL);
-		return this;
 	}
 
 	/**
@@ -88,36 +81,14 @@ public class DownloadSourceCommand extends
 	 *            as a subtask.
 	 * @throws SourcesUpToDateException
 	 *             If the source files are already downloaded and up-to-date.
-	 * @throws CommandMisconfiguredException
-	 *             If the command was not properly configured when it was
-	 *             called.
-	 * @throws DownloadFailedException
-	 *             If the download of some source failed.
 	 * @throws CommandListenerException
 	 *             If some listener detected a problem.
 	 * @return The result of this command.
 	 */
 	@Override
-	public DownloadSourceResult call(IProgressMonitor monitor)
-			throws SourcesUpToDateException, DownloadFailedException,
-			CommandMisconfiguredException,
-			CommandListenerException {
-		try {
-			callPreExecListeners();
-		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof CommandMisconfiguredException) {
-				// explicitly throw the specific exception
-				throw (CommandMisconfiguredException)e.getCause();
-			}
-			throw e;
-		}
-		// provide hint which URL is going to be used
-		FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-		logger.logDebug(NLS.bind(
-				FedoraPackagerText.DownloadSourceCommand_usingDownloadURLMsg,
-				lookasideCache.getDownloadUrl().toString()));
-		
-		
+	public IStatus call(IProgressMonitor monitor)
+			throws SourcesUpToDateException, CommandListenerException {
+		callPreExecListeners();
 		// Check if there are any sources to download (i.e. md5 does not match or
 		// files are not present in the current Fedora project root).
 		Set<String> sourcesToGet = sources.getMissingSources();
@@ -127,7 +98,6 @@ public class DownloadSourceCommand extends
 		}
 		// Need to download the rest of the files in the set from the lookaside
 		// cache
-		DownloadSourceResult result = new DownloadSourceResult();
 		int fileNumber = 1;
 		for (final String source : sourcesToGet) {
 			final String url = lookasideCache.getDownloadUrl().toString()
@@ -144,7 +114,7 @@ public class DownloadSourceCommand extends
 			try {
 				sourceUrl = new URL(url);
 			} catch (MalformedURLException e) {
-				throw new DownloadFailedException(
+				throw new CommandListenerException(
 						NLS.bind(
 								FedoraPackagerText.DownloadSourceCommand_invalidURL,
 						url), e);
@@ -161,7 +131,7 @@ public class DownloadSourceCommand extends
 				try {
 					sources.deleteSource(source);
 				} catch (CoreException coreEx) { /* ignore */ }
-				throw new DownloadFailedException(
+				throw new CommandListenerException(
 						NLS.bind(
 								FedoraPackagerText.DownloadSourceCommand_downloadFileErrorNotInLookaside,
 						file.getName()), e);
@@ -170,12 +140,12 @@ public class DownloadSourceCommand extends
 				try {
 					sources.deleteSource(source);
 				} catch (CoreException coreEx) { /* ignore */ }
-				throw new DownloadFailedException(
+				throw new CommandListenerException(
 						NLS.bind(
 								FedoraPackagerText.DownloadSourceCommand_downloadFileError,
 						file.getName()), e);
 			} catch (CoreException e) {
-				throw new DownloadFailedException(
+				throw new CommandListenerException(
 						NLS.bind(
 								FedoraPackagerText.DownloadSourceCommand_downloadFileError,
 						file.getName()), e);
@@ -184,14 +154,8 @@ public class DownloadSourceCommand extends
 		}
 		// Call post-exec listeners
 		callPostExecListeners();
-		result.setSuccessful(true);
 		setCallable(false);
-		return result;
-	}
-
-	@Override
-	protected void checkConfiguration() {
-		// We are good to go with the defaults. No-Op.
+		return Status.OK_STATUS;
 	}
 
 	/**

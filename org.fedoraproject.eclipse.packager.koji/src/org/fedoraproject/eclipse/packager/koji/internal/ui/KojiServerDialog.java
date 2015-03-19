@@ -19,7 +19,7 @@ import org.fedoraproject.eclipse.packager.koji.KojiText;
 
 /**
  * Dialog prompting the user for creating a Koji server instance.
- * 
+ *
  */
 public class KojiServerDialog extends Dialog {
 
@@ -52,7 +52,7 @@ public class KojiServerDialog extends Dialog {
 
 	/**
 	 * Open the dialog.
-	 * 
+	 *
 	 * @return The server information.
 	 */
 	public String[] open() {
@@ -163,7 +163,7 @@ public class KojiServerDialog extends Dialog {
 			}
 		}
 		if (okButton.getEnabled()) {
-			if (texts[0].getText().trim().contentEquals("") //$NON-NLS-1$
+			if (texts[0].getText().trim().isEmpty()
 					|| !texts[1].getText().startsWith("http") //$NON-NLS-1$
 					|| !texts[2].getText().startsWith("http")) { //$NON-NLS-1$
 				okButton.setEnabled(false);

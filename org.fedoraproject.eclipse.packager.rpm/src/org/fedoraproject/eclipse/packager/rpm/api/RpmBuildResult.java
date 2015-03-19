@@ -51,12 +51,6 @@ public class RpmBuildResult extends Result {
 		this.srpms.add(line.split("\\s+")[1]); //$NON-NLS-1$
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.fedoraproject.eclipse.packager.api.ICommandResult#wasSuccessful()
-	 */
 	@Override
 	public boolean isSuccessful() {
 		return this.success;

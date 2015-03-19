@@ -13,7 +13,6 @@ package org.fedoraproject.eclipse.packager;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PipedInputStream;
@@ -81,7 +80,7 @@ public class SourcesFile {
 				sourcesFile.getContents()));){
 			
 			String line = br.readLine();
-			while (line != null && !line.contentEquals("")) { //$NON-NLS-1$
+			while (line != null && !line.isEmpty()) {
 				String[] source = line.split("\\s+"); //$NON-NLS-1$
 				if (source.length != 2) {
 					continue;
@@ -184,7 +183,7 @@ public class SourcesFile {
 	 * @return True if the given md5 is the same as the calculated one, false
 	 *         otherwise.
 	 */
-	private boolean checkMD5(String storedMd5, IResource resource) {
+	private static boolean checkMD5(String storedMd5, IResource resource) {
 		// open file
 		File file = resource.getLocation().toFile();
 		String md5 = calculateChecksum(file);
@@ -206,8 +205,6 @@ public class SourcesFile {
 			byte buf[] = new byte[(int) file.length()];
 			fis.read(buf); // read entire file into buf array
 			result = DigestUtils.md5Hex(buf);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

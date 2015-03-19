@@ -16,7 +16,6 @@ import org.eclipse.osgi.util.NLS;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.InvalidCheckSumException;
 
 /**
  * A listener for post sources download MD5 checking.
@@ -37,19 +36,6 @@ public class ChecksumValidListener implements ICommandListener {
 		this.projectRoot = root;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.api.ICommandListener#preExecution()
-	 */
-	@Override
-	public void preExecution() {
-		// Nothing
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.api.ICommandListener#postExecution()
-	 */
 	@Override
 	public void postExecution() throws CommandListenerException {
 		// do the MD5 check
@@ -68,10 +54,9 @@ public class ChecksumValidListener implements ICommandListener {
 				badFiles = failedSources.substring(0, end);
 			}
 			throw new CommandListenerException(
-					new InvalidCheckSumException(
 							NLS.bind(
 									FedoraPackagerText.ChecksumValidListener_badChecksum,
-									badFiles)));
+									badFiles));
 		}
 	}
 

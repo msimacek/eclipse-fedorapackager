@@ -11,11 +11,9 @@
 package org.fedoraproject.eclipse.packager.api;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IFpProjectBits;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
-import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
 
@@ -44,30 +42,15 @@ public class UnpushedChangesListener implements ICommandListener {
 		this.mainMonitor = monitor;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.api.ICommandListener#preExecution()
-	 */
 	@Override
-	public void preExecution() throws CommandListenerException {
+	public void preExecution() throws UnpushedChangesException {
 		// indicate some progress, by creating a subtask
-		FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
-		logger.logDebug(FedoraPackagerText.UnpushedChangesListener_checkUnpushedChangesMsg);
 		mainMonitor.subTask(FedoraPackagerText.UnpushedChangesListener_checkUnpushedChangesMsg);
 		IFpProjectBits projectBits = FedoraPackagerUtils.getVcsHandler(projectRoot);
 		if (projectBits.hasLocalChanges()) {
-			throw new CommandListenerException(new UnpushedChangesException(FedoraPackagerText.UnpushedChangesListener_unpushedChangesError));
+			throw new UnpushedChangesException(FedoraPackagerText.UnpushedChangesListener_unpushedChangesError);
 		}
 		mainMonitor.worked(15);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.api.ICommandListener#postExecution()
-	 */
-	@Override
-	public void postExecution() {
-		// nothing
 	}
 
 }

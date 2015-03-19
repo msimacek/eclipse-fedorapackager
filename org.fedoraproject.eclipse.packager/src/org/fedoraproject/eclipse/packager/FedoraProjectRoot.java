@@ -14,7 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
@@ -52,10 +52,6 @@ public class FedoraProjectRoot implements IProjectRoot {
 		// nothing
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#initialize(org.eclipse.core.resources.IContainer, org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils.ProjectType)
-	 */
 	@Override
 	public void initialize(IContainer container) {
 		this.rootContainer = container;
@@ -75,37 +71,21 @@ public class FedoraProjectRoot implements IProjectRoot {
 		this.productStrings = new ProductStringsNonTranslatable();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getContainer()
-	 */
 	@Override
 	public IContainer getContainer() {
 		return rootContainer;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getProject()
-	 */
 	@Override
 	public IProject getProject() {
 		return this.rootContainer.getProject();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getSourcesFile()
-	 */
 	@Override
 	public SourcesFile getSourcesFile() {
 		return sourcesFile;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getPackageName()
-	 */
 	@Override
 	public String getPackageName() {
 		String str = ""; //$NON-NLS-1$
@@ -117,10 +97,6 @@ public class FedoraProjectRoot implements IProjectRoot {
 		return str;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getSpecFile()
-	 */
 	@Override
 	public IFile getSpecFile() {
 		try {
@@ -137,10 +113,6 @@ public class FedoraProjectRoot implements IProjectRoot {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getSpecfileModel()
-	 */
 	@Override
 	public Specfile getSpecfileModel() {
 		SpecfileParser parser = new SpecfileParser();
@@ -162,40 +134,23 @@ public class FedoraProjectRoot implements IProjectRoot {
 		return specfile;
 	}
 
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getLookAsideCache()
-	 */
 	@Override
 	public ILookasideCache getLookAsideCache() {
 		return lookAsideCache;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getProductStrings()
-	 */
 	@Override
 	public IProductStrings getProductStrings() {
 		return this.productStrings;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getSupportedProjectPropertyNames()
-	 */
 	@Override
 	public QualifiedName[] getSupportedProjectPropertyNames() {
 		return new QualifiedName[] { PackagerPlugin.PROJECT_PROP };
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getPackageNVRs()
-	 */
 	@Override
-	public String[] getPackageNVRs(BranchConfigInstance bci) {
+	public List<String> getPackageNVRs(BranchConfigInstance bci) {
 		Specfile specfile = getSpecfileModel();
 		String version = specfile.getVersion();
 		String release = specfile.getRelease().replace("%{?dist}", bci.getDist());  //$NON-NLS-1$
@@ -203,12 +158,11 @@ public class FedoraProjectRoot implements IProjectRoot {
 		for (SpecfilePackage p: specfile.getPackages().getPackages()) {
 			rawNvrs.add(p.getFullPackageName() + "-" + version + "-" + release); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		String[] nvrs = rawNvrs.toArray(new String[]{});
-		Arrays.sort(nvrs);
-		return nvrs;
+		Collections.sort(rawNvrs);
+		return rawNvrs;
 	}
 
-	/*
+	/**
 	 * A valid project root contains a .spec file and a "sources"
 	 * file. The RPM spec-file must be of the form package-name.spec.
      *
@@ -227,10 +181,7 @@ public class FedoraProjectRoot implements IProjectRoot {
 		}
 		return false;
 	}
-	/*
-	 * (non-Javadoc)
-	 * @see org.fedoraproject.eclipse.packager.IProjectRoot#getPluginID()
-	 */
+
 	@Override
 	public String getPluginID() {
 		return PackagerPlugin.PLUGIN_ID;

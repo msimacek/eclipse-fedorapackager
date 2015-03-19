@@ -320,14 +320,24 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Perform the update.
 	 *
-	 * @see org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand#
-	 * checkConfiguration()
+	 * @throws CommandListenerException
+	 *             If a command listener threw an exception.
+	 *
+	 * @return the result of the update. You may use it to determine
+	 *         success/failure and/or retrieve other information.
+	 * @throws BodhiClientLoginException
+	 *             If the login to bodhi failed.
+	 * @throws BodhiClientException
+	 *             If pushing the update failed.
 	 */
 	@Override
-	protected void checkConfiguration() throws CommandMisconfiguredException {
+	public PushUpdateResult call(IProgressMonitor monitor)
+			throws CommandListenerException, BodhiClientLoginException,
+			BodhiClientException {
+		callPreExecListeners();
 		// need a bodhi client
 		if (client == null) {
 			throw new CommandMisconfiguredException(
@@ -349,7 +359,7 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 					BodhiText.PushUpdateCommand_configErrorNoFedoraRelease);
 		}
 		// require a comment
-		if (comment == null || comment.equals("")) { //$NON-NLS-1$
+		if (comment == null || comment.isEmpty()) {
 			throw new CommandMisconfiguredException(
 					BodhiText.PushUpdateCommand_configErrorNoUpdateComment);
 		}
@@ -357,36 +367,6 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 		if (builds == null || builds.length == 0) {
 			throw new CommandMisconfiguredException(
 					BodhiText.PushUpdateCommand_configErrorNoBuilds);
-		}
-	}
-
-	/**
-	 * Perform the update.
-	 *
-	 * @throws CommandMisconfiguredException
-	 *             If the command was configured wrongly.
-	 * @throws CommandListenerException
-	 *             If a command listener threw an exception.
-	 *
-	 * @return the result of the update. You may use it to determine
-	 *         success/failure and/or retrieve other information.
-	 * @throws BodhiClientLoginException
-	 *             If the login to bodhi failed.
-	 * @throws BodhiClientException
-	 *             If pushing the update failed.
-	 */
-	@Override
-	public PushUpdateResult call(IProgressMonitor monitor)
-			throws CommandListenerException, CommandMisconfiguredException,
-			BodhiClientLoginException, BodhiClientException {
-		try {
-			callPreExecListeners();
-		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof CommandMisconfiguredException) {
-				// explicitly throw the specific exception
-				throw (CommandMisconfiguredException) e.getCause();
-			}
-			throw e;
 		}
 		// bugs list may be unset
 		if (this.bugs == null) {
@@ -409,11 +389,10 @@ public class PushUpdateCommand extends FedoraPackagerCommand<PushUpdateResult> {
 		}
 		// It looks like release is extracted from the build NVRs. Not sure, why
 		// it's there.
-		BodhiUpdateResponse updateResponse = this.client
-				.createNewUpdate(builds, release, updateType, requestType,
-						bugs, comment, csrfToken, suggestReboot,
-						enableKarmaAutomatism, stableKarmaThreshold,
-						unpushKarmaThreshold, closeBugsWhenStable);
+		BodhiUpdateResponse updateResponse = this.client.createNewUpdate(
+				builds, updateType, requestType, bugs, comment, csrfToken,
+				suggestReboot, enableKarmaAutomatism, stableKarmaThreshold,
+				unpushKarmaThreshold, closeBugsWhenStable);
 		PushUpdateResult result = new PushUpdateResult(updateResponse);
 		monitor.worked(3);
 		monitor.subTask(BodhiText.PushUpdateCommand_loggingOut);

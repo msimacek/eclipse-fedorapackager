@@ -19,7 +19,6 @@ import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.FedoraProjectRoot;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 
@@ -157,14 +156,6 @@ public abstract class FedoraPackagerCommand<T> {
 			listener.postExecution();
 		}
 	}
-
-	/**
-	 * Configuration checking routine. This should check if all required
-	 * parameters in order to successfully execute the command is present.
-	 * 
-	 */
-	protected abstract void checkConfiguration()
-			throws CommandMisconfiguredException;
 
 	/**
 	 * Add/register a command listener.

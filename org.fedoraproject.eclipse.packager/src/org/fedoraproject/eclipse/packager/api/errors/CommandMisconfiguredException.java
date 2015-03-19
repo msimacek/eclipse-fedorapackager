@@ -17,19 +17,9 @@ import org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand;
  * {@link FedoraPackagerCommand#call(org.eclipse.core.runtime.IProgressMonitor)}
  * .
  */
-public class CommandMisconfiguredException extends FedoraPackagerAPIException {
+public class CommandMisconfiguredException extends CommandListenerException {
 
 	private static final long serialVersionUID = 2429930146036876634L;
-
-	/**
-	 * @param message
-	 *            The message associated with this exception.
-	 * @param cause
-	 *            The throwable that caused the exception to be thrown.
-	 */
-	public CommandMisconfiguredException(String message, Throwable cause) {
-		super(message, cause);
-	}
 
 	/**
 	 * @param message

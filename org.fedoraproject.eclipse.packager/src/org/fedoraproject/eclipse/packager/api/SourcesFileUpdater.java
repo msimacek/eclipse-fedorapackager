@@ -18,7 +18,6 @@ import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.SourcesFile;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.SourcesFileUpdateException;
 
 /**
  * Post exec hook for {@link UploadSourceCommand}, responsible for updating the
@@ -54,11 +53,6 @@ public class SourcesFileUpdater implements ICommandListener {
 		this.shouldReplace = newValue;
 	}
 
-	@Override
-	public void preExecution() {
-		// nothing
-	}
-
 	/**
 	 * Updates the {@code sources} file for the Fedora project root of this
 	 * instance and add the new file as required.
@@ -81,8 +75,8 @@ public class SourcesFileUpdater implements ICommandListener {
 		try {
 			fpRoot.getSourcesFile().save();
 		} catch (CoreException e) {
-			throw new CommandListenerException(new SourcesFileUpdateException(
-					FedoraPackagerText.SourcesFileUpdater_errorSavingFile, e));
+			throw new CommandListenerException(
+					FedoraPackagerText.SourcesFileUpdater_errorSavingFile, e);
 		}
 	}
 }

@@ -37,11 +37,7 @@ import org.fedoraproject.eclipse.packager.api.DownloadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.UploadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.UploadSourceResult;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.DownloadFailedException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
-import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
-import org.fedoraproject.eclipse.packager.api.errors.SourcesUpToDateException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.rpm.api.errors.SRPMImportCommandException;
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
@@ -108,12 +104,8 @@ public class SRPMImportCommandTest implements
 	}
 
 	@Test
-	public void canImportSRPM() throws SRPMImportCommandException,
-			InvalidProjectRootException, IOException, CoreException,
-			FedoraPackagerCommandInitializationException,
-			SourcesUpToDateException, DownloadFailedException,
-			CommandMisconfiguredException, CommandListenerException,
-			GitAPIException {
+	public void canImportSRPM() throws FedoraPackagerAPIException,
+			IOException, CoreException, GitAPIException {
 
 		SRPMImportCommand srpmImport = new SRPMImportCommand(srpmPath,
 				testProject, testProject, uploadURLForTesting, this) {

@@ -178,7 +178,7 @@ public class BodhiNewHandler extends AbstractHandler {
 			}
 
 			// all data gathered, push update
-			Job job = new Job(projectRoot.getProductStrings().getProductName()) { //$NON-NLS-1$
+			Job job = new Job(projectRoot.getProductStrings().getProductName()) {
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					monitor.beginTask(
@@ -203,9 +203,6 @@ public class BodhiNewHandler extends AbstractHandler {
 								.unstableKarmaThreshold(
 										updateDialog
 												.getUnstableKarmaThreshold());
-						logger.logInfo(NLS.bind(
-								FedoraPackagerText.callingCommand,
-								PushUpdateCommand.class.getName()));
 						updateResult = update.call(monitor);
 						return Status.OK_STATUS;
 					} catch (FedoraPackagerAPIException e) {
@@ -282,7 +279,6 @@ public class BodhiNewHandler extends AbstractHandler {
 					final String msg = NLS.bind(
 							BodhiText.BodhiNewHandler_pushingUpdateFailedMsg,
 							updateResult.getDetails());
-					logger.logDebug(msg);
 					PlatformUI.getWorkbench().getDisplay()
 							.asyncExec(new Runnable() {
 								@Override
@@ -356,14 +352,14 @@ public class BodhiNewHandler extends AbstractHandler {
 		return null;
 	}
 
-	/*
+	/**
 	 * Parse bugs listed in a changelog string
 	 *
-	 * @param clog
+	 * @param clog The changelog.
 	 *
 	 * @return A comma separated list of bugs, or the empty string.
 	 */
-	private String findBug(String clog) {
+	private static String findBug(String clog) {
 		String bugs = ""; //$NON-NLS-1$
 		Pattern p = Pattern.compile("#([0-9]*)"); //$NON-NLS-1$
 		Matcher m = p.matcher(clog);
@@ -373,7 +369,7 @@ public class BodhiNewHandler extends AbstractHandler {
 		return bugs.length() > 0 ? bugs.substring(0, bugs.length() - 1) : bugs;
 	}
 
-	private ISecurePreferences getBodhiNode() {
+	private static ISecurePreferences getBodhiNode() {
 		ISecurePreferences preferences = SecurePreferencesFactory.getDefault();
 		if (preferences == null)
 			return null;

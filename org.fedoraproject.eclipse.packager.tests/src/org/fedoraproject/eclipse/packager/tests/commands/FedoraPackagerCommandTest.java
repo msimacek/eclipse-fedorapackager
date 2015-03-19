@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackagerCommand;
@@ -21,7 +22,6 @@ import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
 import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.tests.utils.DummyPostExecCmdListener;
 import org.fedoraproject.eclipse.packager.tests.utils.DummyPreExecCmdListener;
-import org.fedoraproject.eclipse.packager.tests.utils.DummyResult;
 import org.fedoraproject.eclipse.packager.tests.utils.FedoraPackagerCommandDummyImpl;
 import org.fedoraproject.eclipse.packager.tests.utils.git.GitTestProject;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
@@ -90,7 +90,7 @@ public class FedoraPackagerCommandTest {
 	}
 	
 	@Test
-	public void canRegisterCommandListeners() throws Exception {
+	public void canRegisterCommandListeners() {
 		FedoraPackagerCommandDummyImpl fpCmd = new FedoraPackagerCommandDummyImpl();
 		fpCmd.initialize(fpRoot);
 		DummyPreExecCmdListener preExecListener = new DummyPreExecCmdListener();
@@ -135,7 +135,7 @@ public class FedoraPackagerCommandTest {
 		FedoraPackagerCommandDummyImpl fpCmd = new FedoraPackagerCommandDummyImpl();
 		fpCmd.initialize(fpRoot);
 		fpCmd.setConfiguration(true);
-		DummyResult result = fpCmd.call(new NullProgressMonitor());
-		assertTrue(result.isSuccessful());
+		IStatus result = fpCmd.call(new NullProgressMonitor());
+		assertTrue(result.isOK());
 	}
 }

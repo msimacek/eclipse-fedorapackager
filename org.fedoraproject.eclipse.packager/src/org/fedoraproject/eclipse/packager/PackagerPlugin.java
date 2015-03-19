@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.fedoraproject.eclipse.packager;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.preferences.ConfigurationScope;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -51,20 +50,12 @@ public class PackagerPlugin extends AbstractUIPlugin {
 	public PackagerPlugin() {
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
-	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
-	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
@@ -122,21 +113,5 @@ public class PackagerPlugin extends AbstractUIPlugin {
 	 */
 	public static boolean isConfEnabled() {
 		return getDefault().getPreferenceStore().getBoolean(FedoraPackagerPreferencesConstants.PREF_FEDPKG_CONFIG_ENABLED);
-	}
-
-	/**
-	 * @return {@code true} when platform was started in debug mode (
-	 *         {@code -debug} switch) and
-	 *         {@code org.fedoraproject.eclipse.packager/debug=true} is set in
-	 *         some .options file either in $HOME/.options or $(pwd)/.options.
-	 */
-	public static boolean inDebugMode() {
-		if (Platform.inDebugMode()) {
-			String debugOption = Platform.getDebugOption(PLUGIN_ID + "/debug"); //$NON-NLS-1$
-			if (debugOption != null && debugOption.equals("true")) { //$NON-NLS-1$
-				return true;
-			}
-		}
-		return false;
 	}
 }

@@ -23,12 +23,14 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.BasicHttpClientConnectionManager;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -60,7 +62,6 @@ public class FedoraPackagerUtils {
 	private static final String PROJECT_ROOT_CLASS_ATTRIBUTE_NAME = "class"; //$NON-NLS-1$
 	private static final String VCS_CONTRIBUTION_EXTENSIONPOINT_NAME = "vcsContribution"; //$NON-NLS-1$
 	private static final String VCS_CONTRIBUTION_ELEMENT_NAME = "vcs"; //$NON-NLS-1$
-	private static final String VCS_CONTRIBUTION_TYPE_ATTRIBUTE_NAME = "type"; //$NON-NLS-1$
 	private static final String VCS_CONTRIBUTION_CONTRIB_PLUGIN_ID_ATTRIBUTE_NAME = "contribPlugin"; //$NON-NLS-1$
 	private static final String VCS_CONTRIBUTION_CLASS_ATTRIBUTE_NAME = "class"; //$NON-NLS-1$
 
@@ -131,12 +132,7 @@ public class FedoraPackagerUtils {
 						&& elements[i]
 								.getAttribute(
 										VCS_CONTRIBUTION_CONTRIB_PLUGIN_ID_ATTRIBUTE_NAME)
-								.startsWith(propertyName.getQualifier())
-						&& elements[i]
-								.getAttribute(VCS_CONTRIBUTION_TYPE_ATTRIBUTE_NAME) != null
-						&& elements[i].getAttribute(
-								VCS_CONTRIBUTION_TYPE_ATTRIBUTE_NAME).equals(
-								"GIT")) { //$NON-NLS-1$
+								.startsWith(propertyName.getQualifier())) {
 					try {
 						IConfigurationElement bob = elements[i];
 						IFpProjectBits vcsContributor = (IFpProjectBits) bob
@@ -145,10 +141,6 @@ public class FedoraPackagerUtils {
 						if (vcsContributor != null) {
 							vcsContributor.initialize(fedoraprojectRoot);
 						}
-						FedoraPackagerLogger logger = FedoraPackagerLogger
-								.getInstance();
-						logger.logDebug("Using " + vcsContributor.getClass().getName() + //$NON-NLS-1$
-								" as IFpProjectBits"); //$NON-NLS-1$
 						return vcsContributor;
 					} catch (CoreException e) {
 						e.printStackTrace();
@@ -174,7 +166,7 @@ public class FedoraPackagerUtils {
 	public static boolean isValidUploadFile(File candidate) {
 		if (candidate.length() != 0) {
 			Pattern extensionPattern = Pattern
-					.compile("^.*\\.(?:tar|gz|bz2|lzma|xz|Z|zip|tff|bin|tbz|tbz2|tlz|txz|pdf|rpm|jar|war|db|cpio|jisp|egg|gem)$"); //$NON-NLS-1$
+					.compile("^.*\\.(?:tar|gz|bz2|lzma|xz|Z|zip|tff|bin|tbz|tbz2|tgz|tlz|txz|pdf|rpm|jar|war|db|cpio|jisp|egg|gem)$"); //$NON-NLS-1$
 			Matcher extMatcher = extensionPattern.matcher(candidate.getName());
 			if (extMatcher.matches()) {
 				// file extension seems to be good
@@ -235,13 +227,11 @@ public class FedoraPackagerUtils {
 	 * Wrap a basic HttpClient object in an all trusting SSL enabled HttpClient
 	 * object.
 	 * 
-	 * @param base
-	 *            The HttpClient to wrap.
 	 * @return The SSL wrapped HttpClient.
 	 * @throws GeneralSecurityException
 	 *             Function fails for security reasons.
 	 */
-	public static HttpClient trustAllSslEnable(HttpClient base)
+	public static CloseableHttpClient trustAllSslEnable()
 			throws GeneralSecurityException {
 		// Get an initialized SSL context
 		// Create a trust manager that does not validate certificate chains
@@ -263,16 +253,24 @@ public class FedoraPackagerUtils {
 		} };
 
 		// set up the all-trusting trust manager
-		SSLContext sc = SSLContext.getInstance("SSL"); //$NON-NLS-1$
+		SSLContext sc = SSLContext.getInstance("TLS"); //$NON-NLS-1$
 		sc.init(null, trustAllCerts, new java.security.SecureRandom());
+		
+		HttpClientBuilder builder = HttpClientBuilder.create();
+		SSLConnectionSocketFactory sslConnectionFactory = new SSLConnectionSocketFactory(
+				sc,
+				SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+		builder.setSSLSocketFactory(sslConnectionFactory);
+		Registry<ConnectionSocketFactory> registry = RegistryBuilder
+				.<ConnectionSocketFactory> create()
+				.register("https", sslConnectionFactory) //$NON-NLS-1$
+				.build();
 
-		SSLSocketFactory sf = new SSLSocketFactory(sc,
-				SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-		ClientConnectionManager ccm = base.getConnectionManager();
-		SchemeRegistry sr = ccm.getSchemeRegistry();
-		Scheme https = new Scheme("https", 443, sf); //$NON-NLS-1$
-		sr.register(https);
-		return new DefaultHttpClient(ccm, base.getParams());
+		HttpClientConnectionManager ccm = new BasicHttpClientConnectionManager(
+				registry);
+
+		builder.setConnectionManager(ccm);
+		return builder.build();
 	}
 
 	/**
@@ -334,7 +332,7 @@ public class FedoraPackagerUtils {
 				}
 			}
 			// We need at least one project root
-			if (projectRootList.size() == 0) {
+			if (projectRootList.isEmpty()) {
 				throw new FedoraPackagerExtensionPointException(NLS.bind(
 						FedoraPackagerText.extensionNotFoundError,
 						PROJECT_ROOT_EXTENSIONPOINT_NAME));
@@ -374,11 +372,6 @@ public class FedoraPackagerUtils {
 							.getPersistentProperty(propName);
 					if (property != null) {
 						// match found
-						FedoraPackagerLogger logger = FedoraPackagerLogger
-								.getInstance();
-						logger.logDebug(NLS
-								.bind(FedoraPackagerText.FedoraPackagerUtils_projectRootClassNameMsg,
-										root.getClass().getName()));
 						return root;
 					}
 				} catch (CoreException e) {

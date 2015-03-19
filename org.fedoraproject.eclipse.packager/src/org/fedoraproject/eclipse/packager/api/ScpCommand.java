@@ -19,7 +19,9 @@ import java.util.Vector;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.PlatformUI;
@@ -42,7 +44,7 @@ import com.jcraft.jsch.SftpException;
  * instance of this class should only be used for one invocation of the command
  * (means: one call to {@link #call(IProgressMonitor)})
  */
-public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
+public class ScpCommand extends FedoraPackagerCommand<IStatus> {
 
 	/**
 	 * The unique ID of this command.
@@ -56,18 +58,14 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 	private ISession session = null;
 	private boolean scpconfirmed = true;
 	private String fileScpConfirm;
-	protected ScpResult result = null;
 
 	final static FedoraPackagerLogger logger = FedoraPackagerLogger
 			.getInstance();
 
-	/*
+	/**
 	 * Implementation of the {@code ScpCommand}.
 	 *
-	 * @param monitor
-	 *
-	 * @throws CommandMisconfiguredException If the command was not properly
-	 * configured when it was called.
+	 * @param monitor The progress monitor.
 	 *
 	 * @throws CommandListenerException If some listener detected a problem.
 	 *
@@ -76,19 +74,18 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 	 * @return The result of this command.
 	 */
 	@Override
-	public ScpResult call(IProgressMonitor monitor)
-			throws CommandMisconfiguredException, CommandListenerException,
-			ScpFailedException {
-		try {
-			callPreExecListeners();
-		} catch (CommandListenerException e) {
-			if (e.getCause() instanceof CommandMisconfiguredException) {
-				// explicitly throw the specific exception
-				throw (CommandMisconfiguredException) e.getCause();
-			}
-			throw e;
+	public IStatus call(IProgressMonitor monitor)
+			throws CommandListenerException, ScpFailedException {
+		callPreExecListeners();
+		if (this.session == null) {
+			throw new CommandMisconfiguredException(
+					FedoraPackagerText.ScpCommand_NoSession);
 		}
 
+		if ((this.specFile == null) || (this.srpmFile == null)) {
+			throw new CommandMisconfiguredException(
+					FedoraPackagerText.ScpCommand_filesToScpMissing);
+		}
 		try {
 			session.setConfig("StrictHostKeyChecking", "no"); //$NON-NLS-1$ //$NON-NLS-2$
 			session.connect();
@@ -122,19 +119,14 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 			throw new ScpFailedException(e.getMessage(), e);
 		}
 
-		result = new ScpResult(specFile, srpmFile);
-
 		// Call post-exec listeners
 		callPostExecListeners();
 
-		if (scpconfirmed) {
-			result.setSuccessful(true);
-		} else {
-			result.setSuccessful(false);
-		}
 		setCallable(false);
-
-		return result;
+		if (scpconfirmed) {
+			return Status.OK_STATUS;
+		} 
+		return Status.CANCEL_STATUS;
 	}
 
 	/**
@@ -293,19 +285,6 @@ public class ScpCommand extends FedoraPackagerCommand<ScpResult> {
 
 		} catch (JSchException|IOException e) {
 			throw new ScpFailedException(e.getMessage(), e);
-		}
-	}
-
-	@Override
-	protected void checkConfiguration() throws CommandMisconfiguredException {
-		if (this.session == null) {
-			throw new CommandMisconfiguredException(
-					FedoraPackagerText.ScpCommand_NoSession);
-		}
-
-		if ((this.specFile == null) || (this.srpmFile == null)) {
-			throw new CommandMisconfiguredException(
-					FedoraPackagerText.ScpCommand_filesToScpMissing);
 		}
 	}
 

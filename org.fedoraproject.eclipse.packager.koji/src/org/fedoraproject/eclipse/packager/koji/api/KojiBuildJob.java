@@ -28,15 +28,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
-import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IFpProjectBits;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.UnpushedChangesListener;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
-import org.fedoraproject.eclipse.packager.api.errors.TagSourcesException;
 import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
@@ -112,8 +109,6 @@ public class KojiBuildJob extends KojiJob {
 		kojiBuildCmd.sourceLocation(sourceLocation);
 		String nvr = RPMUtils.getNVR(fedoraProjectRoot, bci);
 		kojiBuildCmd.nvr(new String[] { nvr }).isScratchBuild(isScratch);
-		logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
-				KojiBuildCommand.class.getName()));
 		try {
 			// login
 			kojiClient.login();
@@ -145,9 +140,6 @@ public class KojiBuildJob extends KojiJob {
 				}
 				kojiBuildCmd.buildTarget(buildTarget);
 			}
-			logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
-					KojiBuildCommand.class.getName()));
-
 			// Call build command.
 			// Make sure to set the buildResult variable, since it is used
 			// by getBuildResult() which is in turn called from the handler
@@ -158,12 +150,7 @@ public class KojiBuildJob extends KojiJob {
 			FedoraHandlerUtils.showInformationDialog(shell, fedoraProjectRoot
 					.getProductStrings().getProductName(), e.getMessage());
 			return Status.OK_STATUS;
-		} catch (TagSourcesException e) {
-			// something failed while tagging sources
-			logger.logError(e.getMessage(), e);
-			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
-					e.getMessage(), e);
-		} catch (CommandListenerException|ExecutionException|InterruptedException|CommandMisconfiguredException e) {
+		} catch (CommandListenerException|ExecutionException|InterruptedException e) {
 			// This shouldn't happen, but report error anyway
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,

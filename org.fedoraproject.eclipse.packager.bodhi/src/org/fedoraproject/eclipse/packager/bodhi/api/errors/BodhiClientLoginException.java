@@ -43,13 +43,6 @@ public class BodhiClientLoginException extends FedoraPackagerAPIException {
 	}
 	
 	/**
-	 * @return The HTTP response if available, {@code null} otherwise.
-	 */
-	public HttpResponse getHttpResponse() {
-		return this.response;
-	}
-	
-	/**
 	 * 
 	 * @return {@code true} if the user was not allowed access (i.e. 403,
 	 *         Forbidden was returned).

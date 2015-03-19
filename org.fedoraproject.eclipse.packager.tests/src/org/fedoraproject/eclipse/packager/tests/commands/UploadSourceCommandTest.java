@@ -31,12 +31,11 @@ import java.net.MalformedURLException;
 import java.util.Stack;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
@@ -49,15 +48,9 @@ import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.SourcesFileUpdater;
 import org.fedoraproject.eclipse.packager.api.UploadSourceCommand;
 import org.fedoraproject.eclipse.packager.api.UploadSourceResult;
-import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
-import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
+import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerAPIException;
 import org.fedoraproject.eclipse.packager.api.errors.FileAvailableInLookasideCacheException;
-import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidUploadFileException;
-import org.fedoraproject.eclipse.packager.api.errors.UploadFailedException;
-import org.fedoraproject.eclipse.packager.tests.SourcesFileUpdaterTest;
 import org.fedoraproject.eclipse.packager.tests.units.UploadFileValidityTest;
 import org.fedoraproject.eclipse.packager.tests.utils.MockableUploadSourceCommand;
 import org.fedoraproject.eclipse.packager.tests.utils.TestsUtils;
@@ -137,25 +130,18 @@ public class UploadSourceCommandTest {
 	 * resource is "missing" or "available". Should sources be already
 	 * available, an FileAvailableInLookasideCacheException should be thrown.
 	 * @throws IOException 
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
-	 * @throws InvalidUploadFileException 
-	 * @throws UploadFailedException 
-	 * @throws CommandListenerException 
-	 * @throws CommandMisconfiguredException 
-	 * @throws FileAvailableInLookasideCacheException 
 	 * 
 	 */
 	@Test(expected=FileAvailableInLookasideCacheException.class)
-	public void canDetermineIfSourceIsAvailable() throws IOException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, FileAvailableInLookasideCacheException, CommandMisconfiguredException, CommandListenerException, UploadFailedException, InvalidUploadFileException  {
+	public void canDetermineIfSourceIsAvailable() throws IOException, FedoraPackagerAPIException  {
 		String fileName = FileLocator.toFileURL(
 				FileLocator.find(FrameworkUtil.getBundle(this.getClass()),
 						new Path(EXAMPLE_UPLOAD_FILE), null)).getFile();
 		File file = new File(fileName);
 		MockableUploadSourceCommand uploadCmd = (MockableUploadSourceCommand) packager
 				.getCommandInstance(MockableUploadSourceCommand.ID);
-		HttpClient mockClient = createStrictMock(HttpClient.class);
-		HttpResponse mockResponse = createMock(HttpResponse.class);
+		CloseableHttpClient mockClient = createStrictMock(CloseableHttpClient.class);
+		CloseableHttpResponse mockResponse = createMock(CloseableHttpResponse.class);
 		StatusLine mockStatus = createMock(StatusLine.class);
 		HttpEntity mockEntity = createMock(HttpEntity.class);
 		expect(mockClient.execute((HttpUriRequest) anyObject())).andReturn(
@@ -182,24 +168,14 @@ public class UploadSourceCommandTest {
 	 * Generate a file which will have a different checksum than any other
 	 * already uploaded file for package {@code eclipse-fedorapackager}. Then
 	 * attempt to upload this file.
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
-	 * @throws IOException 
-	 * @throws ClientProtocolException 
-	 * @throws IllegalStateException 
-	 * @throws InvalidUploadFileException 
-	 * @throws UploadFailedException 
-	 * @throws CommandListenerException 
-	 * @throws CommandMisconfiguredException 
-	 * @throws FileAvailableInLookasideCacheException 
 	 * 
 	 */
 	@Test
-	public void canUploadSources() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, ClientProtocolException, IOException, FileAvailableInLookasideCacheException, CommandMisconfiguredException, CommandListenerException, UploadFailedException, InvalidUploadFileException {
+	public void canUploadSources() throws FedoraPackagerAPIException, IOException {
 		MockableUploadSourceCommand uploadCmd = (MockableUploadSourceCommand) packager
 				.getCommandInstance(MockableUploadSourceCommand.ID);
-		HttpClient mockClient = createStrictMock(HttpClient.class);
-		HttpResponse mockResponse = createMock(HttpResponse.class);
+		CloseableHttpClient mockClient = createStrictMock(CloseableHttpClient.class);
+		CloseableHttpResponse mockResponse = createMock(CloseableHttpResponse.class);
 		StatusLine mockStatus = createMock(StatusLine.class);
 		HttpEntity mockEntity = createMock(HttpEntity.class);
 		expect(mockClient.execute((HttpUriRequest) anyObject())).andReturn(
@@ -242,21 +218,9 @@ public class UploadSourceCommandTest {
 	/**
 	 * After a file is uploaded, the {@code sources} file should be updated with
 	 * the new checksum/filename. This test checks for this.
-	 * @throws IOException 
-	 * @throws InvalidProjectRootException 
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
-	 * @throws InvalidUploadFileException 
-	 * @throws UploadFailedException 
-	 * @throws CommandListenerException 
-	 * @throws CommandMisconfiguredException 
-	 * @throws FileAvailableInLookasideCacheException 
-	 * 
-	 * @see SourcesFileUpdaterTest
-	 * 
 	 */
 	@Test
-	public void canUpdateSourcesFile() throws IOException, InvalidProjectRootException, FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, InvalidUploadFileException, FileAvailableInLookasideCacheException, CommandMisconfiguredException, CommandListenerException, UploadFailedException  {
+	public void canUpdateSourcesFile() throws IOException, FedoraPackagerAPIException  {
 		// Create a a temp file with checksum, which hasn't been uploaded so
 		// far. We need to upload a new non-existing file into the lookaside
 		// cache. Otherwise a file exists exception is thrown and nothing will
@@ -280,8 +244,8 @@ public class UploadSourceCommandTest {
 				newUploadFile);
 		MockableUploadSourceCommand uploadCmd = (MockableUploadSourceCommand) packager
 				.getCommandInstance(MockableUploadSourceCommand.ID);
-		HttpClient mockClient = createStrictMock(HttpClient.class);
-		HttpResponse mockResponse = createMock(HttpResponse.class);
+		CloseableHttpClient mockClient = createStrictMock(CloseableHttpClient.class);
+		CloseableHttpResponse mockResponse = createMock(CloseableHttpResponse.class);
 		StatusLine mockStatus = createMock(StatusLine.class);
 		HttpEntity mockEntity = createMock(HttpEntity.class);
 		expect(mockClient.execute((HttpUriRequest) anyObject())).andReturn(
@@ -326,14 +290,9 @@ public class UploadSourceCommandTest {
 	 * When setting the upload file it should throw InvalidUploadFileException
 	 * if the file name is not valid. Other upload file validity test are tested
 	 * in {@link UploadFileValidityTest}.
-	 * @throws FedoraPackagerCommandNotFoundException 
-	 * @throws FedoraPackagerCommandInitializationException 
-	 * @throws IOException 
-	 * @throws InvalidUploadFileException 
-	 * 
 	 */
 	@Test(expected = InvalidUploadFileException.class)
-	public void canDetermineValidUploadFiles() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, IOException, InvalidUploadFileException {
+	public void canDetermineValidUploadFiles() throws FedoraPackagerAPIException, IOException {
 		UploadSourceCommand uploadCmd = (UploadSourceCommand) packager
 				.getCommandInstance(UploadSourceCommand.ID);
 		String invalidUploadFileName = FileLocator.toFileURL(
@@ -344,7 +303,7 @@ public class UploadSourceCommandTest {
 	}
 
 	@Test(expected = InvalidUploadFileException.class)
-	public void cannotUploadEmptyFile() throws FedoraPackagerCommandInitializationException, FedoraPackagerCommandNotFoundException, IOException, InvalidUploadFileException{
+	public void cannotUploadEmptyFile() throws FedoraPackagerAPIException, IOException {
 		UploadSourceCommand uploadCmd = (UploadSourceCommand) packager
 				.getCommandInstance(UploadSourceCommand.ID);
 		
@@ -361,7 +320,7 @@ public class UploadSourceCommandTest {
 	 * 
 	 * @param newFile
 	 */
-	private void writeRandomContentToFile(File newFile) {
+	private static void writeRandomContentToFile(File newFile) {
 		try (FileOutputStream out = new FileOutputStream(newFile)){
 			StringBuilder randomContent = new StringBuilder();
 			randomContent.append(Math.random());

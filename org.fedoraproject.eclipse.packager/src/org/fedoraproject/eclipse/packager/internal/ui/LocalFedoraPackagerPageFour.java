@@ -17,8 +17,8 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
-import org.fedoraproject.eclipse.packager.PackagerPlugin;
 import org.fedoraproject.eclipse.packager.FedoraPackagerText;
+import org.fedoraproject.eclipse.packager.PackagerPlugin;
 
 /**
  * Template for SpecFile
@@ -116,11 +116,11 @@ public class LocalFedoraPackagerPageFour extends SpecfileNewWizardPage {
 	 */
 	private void dialogChanged() {
 		String fileName = getFileName();
-		if (getProjectName().length() == 0) {
+		if (getProjectName().isEmpty()) {
 			updateStatus(Messages.SpecfileNewWizardPage_22);
 			return;
 		}
-		if (fileName.length() == 0) {
+		if (fileName.isEmpty()) {
 			updateStatus(Messages.SpecfileNewWizardPage_25);
 			return;
 		}

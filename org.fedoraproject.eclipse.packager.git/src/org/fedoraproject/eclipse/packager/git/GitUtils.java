@@ -29,7 +29,6 @@ import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.fedoraproject.eclipse.packager.FedoraPackagerPreferencesConstants;
 import org.fedoraproject.eclipse.packager.FedoraSSL;
-import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
 import org.fedoraproject.eclipse.packager.PackagerPlugin;
 
 /**
@@ -76,7 +75,7 @@ public class GitUtils {
 	 *         user is using settings from the .conf file.
 	 * @since 0.5.0
 	 */
-	public static String getPreferenceURL() {
+	private static String getPreferenceURL() {
 		String URL = ""; //$NON-NLS-1$
 		// if .conf is enabled, use the base url from .conf
 		if (PackagerPlugin.isConfEnabled()) {
@@ -98,7 +97,7 @@ public class GitUtils {
 	 */
 	public static String getDefaultGitBaseUrl() {
 		// Figure out if we have an anonymous or a FAS user
-		String user = FedoraSSLFactory.getInstance().getUsernameFromCert();
+		String user = new FedoraSSL().getUsernameFromCert();
 		String gitURL;
 		if (!user.equals(FedoraSSL.UNKNOWN_USER)) {
 			gitURL = getAuthenticatedGitBaseUrl(user);
@@ -152,9 +151,7 @@ public class GitUtils {
 					branchCreateCmd.call();
 				}
 			}
-		} catch (JGitInternalException e) {
-			e.printStackTrace();
-		} catch (GitAPIException e) {
+		} catch (JGitInternalException|GitAPIException e) {
 			e.printStackTrace();
 		}
 	}

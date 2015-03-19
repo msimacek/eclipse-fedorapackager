@@ -51,20 +51,12 @@ public class FedoraPackagerGitPreferencePage extends
 		super(GRID);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
-	 */
 	@Override
 	public void init(IWorkbench workbench) {
 		setPreferenceStore(new ScopedPreferenceStore(InstanceScope.INSTANCE,Activator.PLUGIN_ID));
 		setDescription(FedoraPackagerGitText.FedoraPackagerGitPreferencePage_description);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
-	 */
 	@Override
 	public void propertyChange(PropertyChangeEvent event) {
 		if (event.getProperty().equals(FieldEditor.VALUE)) {
@@ -72,10 +64,6 @@ public class FedoraPackagerGitPreferencePage extends
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#checkState()
-	 */
 	@Override
 	public void checkState() {
 		super.checkState();
@@ -89,10 +77,6 @@ public class FedoraPackagerGitPreferencePage extends
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.preference.PreferencePage#isValid()
-	 */
 	@Override
 	public boolean isValid() {
 		// disable modifying the URL if .conf is being used
@@ -100,10 +84,6 @@ public class FedoraPackagerGitPreferencePage extends
 		return super.isValid();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
-	 */
 	@Override
 	public void createFieldEditors() {
 		Composite composite = getFieldEditorParent();
@@ -134,7 +114,7 @@ public class FedoraPackagerGitPreferencePage extends
 		updateMargins(gitGroup);
 	}
 
-	private void updateMargins(Group group) {
+	private static void updateMargins(Group group) {
 		// make sure there is some room between the group border
 		// and the controls in the group
 		GridLayout layout = (GridLayout) group.getLayout();

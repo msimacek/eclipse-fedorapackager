@@ -30,15 +30,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.fedoraproject.eclipse.packager.BranchConfigInstance;
 import org.fedoraproject.eclipse.packager.FedoraPackagerLogger;
-import org.fedoraproject.eclipse.packager.FedoraPackagerText;
 import org.fedoraproject.eclipse.packager.IFpProjectBits;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.errors.CommandListenerException;
-import org.fedoraproject.eclipse.packager.api.errors.CommandMisconfiguredException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandInitializationException;
 import org.fedoraproject.eclipse.packager.api.errors.FedoraPackagerCommandNotFoundException;
-import org.fedoraproject.eclipse.packager.api.errors.TagSourcesException;
 import org.fedoraproject.eclipse.packager.api.errors.UnpushedChangesException;
 import org.fedoraproject.eclipse.packager.koji.KojiPlugin;
 import org.fedoraproject.eclipse.packager.koji.KojiText;
@@ -108,8 +105,6 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 			}
 			if (!kojiInfo[2].contentEquals("true") || !targetSet.contains(bci.getBuildTarget())) { //$NON-NLS-1$
 				kojiBuildCmd.buildTarget(bci.getBuildTarget());
-				logger.logDebug(NLS.bind(KojiText.KojiSRPMBuildJob_logTarget,
-						bci.getBuildTarget()));
 			} else {
 				FutureTask<String> targetTask = new FutureTask<>(
 						new Callable<String>() {
@@ -128,8 +123,6 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 					throw new OperationCanceledException();
 				}
 				kojiBuildCmd.buildTarget(buildTarget);
-				logger.logDebug(NLS.bind(KojiText.KojiSRPMBuildJob_logTarget,
-						buildTarget));
 			}
 		} catch (KojiHubClientException e) {
 			return e.getStatus();
@@ -147,7 +140,7 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 			uploadSRPMCommand.setKojiClient(kojiClient)
 					.setRemotePath(uploadPath).setSRPM(srpmPath.toOSString())
 					.call(subMonitor.newChild(80));
-		} catch (CommandMisconfiguredException|CommandListenerException e) {
+		} catch (CommandListenerException e) {
 			// This shouldn't happen, but report error anyway
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
@@ -197,27 +190,15 @@ public class KojiSRPMBuildJob extends KojiBuildJob {
 		kojiBuildCmd.sourceLocation(sourceLocation);
 		String nvr = RPMUtils.getNVR(fedoraProjectRoot, bci);
 		kojiBuildCmd.nvr(new String[] { nvr }).isScratchBuild(true);
-		logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
-				KojiBuildCommand.class.getName()));
 		try {
-
-			logger.logDebug(NLS.bind(FedoraPackagerText.callingCommand,
-					KojiBuildCommand.class.getName()));
-
 			// Call build command
 			buildResult = kojiBuildCmd.call(subMonitor.newChild(10));
-		} catch (CommandMisconfiguredException|CommandListenerException e) {
-			// This shouldn't happen, but report error anyway
-			logger.logError(e.getMessage(), e);
-			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
-					e.getMessage(), e);
 		} catch (BuildAlreadyExistsException|UnpushedChangesException e) {
-			logger.logDebug(e.getMessage(), e);
 			FedoraHandlerUtils.showInformationDialog(shell, fedoraProjectRoot
 					.getProductStrings().getProductName(), e.getMessage());
 			return Status.OK_STATUS;
-		} catch (TagSourcesException e) {
-			// something failed while tagging sources
+		} catch (CommandListenerException e) {
+			// This shouldn't happen, but report error anyway
 			logger.logError(e.getMessage(), e);
 			return new Status(IStatus.ERROR, KojiPlugin.PLUGIN_ID,
 					e.getMessage(), e);

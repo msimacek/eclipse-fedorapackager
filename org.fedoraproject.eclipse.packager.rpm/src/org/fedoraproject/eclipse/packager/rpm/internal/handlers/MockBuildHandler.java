@@ -31,7 +31,6 @@ import org.fedoraproject.eclipse.packager.api.FileDialogRunable;
 import org.fedoraproject.eclipse.packager.api.errors.InvalidProjectRootException;
 import org.fedoraproject.eclipse.packager.rpm.RPMPlugin;
 import org.fedoraproject.eclipse.packager.rpm.RpmText;
-import org.fedoraproject.eclipse.packager.rpm.api.MockBuildCommand;
 import org.fedoraproject.eclipse.packager.rpm.api.MockBuildJob;
 import org.fedoraproject.eclipse.packager.utils.FedoraHandlerUtils;
 import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
@@ -41,12 +40,9 @@ import org.fedoraproject.eclipse.packager.utils.FedoraPackagerUtils;
  * 
  */
 public class MockBuildHandler extends AbstractHandler {
-	protected Shell shell;
-	protected MockBuildCommand mockBuild;
-
 	@Override
 	public Object execute(final ExecutionEvent event) throws ExecutionException {
-		shell =  HandlerUtil.getActiveShellChecked(event);
+		Shell shell =  HandlerUtil.getActiveShellChecked(event);
 		final FedoraPackagerLogger logger = FedoraPackagerLogger.getInstance();
 		IResource eventResource = FedoraHandlerUtils.getResource(event);
 		try {
