@@ -11,7 +11,7 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.fedoraproject.copr.client.BuildRequest;
 import org.fedoraproject.copr.client.CoprException;
-import org.fedoraproject.eclipse.packager.FedoraSSLFactory;
+import org.fedoraproject.eclipse.packager.FedoraSSL;
 import org.fedoraproject.eclipse.packager.IProjectRoot;
 import org.fedoraproject.eclipse.packager.api.FedoraPackager;
 import org.fedoraproject.eclipse.packager.api.ScpCommand;
@@ -81,8 +81,7 @@ public class CoprBuildHandler extends CoprHandler {
 			throw new OperationCanceledException();
 		}
 
-		String fasAccount = FedoraSSLFactory.getInstance()
-				.getUsernameFromCert();
+		String fasAccount = new FedoraSSL().getUsernameFromCert();
 		// TODO hardcoded constant
 		String remotePath = "http://" + fasAccount + ".fedorapeople.com/"
 				+ srpmPath.toFile().getName();
